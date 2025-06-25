@@ -172,5 +172,5 @@ export const userService = {
         error.response?.data?.message || "Failed to toggle user status"
       );
     }
-  }
+  },
 };
