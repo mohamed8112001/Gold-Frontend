@@ -763,6 +763,7 @@ const Home = () => {
                 onClick={() => navigate('/demo-login')}
                 className="bg-yellow-600 hover:bg-yellow-700 text-white font-medium"
               >
+                
                 🚀 Demo Login (Quick Access)
               </Button>
               <Button
@@ -770,6 +771,7 @@ const Home = () => {
                 onClick={() => navigate('/admin/create')}
                 className="border-red-600 text-red-600 hover:bg-red-600 hover:text-white"
               >
+
                 Create Admin Account
               </Button>
               <Button
@@ -777,6 +779,7 @@ const Home = () => {
                 onClick={() => navigate('/admin/promote')}
                 className="border-red-600 text-red-600 hover:bg-red-600 hover:text-white"
               >
+
                 Promote to Admin
               </Button>
             </div>
@@ -787,7 +790,6 @@ const Home = () => {
         </div>
       </section>
       
-
       {/* Features Section */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
