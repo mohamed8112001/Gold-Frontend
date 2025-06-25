@@ -842,8 +842,10 @@ const Home = () => {
           </div>
         </div>
       </section>
+      
     </div>
   );
+
 };
 
 export default Home;
