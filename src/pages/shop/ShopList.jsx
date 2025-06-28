@@ -58,9 +58,9 @@ const ShopList = () => {
           approved: shop.approved,
           isActive: shop.isActive,
           createdAt: shop.createdAt,
-          hasStatus: shop.hasOwnProperty('status'),
-          hasApproved: shop.hasOwnProperty('approved'),
-          hasIsActive: shop.hasOwnProperty('isActive')
+          hasStatus: Object.prototype.hasOwnProperty.call(shop, 'status'),
+          hasApproved: Object.prototype.hasOwnProperty.call(shop, 'approved'),
+          hasIsActive: Object.prototype.hasOwnProperty.call(shop, 'isActive')
         });
 
         // ULTRA STRICT: Only show if explicitly approved AND not pending
@@ -86,9 +86,9 @@ const ShopList = () => {
         // LEGACY: Only for very old shops created before approval system
         // AND only if they don't have any pending indicators
         const isLegacyApproved = (
-          !shop.hasOwnProperty('status') &&
-          !shop.hasOwnProperty('approved') &&
-          !shop.hasOwnProperty('isActive') &&
+          !Object.prototype.hasOwnProperty.call(shop, 'status') &&
+          !Object.prototype.hasOwnProperty.call(shop, 'approved') &&
+          !Object.prototype.hasOwnProperty.call(shop, 'isActive') &&
           !shop.status &&
           shop.approved !== false &&
           shop.isActive !== false &&
@@ -193,56 +193,11 @@ const ShopList = () => {
     setSearchParams(searchQuery ? { search: searchQuery } : {});
   };
 
-  const mockShops = [
-    {
-      id: 1,
-      name: 'Royal Gold Cairo',
-      nameAr: 'رويال جولد القاهرة',
-      location: 'Downtown, Cairo',
-      locationAr: 'وسط البلد، القاهرة',
-      rating: 4.8,
-      reviewCount: 156,
-      image: '/api/placeholder/300/200',
-      specialties: ['خواتم', 'قلائد', 'أساور'],
-      phone: '+20 2 1234567',
-      openingHours: '9:00 AM - 10:00 PM',
-      description: 'متجر مجوهرات راقي يقدم أفضل التصاميم الذهبية والماسية'
-    },
-    {
-      id: 2,
-      name: 'Alexandria Jewels',
-      nameAr: 'مجوهرات الإسكندرية',
-      location: 'Corniche, Alexandria',
-      locationAr: 'الكورنيش، الإسكندرية',
-      rating: 4.5,
-      reviewCount: 89,
-      image: '/api/placeholder/300/200',
-      specialties: ['أقراط', 'سلاسل', 'طقم عروس'],
-      phone: '+20 3 1234567',
-      openingHours: '10:00 AM - 9:00 PM',
-      description: 'تشكيلة واسعة من المجوهرات العصرية والكلاسيكية'
-    },
-    {
-      id: 3,
-      name: "Pharaoh's Treasures",
-      nameAr: 'كنوز الفراعنة',
-      location: 'Zamalek, Cairo',
-      locationAr: 'الزمالك، القاهرة',
-      rating: 4.9,
-      reviewCount: 234,
-      image: '/api/placeholder/300/200',
-      specialties: ['تصميم فرعوني', 'تصميم مخصص', 'أحجار كريمة'],
-      phone: '+20 2 2345678',
-      openingHours: '9:30 AM - 10:30 PM',
-      description: 'تصاميم مستوحاة من الحضارة المصرية القديمة'
-    },
-    // Add more mock shops...
-  ];
 
   const ShopCard = ({ shop, isListView = false }) => {
     // Handle missing data gracefully
     const shopName = shop.name || 'متجر غير محدد';
-    const shopAddress = shop.address || 'العنوان غير محدد';
+    const shopAddress = shop.area || 'العنوان غير محدد';
     const shopPhone = shop.phone || 'غير محدد';
     const shopDescription = shop.description || 'لا يوجد وصف';
     const shopRating = shop.rating || 0;
