@@ -12,7 +12,10 @@ import {
     Calendar,
     Package,
     Users,
-    TrendingUp
+    TrendingUp,
+    Clock,
+    CheckCircle,
+    AlertTriangle
 } from 'lucide-react';
 import { shopService } from '../../services/shopService.js';
 import { productService } from '../../services/productService.js';
@@ -50,17 +53,43 @@ const ManageShop = () => {
             // Load shop details - get current user's shop
             const loadShop = async () => {
                 try {
-                    // Assuming we have an endpoint to get current user's shop
-                    const shopResponse = await shopService.getAllShops();
-                    const shopsData = Array.isArray(shopResponse) ? shopResponse : shopResponse.data || [];
-                    // For now, get the first shop (in real app, filter by current user)
-                    const userShop = shopsData.length > 0 ? shopsData[0] : mockShop;
-                    setShop(userShop);
-                    return userShop;
+                    console.log('Loading shop for user:', user.id);
+
+                    // Try to get user's shop first
+                    try {
+                        const userShopResponse = await shopService.getMyShop();
+                        const userShop = userShopResponse.data || userShopResponse;
+                        console.log('User shop loaded:', userShop);
+                        setShop(userShop);
+                        return userShop;
+                    } catch (userShopError) {
+                        console.warn('No user shop found, trying all shops:', userShopError);
+
+                        // Fallback: get all shops and filter by user
+                        const shopResponse = await shopService.getAllShops();
+                        const shopsData = Array.isArray(shopResponse) ? shopResponse : shopResponse.data || [];
+
+                        // Filter shops by current user (owner)
+                        const userShop = shopsData.find(shop =>
+                            shop.ownerId === user.id ||
+                            shop.owner === user.id ||
+                            shop.userId === user.id
+                        );
+
+                        if (userShop) {
+                            console.log('Found user shop in all shops:', userShop);
+                            setShop(userShop);
+                            return userShop;
+                        } else {
+                            console.log('No shop found for user, user needs to create one');
+                            setShop(null);
+                            return null;
+                        }
+                    }
                 } catch (error) {
                     console.error('Error loading shop:', error);
-                    setShop(mockShop);
-                    return mockShop;
+                    setShop(null);
+                    return null;
                 }
             };
 
@@ -81,7 +110,7 @@ const ManageShop = () => {
             };
 
             // Load bookings for the shop
-            const loadBookings = async (shopId) => {
+            const loadBookings = async () => {
                 try {
                     const bookingsResponse = await bookingService.getMyBookings();
                     const bookingsData = Array.isArray(bookingsResponse)
@@ -100,7 +129,7 @@ const ManageShop = () => {
             const shopData = await loadShop();
             const [productsData, bookingsData] = await Promise.all([
                 loadProducts(shopData.id),
-                loadBookings(shopData.id)
+                loadBookings()
             ]);
 
             // Calculate stats
@@ -221,14 +250,39 @@ const ManageShop = () => {
                 {/* Header */}
                 <div className="mb-8">
                     <div className="flex items-center justify-between mb-4">
-                        <h1 className="text-3xl font-bold text-gray-900">إدارة المتجر</h1>
+                        <div>
+                            <h1 className="text-3xl font-bold text-gray-900">إدارة المتجر</h1>
+                            {shop && (
+                                <div className="flex items-center gap-2 mt-2">
+                                    <span className="text-lg font-medium text-gray-700">{shop.name}</span>
+                                    {shop.status === 'pending' || shop.approved === false || shop.isActive === false ? (
+                                        <span className="px-3 py-1 bg-yellow-100 text-yellow-800 text-sm rounded-full flex items-center gap-1">
+                                            <Clock className="w-3 h-3" />
+                                            في انتظار الموافقة
+                                        </span>
+                                    ) : (
+                                        <span className="px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full flex items-center gap-1">
+                                            <CheckCircle className="w-3 h-3" />
+                                            مُوافق عليه
+                                        </span>
+                                    )}
+                                </div>
+                            )}
+                        </div>
                         <div className="flex gap-2">
                             <Button
                                 variant="outline"
-                                onClick={() => navigate(ROUTES.SHOP_DETAILS(shop?.id))}
+                                onClick={() => navigate(ROUTES.SHOP_DETAILS(shop?.id || shop?._id))}
                             >
                                 <Eye className="w-4 h-4 mr-2" />
                                 عرض المتجر
+                            </Button>
+                            <Button
+                                variant="outline"
+                                onClick={() => navigate(ROUTES.EDIT_SHOP)}
+                            >
+                                <Edit className="w-4 h-4 mr-2" />
+                                تحديث المتجر
                             </Button>
                             <Button onClick={() => navigate(ROUTES.PRODUCTS_CREATE)}>
                                 <Plus className="w-4 h-4 mr-2" />
@@ -236,7 +290,15 @@ const ManageShop = () => {
                             </Button>
                         </div>
                     </div>
-                    <p className="text-gray-600">إدارة متجرك ومنتجاتك ومواعيدك</p>
+                    <p className="text-gray-600">
+                        إدارة متجرك ومنتجاتك ومواعيدك
+                        {shop && (shop.status === 'pending' || shop.approved === false || shop.isActive === false) && (
+                            <span className="block text-yellow-600 text-sm mt-1 flex items-center gap-1">
+                                <AlertTriangle className="w-4 h-4" />
+                                متجرك في انتظار موافقة الإدارة ولن يظهر للعملاء حتى الموافقة عليه
+                            </span>
+                        )}
+                    </p>
                 </div>
 
                 {/* Stats Cards */}
