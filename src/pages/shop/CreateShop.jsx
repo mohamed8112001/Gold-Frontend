@@ -94,10 +94,29 @@ const CreateShop = () => {
 
             const shopData = {
                 ...formData,
-                specialties: formData.specialties.filter(specialty => specialty.trim() !== '')
+                specialties: formData.specialties.filter(specialty => specialty.trim() !== ''),
+                status: 'pending', // Shop needs admin approval
+                approved: false, // Explicitly set as not approved
+                isActive: false, // Not active until approved
+                createdAt: new Date().toISOString() // Add creation timestamp
             };
 
-            await shopService.createShop(shopData);
+            console.log('Creating shop with data:', shopData);
+
+            const response = await shopService.createShop(shopData);
+            console.log('Shop creation response:', response);
+
+            // Double check the response to ensure status was set correctly
+            if (response && response.data) {
+                console.log('Created shop status check:', {
+                    status: response.data.status,
+                    approved: response.data.approved,
+                    isActive: response.data.isActive
+                });
+            }
+
+            // Show success message
+            alert('تم إرسال طلب إنشاء المتجر بنجاح! سيتم مراجعته من قبل الإدارة قبل ظهوره للعملاء.');
             navigate(ROUTES.DASHBOARD);
         } catch (error) {
             console.error('Error creating shop:', error);
