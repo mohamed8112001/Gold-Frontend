@@ -23,6 +23,7 @@ import { shopService } from '../../services/shopService.js';
 import { userService } from '../../services/userService.js';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES } from '../../utils/constants.js';
+import { testAuthentication } from '../../utils/testAuth.js';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -80,43 +81,18 @@ const AdminDashboard = () => {
 
       setAllShops(shopsData);
 
-      // Filter pending shops using multiple criteria
+      // Filter pending shops - use the backend field 'isApproved'
       const pendingShops = shopsData.filter(shop => {
-        // A shop is pending if:
-        // 1. Explicitly marked as pending
-        // 2. Explicitly not approved
-        // 3. Explicitly not active
-        // 4. Recently created without approval status
-        const isPending = (
-          shop.status === 'pending' ||
-          shop.approved === false ||
-          shop.isActive === false ||
-          // New shops without explicit approval (created recently)
-          (!shop.status && !shop.hasOwnProperty('approved') && !shop.hasOwnProperty('isActive') &&
-            shop.createdAt && new Date(shop.createdAt) > new Date('2024-01-01'))
-        );
-
-        // A shop is NOT pending if it's explicitly approved
-        const isExplicitlyApproved = (
-          shop.status === 'approved' ||
-          shop.approved === true ||
-          shop.isActive === true
-        );
-
-        const finalIsPending = isPending && !isExplicitlyApproved;
+        // A shop is pending if it's not approved (isApproved === false or undefined)
+        const isPending = !shop.isApproved;
 
         console.log(`Shop "${shop.name}" pending check:`, {
           id: shop._id || shop.id,
-          status: shop.status,
-          approved: shop.approved,
-          isActive: shop.isActive,
-          createdAt: shop.createdAt,
-          isPending: isPending,
-          isExplicitlyApproved: isExplicitlyApproved,
-          finalIsPending: finalIsPending
+          isApproved: shop.isApproved,
+          isPending: isPending
         });
 
-        return finalIsPending;
+        return isPending;
       });
 
       console.log('Pending shops found:', pendingShops.length);
@@ -134,24 +110,9 @@ const AdminDashboard = () => {
         totalUsers = 0;
       }
 
-      // Calculate real stats with multiple criteria
-      const pendingCount = shopsData.filter(shop => {
-        return (
-          shop.status === 'pending' ||
-          shop.approved === false ||
-          shop.isActive === false ||
-          (!shop.status && shop.hasOwnProperty('approved') && shop.approved !== true)
-        );
-      }).length;
-
-      const approvedCount = shopsData.filter(shop => {
-        return (
-          shop.status === 'approved' ||
-          shop.approved === true ||
-          shop.isActive === true ||
-          (!shop.status && !shop.hasOwnProperty('approved') && !shop.hasOwnProperty('isActive'))
-        );
-      }).length;
+      // Calculate real stats using backend field 'isApproved'
+      const pendingCount = shopsData.filter(shop => !shop.isApproved).length;
+      const approvedCount = shopsData.filter(shop => shop.isApproved).length;
 
       setStats({
         totalShops: shopsData.length,
@@ -183,20 +144,41 @@ const AdminDashboard = () => {
     const shopName = shop ? shop.name : 'المتجر';
     const actualShopId = shop?._id || shop?.id || shopId;
 
+    console.log('=== APPROVE SHOP DEBUG ===');
+    console.log('Original shopId:', shopId);
+    console.log('Found shop:', shop);
+    console.log('Shop name:', shopName);
+    console.log('Actual shop ID:', actualShopId);
+    console.log('User:', user);
+    console.log('Is Admin:', isAdmin);
+    console.log('Token from localStorage:', localStorage.getItem('dibla_token'));
+
+    // Run authentication test
+    testAuthentication();
+
     try {
       setIsLoading(true);
-      console.log('Approving shop with ID:', actualShopId);
+      console.log('Calling shopService.approveShop with ID:', actualShopId);
 
-      await shopService.approveShop(actualShopId);
+      const result = await shopService.approveShop(actualShopId);
+      console.log('Approval result:', result);
 
       alert(`تم قبول متجر "${shopName}" بنجاح! سيظهر الآن للعملاء.`);
 
       // Reload data to reflect changes
+      console.log('Reloading admin data...');
       await loadAdminData();
 
     } catch (error) {
-      console.error('Error approving shop:', error);
-      alert('حدث خطأ في الموافقة على المتجر: ' + (error.message || 'خطأ غير معروف'));
+      console.error('=== APPROVAL ERROR ===');
+      console.error('Error object:', error);
+      console.error('Error message:', error.message);
+      console.error('Error response:', error.response);
+      console.error('Error response data:', error.response?.data);
+      console.error('Error response status:', error.response?.status);
+
+      const errorMessage = error.response?.data?.message || error.message || 'خطأ غير معروف';
+      alert('حدث خطأ في الموافقة على المتجر: ' + errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -313,17 +295,16 @@ const AdminDashboard = () => {
   };
 
   const getStatusBadge = (shop) => {
-    // Determine status from multiple possible fields
+    // Use the backend field 'isApproved' to determine status
     let status = 'unknown';
 
-    if (shop.status === 'pending' || shop.approved === false || shop.isActive === false) {
-      status = 'pending';
-    } else if (shop.status === 'approved' || shop.approved === true || shop.isActive === true) {
+    if (shop.isApproved === true) {
       status = 'approved';
-    } else if (shop.status === 'rejected') {
-      status = 'rejected';
-    } else if (!shop.status && !shop.hasOwnProperty('approved') && !shop.hasOwnProperty('isActive')) {
-      status = 'approved'; // Legacy shops
+    } else if (shop.isApproved === false) {
+      status = 'pending';
+    } else {
+      // If isApproved is undefined, assume pending
+      status = 'pending';
     }
 
     switch (status) {
@@ -652,7 +633,7 @@ const AdminDashboard = () => {
                             <Eye className="w-4 h-4 mr-1" />
                             عرض
                           </Button>
-                          {(shop.status === 'pending' || shop.approved === false || shop.isActive === false) && (
+                          {!shop.isApproved && (
                             <>
                               <Button
                                 size="sm"
