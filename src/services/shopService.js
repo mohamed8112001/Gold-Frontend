@@ -1,45 +1,35 @@
-import api from './api.js';
-import { API_ENDPOINTS } from '../utils/constants.js';
+import api from "./api.js";
 
 export const shopService = {
-  // Get all shops (public - no authentication required)
+  // Get all shops
   getAllShops: async (params = {}) => {
     try {
-      const response = await api.get(API_ENDPOINTS.SHOP.GET_ALL_PUBLIC, { params });
-      // Backend returns: { status: "success", result: number, data: shops[] }
-      // We need to return the shops array
-      if (response.data && response.data.status === 'success') {
-        return response.data.data || [];
-      }
-      return response.data || [];
+      const response = await api.get("/shop", { params });
+      return response.data;
     } catch (error) {
-      console.error('Error fetching shops:', error);
-      throw new Error(error.response?.data?.message || 'Failed to fetch shops');
+      throw new Error(error.response?.data?.message || "Failed to fetch shops");
     }
   },
 
-  // Get shop by ID (public - no authentication required)
+  // Get shop by ID
   getShop: async (shopId) => {
     try {
-      const response = await api.get(API_ENDPOINTS.SHOP.GET_BY_ID_PUBLIC(shopId));
-      // Backend returns: { status: "success", data: shop }
-      if (response.data && response.data.status === 'success') {
-        return response.data.data;
-      }
+      const response = await api.get(`/shop/${shopId}`);
       return response.data;
     } catch (error) {
-      console.error('Error fetching shop details:', error);
-      throw new Error(error.response?.data?.message || 'Failed to fetch shop details');
+      throw new Error(
+        error.response?.data?.message || "Failed to fetch shop details"
+      );
     }
   },
 
   // Create new shop (shop owner only)
   createShop: async (shopData) => {
     try {
-      const response = await api.post('/shop/create', shopData);
+      const response = await api.post("/shop/create", shopData);
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to create shop');
+      throw new Error(error.response?.data?.message || "Failed to create shop");
     }
   },
 
@@ -49,7 +39,7 @@ export const shopService = {
       const response = await api.put(`/shop/${shopId}`, shopData);
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to update shop');
+      throw new Error(error.response?.data?.message || "Failed to update shop");
     }
   },
 
@@ -59,7 +49,7 @@ export const shopService = {
       const response = await api.delete(`/shop/${shopId}`);
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to delete shop');
+      throw new Error(error.response?.data?.message || "Failed to delete shop");
     }
   },
 
@@ -67,11 +57,57 @@ export const shopService = {
   searchShops: async (query, filters = {}) => {
     try {
       const params = { search: query, ...filters };
-      const response = await api.get('/shop', { params });
+      const response = await api.get("/shop", { params });
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Search failed');
+      throw new Error(error.response?.data?.message || "Search failed");
     }
-  }
-};
+  },
 
+  // Admin functions
+  // Approve shop (admin only)
+  approveShop: async (shopId) => {
+    try {
+      const response = await api.put(`/shop/${shopId}/approve`);
+      return response.data;
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.message || "Failed to approve shop"
+      );
+    }
+  },
+
+  // Reject shop (admin only)
+  rejectShop: async (shopId) => {
+    try {
+      const response = await api.put(`/shop/${shopId}/reject`);
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || "Failed to reject shop");
+    }
+  },
+
+  // Get all shops including pending (admin only)
+  getAllShopsAdmin: async (params = {}) => {
+    try {
+      const response = await api.get("/shop/admin/all", { params });
+      return response.data;
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.message || "Failed to fetch admin shops"
+      );
+    }
+  },
+
+  // Get pending shops (admin only)
+  getPendingShops: async () => {
+    try {
+      const response = await api.get("/shop/admin/pending");
+      return response.data;
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.message || "Failed to fetch pending shops"
+      );
+    }
+  },
+};
