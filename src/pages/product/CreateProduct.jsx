@@ -11,6 +11,7 @@ import {
     Plus
 } from 'lucide-react';
 import { productService } from '../../services/productService.js';
+import { shopService } from '../../services/shopService.js';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES } from '../../utils/constants.js';
 
@@ -18,6 +19,7 @@ const CreateProduct = () => {
     const navigate = useNavigate();
     const { user, isShopOwner } = useAuth();
     const [isLoading, setIsLoading] = useState(false);
+    const [userShop, setUserShop] = useState(null);
     const [formData, setFormData] = useState({
         name: '',
         description: '',
@@ -36,7 +38,41 @@ const CreateProduct = () => {
             navigate(ROUTES.LOGIN);
             return;
         }
+        loadUserShop();
     }, [user, isShopOwner, navigate]);
+
+    const loadUserShop = async () => {
+        try {
+            console.log('🏪 Loading user shop for product creation...');
+
+            // Try to get user's shop
+            try {
+                const response = await shopService.getAllShops();
+                const shopsData = Array.isArray(response) ? response : response.data || [];
+
+                // Find user's shop
+                const userShopData = shopsData.find(shop =>
+                    shop.owner === user.id ||
+                    shop.owner?._id === user.id ||
+                    shop.ownerId === user.id
+                );
+
+                if (userShopData) {
+                    console.log('✅ User shop found:', userShopData.name);
+                    setUserShop(userShopData);
+                } else {
+                    console.error('❌ No shop found for user');
+                    alert('يجب أن يكون لديك متجر لإضافة منتجات. يرجى إنشاء متجر أولاً.');
+                    navigate(ROUTES.CREATE_SHOP);
+                }
+            } catch (error) {
+                console.error('❌ Error loading user shop:', error);
+                alert('خطأ في تحميل بيانات المتجر');
+            }
+        } catch (error) {
+            console.error('❌ Error in loadUserShop:', error);
+        }
+    };
 
     const categories = [
         { value: 'rings', label: 'خواتم' },
@@ -91,30 +127,60 @@ const CreateProduct = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!formData.name || !formData.description || !formData.price || !formData.category) {
+        if (!formData.name || !formData.description || !formData.price) {
             alert('يرجى ملء جميع الحقول المطلوبة');
+            return;
+        }
+
+        if (!userShop) {
+            alert('لم يتم العثور على متجرك. يرجى إنشاء متجر أولاً.');
+            return;
+        }
+
+        if (!formData.karat) {
+            alert('يرجى اختيار العيار');
+            return;
+        }
+
+        if (!formData.weight) {
+            alert('يرجى إدخال الوزن');
             return;
         }
 
         try {
             setIsLoading(true);
 
+            console.log('🛍️ Creating product with data:', {
+                title: formData.name,
+                description: formData.description,
+                price: formData.price,
+                karat: formData.karat,
+                weight: formData.weight,
+                shop: userShop._id || userShop.id
+            });
+
+            // تحضير البيانات بالتنسيق المطلوب للباك إند
             const productData = {
-                ...formData,
+                title: formData.name, // الباك إند يتوقع title وليس name
+                description: formData.description,
                 price: parseFloat(formData.price),
-                features: formData.features.filter(feature => feature.trim() !== ''),
-                specifications: {
-                    weight: formData.weight,
-                    karat: formData.karat,
-                    material: formData.material
-                }
+                karat: formData.karat, // يجب أن يكون بتنسيق "18K", "21K", "24K"
+                weight: parseFloat(formData.weight),
+                design_type: formData.category || formData.material || 'general',
+                images_urls: [], // سيتم إضافة الصور لاحقاً
+                shop: userShop._id || userShop.id // معرف المتجر مطلوب
             };
 
-            await productService.createProduct(productData);
+            console.log('📦 Final product data:', productData);
+
+            const response = await productService.createProduct(productData);
+            console.log('✅ Product created successfully:', response);
+
+            alert('تم إنشاء المنتج بنجاح!');
             navigate(ROUTES.DASHBOARD);
         } catch (error) {
-            console.error('Error creating product:', error);
-            alert('حدث خطأ في إنشاء المنتج');
+            console.error('❌ Error creating product:', error);
+            alert(`حدث خطأ في إنشاء المنتج: ${error.message}`);
         } finally {
             setIsLoading(false);
         }
@@ -134,7 +200,19 @@ const CreateProduct = () => {
                         العودة
                     </Button>
                     <h1 className="text-3xl font-bold text-gray-900 mb-4">إضافة منتج جديد</h1>
-                    <p className="text-gray-600">أضف منتجاً جديداً إلى متجرك</p>
+                    <p className="text-gray-600">
+                        أضف منتجاً جديداً إلى متجرك
+                        {userShop && (
+                            <span className="text-yellow-600 font-medium"> - {userShop.name}</span>
+                        )}
+                    </p>
+                    {!userShop && (
+                        <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                            <p className="text-yellow-800 text-sm">
+                                🔄 جاري تحميل بيانات المتجر...
+                            </p>
+                        </div>
+                    )}
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-8">
@@ -220,10 +298,9 @@ const CreateProduct = () => {
                                         className="w-full p-2 border border-gray-300 rounded-md"
                                     >
                                         <option value="">اختر العيار</option>
-                                        <option value="18">18 قيراط</option>
-                                        <option value="21">21 قيراط</option>
-                                        <option value="22">22 قيراط</option>
-                                        <option value="24">24 قيراط</option>
+                                        <option value="18K">18 قيراط</option>
+                                        <option value="21K">21 قيراط</option>
+                                        <option value="24K">24 قيراط</option>
                                     </select>
                                 </div>
 

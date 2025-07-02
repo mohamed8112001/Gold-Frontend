@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button.jsx';
 import { Card, CardContent } from '@/components/ui/card.jsx';
 import { Input } from '@/components/ui/input.jsx';
+import { AuthContext } from '../../context/AuthContext.jsx';
 import {
   Search,
-  Filter,
   Star,
   MapPin,
   Eye,
@@ -22,6 +22,16 @@ import { shopService } from '../../services/shopService.js';
 const ShopList = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
+
+  // Safe AuthContext usage with fallback
+  let user = null;
+  try {
+    const authContext = useContext(AuthContext);
+    user = authContext?.user || null;
+  } catch (error) {
+    console.log('AuthContext not available, continuing without user data');
+  }
+
   const [shops, setShops] = useState([]);
   const [filteredShops, setFilteredShops] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -46,76 +56,48 @@ const ShopList = () => {
   const loadShops = async () => {
     try {
       setIsLoading(true);
-      const response = await shopService.getAllShops();
-      // Handle both array response and object with data property
-      const shopsData = Array.isArray(response) ? response : response.data || response.shops || [];
+      console.log('🏪 Loading shops for ShopList page...');
+      console.log('🏪 User authentication status:', user ? 'Authenticated' : 'Not authenticated');
+      console.log('🏪 User role:', user?.role || 'No role');
 
-      // Filter only approved shops for regular users - ULTRA STRICT FILTERING
-      const approvedShops = shopsData.filter(shop => {
-        console.log('Checking shop:', shop.name, {
-          id: shop.id || shop._id,
-          status: shop.status,
-          approved: shop.approved,
-          isActive: shop.isActive,
-          createdAt: shop.createdAt,
-          hasStatus: Object.prototype.hasOwnProperty.call(shop, 'status'),
-          hasApproved: Object.prototype.hasOwnProperty.call(shop, 'approved'),
-          hasIsActive: Object.prototype.hasOwnProperty.call(shop, 'isActive')
-        });
+      let response;
+      let shopsData = [];
 
-        // ULTRA STRICT: Only show if explicitly approved AND not pending
-        const isExplicitlyApproved = (
-          shop.status === 'approved' &&
-          shop.status !== 'pending' &&
-          shop.approved !== false &&
-          shop.isActive !== false
-        );
+      if (user) {
+        // User is authenticated - use authenticated endpoint for role-based filtering
+        console.log('🏪 Using authenticated endpoint for role-based shop access');
+        try {
+          response = await shopService.getAllShops();
+          shopsData = Array.isArray(response) ? response : response.data || response.shops || [];
+          console.log('🏪 Authenticated shops loaded:', shopsData.length);
+        } catch (authError) {
+          console.warn('🏪 Authenticated endpoint failed, falling back to public:', authError);
+          // Fallback to public endpoint
+          response = await shopService.getPublicShops();
+          shopsData = Array.isArray(response) ? response : response.data || [];
+          console.log('🏪 Fallback to public shops:', shopsData.length);
+        }
+      } else {
+        // User is not authenticated - use public endpoint (only approved shops)
+        console.log('🏪 Using public endpoint for approved shops only');
+        response = await shopService.getPublicShops();
+        shopsData = Array.isArray(response) ? response : response.data || [];
+        console.log('🏪 Public approved shops loaded:', shopsData.length);
+      }
 
-        // OR if approved field is explicitly true
-        const isApprovedByField = (
-          shop.approved === true &&
-          shop.status !== 'pending'
-        );
+      console.log('🏪 ShopList - Total shops loaded:', shopsData.length);
+      console.log('🏪 ShopList - Sample shop data:', shopsData[0]);
 
-        // OR if isActive is explicitly true
-        const isActiveApproved = (
-          shop.isActive === true &&
-          shop.status !== 'pending'
-        );
+      // Remove duplicates based on _id
+      const uniqueShops = shopsData.filter((shop, index, self) =>
+        index === self.findIndex(s => (s._id || s.id) === (shop._id || shop.id))
+      );
 
-        // LEGACY: Only for very old shops created before approval system
-        // AND only if they don't have any pending indicators
-        const isLegacyApproved = (
-          !Object.prototype.hasOwnProperty.call(shop, 'status') &&
-          !Object.prototype.hasOwnProperty.call(shop, 'approved') &&
-          !Object.prototype.hasOwnProperty.call(shop, 'isActive') &&
-          !shop.status &&
-          shop.approved !== false &&
-          shop.isActive !== false &&
-          // Additional check: if shop was created recently, it should have status
-          (!shop.createdAt || new Date(shop.createdAt) < new Date('2024-01-01'))
-        );
-
-        const shouldShow = isExplicitlyApproved || isApprovedByField || isActiveApproved || isLegacyApproved;
-
-        console.log(`Shop "${shop.name}":
-          - explicitly approved = ${isExplicitlyApproved}
-          - approved by field = ${isApprovedByField}
-          - active approved = ${isActiveApproved}
-          - legacy approved = ${isLegacyApproved}
-          - FINAL DECISION = ${shouldShow}`);
-
-        return shouldShow;
-      });
-
-      console.log('All shops loaded:', shopsData.length);
-      console.log('Approved shops to show:', approvedShops.length);
-      console.log('Filtered out shops:', shopsData.length - approvedShops.length);
-
-      setShops(approvedShops);
+      console.log('🏪 ShopList - Unique shops after deduplication:', uniqueShops.length);
+      setShops(uniqueShops);
+      console.log('✅ Shops loaded successfully for ShopList page');
     } catch (error) {
-      console.error('Error loading shops:', error);
-      // Show empty state instead of mock data
+      console.error('❌ Error loading shops:', error);
       setShops([]);
     } finally {
       setIsLoading(false);
@@ -125,39 +107,52 @@ const ShopList = () => {
   const applyFilters = () => {
     let filtered = [...shops];
 
+    console.log('🔍 Applying filters to', shops.length, 'shops');
+    console.log('🔍 Search query:', searchQuery);
+    console.log('🔍 Active filters:', filters);
+
     // Search filter
     if (searchQuery) {
       filtered = filtered.filter(shop => {
         const name = shop.name || '';
         const description = shop.description || '';
-        const address = shop.address || '';
+        const address = shop.address || shop.area || '';
         const specialties = shop.specialties || [];
+        const ownerName = shop.ownerName || '';
 
-        return (
+        const searchMatch = (
           name.toLowerCase().includes(searchQuery.toLowerCase()) ||
           description.toLowerCase().includes(searchQuery.toLowerCase()) ||
           address.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          ownerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
           (Array.isArray(specialties) && specialties.some(specialty =>
             specialty.toLowerCase().includes(searchQuery.toLowerCase())
           ))
         );
+
+        return searchMatch;
       });
+      console.log('🔍 After search filter:', filtered.length, 'shops');
     }
 
     // Location filter
     if (filters.location) {
       filtered = filtered.filter(shop => {
-        const address = shop.address || '';
-        return address.toLowerCase().includes(filters.location.toLowerCase());
+        const address = shop.address || shop.area || '';
+        const locationMatch = address.toLowerCase().includes(filters.location.toLowerCase());
+        return locationMatch;
       });
+      console.log('🔍 After location filter:', filtered.length, 'shops');
     }
 
     // Rating filter
     if (filters.rating) {
       filtered = filtered.filter(shop => {
         const rating = shop.rating || 0;
-        return rating >= parseFloat(filters.rating);
+        const ratingMatch = rating >= parseFloat(filters.rating);
+        return ratingMatch;
       });
+      console.log('🔍 After rating filter:', filtered.length, 'shops');
     }
 
     // Specialty filter
@@ -185,6 +180,7 @@ const ShopList = () => {
         break;
     }
 
+    console.log('🔍 Final filtered shops:', filtered.length);
     setFilteredShops(filtered);
   };
 
@@ -197,13 +193,13 @@ const ShopList = () => {
   const ShopCard = ({ shop, isListView = false }) => {
     // Handle missing data gracefully
     const shopName = shop.name || 'متجر غير محدد';
-    const shopAddress = shop.area || 'العنوان غير محدد';
-    const shopPhone = shop.phone || 'غير محدد';
+    const shopAddress = shop.address || shop.area || shop.city || 'العنوان غير محدد';
+    const shopPhone = shop.phone || shop.whatsapp || 'غير محدد';
     const shopDescription = shop.description || 'لا يوجد وصف';
-    const shopRating = shop.rating || 0;
+    const shopRating = shop.rating || shop.averageRating || 0;
     const shopSpecialties = shop.specialties || [];
-    const shopWorkingHours = shop.workingHours || 'غير محدد';
-    const shopImage = shop.image || null;
+    const shopWorkingHours = shop.workingHours || '9:00 ص - 9:00 م';
+    const shopImage = shop.image || shop.logoUrl || null;
 
     return (
       <Card
@@ -405,14 +401,53 @@ const ShopList = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="bg-gradient-to-r from-yellow-50 to-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">متاجر المجوهرات</h1>
-              <p className="text-gray-600 mt-1">
-                اكتشف أفضل متاجر المجوهرات في مصر
+              <h1 className="text-4xl font-bold text-gray-900 mb-2">
+                🏪 جميع متاجر المجوهرات
+              </h1>
+              <p className="text-lg text-gray-600">
+                استكشف مجموعة شاملة من أفضل متاجر المجوهرات والذهب في مصر
               </p>
+
+              {/* Personalized welcome message based on user role */}
+              {user && (
+                <div className="mt-4 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                  <p className="text-sm text-yellow-800">
+                    {user.role === 'admin' && (
+                      <>👑 مرحباً أيها المدير! يمكنك رؤية وإدارة جميع المتاجر في النظام</>
+                    )}
+                    {user.role === 'shop_owner' && (
+                      <>🏪 مرحباً صاحب المتجر! استكشف المتاجر الأخرى واحصل على الإلهام</>
+                    )}
+                    {user.role === 'customer' && (
+                      <>💎 مرحباً عزيزي العميل! اكتشف أجمل متاجر المجوهرات واختر الأنسب لك</>
+                    )}
+                    {!user.role && (
+                      <>🌟 مرحباً بك! استكشف جميع متاجر المجوهرات المتاحة</>
+                    )}
+                  </p>
+                </div>
+              )}
+
+              <div className="flex items-center gap-4 mt-3">
+                <div className="flex items-center text-sm text-gray-500">
+                  <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                  متاح لجميع المستخدمين
+                </div>
+                <div className="flex items-center text-sm text-gray-500">
+                  <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+                  {filteredShops.length} متجر متاح
+                </div>
+                {user && (
+                  <div className="flex items-center text-sm text-gray-500">
+                    <span className="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
+                    مسجل دخول كـ {user.role === 'admin' ? 'مدير' : user.role === 'shop_owner' ? 'صاحب متجر' : 'عميل'}
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Search Bar */}
@@ -479,30 +514,58 @@ const ShopList = () => {
 
             {/* Shops Grid/List */}
             {isLoading ? (
-              <div className={`grid gap-6 ${viewMode === 'grid'
-                ? 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3'
-                : 'grid-cols-1'
-                }`}>
-                {[...Array(6)].map((_, index) => (
-                  <div key={index} className="animate-pulse">
-                    <div className="bg-gray-200 h-48 rounded-t-lg"></div>
-                    <div className="bg-white p-4 rounded-b-lg">
-                      <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                      <div className="h-3 bg-gray-200 rounded mb-4 w-2/3"></div>
-                      <div className="h-8 bg-gray-200 rounded"></div>
-                    </div>
+              <div className="space-y-6">
+                <div className="text-center py-8">
+                  <div className="inline-flex items-center gap-3 bg-yellow-50 text-yellow-800 px-6 py-3 rounded-full">
+                    <div className="animate-spin w-5 h-5 border-2 border-yellow-600 border-t-transparent rounded-full"></div>
+                    <span className="font-medium">جاري تحميل جميع المتاجر...</span>
                   </div>
-                ))}
+                </div>
+                <div className={`grid gap-6 ${viewMode === 'grid'
+                  ? 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3'
+                  : 'grid-cols-1'
+                  }`}>
+                  {[...Array(6)].map((_, index) => (
+                    <div key={index} className="animate-pulse">
+                      <div className="bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 h-48 rounded-t-lg"></div>
+                      <div className="bg-white p-4 rounded-b-lg">
+                        <div className="h-4 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded mb-2"></div>
+                        <div className="h-3 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded mb-4 w-2/3"></div>
+                        <div className="h-8 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded"></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             ) : filteredShops.length === 0 ? (
-              <div className="text-center py-12">
-                <div className="text-6xl mb-4">🔍</div>
-                <h3 className="text-xl font-medium text-gray-900 mb-2">
-                  لم يتم العثور على متاجر
+              <div className="text-center py-16">
+                <div className="text-8xl mb-6">🏪</div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                  {shops.length === 0 ? 'لا توجد متاجر متاحة حالياً' : 'لم يتم العثور على متاجر مطابقة'}
                 </h3>
-                <p className="text-gray-600">
-                  جرب تغيير معايير البحث أو الفلاتر
+                <p className="text-lg text-gray-600 mb-8 max-w-md mx-auto">
+                  {shops.length === 0
+                    ? 'يبدو أنه لا توجد متاجر مسجلة في النظام حالياً. تحقق مرة أخرى لاحقاً.'
+                    : 'جرب تغيير معايير البحث أو الفلاتر للعثور على المتاجر المناسبة'
+                  }
                 </p>
+                {shops.length > 0 && (
+                  <Button
+                    onClick={() => {
+                      setFilters({
+                        location: '',
+                        rating: '',
+                        specialty: '',
+                        sortBy: 'rating'
+                      });
+                      setSearchQuery('');
+                      setSearchParams({});
+                    }}
+                    className="bg-yellow-600 hover:bg-yellow-700 text-white"
+                  >
+                    مسح جميع الفلاتر
+                  </Button>
+                )}
               </div>
             ) : (
               <div className={`grid gap-6 ${viewMode === 'grid'
@@ -511,7 +574,7 @@ const ShopList = () => {
                 }`}>
                 {filteredShops.map((shop) => (
                   <ShopCard
-                    key={shop.id}
+                    key={shop._id || shop.id}
                     shop={shop}
                     isListView={viewMode === 'list'}
                   />

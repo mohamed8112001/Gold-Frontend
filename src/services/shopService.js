@@ -1,7 +1,7 @@
 import api from "./api.js";
 
 export const shopService = {
-  // Get all shops
+  // Get all shops (authenticated - role-based filtering)
   getAllShops: async (params = {}) => {
     try {
       const response = await api.get("/shop", { params });
@@ -11,7 +11,19 @@ export const shopService = {
     }
   },
 
-  // Get shop by ID
+  // Get public shops (no authentication required - only approved shops)
+  getPublicShops: async (params = {}) => {
+    try {
+      const response = await api.get("/shop/public", { params });
+      return response.data;
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.message || "Failed to fetch public shops"
+      );
+    }
+  },
+
+  // Get shop by ID (authenticated)
   getShop: async (shopId) => {
     try {
       const response = await api.get(`/shop/${shopId}`);
@@ -19,6 +31,18 @@ export const shopService = {
     } catch (error) {
       throw new Error(
         error.response?.data?.message || "Failed to fetch shop details"
+      );
+    }
+  },
+
+  // Get public shop by ID (no authentication required - only approved shops)
+  getPublicShop: async (shopId) => {
+    try {
+      const response = await api.get(`/shop/public/${shopId}`);
+      return response.data;
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.message || "Failed to fetch public shop details"
       );
     }
   },

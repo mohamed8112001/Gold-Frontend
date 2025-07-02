@@ -50,50 +50,57 @@ const ShopDetails = () => {
 
             // Load shop details
             try {
-                const shopResponse = await shopService.getShop(id);
-                const shopData = shopResponse.data || shopResponse;
+                let shopResponse;
+                let shopData;
 
-                // Check if shop is approved for regular users
-                const isApproved = (
-                    shopData.status === 'approved' ||
-                    shopData.approved === true ||
-                    shopData.isActive === true ||
-                    (!Object.prototype.hasOwnProperty.call(shopData, 'status') &&
-                        !Object.prototype.hasOwnProperty.call(shopData, 'approved') &&
-                        !Object.prototype.hasOwnProperty.call(shopData, 'isActive') &&
-                        !shopData.status &&
-                        shopData.approved !== false &&
-                        shopData.isActive !== false)
-                );
+                // Try public endpoint first (for approved shops)
+                try {
+                    console.log('🏪 Trying public shop endpoint for shop:', id);
+                    shopResponse = await shopService.getPublicShop(id);
+                    shopData = shopResponse.data || shopResponse;
+                    console.log('🏪 Public shop loaded successfully:', shopData.name);
+                } catch (publicError) {
+                    console.log('🏪 Public endpoint failed, trying authenticated endpoint:', publicError.message);
 
-                console.log('Shop approval status:', {
-                    name: shopData.name,
-                    status: shopData.status,
-                    approved: shopData.approved,
-                    isActive: shopData.isActive,
-                    isApproved: isApproved
-                });
+                    // Fallback to authenticated endpoint if user is logged in
+                    if (user) {
+                        try {
+                            shopResponse = await shopService.getShop(id);
+                            shopData = shopResponse.data || shopResponse;
+                            console.log('🏪 Authenticated shop loaded:', shopData.name);
 
-                if (!isApproved && user?.role !== 'admin') {
-                    // Shop is not approved and user is not admin
-                    console.log('Shop not approved for regular user');
-                    setShop(null);
-                    return;
+                            // Check if shop is approved for regular users (non-admin)
+                            if (user.role !== 'admin' && !shopData.isApproved) {
+                                console.log('🏪 Shop not approved for regular user');
+                                setShop(null);
+                                return;
+                            }
+                        } catch (authError) {
+                            console.error('🏪 Both endpoints failed:', authError);
+                            setShop(null);
+                            return;
+                        }
+                    } else {
+                        // User not authenticated and public endpoint failed
+                        console.error('🏪 Shop not available publicly and user not authenticated');
+                        setShop(null);
+                        return;
+                    }
                 }
 
                 // Ensure shop has all required fields
                 const processedShopData = {
                     ...shopData,
-                    rating: shopData.rating || 0,
+                    rating: shopData.averageRating || shopData.rating || 0,
                     specialties: Array.isArray(shopData.specialties) ? shopData.specialties : [],
                     gallery: Array.isArray(shopData.gallery) ? shopData.gallery : [],
-                    image: shopData.image || shopData.imageUrl || '/placeholder-shop.jpg'
+                    image: shopData.logoUrl || shopData.image || shopData.imageUrl || '/placeholder-shop.jpg'
                 };
 
-                console.log('Processed shop data:', processedShopData);
+                console.log('🏪 Processed shop data:', processedShopData);
                 setShop(processedShopData);
             } catch (shopError) {
-                console.error('Error loading shop details:', shopError);
+                console.error('🏪 Error loading shop details:', shopError);
                 setShop(null);
             }
 
@@ -148,7 +155,6 @@ const ShopDetails = () => {
 
     const handleBookAppointment = () => {
         if (!user) {
-            // Show a message or modal instead of redirecting immediately
             alert('يرجى تسجيل الدخول أولاً لحجز موعد');
             navigate(ROUTES.LOGIN);
             return;
@@ -186,7 +192,7 @@ const ShopDetails = () => {
         }
     };
 
-   
+
     const ProductCard = ({ product }) => {
         const productId = product.id || product._id;
 

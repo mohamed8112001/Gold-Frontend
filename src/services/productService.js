@@ -16,11 +16,8 @@ export const productService = {
   // Get products by shop ID
   getProductsByShop: async (shopId, params = {}) => {
     try {
-      const response = await api.get("/product", {
-        params: {
-          shopId: shopId,
-          ...params,
-        },
+      const response = await api.get(`/product/shop/${shopId}`, {
+        params: params,
       });
       return response.data;
     } catch (error) {
