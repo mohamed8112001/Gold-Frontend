@@ -1,4 +1,4 @@
-import api from './api.js';
+import api from "./api.js";
 
 export const rateService = {
   // Create rate for shop
@@ -7,17 +7,41 @@ export const rateService = {
       const response = await api.post(`/rate/${shopId}`, rateData);
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to create rating');
+      throw new Error(
+        error.response?.data?.message || "Failed to create rating"
+      );
     }
   },
 
   // Get all rates
   getAllRates: async (params = {}) => {
     try {
-      const response = await api.get('/rate', { params });
+      console.log("Getting rates with params:", params);
+
+      // Validate shopId if provided
+      if (params.shopId) {
+        // Check if shopId is a valid format
+        if (typeof params.shopId !== "string" || params.shopId.length < 3) {
+          console.error("Invalid shop ID format:", params.shopId);
+          throw new Error("Invalid shop ID format");
+        }
+      }
+
+      const response = await api.get("/rate", { params });
+      console.log("Rates API response:", response.data);
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to fetch ratings');
+      console.error("Error in getAllRates:", error);
+
+      // If it's a 400 error, likely the shopId format is wrong
+      if (error.response?.status === 400) {
+        console.warn("Bad request for rates, returning empty array");
+        return []; // Return empty array instead of throwing
+      }
+
+      throw new Error(
+        error.response?.data?.message || "Failed to fetch ratings"
+      );
     }
   },
 
@@ -27,7 +51,9 @@ export const rateService = {
       const response = await api.get(`/rate/${rateId}`);
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to fetch rating');
+      throw new Error(
+        error.response?.data?.message || "Failed to fetch rating"
+      );
     }
   },
 
@@ -37,7 +63,9 @@ export const rateService = {
       const response = await api.put(`/rate/${rateId}`, rateData);
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to update rating');
+      throw new Error(
+        error.response?.data?.message || "Failed to update rating"
+      );
     }
   },
 
@@ -47,7 +75,9 @@ export const rateService = {
       const response = await api.delete(`/rate/${rateId}`);
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to delete rating');
+      throw new Error(
+        error.response?.data?.message || "Failed to delete rating"
+      );
     }
   },
 
@@ -56,10 +86,14 @@ export const rateService = {
     try {
       // This endpoint doesn't exist in backend, would need to be added
       // For now, we can use getAllRates and filter by shopId on frontend
-      const response = await api.get('/rate', { params: { shopId, ...params } });
+      const response = await api.get("/rate", {
+        params: { shopId, ...params },
+      });
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to fetch shop ratings');
+      throw new Error(
+        error.response?.data?.message || "Failed to fetch shop ratings"
+      );
     }
   },
 
@@ -68,11 +102,12 @@ export const rateService = {
     try {
       // This endpoint doesn't exist in backend, would need to be added
       // For now, we can use getAllRates and filter by userId on frontend
-      const response = await api.get('/rate', { params: { userId } });
+      const response = await api.get("/rate", { params: { userId } });
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to fetch user ratings');
+      throw new Error(
+        error.response?.data?.message || "Failed to fetch user ratings"
+      );
     }
-  }
+  },
 };
-
