@@ -1,78 +1,112 @@
-import api from './api.js';
+import api from "./api.js";
 
 export const bookingService = {
-  // Add available time (shop owner only)
-  addAvailableTime: async (timeData) => {
+  // Get all bookings for the current user
+  async getUserBookings(params = {}) {
     try {
-      const response = await api.post('/booking', timeData);
+      const response = await api.get("/dashboard/user/bookings", {
+        params,
+      });
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to add available time');
+      console.error("Error fetching user bookings:", error);
+      throw error;
     }
   },
 
-  // Get available times for shop
-  getAvailableTimesForShop: async (shopId, date = null) => {
+  // Get all bookings for shop owner
+  async getShopBookings(params = {}) {
     try {
-      const params = date ? { date } : {};
-      const response = await api.get(`/booking/${shopId}`, { params });
+      const response = await api.get("/booking/shop", { params });
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to fetch available times');
+      console.error("Error fetching shop bookings:", error);
+      throw error;
     }
   },
 
-  // Book time
-  bookTime: async (bookingData) => {
+  // Create a new booking
+  async createBooking(bookingData) {
     try {
-      const response = await api.post('/booking/book', bookingData);
+      const response = await api.post("/booking", bookingData);
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to book appointment');
+      console.error("Error creating booking:", error);
+      throw error;
     }
   },
 
-  // Note: The following endpoints are not available in the backend yet
-  // They would need to be implemented in the backend if needed
-
-  // Get user bookings - NOT IMPLEMENTED IN BACKEND
-  getUserBookings: async () => {
+  // Update booking status
+  async updateBookingStatus(bookingId, status) {
     try {
-      // This endpoint doesn't exist in backend, would need to be added
-      throw new Error('This feature is not yet implemented in the backend');
+      const response = await api.patch(`/booking/${bookingId}/status`, {
+        status,
+      });
+      return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to fetch bookings');
+      console.error("Error updating booking status:", error);
+      throw error;
     }
   },
 
-  // Get shop bookings - NOT IMPLEMENTED IN BACKEND
-  getShopBookings: async (shopId) => {
+  // Cancel a booking
+  async cancelBooking(bookingId) {
     try {
-      // This endpoint doesn't exist in backend, would need to be added
-      throw new Error('This feature is not yet implemented in the backend');
+      const response = await api.delete(
+        `/dashboard/user/bookings/${bookingId}/cancel`
+      );
+      return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to fetch shop bookings');
+      console.error("Error cancelling booking:", error);
+      throw error;
     }
   },
 
-  // Update booking status - NOT IMPLEMENTED IN BACKEND
-  updateBookingStatus: async (bookingId, status) => {
+  // Get available time slots for a shop
+  async getAvailableTimeSlots(shopId, date) {
     try {
-      // This endpoint doesn't exist in backend, would need to be added
-      throw new Error('This feature is not yet implemented in the backend');
+      const response = await api.get(`/booking/available-times/${shopId}`, {
+        params: { date },
+      });
+      return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to update booking status');
+      console.error("Error fetching available time slots:", error);
+      throw error;
     }
   },
 
-  // Cancel booking - NOT IMPLEMENTED IN BACKEND
-  cancelBooking: async (bookingId) => {
+  // Add available time slot (for shop owners)
+  async addAvailableTime(timeData) {
     try {
-      // This endpoint doesn't exist in backend, would need to be added
-      throw new Error('This feature is not yet implemented in the backend');
+      const response = await api.post("/booking/available-time", timeData);
+      return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to cancel booking');
+      console.error("Error adding available time:", error);
+      throw error;
     }
-  }
+  },
+
+  // Remove available time slot (for shop owners)
+  async removeAvailableTime(timeId) {
+    try {
+      const response = await api.delete(
+        `/booking/available-time/${timeId}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error removing available time:", error);
+      throw error;
+    }
+  },
+
+  // Book a time slot
+  async bookTimeSlot(timeSlotId) {
+    try {
+      const response = await api.post(`/booking/book/${timeSlotId}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error booking time slot:", error);
+      throw error;
+    }
+  },
 };
-
