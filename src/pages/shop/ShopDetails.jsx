@@ -34,6 +34,10 @@ const ShopDetails = () => {
     const [activeTab, setActiveTab] = useState('products');
     const [viewMode, setViewMode] = useState('grid');
 
+    // Ensure arrays are always arrays to prevent map errors
+    const safeProducts = Array.isArray(products) ? products : [];
+    const safeReviews = Array.isArray(reviews) ? reviews : [];
+
     useEffect(() => {
         if (id) {
             loadShopDetails();
@@ -48,12 +52,39 @@ const ShopDetails = () => {
             try {
                 const shopResponse = await shopService.getShop(id);
                 const shopData = shopResponse.data || shopResponse;
+
+                // Check if shop is approved for regular users
+                const isApproved = (
+                    shopData.status === 'approved' ||
+                    shopData.approved === true ||
+                    shopData.isActive === true ||
+                    (!shopData.hasOwnProperty('status') &&
+                        !shopData.hasOwnProperty('approved') &&
+                        !shopData.hasOwnProperty('isActive') &&
+                        !shopData.status &&
+                        shopData.approved !== false &&
+                        shopData.isActive !== false)
+                );
+
+                console.log('Shop approval status:', {
+                    name: shopData.name,
+                    status: shopData.status,
+                    approved: shopData.approved,
+                    isActive: shopData.isActive,
+                    isApproved: isApproved
+                });
+
+                if (!isApproved && user?.role !== 'admin') {
+                    // Shop is not approved and user is not admin
+                    console.log('Shop not approved for regular user');
+                    setShop(null);
+                    return;
+                }
+
                 setShop(shopData);
             } catch (shopError) {
                 console.error('Error loading shop details:', shopError);
-                // Use mock data with the correct ID
-                const mockShopWithId = { ...mockShop, id: parseInt(id) };
-                setShop(mockShopWithId);
+                setShop(null);
             }
 
             // Load shop products - parallel loading
@@ -88,14 +119,17 @@ const ShopDetails = () => {
             // Load shop reviews - parallel loading
             const loadReviews = async () => {
                 try {
+                    console.log('Loading reviews for shop ID:', id);
                     const reviewsResponse = await rateService.getAllRates({ shopId: id });
                     const reviewsData = Array.isArray(reviewsResponse)
                         ? reviewsResponse
                         : reviewsResponse.data || reviewsResponse.reviews || [];
+                    console.log('Reviews loaded:', reviewsData.length);
                     setReviews(reviewsData);
                 } catch (error) {
                     console.error('Error loading reviews:', error);
-                    setReviews(mockReviews);
+                    // Set empty array instead of mock data to avoid errors
+                    setReviews([]);
                 }
             };
 
@@ -309,8 +343,8 @@ const ShopDetails = () => {
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
                 <div className="text-center">
                     <div className="text-6xl mb-4">🏪</div>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-2">المتجر غير موجود</h2>
-                    <p className="text-gray-600 mb-4">لم يتم العثور على المتجر المطلوب</p>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-2">المتجر غير متاح</h2>
+                    <p className="text-gray-600 mb-4">عذراً، هذا المتجر غير متاح حالياً أو في انتظار الموافقة من الإدارة</p>
                     <Button onClick={() => navigate(ROUTES.SHOPS)}>
                         العودة للمتاجر
                     </Button>
@@ -318,6 +352,20 @@ const ShopDetails = () => {
             </div>
         );
     }
+
+    // Ensure shop has required properties to prevent errors
+    const safeShop = {
+        name: shop.name || 'متجر غير محدد',
+        description: shop.description || 'لا يوجد وصف متاح',
+        address: shop.address || 'العنوان غير محدد',
+        phone: shop.phone || 'غير محدد',
+        rating: shop.rating || 0,
+        specialties: Array.isArray(shop.specialties) ? shop.specialties : [],
+        workingHours: shop.workingHours || 'غير محدد',
+        gallery: Array.isArray(shop.gallery) ? shop.gallery : [],
+        image: shop.image || '/placeholder-shop.jpg',
+        ...shop
+    };
 
 
 
@@ -340,15 +388,15 @@ const ShopDetails = () => {
                         المتاجر
                     </span>
                     <span>/</span>
-                    <span className="text-gray-900">{shop.name}</span>
+                    <span className="text-gray-900">{safeShop.name}</span>
                 </div>
 
                 {/* Shop Header */}
                 <div className="bg-white rounded-lg shadow-sm mb-8">
                     <div className="relative h-64 md:h-80">
                         <img
-                            src={shop.image}
-                            alt={shop.name}
+                            src={safeShop.image}
+                            alt={safeShop.name}
                             className="w-full h-full object-cover rounded-t-lg"
                         />
                         <div className="absolute inset-0 bg-black bg-opacity-40 rounded-t-lg"></div>
@@ -393,11 +441,15 @@ const ShopDetails = () => {
                         </p>
 
                         <div className="flex flex-wrap gap-2 mb-6">
-                            {shop.specialties.map((specialty, index) => (
-                                <Badge key={index} variant="secondary">
-                                    {specialty}
-                                </Badge>
-                            ))}
+                            {shop.specialties && shop.specialties.length > 0 ? (
+                                shop.specialties.map((specialty, index) => (
+                                    <Badge key={index} variant="secondary">
+                                        {specialty}
+                                    </Badge>
+                                ))
+                            ) : (
+                                <Badge variant="secondary">لا توجد تخصصات محددة</Badge>
+                            )}
                         </div>
 
                         <div className="flex flex-col sm:flex-row gap-4">
@@ -458,12 +510,12 @@ const ShopDetails = () => {
                             </div>
                         </div>
 
-                        {products.length > 0 ? (
+                        {safeProducts.length > 0 ? (
                             <div className={`grid gap-6 ${viewMode === 'grid'
                                 ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
                                 : 'grid-cols-1'
                                 }`}>
-                                {products.map((product) => (
+                                {safeProducts.map((product) => (
                                     <ProductCard key={product.id} product={product} />
                                 ))}
                             </div>
@@ -483,9 +535,9 @@ const ShopDetails = () => {
                     <TabsContent value="reviews" className="space-y-6">
                         <h2 className="text-2xl font-bold">تقييمات العملاء</h2>
 
-                        {reviews.length > 0 ? (
+                        {safeReviews.length > 0 ? (
                             <div className="space-y-6">
-                                {reviews.map((review) => (
+                                {safeReviews.map((review) => (
                                     <Card key={review.id}>
                                         <CardContent className="p-6">
                                             <div className="flex items-start justify-between mb-4">
