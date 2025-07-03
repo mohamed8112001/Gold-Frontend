@@ -49,7 +49,70 @@ const ShopList = () => {
       const response = await shopService.getAllShops();
       // Handle both array response and object with data property
       const shopsData = Array.isArray(response) ? response : response.data || response.shops || [];
-      setShops(shopsData);
+
+      // Filter only approved shops for regular users - ULTRA STRICT FILTERING
+      const approvedShops = shopsData.filter(shop => {
+        console.log('Checking shop:', shop.name, {
+          id: shop.id || shop._id,
+          status: shop.status,
+          approved: shop.approved,
+          isActive: shop.isActive,
+          createdAt: shop.createdAt,
+          hasStatus: shop.hasOwnProperty('status'),
+          hasApproved: shop.hasOwnProperty('approved'),
+          hasIsActive: shop.hasOwnProperty('isActive')
+        });
+
+        // ULTRA STRICT: Only show if explicitly approved AND not pending
+        const isExplicitlyApproved = (
+          shop.status === 'approved' &&
+          shop.status !== 'pending' &&
+          shop.approved !== false &&
+          shop.isActive !== false
+        );
+
+        // OR if approved field is explicitly true
+        const isApprovedByField = (
+          shop.approved === true &&
+          shop.status !== 'pending'
+        );
+
+        // OR if isActive is explicitly true
+        const isActiveApproved = (
+          shop.isActive === true &&
+          shop.status !== 'pending'
+        );
+
+        // LEGACY: Only for very old shops created before approval system
+        // AND only if they don't have any pending indicators
+        const isLegacyApproved = (
+          !shop.hasOwnProperty('status') &&
+          !shop.hasOwnProperty('approved') &&
+          !shop.hasOwnProperty('isActive') &&
+          !shop.status &&
+          shop.approved !== false &&
+          shop.isActive !== false &&
+          // Additional check: if shop was created recently, it should have status
+          (!shop.createdAt || new Date(shop.createdAt) < new Date('2024-01-01'))
+        );
+
+        const shouldShow = isExplicitlyApproved || isApprovedByField || isActiveApproved || isLegacyApproved;
+
+        console.log(`Shop "${shop.name}":
+          - explicitly approved = ${isExplicitlyApproved}
+          - approved by field = ${isApprovedByField}
+          - active approved = ${isActiveApproved}
+          - legacy approved = ${isLegacyApproved}
+          - FINAL DECISION = ${shouldShow}`);
+
+        return shouldShow;
+      });
+
+      console.log('All shops loaded:', shopsData.length);
+      console.log('Approved shops to show:', approvedShops.length);
+      console.log('Filtered out shops:', shopsData.length - approvedShops.length);
+
+      setShops(approvedShops);
     } catch (error) {
       console.error('Error loading shops:', error);
       // Show empty state instead of mock data
@@ -191,7 +254,13 @@ const ShopList = () => {
       <Card
         className={`group hover:shadow-lg transition-all duration-300 cursor-pointer ${isListView ? 'flex flex-row' : ''}`}
         onClick={() => {
-          navigate(ROUTES.SHOP_DETAILS(shop.id));
+          const shopId = shop._id || shop.id;
+          console.log('Navigating to shop:', shopId, shop.name);
+          if (shopId) {
+            navigate(ROUTES.SHOP_DETAILS(shopId));
+          } else {
+            console.error('Shop ID is missing:', shop);
+          }
         }}
       >
         <div className={`relative overflow-hidden ${isListView ? 'w-48 flex-shrink-0' : 'w-full'
@@ -272,7 +341,13 @@ const ShopList = () => {
               className="bg-yellow-600 hover:bg-yellow-700 text-white"
               onClick={(e) => {
                 e.stopPropagation(); // Prevent card click
-                navigate(ROUTES.SHOP_DETAILS(shop.id));
+                const shopId = shop._id || shop.id;
+                console.log('Button click - navigating to shop:', shopId, shop.name);
+                if (shopId) {
+                  navigate(ROUTES.SHOP_DETAILS(shopId));
+                } else {
+                  console.error('Shop ID is missing:', shop);
+                }
               }}
             >
               <Eye className="w-4 h-4 mr-1" />
@@ -509,4 +584,3 @@ const ShopList = () => {
 };
 
 export default ShopList;
-
