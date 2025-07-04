@@ -3,14 +3,14 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button.jsx';
 import { Card, CardContent } from '@/components/ui/card.jsx';
 import { Input } from '@/components/ui/input.jsx';
-import { 
-  Search, 
-  Filter, 
-  Star, 
-  MapPin, 
-  Eye, 
-  Heart, 
-  Grid3X3, 
+import {
+  Search,
+  Filter,
+  Star,
+  MapPin,
+  Eye,
+  Heart,
+  Grid3X3,
   List,
   SlidersHorizontal,
   Clock,
@@ -45,12 +45,15 @@ const ShopList = () => {
 
   const loadShops = async () => {
     try {
-      const shopsData = await shopService.getAllShops();
+      setIsLoading(true);
+      const response = await shopService.getAllShops();
+      // Handle both array response and object with data property
+      const shopsData = Array.isArray(response) ? response : response.data || response.shops || [];
       setShops(shopsData);
     } catch (error) {
       console.error('Error loading shops:', error);
-      // Use mock data for demo
-      setShops(mockShops);
+      // Show empty state instead of mock data
+      setShops([]);
     } finally {
       setIsLoading(false);
     }
@@ -61,36 +64,47 @@ const ShopList = () => {
 
     // Search filter
     if (searchQuery) {
-      filtered = filtered.filter(shop => 
-        shop.nameAr.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        shop.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        shop.locationAr.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        shop.specialties.some(specialty => 
-          specialty.toLowerCase().includes(searchQuery.toLowerCase())
-        )
-      );
+      filtered = filtered.filter(shop => {
+        const name = shop.name || '';
+        const description = shop.description || '';
+        const address = shop.address || '';
+        const specialties = shop.specialties || [];
+
+        return (
+          name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          address.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (Array.isArray(specialties) && specialties.some(specialty =>
+            specialty.toLowerCase().includes(searchQuery.toLowerCase())
+          ))
+        );
+      });
     }
 
     // Location filter
     if (filters.location) {
-      filtered = filtered.filter(shop => 
-        shop.locationAr.includes(filters.location) ||
-        shop.location.includes(filters.location)
-      );
+      filtered = filtered.filter(shop => {
+        const address = shop.address || '';
+        return address.toLowerCase().includes(filters.location.toLowerCase());
+      });
     }
 
     // Rating filter
     if (filters.rating) {
-      filtered = filtered.filter(shop => shop.rating >= parseFloat(filters.rating));
+      filtered = filtered.filter(shop => {
+        const rating = shop.rating || 0;
+        return rating >= parseFloat(filters.rating);
+      });
     }
 
     // Specialty filter
     if (filters.specialty) {
-      filtered = filtered.filter(shop => 
-        shop.specialties.some(specialty => 
+      filtered = filtered.filter(shop => {
+        const specialties = shop.specialties || [];
+        return Array.isArray(specialties) && specialties.some(specialty =>
           specialty.toLowerCase().includes(filters.specialty.toLowerCase())
-        )
-      );
+        );
+      });
     }
 
     // Sort
@@ -162,85 +176,122 @@ const ShopList = () => {
     // Add more mock shops...
   ];
 
-  const ShopCard = ({ shop, isListView = false }) => (
-    <Card className={`group hover:shadow-lg transition-all duration-300 cursor-pointer ${
-      isListView ? 'flex flex-row' : ''
-    }`}>
-      <div className={`relative overflow-hidden ${
-        isListView ? 'w-48 flex-shrink-0' : 'w-full'
-      }`}>
-        <div className={`bg-gradient-to-br from-yellow-100 to-yellow-200 flex items-center justify-center ${
-          isListView ? 'h-full' : 'h-48'
-        }`}>
-          <div className="text-4xl">💍</div>
-        </div>
-        <div className="absolute top-2 right-2">
-          <Button size="sm" variant="ghost" className="bg-white/80 hover:bg-white">
-            <Heart className="w-4 h-4" />
-          </Button>
-        </div>
-      </div>
-      
-      <CardContent className={`p-4 ${isListView ? 'flex-1' : ''}`}>
-        <div className="flex items-start justify-between mb-2">
-          <div className="flex-1">
-            <h3 className="font-bold text-lg text-gray-900">{shop.nameAr}</h3>
-            <div className="flex items-center text-sm text-gray-600 mt-1">
-              <MapPin className="w-4 h-4 mr-1" />
-              <span>{shop.locationAr}</span>
+  const ShopCard = ({ shop, isListView = false }) => {
+    // Handle missing data gracefully
+    const shopName = shop.name || 'متجر غير محدد';
+    const shopAddress = shop.address || 'العنوان غير محدد';
+    const shopPhone = shop.phone || 'غير محدد';
+    const shopDescription = shop.description || 'لا يوجد وصف';
+    const shopRating = shop.rating || 0;
+    const shopSpecialties = shop.specialties || [];
+    const shopWorkingHours = shop.workingHours || 'غير محدد';
+    const shopImage = shop.image || null;
+
+    return (
+      <Card
+        className={`group hover:shadow-lg transition-all duration-300 cursor-pointer ${isListView ? 'flex flex-row' : ''}`}
+        onClick={() => {
+          navigate(ROUTES.SHOP_DETAILS(shop.id));
+        }}
+      >
+        <div className={`relative overflow-hidden ${isListView ? 'w-48 flex-shrink-0' : 'w-full'
+          }`}>
+          {shopImage ? (
+            <img
+              src={shopImage}
+              alt={shopName}
+              className={`w-full object-cover ${isListView ? 'h-full' : 'h-48'}`}
+            />
+          ) : (
+            <div className={`bg-gradient-to-br from-yellow-100 to-yellow-200 flex items-center justify-center ${isListView ? 'h-full' : 'h-48'
+              }`}>
+              <div className="text-4xl">💍</div>
             </div>
-            {isListView && (
-              <div className="mt-2 space-y-1">
-                <div className="flex items-center text-sm text-gray-600">
-                  <Phone className="w-4 h-4 mr-1" />
-                  <span>{shop.phone}</span>
+          )}
+          <div className="absolute top-2 right-2">
+            <Button
+              size="sm"
+              variant="ghost"
+              className="bg-white/80 hover:bg-white"
+              onClick={(e) => {
+                e.stopPropagation(); // Prevent card click
+                // Handle favorite functionality here
+              }}
+            >
+              <Heart className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+
+        <CardContent className={`p-4 ${isListView ? 'flex-1' : ''}`}>
+          <div className="flex items-start justify-between mb-2">
+            <div className="flex-1">
+              <h3 className="font-bold text-lg text-gray-900">{shopName}</h3>
+              <div className="flex items-center text-sm text-gray-600 mt-1">
+                <MapPin className="w-4 h-4 mr-1" />
+                <span>{shopAddress}</span>
+              </div>
+              {isListView && (
+                <div className="mt-2 space-y-1">
+                  <div className="flex items-center text-sm text-gray-600">
+                    <Phone className="w-4 h-4 mr-1" />
+                    <span>{shopPhone}</span>
+                  </div>
+                  <div className="flex items-center text-sm text-gray-600">
+                    <Clock className="w-4 h-4 mr-1" />
+                    <span>{shopWorkingHours}</span>
+                  </div>
+                  <p className="text-sm text-gray-600 mt-2">{shopDescription}</p>
                 </div>
-                <div className="flex items-center text-sm text-gray-600">
-                  <Clock className="w-4 h-4 mr-1" />
-                  <span>{shop.openingHours}</span>
-                </div>
-                <p className="text-sm text-gray-600 mt-2">{shop.description}</p>
+              )}
+            </div>
+            {shopRating > 0 && (
+              <div className="flex items-center space-x-1 bg-yellow-100 px-2 py-1 rounded-full ml-2">
+                <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                <span className="text-sm font-medium">{shopRating.toFixed(1)}</span>
               </div>
             )}
           </div>
-          <div className="flex items-center space-x-1 bg-yellow-100 px-2 py-1 rounded-full ml-2">
-            <Star className="w-4 h-4 text-yellow-500 fill-current" />
-            <span className="text-sm font-medium">{shop.rating}</span>
-          </div>
-        </div>
-        
-        <div className="flex flex-wrap gap-1 mb-3">
-          {shop.specialties.slice(0, 3).map((specialty, index) => (
-            <span 
-              key={index}
-              className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full"
+
+          {shopSpecialties.length > 0 && (
+            <div className="flex flex-wrap gap-1 mb-3">
+              {shopSpecialties.slice(0, 3).map((specialty, index) => (
+                <span
+                  key={index}
+                  className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full"
+                >
+                  {specialty}
+                </span>
+              ))}
+            </div>
+          )}
+
+          <div className="flex items-center justify-between">
+            <Button
+              size="sm"
+              className="bg-yellow-600 hover:bg-yellow-700 text-white"
+              onClick={(e) => {
+                e.stopPropagation(); // Prevent card click
+                navigate(ROUTES.SHOP_DETAILS(shop.id));
+              }}
             >
-              {specialty}
+              <Eye className="w-4 h-4 mr-1" />
+              عرض المتجر
+            </Button>
+            <span className="text-xs text-gray-500">
+              {shop.reviewCount || 0} تقييم
             </span>
-          ))}
-        </div>
-        
-        <div className="flex items-center justify-between">
-          <Button 
-            size="sm" 
-            className="bg-yellow-600 hover:bg-yellow-700 text-white"
-            onClick={() => navigate(`${ROUTES.SHOP_DETAILS}/${shop.id}`)}
-          >
-            <Eye className="w-4 h-4 mr-1" />
-            عرض المتجر
-          </Button>
-          <span className="text-xs text-gray-500">{shop.reviewCount} تقييم</span>
-        </div>
-      </CardContent>
-    </Card>
-  );
+          </div>
+        </CardContent>
+      </Card>
+    );
+  };
 
   const FilterPanel = () => (
-    <div className={`bg-white p-4 rounded-lg shadow-sm border ${
-      showFilters ? 'block' : 'hidden lg:block'
-    }`}>
+    <div className={`bg-white p-4 rounded-lg shadow-sm border ${showFilters ? 'block' : 'hidden lg:block'
+      }`}>
       <h3 className="font-bold text-lg mb-4">تصفية النتائج</h3>
-      
+
       <div className="space-y-4">
         {/* Location Filter */}
         <div>
@@ -333,7 +384,7 @@ const ShopList = () => {
                 اكتشف أفضل متاجر المجوهرات في مصر
               </p>
             </div>
-            
+
             {/* Search Bar */}
             <form onSubmit={handleSearch} className="flex-1 max-w-md">
               <div className="relative">
@@ -377,7 +428,7 @@ const ShopList = () => {
                   {filteredShops.length} متجر
                 </span>
               </div>
-              
+
               <div className="flex items-center space-x-2">
                 <Button
                   variant={viewMode === 'grid' ? 'default' : 'outline'}
@@ -398,11 +449,10 @@ const ShopList = () => {
 
             {/* Shops Grid/List */}
             {isLoading ? (
-              <div className={`grid gap-6 ${
-                viewMode === 'grid' 
-                  ? 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3' 
-                  : 'grid-cols-1'
-              }`}>
+              <div className={`grid gap-6 ${viewMode === 'grid'
+                ? 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3'
+                : 'grid-cols-1'
+                }`}>
                 {[...Array(6)].map((_, index) => (
                   <div key={index} className="animate-pulse">
                     <div className="bg-gray-200 h-48 rounded-t-lg"></div>
@@ -425,16 +475,15 @@ const ShopList = () => {
                 </p>
               </div>
             ) : (
-              <div className={`grid gap-6 ${
-                viewMode === 'grid' 
-                  ? 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3' 
-                  : 'grid-cols-1'
-              }`}>
+              <div className={`grid gap-6 ${viewMode === 'grid'
+                ? 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3'
+                : 'grid-cols-1'
+                }`}>
                 {filteredShops.map((shop) => (
-                  <ShopCard 
-                    key={shop.id} 
-                    shop={shop} 
-                    isListView={viewMode === 'list'} 
+                  <ShopCard
+                    key={shop.id}
+                    shop={shop}
+                    isListView={viewMode === 'list'}
                   />
                 ))}
               </div>
@@ -443,7 +492,7 @@ const ShopList = () => {
             {/* Load More */}
             {filteredShops.length > 0 && (
               <div className="text-center mt-12">
-                <Button 
+                <Button
                   variant="outline"
                   size="lg"
                   className="px-8"

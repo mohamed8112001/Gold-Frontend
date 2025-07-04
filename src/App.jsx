@@ -9,8 +9,19 @@ import Register from './pages/auth/Register.jsx';
 import ForgotPassword from './pages/auth/ForgotPassword.jsx';
 import GoogleCallback from './pages/auth/GoogleCallback.jsx';
 import ShopList from './pages/shop/ShopList.jsx';
+import ShopDetails from './pages/shop/ShopDetails.jsx';
+import CreateShop from './pages/shop/CreateShop.jsx';
+import ManageShop from './pages/shop/ManageShop.jsx';
+import ProductList from './pages/product/ProductList.jsx';
+import ProductDetails from './pages/product/ProductDetails.jsx';
+import CreateProduct from './pages/product/CreateProduct.jsx';
+import Favorites from './pages/product/Favorites.jsx';
 import Dashboard from './pages/user/Dashboard.jsx';
+import Profile from './pages/user/Profile.jsx';
+import Settings from './pages/user/Settings.jsx';
 import BookAppointment from './pages/booking/BookAppointment.jsx';
+import MyBookings from './pages/booking/MyBookings.jsx';
+import ManageBookings from './pages/booking/ManageBookings.jsx';
 import NotFound from './pages/NotFound.jsx';
 import TestPage from './pages/TestPage.jsx';
 import './App.css';
@@ -24,6 +35,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
             <Route path="/test" element={<TestPage />} />
+
+            {/* Auth Routes */}
             <Route path="/auth/login" element={<Login />} />
             <Route path="/login" element={<Login />} />
             <Route path="/auth/register" element={<Register />} />
@@ -32,10 +45,30 @@ function App() {
             <Route path="/auth/forgot-password" element={<ForgotPassword />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/auth/google/callback" element={<GoogleCallback />} />
+
+            {/* Shop Routes */}
             <Route path="/shops" element={<ShopList />} />
+            <Route path="/shops/:id" element={<ShopDetails />} />
+            <Route path="/shop/create" element={<CreateShop />} />
+            <Route path="/shop/manage" element={<ManageShop />} />
+
+            {/* Product Routes */}
+            <Route path="/products" element={<ProductList />} />
+            <Route path="/products/:id" element={<ProductDetails />} />
+            <Route path="/products/create" element={<CreateProduct />} />
+            <Route path="/favorites" element={<Favorites />} />
+
+            {/* User Routes */}
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/settings" element={<Settings />} />
+
+            {/* Booking Routes */}
             <Route path="/book-appointment" element={<BookAppointment />} />
-            <Route path="/book-appointment/:shopId" element={<BookAppointment />} />
+            <Route path="/booking/:shopId" element={<BookAppointment />} />
+            <Route path="/my-bookings" element={<MyBookings />} />
+            <Route path="/bookings/manage" element={<ManageBookings />} />
+
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>

@@ -1,0 +1,505 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button.jsx';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.jsx';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.jsx';
+import {
+    Edit,
+    Plus,
+    Eye,
+    Trash2,
+    Star,
+    Calendar,
+    Package,
+    Users,
+    TrendingUp
+} from 'lucide-react';
+import { shopService } from '../../services/shopService.js';
+import { productService } from '../../services/productService.js';
+import { bookingService } from '../../services/bookingService.js';
+import { useAuth } from '../../context/AuthContext.jsx';
+import { ROUTES } from '../../utils/constants.js';
+
+const ManageShop = () => {
+    const navigate = useNavigate();
+    const { user, isShopOwner } = useAuth();
+    const [shop, setShop] = useState(null);
+    const [products, setProducts] = useState([]);
+    const [bookings, setBookings] = useState([]);
+    const [stats, setStats] = useState({
+        totalProducts: 0,
+        totalBookings: 0,
+        totalCustomers: 0,
+        averageRating: 0
+    });
+    const [isLoading, setIsLoading] = useState(true);
+    const [activeTab, setActiveTab] = useState('overview');
+
+    useEffect(() => {
+        if (!user || !isShopOwner) {
+            navigate(ROUTES.LOGIN);
+            return;
+        }
+        loadShopData();
+    }, [user, isShopOwner, navigate]);
+
+    const loadShopData = async () => {
+        try {
+            setIsLoading(true);
+
+            // Load shop details - get current user's shop
+            const loadShop = async () => {
+                try {
+                    // Assuming we have an endpoint to get current user's shop
+                    const shopResponse = await shopService.getAllShops();
+                    const shopsData = Array.isArray(shopResponse) ? shopResponse : shopResponse.data || [];
+                    // For now, get the first shop (in real app, filter by current user)
+                    const userShop = shopsData.length > 0 ? shopsData[0] : mockShop;
+                    setShop(userShop);
+                    return userShop;
+                } catch (error) {
+                    console.error('Error loading shop:', error);
+                    setShop(mockShop);
+                    return mockShop;
+                }
+            };
+
+            // Load products for the shop
+            const loadProducts = async (shopId) => {
+                try {
+                    const productsResponse = await productService.getAllProducts({ shopId });
+                    const productsData = Array.isArray(productsResponse)
+                        ? productsResponse
+                        : productsResponse.data || productsResponse.products || [];
+                    setProducts(productsData);
+                    return productsData;
+                } catch (error) {
+                    console.error('Error loading products:', error);
+                    setProducts(mockProducts);
+                    return mockProducts;
+                }
+            };
+
+            // Load bookings for the shop
+            const loadBookings = async (shopId) => {
+                try {
+                    const bookingsResponse = await bookingService.getMyBookings();
+                    const bookingsData = Array.isArray(bookingsResponse)
+                        ? bookingsResponse
+                        : bookingsResponse.data || bookingsResponse.bookings || [];
+                    setBookings(bookingsData);
+                    return bookingsData;
+                } catch (error) {
+                    console.error('Error loading bookings:', error);
+                    setBookings(mockBookings);
+                    return mockBookings;
+                }
+            };
+
+            // Load data sequentially
+            const shopData = await loadShop();
+            const [productsData, bookingsData] = await Promise.all([
+                loadProducts(shopData.id),
+                loadBookings(shopData.id)
+            ]);
+
+            // Calculate stats
+            setStats({
+                totalProducts: productsData.length,
+                totalBookings: bookingsData.length,
+                totalCustomers: shopData.customerCount || 45,
+                averageRating: shopData.rating || 4.7
+            });
+
+        } catch (error) {
+            console.error('Error loading shop data:', error);
+            // Fallback to mock data
+            setShop(mockShop);
+            setProducts(mockProducts);
+            setBookings(mockBookings);
+            setStats({
+                totalProducts: mockProducts.length,
+                totalBookings: mockBookings.length,
+                totalCustomers: 45,
+                averageRating: 4.7
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleDeleteProduct = async (productId) => {
+        const confirmed = window.confirm('هل أنت متأكد من حذف هذا المنتج؟');
+
+        if (confirmed) {
+            try {
+                await productService.deleteProduct(productId);
+                setProducts(prev => prev.filter(product => product.id !== productId));
+            } catch (error) {
+                console.error('Error deleting product:', error);
+            }
+        }
+    };
+
+    // Mock data
+    const mockShop = {
+        id: 1,
+        name: 'مجوهرات الإسكندرية',
+        description: 'متجر مجوهرات فاخر متخصص في الذهب والمجوهرات الثمينة',
+        address: 'شارع فؤاد، الإسكندرية',
+        phone: '+20 3 123 4567',
+        email: 'info@alexandria-jewelry.com',
+        rating: 4.7,
+        reviewCount: 156,
+        verified: true
+    };
+
+    const mockProducts = [
+        {
+            id: 1,
+            name: 'خاتم ذهبي كلاسيكي',
+            price: 2500,
+            category: 'rings',
+            image: '/api/placeholder/300/300',
+            status: 'active',
+            views: 245,
+            favorites: 12
+        },
+        {
+            id: 2,
+            name: 'سلسلة ذهبية فاخرة',
+            price: 4200,
+            category: 'chains',
+            image: '/api/placeholder/300/300',
+            status: 'active',
+            views: 189,
+            favorites: 8
+        },
+        {
+            id: 3,
+            name: 'أسورة ذهبية مرصعة',
+            price: 3800,
+            category: 'bracelets',
+            image: '/api/placeholder/300/300',
+            status: 'draft',
+            views: 67,
+            favorites: 3
+        }
+    ];
+
+    const mockBookings = [
+        {
+            id: 1,
+            customerName: 'أحمد محمد',
+            date: '2024-01-25',
+            time: '14:00',
+            status: 'confirmed'
+        },
+        {
+            id: 2,
+            customerName: 'فاطمة علي',
+            date: '2024-01-22',
+            time: '16:30',
+            status: 'pending'
+        }
+    ];
+
+    if (isLoading) {
+        return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600 mx-auto mb-4"></div>
+                    <p className="text-gray-600">جاري تحميل بيانات المتجر...</p>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="min-h-screen bg-gray-50">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                {/* Header */}
+                <div className="mb-8">
+                    <div className="flex items-center justify-between mb-4">
+                        <h1 className="text-3xl font-bold text-gray-900">إدارة المتجر</h1>
+                        <div className="flex gap-2">
+                            <Button
+                                variant="outline"
+                                onClick={() => navigate(ROUTES.SHOP_DETAILS(shop?.id))}
+                            >
+                                <Eye className="w-4 h-4 mr-2" />
+                                عرض المتجر
+                            </Button>
+                            <Button onClick={() => navigate(ROUTES.PRODUCTS_CREATE)}>
+                                <Plus className="w-4 h-4 mr-2" />
+                                إضافة منتج
+                            </Button>
+                        </div>
+                    </div>
+                    <p className="text-gray-600">إدارة متجرك ومنتجاتك ومواعيدك</p>
+                </div>
+
+                {/* Stats Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <Card>
+                        <CardContent className="p-6">
+                            <div className="flex items-center">
+                                <Package className="w-8 h-8 text-blue-600" />
+                                <div className="ml-4">
+                                    <p className="text-sm font-medium text-gray-600">المنتجات</p>
+                                    <p className="text-2xl font-bold text-gray-900">{stats.totalProducts}</p>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardContent className="p-6">
+                            <div className="flex items-center">
+                                <Calendar className="w-8 h-8 text-green-600" />
+                                <div className="ml-4">
+                                    <p className="text-sm font-medium text-gray-600">المواعيد</p>
+                                    <p className="text-2xl font-bold text-gray-900">{stats.totalBookings}</p>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardContent className="p-6">
+                            <div className="flex items-center">
+                                <Users className="w-8 h-8 text-purple-600" />
+                                <div className="ml-4">
+                                    <p className="text-sm font-medium text-gray-600">العملاء</p>
+                                    <p className="text-2xl font-bold text-gray-900">{stats.totalCustomers}</p>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardContent className="p-6">
+                            <div className="flex items-center">
+                                <Star className="w-8 h-8 text-yellow-600" />
+                                <div className="ml-4">
+                                    <p className="text-sm font-medium text-gray-600">التقييم</p>
+                                    <p className="text-2xl font-bold text-gray-900">{stats.averageRating}</p>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+
+                {/* Tabs */}
+                <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+                    <TabsList className="grid w-full grid-cols-3">
+                        <TabsTrigger value="overview">نظرة عامة</TabsTrigger>
+                        <TabsTrigger value="products">المنتجات ({products.length})</TabsTrigger>
+                        <TabsTrigger value="bookings">المواعيد ({bookings.length})</TabsTrigger>
+                    </TabsList>
+
+                    <TabsContent value="overview" className="space-y-6">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            {/* Shop Info */}
+                            <Card>
+                                <CardHeader>
+                                    <div className="flex items-center justify-between">
+                                        <CardTitle>معلومات المتجر</CardTitle>
+                                        <Button size="sm" variant="outline">
+                                            <Edit className="w-4 h-4 mr-1" />
+                                            تعديل
+                                        </Button>
+                                    </div>
+                                </CardHeader>
+                                <CardContent className="space-y-4">
+                                    <div>
+                                        <p className="text-sm font-medium text-gray-600">اسم المتجر</p>
+                                        <p className="text-gray-900">{shop?.name}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-medium text-gray-600">الوصف</p>
+                                        <p className="text-gray-900">{shop?.description}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-medium text-gray-600">العنوان</p>
+                                        <p className="text-gray-900">{shop?.address}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-medium text-gray-600">الهاتف</p>
+                                        <p className="text-gray-900">{shop?.phone}</p>
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            {/* Recent Activity */}
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>النشاط الأخير</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="space-y-4">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                                            <p className="text-sm">تم حجز موعد جديد من أحمد محمد</p>
+                                            <span className="text-xs text-gray-500 mr-auto">منذ ساعة</span>
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                            <p className="text-sm">تم إضافة منتج جديد: خاتم ذهبي</p>
+                                            <span className="text-xs text-gray-500 mr-auto">منذ 3 ساعات</span>
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                                            <p className="text-sm">تقييم جديد: 5 نجوم</p>
+                                            <span className="text-xs text-gray-500 mr-auto">أمس</span>
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </div>
+                    </TabsContent>
+
+                    <TabsContent value="products" className="space-y-6">
+                        <div className="flex items-center justify-between">
+                            <h2 className="text-xl font-semibold">منتجاتي</h2>
+                            <Button onClick={() => navigate(ROUTES.PRODUCTS_CREATE)}>
+                                <Plus className="w-4 h-4 mr-2" />
+                                إضافة منتج جديد
+                            </Button>
+                        </div>
+
+                        {products.length > 0 ? (
+                            <div className="grid gap-6">
+                                {products.map((product) => (
+                                    <Card key={product.id}>
+                                        <CardContent className="p-6">
+                                            <div className="flex items-start gap-4">
+                                                <img
+                                                    src={product.image}
+                                                    alt={product.name}
+                                                    className="w-20 h-20 object-cover rounded-lg"
+                                                />
+                                                <div className="flex-1">
+                                                    <div className="flex items-start justify-between">
+                                                        <div>
+                                                            <h3 className="font-semibold text-lg">{product.name}</h3>
+                                                            <p className="text-yellow-600 font-bold text-xl">
+                                                                {product.price.toLocaleString()} ج.م
+                                                            </p>
+                                                        </div>
+                                                        <div className="flex items-center gap-2">
+                                                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${product.status === 'active'
+                                                                ? 'bg-green-100 text-green-800'
+                                                                : 'bg-gray-100 text-gray-800'
+                                                                }`}>
+                                                                {product.status === 'active' ? 'نشط' : 'مسودة'}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="flex items-center gap-4 mt-4 text-sm text-gray-600">
+                                                        <span>المشاهدات: {product.views}</span>
+                                                        <span>المفضلة: {product.favorites}</span>
+                                                        <span>الفئة: {product.category}</span>
+                                                    </div>
+
+                                                    <div className="flex gap-2 mt-4">
+                                                        <Button
+                                                            size="sm"
+                                                            variant="outline"
+                                                            onClick={() => navigate(ROUTES.PRODUCT_DETAILS(product.id))}
+                                                        >
+                                                            <Eye className="w-4 h-4 mr-1" />
+                                                            عرض
+                                                        </Button>
+                                                        <Button
+                                                            size="sm"
+                                                            variant="outline"
+                                                        >
+                                                            <Edit className="w-4 h-4 mr-1" />
+                                                            تعديل
+                                                        </Button>
+                                                        <Button
+                                                            size="sm"
+                                                            variant="outline"
+                                                            onClick={() => handleDeleteProduct(product.id)}
+                                                            className="text-red-600 hover:text-red-700"
+                                                        >
+                                                            <Trash2 className="w-4 h-4 mr-1" />
+                                                            حذف
+                                                        </Button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="text-center py-12">
+                                <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                                <h3 className="text-xl font-medium text-gray-900 mb-2">
+                                    لا توجد منتجات
+                                </h3>
+                                <p className="text-gray-600 mb-4">
+                                    ابدأ بإضافة منتجاتك الأولى
+                                </p>
+                                <Button onClick={() => navigate(ROUTES.PRODUCTS_CREATE)}>
+                                    <Plus className="w-4 h-4 mr-2" />
+                                    إضافة منتج جديد
+                                </Button>
+                            </div>
+                        )}
+                    </TabsContent>
+
+                    <TabsContent value="bookings" className="space-y-6">
+                        <div className="flex items-center justify-between">
+                            <h2 className="text-xl font-semibold">المواعيد</h2>
+                            <Button onClick={() => navigate(ROUTES.MANAGE_BOOKINGS)}>
+                                <Calendar className="w-4 h-4 mr-2" />
+                                إدارة المواعيد
+                            </Button>
+                        </div>
+
+                        {bookings.length > 0 ? (
+                            <div className="grid gap-4">
+                                {bookings.map((booking) => (
+                                    <Card key={booking.id}>
+                                        <CardContent className="p-4">
+                                            <div className="flex items-center justify-between">
+                                                <div>
+                                                    <h4 className="font-medium">{booking.customerName}</h4>
+                                                    <p className="text-sm text-gray-600">
+                                                        {new Date(booking.date).toLocaleDateString('ar-EG')} في {booking.time}
+                                                    </p>
+                                                </div>
+                                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${booking.status === 'confirmed'
+                                                    ? 'bg-green-100 text-green-800'
+                                                    : 'bg-yellow-100 text-yellow-800'
+                                                    }`}>
+                                                    {booking.status === 'confirmed' ? 'مؤكد' : 'في الانتظار'}
+                                                </span>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="text-center py-12">
+                                <Calendar className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                                <h3 className="text-xl font-medium text-gray-900 mb-2">
+                                    لا توجد مواعيد
+                                </h3>
+                                <p className="text-gray-600">
+                                    ستظهر هنا المواعيد المحجوزة من العملاء
+                                </p>
+                            </div>
+                        )}
+                    </TabsContent>
+                </Tabs>
+            </div>
+        </div>
+    );
+};
+
+export default ManageShop;

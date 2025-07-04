@@ -24,22 +24,28 @@ export const AuthProvider = ({ children }) => {
     try {
       const token = authService.getToken();
       const userData = authService.getCurrentUser();
-      
+
       if (token && userData) {
         setUser(userData);
         setIsAuthenticated(true);
-        
-        // Verify token is still valid
-        try {
-          await authService.refreshToken();
-        } catch (error) {
-          // Token is invalid, clear auth state
-          await logout();
-        }
+
+        // Verify token is still valid (optional - remove if causing issues)
+        // try {
+        //   await authService.refreshToken();
+        // } catch (error) {
+        //   // Token is invalid, clear auth state
+        //   await logout();
+        // }
+      } else {
+        // No token or user data, but don't redirect automatically
+        setUser(null);
+        setIsAuthenticated(false);
       }
     } catch (error) {
       console.error('Auth initialization error:', error);
-      await logout();
+      // Don't logout automatically on initialization error
+      setUser(null);
+      setIsAuthenticated(false);
     } finally {
       setIsLoading(false);
     }

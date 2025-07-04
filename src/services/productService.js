@@ -1,13 +1,33 @@
-import api from './api.js';
+import api from "./api.js";
 
 export const productService = {
   // Get all products
   getAllProducts: async (params = {}) => {
     try {
-      const response = await api.get('/product', { params });
+      const response = await api.get("/product", { params });
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to fetch products');
+      throw new Error(
+        error.response?.data?.message || "Failed to fetch products"
+      );
+    }
+  },
+
+  // Get products by shop ID
+  getProductsByShop: async (shopId, params = {}) => {
+    try {
+      const response = await api.get("/product", {
+        params: {
+          shopId: shopId,
+          shop_id: shopId, // Try both formats
+          ...params,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.message || "Failed to fetch shop products"
+      );
     }
   },
 
@@ -17,17 +37,21 @@ export const productService = {
       const response = await api.get(`/product/${productId}`);
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to fetch product details');
+      throw new Error(
+        error.response?.data?.message || "Failed to fetch product details"
+      );
     }
   },
 
   // Create new product (shop owner only)
   createProduct: async (productData) => {
     try {
-      const response = await api.post('/product/create', productData);
+      const response = await api.post("/product/create", productData);
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to create product');
+      throw new Error(
+        error.response?.data?.message || "Failed to create product"
+      );
     }
   },
 
@@ -37,7 +61,9 @@ export const productService = {
       const response = await api.put(`/product/${productId}`, productData);
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to update product');
+      throw new Error(
+        error.response?.data?.message || "Failed to update product"
+      );
     }
   },
 
@@ -47,17 +73,21 @@ export const productService = {
       const response = await api.delete(`/product/${productId}`);
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to delete product');
+      throw new Error(
+        error.response?.data?.message || "Failed to delete product"
+      );
     }
   },
 
   // Add to favorites
   addToFavorites: async (productId) => {
     try {
-      const response = await api.post('/product/favorite', { productId });
+      const response = await api.post("/product/favorite", { productId });
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to add to favorites');
+      throw new Error(
+        error.response?.data?.message || "Failed to add to favorites"
+      );
     }
   },
 
@@ -67,7 +97,9 @@ export const productService = {
       const response = await api.delete(`/product/favorite/${productId}`);
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to remove from favorites');
+      throw new Error(
+        error.response?.data?.message || "Failed to remove from favorites"
+      );
     }
   },
 
@@ -77,8 +109,9 @@ export const productService = {
       const response = await api.get(`/product/favorite/${userId}`);
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to fetch favorites');
+      throw new Error(
+        error.response?.data?.message || "Failed to fetch favorites"
+      );
     }
-  }
+  },
 };
-
