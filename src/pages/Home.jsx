@@ -19,12 +19,24 @@ const Home = () => {
 
   const loadFeaturedShops = async () => {
     try {
+      setIsLoading(true);
       const shops = await shopService.getAllShops();
-      setFeaturedShops(shops.slice(0, 9)); // Show first 9 shops
+      console.log('Loaded shops from API:', shops);
+
+      // Ensure we have an array and limit to 9 shops
+      const shopsArray = Array.isArray(shops) ? shops : [];
+      setFeaturedShops(shopsArray.slice(0, 9));
+
+      // If no shops from API, fallback to mock data for demo
+      if (shopsArray.length === 0) {
+        console.log('No shops from API, using mock data');
+        setFeaturedShops(mockShops.slice(0, 9));
+      }
     } catch (error) {
       console.error('Error loading shops:', error);
-      // Use mock data for demo
-      setFeaturedShops(mockShops);
+      // Use mock data as fallback
+      console.log('Using mock data due to error');
+      setFeaturedShops(mockShops.slice(0, 9));
     } finally {
       setIsLoading(false);
     }
@@ -139,48 +151,72 @@ const Home = () => {
     }
   ];
 
-  const ShopCard = ({ shop }) => (
-    <Card className="group hover:shadow-lg transition-all duration-300 cursor-pointer">
-      <div className="relative overflow-hidden">
-        <div className="w-full h-48 bg-gradient-to-br from-yellow-100 to-yellow-200 flex items-center justify-center">
-          <div className="text-4xl">💍</div>
+  const ShopCard = ({ shop }) => {
+    // Handle both API data and mock data formats
+    const shopId = shop._id || shop.id;
+    const shopName = shop.name || shop.nameAr || 'متجر مجوهرات';
+    const shopLocation = shop.city && shop.area ? `${shop.area}, ${shop.city}` : (shop.locationAr || shop.location || 'غير محدد');
+    const shopRating = shop.averageRating || shop.rating || 0;
+    const shopImage = shop.logoUrl || shop.image;
+
+    return (
+      <Card className="group hover:shadow-lg transition-all duration-300 cursor-pointer">
+        <div className="relative overflow-hidden">
+          {shopImage ? (
+            <img
+              src={shopImage}
+              alt={shopName}
+              className="w-full h-48 object-cover"
+              onError={(e) => {
+                e.target.style.display = 'none';
+                e.target.nextSibling.style.display = 'flex';
+              }}
+            />
+          ) : null}
+          <div className="w-full h-48 bg-gradient-to-br from-yellow-100 to-yellow-200 flex items-center justify-center" style={{display: shopImage ? 'none' : 'flex'}}>
+            <div className="text-4xl">💍</div>
+          </div>
+          <div className="absolute top-2 right-2 flex space-x-1">
+            <Button size="sm" variant="ghost" className="bg-white/80 hover:bg-white">
+              <Heart className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
-        <div className="absolute top-2 right-2 flex space-x-1">
-          <Button size="sm" variant="ghost" className="bg-white/80 hover:bg-white">
-            <Heart className="w-4 h-4" />
-          </Button>
-        </div>
-      </div>
-      
-      <CardContent className="p-4">
-        <div className="flex items-start justify-between mb-2">
-          <div>
-            <h3 className="font-bold text-lg text-gray-900">{shop.nameAr}</h3>
-            <div className="flex items-center text-sm text-gray-600 mt-1">
-              <MapPin className="w-4 h-4 mr-1" />
-              <span>{shop.locationAr}</span>
+
+        <CardContent className="p-4">
+          <div className="flex items-start justify-between mb-2">
+            <div>
+              <h3 className="font-bold text-lg text-gray-900">{shopName}</h3>
+              <div className="flex items-center text-sm text-gray-600 mt-1">
+                <MapPin className="w-4 h-4 mr-1" />
+                <span>{shopLocation}</span>
+              </div>
             </div>
+            {shopRating > 0 && (
+              <div className="flex items-center space-x-1 bg-yellow-100 px-2 py-1 rounded-full">
+                <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                <span className="text-sm font-medium">{shopRating.toFixed(1)}</span>
+              </div>
+            )}
           </div>
-          <div className="flex items-center space-x-1 bg-yellow-100 px-2 py-1 rounded-full">
-            <Star className="w-4 h-4 text-yellow-500 fill-current" />
-            <span className="text-sm font-medium">{shop.rating}</span>
+
+          <div className="flex items-center justify-between">
+            <Button
+              size="sm"
+              className="bg-yellow-600 hover:bg-yellow-700 text-white"
+              onClick={() => navigate(ROUTES.SHOP_DETAILS(shopId))}
+            >
+              <Eye className="w-4 h-4 mr-1" />
+              View Shop
+            </Button>
+            <span className="text-xs text-gray-500">
+              {shop.reviewCount || 'لا توجد تقييمات'}
+            </span>
           </div>
-        </div>
-        
-        <div className="flex items-center justify-between">
-          <Button 
-            size="sm" 
-            className="bg-yellow-600 hover:bg-yellow-700 text-white"
-            onClick={() => navigate(`${ROUTES.SHOP_DETAILS}/${shop.id}`)}
-          >
-            <Eye className="w-4 h-4 mr-1" />
-            View Shop
-          </Button>
-          <span className="text-xs text-gray-500">{shop.reviewCount} reviews</span>
-        </div>
-      </CardContent>
-    </Card>
-  );
+        </CardContent>
+      </Card>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -246,7 +282,7 @@ const Home = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {featuredShops.map((shop) => (
-                <ShopCard key={shop.id} shop={shop} />
+                <ShopCard key={shop._id || shop.id} shop={shop} />
               ))}
             </div>
           )}
