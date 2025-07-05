@@ -1,22 +1,34 @@
 import api from './api.js';
+import { API_ENDPOINTS } from '../utils/constants.js';
 
 export const shopService = {
-  // Get all shops
+  // Get all shops (public - no authentication required)
   getAllShops: async (params = {}) => {
     try {
-      const response = await api.get('/shop', { params });
-      return response.data;
+      const response = await api.get(API_ENDPOINTS.SHOP.GET_ALL_PUBLIC, { params });
+      // Backend returns: { status: "success", result: number, data: shops[] }
+      // We need to return the shops array
+      if (response.data && response.data.status === 'success') {
+        return response.data.data || [];
+      }
+      return response.data || [];
     } catch (error) {
+      console.error('Error fetching shops:', error);
       throw new Error(error.response?.data?.message || 'Failed to fetch shops');
     }
   },
 
-  // Get shop by ID
+  // Get shop by ID (public - no authentication required)
   getShop: async (shopId) => {
     try {
-      const response = await api.get(`/shop/${shopId}`);
+      const response = await api.get(API_ENDPOINTS.SHOP.GET_BY_ID_PUBLIC(shopId));
+      // Backend returns: { status: "success", data: shop }
+      if (response.data && response.data.status === 'success') {
+        return response.data.data;
+      }
       return response.data;
     } catch (error) {
+      console.error('Error fetching shop details:', error);
       throw new Error(error.response?.data?.message || 'Failed to fetch shop details');
     }
   },
