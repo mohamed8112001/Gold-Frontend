@@ -6,7 +6,7 @@ import { useAuth } from '../../context/AuthContext.jsx';
 
 const Header = () => {
   const navigate = useNavigate();
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, isAdmin, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogout = async () => {
@@ -34,6 +34,11 @@ const Header = () => {
             {isAuthenticated && (
               <Link to="/dashboard" className="text-gray-700 hover:text-yellow-600">
                 لوحة التحكم
+              </Link>
+            )}
+            {isAdmin && (
+              <Link to="/admin" className="text-gray-700 hover:text-red-600 font-medium">
+                إدارة النظام
               </Link>
             )}
           </nav>
@@ -110,6 +115,15 @@ const Header = () => {
                   >
                     لوحة التحكم
                   </Link>
+                  {isAdmin && (
+                    <Link
+                      to="/admin"
+                      className="text-gray-700 hover:text-red-600 font-medium"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      إدارة النظام
+                    </Link>
+                  )}
                   <Button
                     variant="outline"
                     onClick={() => {
@@ -153,4 +167,3 @@ const Header = () => {
 };
 
 export default Header;
-
