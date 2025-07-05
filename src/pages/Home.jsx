@@ -763,6 +763,7 @@ const Home = () => {
                 onClick={() => navigate('/demo-login')}
                 className="bg-yellow-600 hover:bg-yellow-700 text-white font-medium"
               >
+                
                 🚀 Demo Login (Quick Access)
               </Button>
               <Button
@@ -770,6 +771,7 @@ const Home = () => {
                 onClick={() => navigate('/admin/create')}
                 className="border-red-600 text-red-600 hover:bg-red-600 hover:text-white"
               >
+
                 Create Admin Account
               </Button>
               <Button
@@ -777,6 +779,7 @@ const Home = () => {
                 onClick={() => navigate('/admin/promote')}
                 className="border-red-600 text-red-600 hover:bg-red-600 hover:text-white"
               >
+
                 Promote to Admin
               </Button>
             </div>
@@ -786,7 +789,7 @@ const Home = () => {
           </div>
         </div>
       </section>
-
+      
       {/* Features Section */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -799,6 +802,7 @@ const Home = () => {
             </p>
           </div>
 
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center group">
               <div className="w-20 h-20 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:shadow-xl transition-all duration-300 transform group-hover:scale-110">
@@ -810,6 +814,7 @@ const Home = () => {
               </p>
             </div>
 
+
             <div className="text-center group">
               <div className="w-20 h-20 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:shadow-xl transition-all duration-300 transform group-hover:scale-110">
                 <Award className="w-10 h-10 text-white" />
@@ -819,6 +824,7 @@ const Home = () => {
                 أسعار تنافسية وعروض حصرية من أفضل متاجر المجوهرات في مصر
               </p>
             </div>
+
 
             <div className="text-center group">
               <div className="w-20 h-20 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:shadow-xl transition-all duration-300 transform group-hover:scale-110">
