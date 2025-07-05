@@ -44,6 +44,12 @@ const ProductDetails = () => {
             // Load product details
             const productResponse = await productService.getProduct(id);
             const productData = productResponse.data || productResponse;
+
+            // Debug: Log product data to understand structure
+            console.log('🔍 Product data loaded:', productData);
+            console.log('🔍 Product price:', productData.price, typeof productData.price);
+            console.log('🔍 Product rating:', productData.rating, typeof productData.rating);
+
             setProduct(productData);
 
             // Load shop details
@@ -216,7 +222,7 @@ const ProductDetails = () => {
                         المنتجات
                     </span>
                     <span>/</span>
-                    <span className="text-gray-900">{product.name}</span>
+                    <span className="text-gray-900">{product.name || product.title || 'منتج غير محدد'}</span>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
@@ -254,7 +260,9 @@ const ProductDetails = () => {
                     <div className="space-y-6">
                         <div>
                             <div className="flex items-start justify-between mb-2">
-                                <h1 className="text-3xl font-bold text-gray-900">{product.name}</h1>
+                                <h1 className="text-3xl font-bold text-gray-900">
+                                    {product.name || product.title || 'منتج غير محدد'}
+                                </h1>
                                 <Button
                                     variant="ghost"
                                     size="sm"
@@ -276,19 +284,42 @@ const ProductDetails = () => {
                                     {[...Array(5)].map((_, i) => (
                                         <Star
                                             key={i}
-                                            className={`w-4 h-4 ${i < Math.floor(product.rating)
+                                            className={`w-4 h-4 ${i < Math.floor(product.rating || 0)
                                                 ? 'fill-yellow-400 text-yellow-400'
                                                 : 'text-gray-300'
                                                 }`}
                                         />
                                     ))}
-                                    <span className="text-sm font-medium ml-2">{product.rating}</span>
-                                    <span className="text-sm text-gray-500 ml-1">({product.reviewCount} تقييم)</span>
+                                    <span className="text-sm font-medium ml-2">
+                                        {typeof product.rating === 'number' ? product.rating.toFixed(1) : '0.0'}
+                                    </span>
+                                    <span className="text-sm text-gray-500 ml-1">
+                                        ({product.reviewCount || product.reviews?.length || 0} تقييم)
+                                    </span>
                                 </div>
                             </div>
 
                             <div className="text-3xl font-bold text-yellow-600 mb-6">
-                                {product.price.toLocaleString()} ج.م
+                                {(() => {
+                                    // Handle different price formats
+                                    let price = product.price;
+
+                                    if (typeof price === 'object' && price !== null) {
+                                        // If price is an object, try to extract the value
+                                        price = price.value || price.amount || price.price || 0;
+                                    }
+
+                                    if (typeof price === 'string') {
+                                        // If price is a string, try to parse it
+                                        price = parseFloat(price) || 0;
+                                    }
+
+                                    if (typeof price === 'number' && price > 0) {
+                                        return price.toLocaleString();
+                                    }
+
+                                    return 'غير محدد';
+                                })()} ج.م
                             </div>
 
                             <p className="text-gray-700 leading-relaxed mb-6">
@@ -403,8 +434,8 @@ const ProductDetails = () => {
                                                                 <Star
                                                                     key={i}
                                                                     className={`w-4 h-4 ${i < review.rating
-                                                                            ? 'fill-yellow-400 text-yellow-400'
-                                                                            : 'text-gray-300'
+                                                                        ? 'fill-yellow-400 text-yellow-400'
+                                                                        : 'text-gray-300'
                                                                         }`}
                                                                 />
                                                             ))}
@@ -489,33 +520,19 @@ const ProductDetails = () => {
                             </Card>
                         )}
 
-                        {/* Related Products */}
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>منتجات مشابهة</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="space-y-4">
-                                    {[1, 2, 3].map((item) => (
-                                        <div key={item} className="flex gap-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                            <img
-                                                src="/api/placeholder/80/80"
-                                                alt="منتج مشابه"
-                                                className="w-16 h-16 rounded-lg object-cover"
-                                            />
-                                            <div className="flex-1">
-                                                <h4 className="font-medium text-sm mb-1">خاتم ذهبي مشابه</h4>
-                                                <div className="flex items-center mb-1">
-                                                    <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                                                    <span className="text-xs ml-1">4.5</span>
-                                                </div>
-                                                <p className="text-sm font-semibold text-yellow-600">2,800 ج.م</p>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </CardContent>
-                        </Card>
+                        {/* Related Products - Hidden for now until we have real data */}
+                        {false && (
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>منتجات مشابهة</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="text-center py-8 text-gray-500">
+                                        <p>سيتم عرض المنتجات المشابهة قريباً</p>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        )}
                     </div>
                 </div>
             </div>

@@ -11,6 +11,7 @@ import GoogleCallback from './pages/auth/GoogleCallback.jsx';
 import ShopList from './pages/shop/ShopList.jsx';
 import ShopDetails from './pages/shop/ShopDetails.jsx';
 import CreateShop from './pages/shop/CreateShop.jsx';
+import EditShop from './pages/shop/EditShop.jsx';
 import ManageShop from './pages/shop/ManageShop.jsx';
 import ProductList from './pages/product/ProductList.jsx';
 import ProductDetails from './pages/product/ProductDetails.jsx';
@@ -54,6 +55,8 @@ function App() {
             <Route path="/shops" element={<ShopList />} />
             <Route path="/shops/:id" element={<ShopDetails />} />
             <Route path="/shop/create" element={<CreateShop />} />
+            <Route path="/shop/edit" element={<EditShop />} />
+            <Route path="/shop/edit/:id" element={<EditShop />} />
             <Route path="/shop/manage" element={<ManageShop />} />
 
             {/* Product Routes */}

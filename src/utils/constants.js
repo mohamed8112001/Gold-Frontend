@@ -104,6 +104,8 @@ export const ROUTES = {
   SHOPS: "/shops",
   SHOP_DETAILS: (id) => `/shops/${id}`,
   CREATE_SHOP: "/shop/create",
+  EDIT_SHOP: "/shop/edit",
+  EDIT_SHOP_ID: (id) => `/shop/edit/${id}`,
   MANAGE_SHOP: "/shop/manage",
 
   // Product routes

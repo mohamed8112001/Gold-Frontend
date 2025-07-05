@@ -49,10 +49,21 @@ const ProductList = () => {
         try {
             setIsLoading(true);
             const response = await productService.getAllProducts();
-            setProducts(response.data || response);
+            const data = response.data || response;
+
+            // Debug: Log products data to understand structure
+            console.log('🔍 Products loaded:', data);
+            if (data.length > 0) {
+                console.log('🔍 Sample product:', data[0]);
+                console.log('🔍 Product price:', data[0].price, typeof data[0].price);
+                console.log('🔍 Product shop:', data[0].shopName || data[0].shop);
+            }
+
+            setProducts(data);
         } catch (error) {
             console.error('Error loading products:', error);
             // Use mock data for demo
+            console.log('🔍 Using mock products for demo');
             setProducts(mockProducts);
         } finally {
             setIsLoading(false);
@@ -255,126 +266,212 @@ const ProductList = () => {
         }
     ];
 
-    const ProductCard = ({ product, isListView = false }) => (
-        <Card className={`group hover:shadow-lg transition-all duration-300 ${isListView ? 'flex' : ''}`}>
-            <div className={`relative ${isListView ? 'w-48 flex-shrink-0' : ''}`}>
-                <img
-                    src={product.image}
-                    alt={product.name}
-                    className={`w-full object-cover group-hover:scale-105 transition-transform duration-300 ${isListView ? 'h-full rounded-l-lg' : 'h-48 rounded-t-lg'
-                        }`}
-                />
-                <Button
-                    size="sm"
-                    variant="ghost"
-                    className="absolute top-2 right-2 bg-white/80 hover:bg-white"
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        handleAddToFavorites(product.id);
-                    }}
-                >
-                    <Heart className={`w-4 h-4 ${product.isFavorited ? 'fill-red-500 text-red-500' : ''}`} />
-                </Button>
-                {product.category && (
-                    <Badge className="absolute top-2 left-2 bg-yellow-500 text-white">
-                        {PRODUCT_CATEGORIES[product.category.toUpperCase()] || product.category}
-                    </Badge>
-                )}
-            </div>
+    const ProductCard = ({ product, isListView = false }) => {
+        const productId = product.id || product._id;
 
-            <div className={`p-4 flex-1 ${isListView ? 'flex flex-col justify-between' : ''}`}>
-                <div>
-                    <h3 className="font-semibold text-lg mb-2 group-hover:text-yellow-600 transition-colors">
-                        {product.name}
-                    </h3>
-                    <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-                        {product.description}
-                    </p>
+        // Safe data extraction
+        const safeProduct = {
+            name: product.name || product.title || 'منتج غير محدد',
+            description: product.description || 'لا يوجد وصف متاح',
+            image: product.image || product.imageUrl || product.images?.[0] || '/api/placeholder/300/300',
+            rating: typeof product.rating === 'number' ? product.rating : 0,
+            reviewCount: product.reviewCount || product.reviews?.length || 0,
+            shopName: product.shopName || product.shop?.name || 'متجر غير محدد',
+            shopId: product.shopId || product.shop?.id || product.shop?._id,
+            category: product.category || 'عام',
+            isFavorited: product.isFavorited || false,
+            price: (() => {
+                let price = product.price;
+                if (typeof price === 'object' && price !== null) {
+                    price = price.value || price.amount || price.price || 0;
+                }
+                if (typeof price === 'string') {
+                    price = parseFloat(price) || 0;
+                }
+                return typeof price === 'number' ? price : 0;
+            })()
+        };
 
-                    <div className="flex items-center gap-2 mb-3">
-                        <div className="flex items-center">
-                            <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                            <span className="text-sm font-medium ml-1">{product.rating}</span>
-                            <span className="text-sm text-gray-500 ml-1">({product.reviewCount})</span>
+        return (
+            <Card
+                className={`group hover:shadow-xl transition-all duration-300 cursor-pointer border-0 shadow-md hover:shadow-2xl transform hover:-translate-y-1 ${isListView ? 'flex h-48' : 'flex flex-col h-full'}`}
+                onClick={() => navigate(ROUTES.PRODUCT_DETAILS(productId))}
+            >
+                <div className={`relative overflow-hidden ${isListView ? 'w-48 flex-shrink-0' : 'w-full'}`}>
+                    <img
+                        src={safeProduct.image}
+                        alt={safeProduct.name}
+                        className={`w-full object-cover group-hover:scale-110 transition-transform duration-500 ${isListView ? 'h-full' : 'h-48'}`}
+                        onError={(e) => {
+                            e.target.src = 'https://via.placeholder.com/300x300/f3f4f6/9ca3af?text=منتج';
+                        }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+                    <Button
+                        size="sm"
+                        variant="ghost"
+                        className="absolute top-3 right-3 bg-white/90 hover:bg-white shadow-lg backdrop-blur-sm"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleAddToFavorites(productId);
+                        }}
+                    >
+                        <Heart className={`w-4 h-4 ${safeProduct.isFavorited ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
+                    </Button>
+
+                    {safeProduct.category && (
+                        <Badge className="absolute top-3 left-3 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white shadow-lg">
+                            {PRODUCT_CATEGORIES[safeProduct.category.toUpperCase()] || safeProduct.category}
+                        </Badge>
+                    )}
+
+                    {safeProduct.price > 0 && (
+                        <div className="absolute bottom-3 left-3 bg-black/70 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm font-bold">
+                            {safeProduct.price.toLocaleString()} ج.م
+                        </div>
+                    )}
+                </div>
+
+                <div className={`p-5 flex flex-col h-full ${isListView ? 'justify-between' : ''}`}>
+                    <div className="flex-1">
+                        <h3 className="font-bold text-lg mb-2 group-hover:text-yellow-600 transition-colors line-clamp-2 leading-tight">
+                            {safeProduct.name}
+                        </h3>
+                        <p className="text-gray-600 text-sm mb-3 line-clamp-2 leading-relaxed">
+                            {safeProduct.description}
+                        </p>
+
+                        <div className="flex items-center gap-2 mb-3">
+                            <div className="flex items-center bg-yellow-50 px-2 py-1 rounded-full">
+                                <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                                <span className="text-xs font-semibold ml-1 text-yellow-700">
+                                    {safeProduct.rating.toFixed(1)}
+                                </span>
+                                <span className="text-xs text-gray-500 ml-1">
+                                    ({safeProduct.reviewCount})
+                                </span>
+                            </div>
+                        </div>
+
+                        <div className="flex items-center gap-2 mb-4">
+                            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                            <p className="text-xs text-gray-600 font-medium truncate">
+                                في <span className="text-yellow-600 hover:text-yellow-700 cursor-pointer" onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (safeProduct.shopId) {
+                                        navigate(ROUTES.SHOP_DETAILS(safeProduct.shopId));
+                                    }
+                                }}>{safeProduct.shopName}</span>
+                            </p>
                         </div>
                     </div>
 
-                    <p className="text-sm text-gray-600 mb-3">
-                        في {product.shopName}
-                    </p>
-                </div>
+                    {/* Price and Actions - Fixed at bottom */}
+                    <div className="mt-auto pt-3 border-t border-gray-100">
+                        <div className="flex items-center justify-between mb-3">
+                            <div className="text-lg font-bold text-yellow-600 truncate">
+                                {safeProduct.price > 0 ? `${safeProduct.price.toLocaleString()} ج.م` : 'غير محدد'}
+                            </div>
+                        </div>
 
-                <div className={`flex items-center justify-between ${isListView ? 'mt-4' : ''}`}>
-                    <div className="text-xl font-bold text-yellow-600">
-                        {product.price.toLocaleString()} ج.م
-                    </div>
-                    <div className="flex gap-2">
-                        <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                navigate(ROUTES.PRODUCT_DETAILS(product.id));
-                            }}
-                        >
-                            <Eye className="w-4 h-4 mr-1" />
-                            عرض
-                        </Button>
-                        <Button
-                            size="sm"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                navigate(ROUTES.SHOP_DETAILS(product.shopId));
-                            }}
-                        >
-                            <ShoppingBag className="w-4 h-4 mr-1" />
-                            المتجر
-                        </Button>
+                        <div className="flex gap-2">
+                            <Button
+                                size="sm"
+                                variant="outline"
+                                className="flex-1 border-yellow-200 text-yellow-700 hover:bg-yellow-50 hover:border-yellow-300 transition-all duration-300 text-xs"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    navigate(ROUTES.PRODUCT_DETAILS(productId));
+                                }}
+                            >
+                                <Eye className="w-3 h-3 mr-1" />
+                                عرض
+                            </Button>
+                            {safeProduct.shopId && (
+                                <Button
+                                    size="sm"
+                                    className="flex-1 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white shadow-md hover:shadow-lg transition-all duration-300 text-xs"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        navigate(ROUTES.SHOP_DETAILS(safeProduct.shopId));
+                                    }}
+                                >
+                                    <ShoppingBag className="w-3 h-3 mr-1" />
+                                    المتجر
+                                </Button>
+                            )}
+                        </div>
                     </div>
                 </div>
-            </div>
-        </Card>
-    );
+            </Card>
+        );
+    };
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {/* Header */}
-                <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900 mb-4">المنتجات</h1>
+                <div className="mb-12">
+                    <div className="text-center mb-8">
+                        <h1 className="text-5xl font-bold text-gray-900 mb-4">
+                            💎 معرض المنتجات 💎
+                        </h1>
+                        <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                            اكتشف أجمل قطع المجوهرات والذهب من أفضل المتاجر في مصر
+                        </p>
+                    </div>
 
                     {/* Search and Controls */}
-                    <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
-                        <form onSubmit={handleSearch} className="flex-1 max-w-md">
-                            <div className="relative">
-                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                                <Input
-                                    type="text"
-                                    placeholder="ابحث عن المنتجات..."
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="pl-10"
-                                />
+                    <div className="flex flex-col lg:flex-row gap-6 items-start lg:items-center justify-between bg-white rounded-2xl p-6 shadow-lg">
+                        <form onSubmit={handleSearch} className="flex-1 max-w-2xl">
+                            <div className="relative group">
+                                <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full blur opacity-25 group-hover:opacity-40 transition-opacity duration-300"></div>
+                                <div className="relative bg-white rounded-full border-2 border-gray-200 focus-within:border-yellow-400 transition-colors duration-300">
+                                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                                    <Input
+                                        type="text"
+                                        placeholder="🔍 ابحث عن المنتجات، المجوهرات، الذهب..."
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        className="pl-12 pr-6 py-4 text-lg rounded-full border-0 focus:ring-0 bg-transparent placeholder-gray-500"
+                                    />
+                                    <Button
+                                        type="submit"
+                                        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-6 py-2 rounded-full"
+                                    >
+                                        بحث
+                                    </Button>
+                                </div>
                             </div>
                         </form>
 
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-full">
+                                <span className="text-sm font-medium text-gray-600">
+                                    {filteredProducts.length} منتج
+                                </span>
+                            </div>
+
                             <Button
                                 variant="outline"
                                 size="sm"
                                 onClick={() => setShowFilters(!showFilters)}
-                                className="flex items-center gap-2"
+                                className="flex items-center gap-2 border-yellow-200 text-yellow-700 hover:bg-yellow-50 hover:border-yellow-300"
                             >
                                 <SlidersHorizontal className="w-4 h-4" />
                                 فلاتر
+                                {Object.keys(filters).some(key => filters[key]) && (
+                                    <span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
+                                )}
                             </Button>
 
-                            <div className="flex border rounded-lg">
+                            <div className="flex border-2 border-gray-200 rounded-xl overflow-hidden">
                                 <Button
                                     variant={viewMode === 'grid' ? 'default' : 'ghost'}
                                     size="sm"
                                     onClick={() => setViewMode('grid')}
-                                    className="rounded-r-none"
+                                    className={`rounded-none ${viewMode === 'grid' ? 'bg-yellow-500 text-white' : 'hover:bg-gray-50'}`}
                                 >
                                     <Grid className="w-4 h-4" />
                                 </Button>
@@ -382,7 +479,7 @@ const ProductList = () => {
                                     variant={viewMode === 'list' ? 'default' : 'ghost'}
                                     size="sm"
                                     onClick={() => setViewMode('list')}
-                                    className="rounded-l-none"
+                                    className={`rounded-none ${viewMode === 'list' ? 'bg-yellow-500 text-white' : 'hover:bg-gray-50'}`}
                                 >
                                     <List className="w-4 h-4" />
                                 </Button>
@@ -521,49 +618,76 @@ const ProductList = () => {
                     {/* Products Grid/List */}
                     <div className="flex-1">
                         {/* Results Info */}
-                        <div className="flex items-center justify-between mb-6">
-                            <p className="text-gray-600">
-                                {filteredProducts.length} منتج
-                                {searchQuery && ` لـ "${searchQuery}"`}
-                                {filters.category && ` في فئة ${PRODUCT_CATEGORIES[filters.category.toUpperCase()]}`}
-                            </p>
+                        <div className="flex items-center justify-between mb-8 bg-white rounded-xl p-4 shadow-sm">
+                            <div>
+                                <p className="text-lg font-semibold text-gray-900">
+                                    {filteredProducts.length} منتج متاح
+                                </p>
+                                {searchQuery && (
+                                    <p className="text-sm text-gray-600">
+                                        نتائج البحث عن: <span className="font-medium text-yellow-600">"{searchQuery}"</span>
+                                    </p>
+                                )}
+                                {filters.category && (
+                                    <p className="text-sm text-gray-600">
+                                        في فئة: <span className="font-medium text-yellow-600">{PRODUCT_CATEGORIES[filters.category.toUpperCase()]}</span>
+                                    </p>
+                                )}
+                            </div>
+                            <div className="text-right">
+                                <p className="text-sm text-gray-500">عرض النتائج</p>
+                                <p className="text-lg font-bold text-yellow-600">{viewMode === 'grid' ? '🔲' : '📋'}</p>
+                            </div>
                         </div>
 
                         {/* Products Grid/List */}
                         {isLoading ? (
                             <div className={`grid gap-6 ${viewMode === 'grid'
-                                ? 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3'
+                                ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
                                 : 'grid-cols-1'
                                 }`}>
-                                {[...Array(6)].map((_, index) => (
-                                    <div key={index} className="animate-pulse">
-                                        <div className="bg-gray-200 h-48 rounded-t-lg"></div>
-                                        <div className="bg-white p-4 rounded-b-lg">
-                                            <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                                            <div className="h-3 bg-gray-200 rounded mb-4 w-2/3"></div>
-                                            <div className="h-8 bg-gray-200 rounded"></div>
+                                {[...Array(8)].map((_, index) => (
+                                    <div key={index} className="animate-pulse bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col h-full">
+                                        <div className="bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 h-48"></div>
+                                        <div className="p-4 flex flex-col flex-1">
+                                            <div className="h-5 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded mb-2"></div>
+                                            <div className="h-4 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded mb-3 w-3/4"></div>
+                                            <div className="h-3 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded mb-3 w-1/2"></div>
+                                            <div className="mt-auto pt-3 border-t border-gray-200">
+                                                <div className="h-6 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded mb-3 w-24"></div>
+                                                <div className="flex gap-2">
+                                                    <div className="h-8 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded flex-1"></div>
+                                                    <div className="h-8 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded flex-1"></div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 ))}
                             </div>
                         ) : filteredProducts.length === 0 ? (
-                            <div className="text-center py-12">
-                                <div className="text-6xl mb-4">🔍</div>
-                                <h3 className="text-xl font-medium text-gray-900 mb-2">
+                            <div className="text-center py-20 bg-white rounded-2xl shadow-lg">
+                                <div className="text-8xl mb-6">💎</div>
+                                <h3 className="text-2xl font-bold text-gray-900 mb-4">
                                     لم يتم العثور على منتجات
                                 </h3>
-                                <p className="text-gray-600">
-                                    جرب تغيير معايير البحث أو الفلاتر
+                                <p className="text-gray-600 text-lg mb-8 max-w-md mx-auto">
+                                    جرب تغيير معايير البحث أو الفلاتر للعثور على المنتجات المناسبة
                                 </p>
+                                <Button
+                                    onClick={clearFilters}
+                                    className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-8 py-3"
+                                >
+                                    مسح جميع الفلاتر
+                                </Button>
                             </div>
                         ) : (
                             <div className={`grid gap-6 ${viewMode === 'grid'
-                                ? 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3'
-                                : 'grid-cols-1'
+                                ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+                                : 'grid-cols-1 max-w-4xl mx-auto'
                                 }`}>
                                 {filteredProducts.map((product) => (
                                     <ProductCard
-                                        key={product.id}
+                                        key={product.id || product._id}
                                         product={product}
                                         isListView={viewMode === 'list'}
                                     />
@@ -572,15 +696,46 @@ const ProductList = () => {
                         )}
 
                         {/* Load More */}
+                        {filteredProducts.length > 0 && filteredProducts.length >= 12 && (
+                            <div className="text-center mt-16">
+                                <div className="bg-white rounded-2xl p-8 shadow-lg">
+                                    <h3 className="text-xl font-bold text-gray-900 mb-4">
+                                        هل تريد رؤية المزيد من المنتجات؟
+                                    </h3>
+                                    <p className="text-gray-600 mb-6">
+                                        اكتشف المزيد من المجوهرات والذهب الرائع
+                                    </p>
+                                    <Button
+                                        size="lg"
+                                        className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-12 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                                    >
+                                        ✨ تحميل المزيد من المنتجات
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Quick Stats */}
                         {filteredProducts.length > 0 && (
-                            <div className="text-center mt-12">
-                                <Button
-                                    variant="outline"
-                                    size="lg"
-                                    className="px-8"
-                                >
-                                    تحميل المزيد
-                                </Button>
+                            <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-2xl p-6 text-center">
+                                    <div className="text-3xl font-bold text-yellow-600 mb-2">
+                                        {filteredProducts.length}
+                                    </div>
+                                    <div className="text-gray-700 font-medium">منتج متاح</div>
+                                </div>
+                                <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-6 text-center">
+                                    <div className="text-3xl font-bold text-blue-600 mb-2">
+                                        {new Set(filteredProducts.map(p => p.shopId || p.shop?.id)).size}
+                                    </div>
+                                    <div className="text-gray-700 font-medium">متجر مختلف</div>
+                                </div>
+                                <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl p-6 text-center">
+                                    <div className="text-3xl font-bold text-green-600 mb-2">
+                                        {new Set(filteredProducts.map(p => p.category)).size}
+                                    </div>
+                                    <div className="text-gray-700 font-medium">فئة مختلفة</div>
+                                </div>
                             </div>
                         )}
                     </div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button.jsx';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.jsx';
+import { Card, CardContent } from '@/components/ui/card.jsx';
 import { Badge } from '@/components/ui/badge.jsx';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.jsx';
 import {
@@ -13,7 +13,7 @@ import {
     Calendar,
     Heart,
     Eye,
-    ShoppingBag,
+
     Grid,
     List
 } from 'lucide-react';
@@ -58,9 +58,9 @@ const ShopDetails = () => {
                     shopData.status === 'approved' ||
                     shopData.approved === true ||
                     shopData.isActive === true ||
-                    (!shopData.hasOwnProperty('status') &&
-                        !shopData.hasOwnProperty('approved') &&
-                        !shopData.hasOwnProperty('isActive') &&
+                    (!Object.prototype.hasOwnProperty.call(shopData, 'status') &&
+                        !Object.prototype.hasOwnProperty.call(shopData, 'approved') &&
+                        !Object.prototype.hasOwnProperty.call(shopData, 'isActive') &&
                         !shopData.status &&
                         shopData.approved !== false &&
                         shopData.isActive !== false)
@@ -81,54 +81,53 @@ const ShopDetails = () => {
                     return;
                 }
 
-                setShop(shopData);
+                // Ensure shop has all required fields
+                const processedShopData = {
+                    ...shopData,
+                    rating: shopData.rating || 0,
+                    specialties: Array.isArray(shopData.specialties) ? shopData.specialties : [],
+                    gallery: Array.isArray(shopData.gallery) ? shopData.gallery : [],
+                    image: shopData.image || shopData.imageUrl || '/placeholder-shop.jpg'
+                };
+
+                console.log('Processed shop data:', processedShopData);
+                setShop(processedShopData);
             } catch (shopError) {
                 console.error('Error loading shop details:', shopError);
                 setShop(null);
             }
 
-            // Load shop products - parallel loading
+            // Load shop products
             const loadProducts = async () => {
                 try {
                     const productsResponse = await productService.getProductsByShop(id);
                     const productsData = Array.isArray(productsResponse)
                         ? productsResponse
                         : productsResponse.data || productsResponse.products || [];
+
+                    // Debug: Log the first product to understand the data structure
+                    if (productsData.length > 0) {
+                        console.log('📦 Sample product data:', productsData[0]);
+                        console.log('📦 Product keys:', Object.keys(productsData[0]));
+                    }
+
                     setProducts(productsData);
                 } catch (error) {
                     console.error('Error loading products:', error);
-                    // Try fallback with getAllProducts and shopId param
-                    try {
-                        const fallbackResponse = await productService.getAllProducts({ shopId: id });
-                        const fallbackData = Array.isArray(fallbackResponse)
-                            ? fallbackResponse
-                            : fallbackResponse.data || fallbackResponse.products || [];
-
-                        // Filter products by shopId if needed
-                        const filteredProducts = fallbackData.filter(product =>
-                            product.shopId === parseInt(id) || product.shop_id === parseInt(id)
-                        );
-                        setProducts(filteredProducts);
-                    } catch (fallbackError) {
-                        console.error('Fallback products loading failed:', fallbackError);
-                        setProducts([]); // Use empty array instead of mock data
-                    }
+                    setProducts([]);
                 }
             };
 
-            // Load shop reviews - parallel loading
+            // Load shop reviews
             const loadReviews = async () => {
                 try {
-                    console.log('Loading reviews for shop ID:', id);
                     const reviewsResponse = await rateService.getAllRates({ shopId: id });
                     const reviewsData = Array.isArray(reviewsResponse)
                         ? reviewsResponse
                         : reviewsResponse.data || reviewsResponse.reviews || [];
-                    console.log('Reviews loaded:', reviewsData.length);
                     setReviews(reviewsData);
                 } catch (error) {
                     console.error('Error loading reviews:', error);
-                    // Set empty array instead of mock data to avoid errors
                     setReviews([]);
                 }
             };
@@ -159,129 +158,65 @@ const ShopDetails = () => {
 
     const handleAddToFavorites = async (productId) => {
         if (!user) {
-            // Show a message or modal instead of redirecting immediately
             alert('يرجى تسجيل الدخول أولاً لإضافة المنتج للمفضلة');
             navigate(ROUTES.LOGIN);
             return;
         }
 
+        if (!productId) {
+            alert('حدث خطأ: معرف المنتج غير موجود');
+            return;
+        }
+
         try {
             await productService.addToFavorites(productId);
+
             // Update local state
-            setProducts(prev => prev.map(product =>
-                product.id === productId
+            setProducts(prev => prev.map(product => {
+                const currentProductId = product.id || product._id;
+                return currentProductId === productId
                     ? { ...product, isFavorited: true }
-                    : product
-            ));
+                    : product;
+            }));
+
+            alert('تم إضافة المنتج للمفضلة بنجاح!');
         } catch (error) {
             console.error('Error adding to favorites:', error);
             alert('حدث خطأ في إضافة المنتج للمفضلة');
         }
     };
 
-    // Mock data for demo
-    const mockShop = {
-        id: parseInt(id),
-        name: 'مجوهرات الإسكندرية',
-        description: 'متجر مجوهرات فاخر متخصص في الذهب والمجوهرات الثمينة منذ عام 1985. نقدم أجود أنواع الذهب والمجوهرات بأسعار تنافسية وخدمة عملاء ممتازة.',
-        address: 'شارع فؤاد، الإسكندرية، مصر',
-        phone: '+20 3 123 4567',
-        email: 'info@alexandria-jewelry.com',
-        rating: 4.7,
-        reviewCount: 156,
-        workingHours: 'السبت - الخميس: 10:00 ص - 10:00 م',
-        image: '/api/placeholder/800/400',
-        gallery: [
-            '/api/placeholder/400/300',
-            '/api/placeholder/400/300',
-            '/api/placeholder/400/300',
-            '/api/placeholder/400/300'
-        ],
-        specialties: ['خواتم الخطوبة', 'السلاسل الذهبية', 'الأساور', 'الأقراط'],
-        established: '1985',
-        verified: true,
-        productsCount: 45,
-        customersCount: 1200
-    };
-
-    const mockProducts = [
-        {
-            id: 1,
-            name: 'خاتم ذهبي كلاسيكي',
-            price: 2500,
-            image: '/api/placeholder/300/300',
-            rating: 4.5,
-            reviewCount: 23,
-            isFavorited: false,
-            category: 'rings'
-        },
-        {
-            id: 2,
-            name: 'سلسلة ذهبية فاخرة',
-            price: 4200,
-            image: '/api/placeholder/300/300',
-            rating: 4.8,
-            reviewCount: 45,
-            isFavorited: true,
-            category: 'chains'
-        },
-        {
-            id: 3,
-            name: 'أسورة ذهبية مرصعة',
-            price: 3800,
-            image: '/api/placeholder/300/300',
-            rating: 4.3,
-            reviewCount: 18,
-            isFavorited: false,
-            category: 'bracelets'
-        },
-        {
-            id: 4,
-            name: 'أقراط ذهبية أنيقة',
-            price: 2200,
-            image: '/api/placeholder/300/300',
-            rating: 4.6,
-            reviewCount: 31,
-            isFavorited: false,
-            category: 'earrings'
-        }
-    ];
-
-    const mockReviews = [
-        {
-            id: 1,
-            userName: 'أحمد محمد',
-            rating: 5,
-            comment: 'متجر ممتاز وخدمة رائعة، أنصح بالتعامل معهم',
-            date: '2024-01-10',
-            verified: true
-        },
-        {
-            id: 2,
-            userName: 'فاطمة علي',
-            rating: 4,
-            comment: 'جودة عالية وأسعار مناسبة',
-            date: '2024-01-08',
-            verified: true
-        },
-        {
-            id: 3,
-            userName: 'محمود حسن',
-            rating: 5,
-            comment: 'تصاميم راقية وتعامل محترم',
-            date: '2024-01-05',
-            verified: false
-        }
-    ];
-
+   
     const ProductCard = ({ product }) => {
+        const productId = product.id || product._id;
+
+        // Debug: Log product data for troubleshooting
+        console.log('🔍 ProductCard received:', {
+            id: productId,
+            name: product.name,
+            price: product.price,
+            priceType: typeof product.price,
+            rating: product.rating,
+            description: product.description
+        });
+
         return (
-            <Card className="group hover:shadow-lg transition-all duration-300">
+            <Card
+                className="group hover:shadow-lg transition-all duration-300 cursor-pointer"
+                onClick={() => {
+                    if (productId) {
+                        navigate(ROUTES.PRODUCT_DETAILS(productId));
+                    }
+                }}
+            >
                 <div className="relative">
                     <img
-                        src={product.image || '/api/placeholder/300/300'}
-                        alt={product.name}
+                        src={product.image || product.imageUrl || product.images?.[0] || '/api/placeholder/300/300'}
+                        alt={product.name || 'منتج'}
                         className="w-full h-48 object-cover rounded-t-lg group-hover:scale-105 transition-transform duration-300"
+                        onError={(e) => {
+                            e.target.src = 'https://via.placeholder.com/300x300/f3f4f6/9ca3af?text=منتج';
+                        }}
                     />
                     <Button
                         size="sm"
@@ -289,7 +224,7 @@ const ShopDetails = () => {
                         className="absolute top-2 right-2 bg-white/80 hover:bg-white"
                         onClick={(e) => {
                             e.stopPropagation();
-                            handleAddToFavorites(product.id);
+                            handleAddToFavorites(productId);
                         }}
                     >
                         <Heart className={`w-4 h-4 ${product.isFavorited ? 'fill-red-500 text-red-500' : ''}`} />
@@ -298,25 +233,59 @@ const ShopDetails = () => {
 
                 <CardContent className="p-4">
                     <h3 className="font-semibold text-lg mb-2 group-hover:text-yellow-600 transition-colors">
-                        {product.name}
+                        {product.name || product.title || 'منتج غير محدد'}
                     </h3>
+
+                    {product.description && (
+                        <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                            {product.description}
+                        </p>
+                    )}
 
                     <div className="flex items-center gap-2 mb-3">
                         <div className="flex items-center">
                             <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                            <span className="text-sm font-medium ml-1">{product.rating}</span>
-                            <span className="text-sm text-gray-500 ml-1">({product.reviewCount})</span>
+                            <span className="text-sm font-medium ml-1">
+                                {typeof product.rating === 'number' ? product.rating.toFixed(1) : '0.0'}
+                            </span>
+                            <span className="text-sm text-gray-500 ml-1">
+                                ({product.reviewCount || product.reviews?.length || 0})
+                            </span>
                         </div>
                     </div>
 
                     <div className="flex items-center justify-between">
                         <div className="text-xl font-bold text-yellow-600">
-                            {product.price.toLocaleString()} ج.م
+                            {(() => {
+                                // Handle different price formats
+                                let price = product.price;
+
+                                if (typeof price === 'object' && price !== null) {
+                                    // If price is an object, try to extract the value
+                                    price = price.value || price.amount || price.price || 0;
+                                }
+
+                                if (typeof price === 'string') {
+                                    // If price is a string, try to parse it
+                                    price = parseFloat(price) || 0;
+                                }
+
+                                if (typeof price === 'number' && price > 0) {
+                                    return price.toLocaleString();
+                                }
+
+                                return 'غير محدد';
+                            })()} ج.م
                         </div>
                         <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => navigate(ROUTES.PRODUCT_DETAILS(product.id))}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                if (productId) {
+                                    navigate(ROUTES.PRODUCT_DETAILS(productId));
+                                }
+                            }}
                         >
                             <Eye className="w-4 h-4 mr-1" />
                             عرض
@@ -398,12 +367,15 @@ const ShopDetails = () => {
                             src={safeShop.image}
                             alt={safeShop.name}
                             className="w-full h-full object-cover rounded-t-lg"
+                            onError={(e) => {
+                                e.target.src = '/placeholder-shop.jpg';
+                            }}
                         />
                         <div className="absolute inset-0 bg-black bg-opacity-40 rounded-t-lg"></div>
                         <div className="absolute bottom-6 left-6 text-white">
                             <div className="flex items-center gap-2 mb-2">
-                                <h1 className="text-3xl md:text-4xl font-bold">{shop.name}</h1>
-                                {shop.verified && (
+                                <h1 className="text-3xl md:text-4xl font-bold">{safeShop.name}</h1>
+                                {safeShop.verified && (
                                     <Badge className="bg-green-500">
                                         متجر موثق
                                     </Badge>
@@ -412,10 +384,19 @@ const ShopDetails = () => {
                             <div className="flex items-center gap-4">
                                 <div className="flex items-center">
                                     <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                                    <span className="text-lg font-medium ml-1">{shop.rating}</span>
-                                    <span className="text-sm ml-1">({shop.reviewCount} تقييم)</span>
+                                    <span className="text-lg font-medium ml-1">
+                                        {safeShop.rating ? safeShop.rating.toFixed(1) : '0.0'}
+                                    </span>
+                                    <span className="text-sm ml-1">
+                                        ({safeReviews.length} تقييم)
+                                    </span>
                                 </div>
-                                <span className="text-sm">منذ {shop.established}</span>
+                                <span className="text-sm">
+                                    منذ {safeShop.established || safeShop.createdAt ?
+                                        new Date(safeShop.established || safeShop.createdAt).getFullYear() :
+                                        'غير محدد'
+                                    }
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -424,31 +405,33 @@ const ShopDetails = () => {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                             <div className="flex items-center gap-3">
                                 <MapPin className="w-5 h-5 text-gray-500" />
-                                <span>{shop.address}</span>
+                                <span className="text-gray-700">{safeShop.address}</span>
                             </div>
                             <div className="flex items-center gap-3">
                                 <Phone className="w-5 h-5 text-gray-500" />
-                                <span>{shop.phone}</span>
+                                <span className="text-gray-700">{safeShop.phone}</span>
                             </div>
                             <div className="flex items-center gap-3">
                                 <Clock className="w-5 h-5 text-gray-500" />
-                                <span>{shop.workingHours}</span>
+                                <span className="text-gray-700">{safeShop.workingHours}</span>
                             </div>
                         </div>
 
                         <p className="text-gray-700 mb-6 leading-relaxed">
-                            {shop.description}
+                            {safeShop.description}
                         </p>
 
                         <div className="flex flex-wrap gap-2 mb-6">
-                            {shop.specialties && shop.specialties.length > 0 ? (
-                                shop.specialties.map((specialty, index) => (
-                                    <Badge key={index} variant="secondary">
+                            {safeShop.specialties && safeShop.specialties.length > 0 ? (
+                                safeShop.specialties.map((specialty, index) => (
+                                    <Badge key={index} variant="secondary" className="bg-yellow-100 text-yellow-800">
                                         {specialty}
                                     </Badge>
                                 ))
                             ) : (
-                                <Badge variant="secondary">لا توجد تخصصات محددة</Badge>
+                                <Badge variant="secondary" className="bg-gray-100 text-gray-600">
+                                    لا توجد تخصصات محددة
+                                </Badge>
                             )}
                         </div>
 
@@ -463,15 +446,21 @@ const ShopDetails = () => {
                             </Button>
                             <div className="grid grid-cols-3 gap-4 text-center">
                                 <div>
-                                    <div className="text-2xl font-bold text-yellow-600">{shop.productsCount}</div>
+                                    <div className="text-2xl font-bold text-yellow-600">
+                                        {safeProducts.length}
+                                    </div>
                                     <div className="text-sm text-gray-600">منتج</div>
                                 </div>
                                 <div>
-                                    <div className="text-2xl font-bold text-yellow-600">{shop.customersCount}</div>
+                                    <div className="text-2xl font-bold text-yellow-600">
+                                        {safeShop.customersCount || safeShop.customerCount || 0}
+                                    </div>
                                     <div className="text-sm text-gray-600">عميل</div>
                                 </div>
                                 <div>
-                                    <div className="text-2xl font-bold text-yellow-600">{shop.reviewCount}</div>
+                                    <div className="text-2xl font-bold text-yellow-600">
+                                        {safeReviews.length}
+                                    </div>
                                     <div className="text-sm text-gray-600">تقييم</div>
                                 </div>
                             </div>
@@ -482,9 +471,15 @@ const ShopDetails = () => {
                 {/* Shop Content Tabs */}
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
                     <TabsList className="grid w-full grid-cols-3">
-                        <TabsTrigger value="products">المنتجات ({products.length})</TabsTrigger>
-                        <TabsTrigger value="reviews">التقييمات ({reviews.length})</TabsTrigger>
-                        <TabsTrigger value="gallery">معرض الصور</TabsTrigger>
+                        <TabsTrigger value="products">
+                            المنتجات ({safeProducts.length})
+                        </TabsTrigger>
+                        <TabsTrigger value="reviews">
+                            التقييمات ({safeReviews.length})
+                        </TabsTrigger>
+                        <TabsTrigger value="gallery">
+                            معرض الصور {safeShop.gallery?.length ? `(${safeShop.gallery.length})` : ''}
+                        </TabsTrigger>
                     </TabsList>
 
                     <TabsContent value="products" className="space-y-6">
@@ -511,23 +506,43 @@ const ShopDetails = () => {
                         </div>
 
                         {safeProducts.length > 0 ? (
-                            <div className={`grid gap-6 ${viewMode === 'grid'
-                                ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-                                : 'grid-cols-1'
-                                }`}>
-                                {safeProducts.map((product) => (
-                                    <ProductCard key={product.id} product={product} />
-                                ))}
+                            <div>
+                                <div className="mb-4 text-sm text-gray-600">
+                                    عرض {safeProducts.length} منتج من متجر {safeShop.name}
+                                </div>
+                                <div className={`grid gap-6 ${viewMode === 'grid'
+                                    ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+                                    : 'grid-cols-1'
+                                    }`}>
+                                    {safeProducts.map((product) => {
+                                        const productKey = product.id || product._id || Math.random();
+                                        return (
+                                            <ProductCard key={productKey} product={product} />
+                                        );
+                                    })}
+                                </div>
                             </div>
                         ) : (
-                            <div className="text-center py-12">
+                            <div className="text-center py-12 bg-gray-50 rounded-lg">
                                 <div className="text-6xl mb-4">📦</div>
                                 <h3 className="text-xl font-medium text-gray-900 mb-2">
-                                    لا توجد منتجات
+                                    لا توجد منتجات في هذا المتجر
                                 </h3>
-                                <p className="text-gray-600">
-                                    لم يتم إضافة منتجات لهذا المتجر بعد
+                                <p className="text-gray-600 mb-4">
+                                    لم يتم إضافة منتجات لمتجر "{safeShop.name}" بعد
                                 </p>
+                                {user?.role === 'admin' || user?.id === safeShop.ownerId ? (
+                                    <Button
+                                        variant="outline"
+                                        onClick={() => navigate(ROUTES.PRODUCTS_CREATE)}
+                                    >
+                                        إضافة منتج جديد
+                                    </Button>
+                                ) : (
+                                    <p className="text-sm text-gray-500">
+                                        تواصل مع صاحب المتجر لإضافة منتجات
+                                    </p>
+                                )}
                             </div>
                         )}
                     </TabsContent>
@@ -585,27 +600,43 @@ const ShopDetails = () => {
                     <TabsContent value="gallery" className="space-y-6">
                         <h2 className="text-2xl font-bold">معرض صور المتجر</h2>
 
-                        {shop.gallery && shop.gallery.length > 0 ? (
+                        {safeShop.gallery && safeShop.gallery.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {shop.gallery.map((image, index) => (
-                                    <div key={index} className="aspect-square rounded-lg overflow-hidden">
+                                {safeShop.gallery.map((image, index) => (
+                                    <div key={index} className="aspect-square rounded-lg overflow-hidden shadow-lg">
                                         <img
                                             src={image}
-                                            alt={`${shop.name} - صورة ${index + 1}`}
-                                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                                            alt={`${safeShop.name} - صورة ${index + 1}`}
+                                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300 cursor-pointer"
+                                            onError={(e) => {
+                                                e.target.src = '/placeholder-image.jpg';
+                                            }}
+                                            onClick={() => {
+                                                // يمكن إضافة modal لعرض الصورة بحجم كبير
+                                                window.open(image, '_blank');
+                                            }}
                                         />
                                     </div>
                                 ))}
                             </div>
                         ) : (
-                            <div className="text-center py-12">
+                            <div className="text-center py-12 bg-gray-50 rounded-lg">
                                 <div className="text-6xl mb-4">📸</div>
                                 <h3 className="text-xl font-medium text-gray-900 mb-2">
-                                    لا توجد صور
+                                    لا توجد صور في المعرض
                                 </h3>
                                 <p className="text-gray-600">
                                     لم يتم إضافة صور لمعرض المتجر بعد
                                 </p>
+                                {user?.role === 'admin' || user?.id === safeShop.ownerId && (
+                                    <Button
+                                        variant="outline"
+                                        className="mt-4"
+                                        onClick={() => navigate(ROUTES.EDIT_SHOP)}
+                                    >
+                                        إضافة صور للمعرض
+                                    </Button>
+                                )}
                             </div>
                         )}
                     </TabsContent>

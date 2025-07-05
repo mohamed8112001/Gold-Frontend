@@ -110,8 +110,16 @@ export const shopService = {
       );
     }
   },
-<<<<<<< HEAD
+
+  // Get current user's shop
+  getMyShop: async () => {
+    try {
+      const response = await api.get("/shop/my-shop");
+      return response.data;
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.message || "Failed to fetch user shop"
+      );
+    }
+  },
 };
-=======
-};
->>>>>>> 85f67a2d071b5831fabbe48782b6a10de32d8cbc

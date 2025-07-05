@@ -19,7 +19,6 @@ export const productService = {
       const response = await api.get("/product", {
         params: {
           shopId: shopId,
-          shop_id: shopId, // Try both formats
           ...params,
         },
       });
