@@ -341,7 +341,13 @@ const ShopList = () => {
               className="bg-yellow-600 hover:bg-yellow-700 text-white"
               onClick={(e) => {
                 e.stopPropagation(); // Prevent card click
-                navigate(ROUTES.SHOP_DETAILS(shop.id));
+                const shopId = shop._id || shop.id;
+                console.log('Button click - navigating to shop:', shopId, shop.name);
+                if (shopId) {
+                  navigate(ROUTES.SHOP_DETAILS(shopId));
+                } else {
+                  console.error('Shop ID is missing:', shop);
+                }
               }}
             >
               <Eye className="w-4 h-4 mr-1" />
@@ -578,4 +584,3 @@ const ShopList = () => {
 };
 
 export default ShopList;
-

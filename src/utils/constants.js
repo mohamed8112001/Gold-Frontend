@@ -1,6 +1,6 @@
 // API Base URL
 export const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:5006";
 
 // API Endpoints
 export const API_ENDPOINTS = {
@@ -19,7 +19,9 @@ export const API_ENDPOINTS = {
   SHOP: {
     CREATE: "/shop/create",
     GET_ALL: "/shop",
+    GET_ALL_PUBLIC: "/shop/public", // Public endpoint for browsing shops
     GET_BY_ID: (id) => `/shop/${id}`,
+    GET_BY_ID_PUBLIC: (id) => `/shop/public/${id}`, // Public endpoint for shop details
     UPDATE: (id) => `/shop/${id}`,
     DELETE: (id) => `/shop/${id}`,
   },
