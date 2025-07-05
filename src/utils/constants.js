@@ -123,6 +123,11 @@ export const ROUTES = {
   // Additional routes
   PRODUCTS_CREATE: "/products/create",
 
+  // Admin routes
+  ADMIN_DASHBOARD: "/admin",
+  ADMIN_SHOPS: "/admin/shops",
+  ADMIN_USERS: "/admin/users",
+
   // Other
   NOT_FOUND: "/404",
 };

@@ -22,6 +22,10 @@ import Settings from './pages/user/Settings.jsx';
 import BookAppointment from './pages/booking/BookAppointment.jsx';
 import MyBookings from './pages/booking/MyBookings.jsx';
 import ManageBookings from './pages/booking/ManageBookings.jsx';
+import AdminDashboard from './pages/admin/AdminDashboard.jsx';
+import CreateAdmin from './pages/admin/CreateAdmin.jsx';
+import PromoteToAdmin from './pages/admin/PromoteToAdmin.jsx';
+import DemoAdminLogin from './pages/admin/DemoAdminLogin.jsx';
 import NotFound from './pages/NotFound.jsx';
 import TestPage from './pages/TestPage.jsx';
 import './App.css';
@@ -68,6 +72,12 @@ function App() {
             <Route path="/booking/:shopId" element={<BookAppointment />} />
             <Route path="/my-bookings" element={<MyBookings />} />
             <Route path="/bookings/manage" element={<ManageBookings />} />
+
+            {/* Admin Routes */}
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/create" element={<CreateAdmin />} />
+            <Route path="/admin/promote" element={<PromoteToAdmin />} />
+            <Route path="/demo-login" element={<DemoAdminLogin />} />
 
             <Route path="*" element={<NotFound />} />
           </Routes>
