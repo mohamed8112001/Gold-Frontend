@@ -123,7 +123,7 @@ const Home = () => {
     }
   };
 
- 
+
   const ShopCard = ({ shop }) => (
     <Card className="group hover:shadow-lg transition-all duration-300 cursor-pointer">
       <div className="relative overflow-hidden">
