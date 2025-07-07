@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button.jsx';
-import { Card, CardContent } from '@/components/ui/card.jsx';
+import { Card, CardContent, CardHeader } from '@/components/ui/card.jsx';
 import { Badge } from '@/components/ui/badge.jsx';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.jsx';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar.jsx';
+import { Separator } from '@/components/ui/separator.jsx';
 import {
     ArrowLeft,
     Star,
@@ -13,9 +15,14 @@ import {
     Calendar,
     Heart,
     Eye,
-
+    Share2,
+    MessageCircle,
     Grid,
-    List
+    List,
+    Award,
+    Users,
+    ShoppingBag,
+    Verified
 } from 'lucide-react';
 import { shopService } from '../../services/shopService.js';
 import { productService } from '../../services/productService.js';
@@ -88,13 +95,16 @@ const ShopDetails = () => {
                     }
                 }
 
+                // Default gold shop image
+                const defaultShopImage = 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=400&fit=crop&crop=center&auto=format&q=60';
+
                 // Ensure shop has all required fields
                 const processedShopData = {
                     ...shopData,
                     rating: shopData.averageRating || shopData.rating || 0,
                     specialties: Array.isArray(shopData.specialties) ? shopData.specialties : [],
                     gallery: Array.isArray(shopData.gallery) ? shopData.gallery : [],
-                    image: shopData.logoUrl || shopData.image || shopData.imageUrl || '/placeholder-shop.jpg'
+                    image: shopData.logoUrl || shopData.image || shopData.imageUrl || defaultShopImage
                 };
 
                 console.log('🏪 Processed shop data:', processedShopData);
@@ -155,7 +165,7 @@ const ShopDetails = () => {
 
     const handleBookAppointment = () => {
         if (!user) {
-            alert('يرجى تسجيل الدخول أولاً لحجز موعد');
+            alert('Please login first to book an appointment');
             navigate(ROUTES.LOGIN);
             return;
         }
@@ -164,13 +174,13 @@ const ShopDetails = () => {
 
     const handleAddToFavorites = async (productId) => {
         if (!user) {
-            alert('يرجى تسجيل الدخول أولاً لإضافة المنتج للمفضلة');
+            alert('Please login first to add product to favorites');
             navigate(ROUTES.LOGIN);
             return;
         }
 
         if (!productId) {
-            alert('حدث خطأ: معرف المنتج غير موجود');
+            alert('Error: Product ID not found');
             return;
         }
 
@@ -185,10 +195,10 @@ const ShopDetails = () => {
                     : product;
             }));
 
-            alert('تم إضافة المنتج للمفضلة بنجاح!');
+            alert('Product added to favorites successfully!');
         } catch (error) {
             console.error('Error adding to favorites:', error);
-            alert('حدث خطأ في إضافة المنتج للمفضلة');
+            alert('Error adding product to favorites');
         }
     };
 
@@ -196,96 +206,100 @@ const ShopDetails = () => {
     const ProductCard = ({ product }) => {
         const productId = product.id || product._id;
 
-        // Debug: Log product data for troubleshooting
-        console.log('🔍 ProductCard received:', {
-            id: productId,
-            name: product.name,
-            price: product.price,
-            priceType: typeof product.price,
-            rating: product.rating,
-            description: product.description
-        });
+        // Array of default gold jewelry images
+        const defaultGoldImages = [
+            'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=300&fit=crop&crop=center&auto=format&q=60', // Gold rings
+            'https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=400&h=300&fit=crop&crop=center&auto=format&q=60', // Gold necklace
+            'https://images.unsplash.com/photo-1602173574767-37ac01994b2a?w=400&h=300&fit=crop&crop=center&auto=format&q=60', // Gold earrings
+            'https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?w=400&h=300&fit=crop&crop=center&auto=format&q=60', // Gold bracelet
+            'https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=400&h=300&fit=crop&crop=center&auto=format&q=60'  // Gold jewelry set
+        ];
+
+        // Select a random default image based on product ID for consistency
+        const defaultProductImage = defaultGoldImages[productId ? (productId.length % defaultGoldImages.length) : 0];
 
         return (
             <Card
-                className="group hover:shadow-lg transition-all duration-300 cursor-pointer"
+                className="group hover:shadow-2xl hover:-translate-y-3 transition-all duration-500 cursor-pointer overflow-hidden border-0 bg-white rounded-3xl shadow-lg h-[500px] flex flex-col"
                 onClick={() => {
                     if (productId) {
                         navigate(ROUTES.PRODUCT_DETAILS(productId));
                     }
                 }}
             >
-                <div className="relative">
+                <div className="relative overflow-hidden h-64">
                     <img
-                        src={product.image || product.imageUrl || product.images?.[0] || '/api/placeholder/300/300'}
-                        alt={product.name || 'منتج'}
-                        className="w-full h-48 object-cover rounded-t-lg group-hover:scale-105 transition-transform duration-300"
+                        src={product.image || product.imageUrl || product.images?.[0] || defaultProductImage}
+                        alt={product.name || 'Product'}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         onError={(e) => {
-                            e.target.src = 'https://via.placeholder.com/300x300/f3f4f6/9ca3af?text=منتج';
+                            e.target.src = defaultProductImage;
                         }}
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+                    {/* Favorite Button */}
                     <Button
                         size="sm"
                         variant="ghost"
-                        className="absolute top-2 right-2 bg-white/80 hover:bg-white"
+                        className="absolute top-3 right-3 bg-white/90 hover:bg-white backdrop-blur-sm rounded-full w-9 h-9 p-0 shadow-md opacity-0 group-hover:opacity-100 transition-all duration-300"
                         onClick={(e) => {
                             e.stopPropagation();
                             handleAddToFavorites(productId);
                         }}
                     >
-                        <Heart className={`w-4 h-4 ${product.isFavorited ? 'fill-red-500 text-red-500' : ''}`} />
+                        <Heart className={`w-4 h-4 ${product.isFavorited ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
                     </Button>
+
+                    {/* Status Badge */}
+                    <Badge
+                        className="absolute top-3 left-3 bg-green-500 hover:bg-green-600 text-white opacity-0 group-hover:opacity-100 transition-all duration-300"
+                    >
+                        Available
+                    </Badge>
                 </div>
 
-                <CardContent className="p-4">
-                    <h3 className="font-semibold text-lg mb-2 group-hover:text-yellow-600 transition-colors">
-                        {product.name || product.title || 'منتج غير محدد'}
-                    </h3>
+                <CardContent className="p-5 flex-1 flex flex-col">
+                    <div className="space-y-3 flex-1">
+                        <div className="space-y-2">
+                            <h3 className="font-bold text-lg text-gray-900 group-hover:text-yellow-600 transition-colors duration-300 line-clamp-2 leading-tight min-h-[56px]">
+                                {product.name || product.title || 'Untitled Product'}
+                            </h3>
 
-                    {product.description && (
-                        <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-                            {product.description}
-                        </p>
-                    )}
+                            {product.description && (
+                                <p className="text-gray-600 text-sm leading-relaxed line-clamp-2 min-h-[40px]">
+                                    {product.description}
+                                </p>
+                            )}
+                        </div>
 
-                    <div className="flex items-center gap-2 mb-3">
-                        <div className="flex items-center">
-                            <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                            <span className="text-sm font-medium ml-1">
-                                {typeof product.rating === 'number' ? product.rating.toFixed(1) : '0.0'}
-                            </span>
-                            <span className="text-sm text-gray-500 ml-1">
-                                ({product.reviewCount || product.reviews?.length || 0})
-                            </span>
+                        <div className="flex items-center justify-center py-2">
+                            <div className="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-full">
+                                <div className="flex">
+                                    {[...Array(5)].map((_, i) => (
+                                        <Star
+                                            key={i}
+                                            className={`w-4 h-4 ${i < Math.floor(product.rating || 0)
+                                                ? 'fill-yellow-400 text-yellow-400'
+                                                : 'text-gray-300'
+                                                }`}
+                                        />
+                                    ))}
+                                </div>
+                                <span className="text-sm font-semibold text-gray-800">
+                                    {typeof product.rating === 'number' ? product.rating.toFixed(1) : '0.0'}
+                                </span>
+                                <span className="text-xs text-gray-500">
+                                    ({product.reviewCount || product.reviews?.length || 0})
+                                </span>
+                            </div>
                         </div>
                     </div>
 
-                    <div className="flex items-center justify-between">
-                        <div className="text-xl font-bold text-yellow-600">
-                            {(() => {
-                                // Handle different price formats
-                                let price = product.price;
-
-                                if (typeof price === 'object' && price !== null) {
-                                    // If price is an object, try to extract the value
-                                    price = price.value || price.amount || price.price || 0;
-                                }
-
-                                if (typeof price === 'string') {
-                                    // If price is a string, try to parse it
-                                    price = parseFloat(price) || 0;
-                                }
-
-                                if (typeof price === 'number' && price > 0) {
-                                    return price.toLocaleString();
-                                }
-
-                                return 'غير محدد';
-                            })()} ج.م
-                        </div>
+                    <div className="mt-auto pt-3 border-t border-gray-100">
                         <Button
                             size="sm"
-                            variant="outline"
+                            className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white rounded-full py-2.5 text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
                             onClick={(e) => {
                                 e.stopPropagation();
                                 if (productId) {
@@ -293,8 +307,8 @@ const ShopDetails = () => {
                                 }
                             }}
                         >
-                            <Eye className="w-4 h-4 mr-1" />
-                            عرض
+                            <Eye className="w-4 h-4 mr-2" />
+                            View Details
                         </Button>
                     </div>
                 </CardContent>
@@ -307,7 +321,7 @@ const ShopDetails = () => {
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600 mx-auto mb-4"></div>
-                    <p className="text-gray-600">جاري تحميل تفاصيل المتجر...</p>
+                    <p className="text-gray-600">Loading shop details...</p>
                 </div>
             </div>
         );
@@ -318,335 +332,487 @@ const ShopDetails = () => {
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
                 <div className="text-center">
                     <div className="text-6xl mb-4">🏪</div>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-2">المتجر غير متاح</h2>
-                    <p className="text-gray-600 mb-4">عذراً، هذا المتجر غير متاح حالياً أو في انتظار الموافقة من الإدارة</p>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Shop Not Available</h2>
+                    <p className="text-gray-600 mb-4">Sorry, this shop is currently unavailable or pending approval</p>
                     <Button onClick={() => navigate(ROUTES.SHOPS)}>
-                        العودة للمتاجر
+                        Back to Shops
                     </Button>
                 </div>
             </div>
         );
     }
 
+    // Default gold shop image
+    const defaultShopImage = 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=400&fit=crop&crop=center&auto=format&q=60';
+
     // Ensure shop has required properties to prevent errors
     const safeShop = {
-        name: shop.name || 'متجر غير محدد',
-        description: shop.description || 'لا يوجد وصف متاح',
-        address: shop.address || 'العنوان غير محدد',
-        phone: shop.phone || 'غير محدد',
+        name: shop.name || 'Unnamed Shop',
+        description: shop.description || 'No description available',
+        address: shop.address || 'Address not specified',
+        phone: shop.phone || 'Not specified',
         rating: shop.rating || 0,
         specialties: Array.isArray(shop.specialties) ? shop.specialties : [],
-        workingHours: shop.workingHours || 'غير محدد',
+        workingHours: shop.workingHours || 'Not specified',
         gallery: Array.isArray(shop.gallery) ? shop.gallery : [],
-        image: shop.image || '/placeholder-shop.jpg',
+        image: shop.image || defaultShopImage,
         ...shop
     };
 
 
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                {/* Breadcrumb */}
-                <div className="flex items-center gap-2 text-sm text-gray-600 mb-6">
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+            <div className="w-full px-4 sm:px-6 lg:px-8 py-6">
+                {/* Enhanced Breadcrumb */}
+                <div className="flex items-center gap-2 text-sm text-gray-600 mb-8">
                     <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => navigate(-1)}
-                        className="flex items-center gap-1 p-0 h-auto"
+                        className="flex items-center gap-2 hover:bg-white hover:shadow-sm transition-all duration-200 rounded-full px-4 py-2"
                     >
                         <ArrowLeft className="w-4 h-4" />
-                        العودة
+                        Back
                     </Button>
-                    <span>/</span>
-                    <span onClick={() => navigate(ROUTES.SHOPS)} className="cursor-pointer hover:text-yellow-600">
-                        المتاجر
+                    <Separator orientation="vertical" className="h-4" />
+                    <span onClick={() => navigate(ROUTES.SHOPS)} className="cursor-pointer hover:text-yellow-600 transition-colors">
+                        Shops
                     </span>
-                    <span>/</span>
-                    <span className="text-gray-900">{safeShop.name}</span>
+                    <span className="text-gray-400">/</span>
+                    <span className="text-gray-900 font-medium">{safeShop.name}</span>
                 </div>
 
-                {/* Shop Header */}
-                <div className="bg-white rounded-lg shadow-sm mb-8">
-                    <div className="relative h-64 md:h-80">
+                {/* Enhanced Shop Header */}
+                <div className="bg-white rounded-2xl shadow-xl mb-8 overflow-hidden mx-4 lg:mx-8">
+                    {/* Hero Section */}
+                    <div className="relative h-72 md:h-96">
                         <img
                             src={safeShop.image}
                             alt={safeShop.name}
-                            className="w-full h-full object-cover rounded-t-lg"
+                            className="w-full h-full object-cover"
                             onError={(e) => {
-                                e.target.src = '/placeholder-shop.jpg';
+                                e.target.src = defaultShopImage;
                             }}
                         />
-                        <div className="absolute inset-0 bg-black bg-opacity-40 rounded-t-lg"></div>
-                        <div className="absolute bottom-6 left-6 text-white">
-                            <div className="flex items-center gap-2 mb-2">
-                                <h1 className="text-3xl md:text-4xl font-bold">{safeShop.name}</h1>
-                                {safeShop.verified && (
-                                    <Badge className="bg-green-500">
-                                        متجر موثق
-                                    </Badge>
-                                )}
-                            </div>
-                            <div className="flex items-center gap-4">
-                                <div className="flex items-center">
-                                    <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                                    <span className="text-lg font-medium ml-1">
-                                        {safeShop.rating ? safeShop.rating.toFixed(1) : '0.0'}
-                                    </span>
-                                    <span className="text-sm ml-1">
-                                        ({safeReviews.length} تقييم)
-                                    </span>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+
+                        {/* Action Buttons */}
+                        <div className="absolute top-6 right-6 flex gap-2">
+                            <Button
+                                size="sm"
+                                variant="secondary"
+                                className="bg-white/90 hover:bg-white backdrop-blur-sm"
+                            >
+                                <Share2 className="w-4 h-4" />
+                            </Button>
+                            <Button
+                                size="sm"
+                                variant="secondary"
+                                className="bg-white/90 hover:bg-white backdrop-blur-sm"
+                            >
+                                <Heart className="w-4 h-4" />
+                            </Button>
+                        </div>
+
+                        {/* Shop Info Overlay */}
+                        <div className="absolute bottom-0 left-0 right-0 p-8">
+                            <div className="flex items-end justify-between">
+                                <div className="text-white">
+                                    <div className="flex items-center gap-3 mb-3">
+                                        <h1 className="text-4xl md:text-5xl font-bold">{safeShop.name}</h1>
+                                        {safeShop.verified && (
+                                            <Badge className="bg-green-500 hover:bg-green-600 flex items-center gap-1">
+                                                <Verified className="w-3 h-3" />
+                                                متجر موثق
+                                            </Badge>
+                                        )}
+                                    </div>
+                                    <div className="flex items-center gap-6 text-white/90">
+                                        <div className="flex items-center gap-2">
+                                            <div className="flex">
+                                                {[...Array(5)].map((_, i) => (
+                                                    <Star
+                                                        key={i}
+                                                        className={`w-5 h-5 ${i < Math.floor(safeShop.rating)
+                                                            ? 'fill-yellow-400 text-yellow-400'
+                                                            : 'text-white/40'
+                                                            }`}
+                                                    />
+                                                ))}
+                                            </div>
+                                            <span className="text-lg font-semibold">
+                                                {safeShop.rating ? safeShop.rating.toFixed(1) : '0.0'}
+                                            </span>
+                                            <span className="text-sm">
+                                                ({safeReviews.length} تقييم)
+                                            </span>
+                                        </div>
+                                        <div className="flex items-center gap-1">
+                                            <Award className="w-4 h-4" />
+                                            <span className="text-sm">
+                                                منذ {safeShop.established || safeShop.createdAt ?
+                                                    new Date(safeShop.established || safeShop.createdAt).getFullYear() :
+                                                    'غير محدد'
+                                                }
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <span className="text-sm">
-                                    منذ {safeShop.established || safeShop.createdAt ?
-                                        new Date(safeShop.established || safeShop.createdAt).getFullYear() :
-                                        'غير محدد'
-                                    }
-                                </span>
                             </div>
                         </div>
                     </div>
 
-                    <div className="p-6">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                            <div className="flex items-center gap-3">
-                                <MapPin className="w-5 h-5 text-gray-500" />
-                                <span className="text-gray-700">{safeShop.address}</span>
-                            </div>
-                            <div className="flex items-center gap-3">
-                                <Phone className="w-5 h-5 text-gray-500" />
-                                <span className="text-gray-700">{safeShop.phone}</span>
-                            </div>
-                            <div className="flex items-center gap-3">
-                                <Clock className="w-5 h-5 text-gray-500" />
-                                <span className="text-gray-700">{safeShop.workingHours}</span>
-                            </div>
-                        </div>
-
-                        <p className="text-gray-700 mb-6 leading-relaxed">
-                            {safeShop.description}
-                        </p>
-
-                        <div className="flex flex-wrap gap-2 mb-6">
-                            {safeShop.specialties && safeShop.specialties.length > 0 ? (
-                                safeShop.specialties.map((specialty, index) => (
-                                    <Badge key={index} variant="secondary" className="bg-yellow-100 text-yellow-800">
-                                        {specialty}
-                                    </Badge>
-                                ))
-                            ) : (
-                                <Badge variant="secondary" className="bg-gray-100 text-gray-600">
-                                    لا توجد تخصصات محددة
-                                </Badge>
-                            )}
-                        </div>
-
-                        <div className="flex flex-col sm:flex-row gap-4">
-                            <Button
-                                size="lg"
-                                onClick={handleBookAppointment}
-                                className="flex-1 sm:flex-none"
-                            >
-                                <Calendar className="w-5 h-5 mr-2" />
-                                حجز موعد
-                            </Button>
-                            <div className="grid grid-cols-3 gap-4 text-center">
-                                <div>
-                                    <div className="text-2xl font-bold text-yellow-600">
-                                        {safeProducts.length}
+                    {/* Enhanced Shop Info Section */}
+                    <div className="p-8">
+                        {/* Contact Information Cards */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                            <Card className="border-0 bg-gradient-to-r from-blue-50 to-blue-100 hover:shadow-lg transition-shadow rounded-2xl">
+                                <CardContent className="p-6 flex items-center gap-4">
+                                    <div className="p-3 bg-blue-500 rounded-full">
+                                        <MapPin className="w-6 h-6 text-white" />
                                     </div>
-                                    <div className="text-sm text-gray-600">منتج</div>
+                                    <div>
+                                        <p className="text-sm text-blue-600 font-medium mb-1">Address</p>
+                                        <p className="text-gray-800 font-semibold text-base">{safeShop.address}</p>
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            <Card className="border-0 bg-gradient-to-r from-green-50 to-green-100 hover:shadow-lg transition-shadow rounded-2xl">
+                                <CardContent className="p-6 flex items-center gap-4">
+                                    <div className="p-3 bg-green-500 rounded-full">
+                                        <Phone className="w-6 h-6 text-white" />
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-green-600 font-medium mb-1">Phone</p>
+                                        <p className="text-gray-800 font-semibold text-base">{safeShop.phone}</p>
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            <Card className="border-0 bg-gradient-to-r from-purple-50 to-purple-100 hover:shadow-lg transition-shadow rounded-2xl">
+                                <CardContent className="p-6 flex items-center gap-4">
+                                    <div className="p-3 bg-purple-500 rounded-full">
+                                        <Clock className="w-6 h-6 text-white" />
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-purple-600 font-medium mb-1">Working Hours</p>
+                                        <p className="text-gray-800 font-semibold text-base">{safeShop.workingHours}</p>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </div>
+
+                        {/* Description */}
+                        <div className="mb-10">
+                            <h3 className="text-2xl font-bold text-gray-900 mb-6">About the Shop</h3>
+                            <p className="text-gray-700 leading-relaxed text-xl bg-gray-50 p-6 rounded-2xl">
+                                {safeShop.description}
+                            </p>
+                        </div>
+
+                        {/* Specialties */}
+                        <div className="mb-10">
+                            <h3 className="text-2xl font-bold text-gray-900 mb-6">Specialties</h3>
+                            <div className="flex flex-wrap gap-4">
+                                {safeShop.specialties && safeShop.specialties.length > 0 ? (
+                                    safeShop.specialties.map((specialty, index) => (
+                                        <Badge
+                                            key={index}
+                                            className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-white px-6 py-3 text-base font-semibold hover:from-yellow-500 hover:to-yellow-600 transition-all rounded-full"
+                                        >
+                                            {specialty}
+                                        </Badge>
+                                    ))
+                                ) : (
+                                    <Badge variant="secondary" className="bg-gray-100 text-gray-600 px-6 py-3 text-base rounded-full">
+                                        No specialties specified
+                                    </Badge>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Action Section */}
+                        <div className="flex flex-col lg:flex-row items-center justify-between gap-8 p-8 bg-gradient-to-r from-gray-50 to-gray-100 rounded-3xl">
+                            <div className="flex gap-6">
+                                <Button
+                                    size="lg"
+                                    onClick={handleBookAppointment}
+                                    className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-10 py-4 rounded-full font-bold text-lg shadow-xl hover:shadow-2xl transition-all"
+                                >
+                                    <Calendar className="w-6 h-6 mr-3" />
+                                    Book Appointment
+                                </Button>
+                                <Button
+                                    size="lg"
+                                    variant="outline"
+                                    className="border-2 border-gray-300 hover:border-gray-400 px-10 py-4 rounded-full font-bold text-lg hover:bg-white transition-all"
+                                >
+                                    <MessageCircle className="w-6 h-6 mr-3" />
+                                    Contact Us
+                                </Button>
+                            </div>
+
+                            {/* Stats */}
+                            <div className="flex gap-10">
+                                <div className="text-center">
+                                    <div className="flex items-center justify-center w-16 h-16 bg-yellow-500 rounded-full mb-3 shadow-lg">
+                                        <ShoppingBag className="w-8 h-8 text-white" />
+                                    </div>
+                                    <div className="text-3xl font-bold text-gray-900">{safeProducts.length}</div>
+                                    <div className="text-base text-gray-600 font-medium">Products</div>
                                 </div>
-                                <div>
-                                    <div className="text-2xl font-bold text-yellow-600">
+                                <div className="text-center">
+                                    <div className="flex items-center justify-center w-16 h-16 bg-blue-500 rounded-full mb-3 shadow-lg">
+                                        <Users className="w-8 h-8 text-white" />
+                                    </div>
+                                    <div className="text-3xl font-bold text-gray-900">
                                         {safeShop.customersCount || safeShop.customerCount || 0}
                                     </div>
-                                    <div className="text-sm text-gray-600">عميل</div>
+                                    <div className="text-base text-gray-600 font-medium">Customers</div>
                                 </div>
-                                <div>
-                                    <div className="text-2xl font-bold text-yellow-600">
-                                        {safeReviews.length}
+                                <div className="text-center">
+                                    <div className="flex items-center justify-center w-16 h-16 bg-green-500 rounded-full mb-3 shadow-lg">
+                                        <Star className="w-8 h-8 text-white" />
                                     </div>
-                                    <div className="text-sm text-gray-600">تقييم</div>
+                                    <div className="text-3xl font-bold text-gray-900">{safeReviews.length}</div>
+                                    <div className="text-base text-gray-600 font-medium">Reviews</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {/* Shop Content Tabs */}
-                <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-                    <TabsList className="grid w-full grid-cols-3">
-                        <TabsTrigger value="products">
-                            المنتجات ({safeProducts.length})
-                        </TabsTrigger>
-                        <TabsTrigger value="reviews">
-                            التقييمات ({safeReviews.length})
-                        </TabsTrigger>
-                        <TabsTrigger value="gallery">
-                            معرض الصور {safeShop.gallery?.length ? `(${safeShop.gallery.length})` : ''}
-                        </TabsTrigger>
-                    </TabsList>
+                {/* Enhanced Shop Content Tabs */}
+                <div className="bg-white rounded-2xl shadow-xl overflow-hidden mx-4 lg:mx-8">
+                    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                        <TabsList className="grid w-full grid-cols-3 bg-gray-50 p-3 rounded-none h-auto">
+                            <TabsTrigger
+                                value="products"
+                                className="data-[state=active]:bg-white data-[state=active]:shadow-lg rounded-2xl py-5 px-8 font-bold text-lg transition-all"
+                            >
+                                <ShoppingBag className="w-6 h-6 mr-3" />
+                                Products ({safeProducts.length})
+                            </TabsTrigger>
+                            <TabsTrigger
+                                value="reviews"
+                                className="data-[state=active]:bg-white data-[state=active]:shadow-lg rounded-2xl py-5 px-8 font-bold text-lg transition-all"
+                            >
+                                <Star className="w-6 h-6 mr-3" />
+                                Reviews ({safeReviews.length})
+                            </TabsTrigger>
+                            <TabsTrigger
+                                value="gallery"
+                                className="data-[state=active]:bg-white data-[state=active]:shadow-lg rounded-2xl py-5 px-8 font-bold text-lg transition-all"
+                            >
+                                <Eye className="w-6 h-6 mr-3" />
+                                Gallery {safeShop.gallery?.length ? `(${safeShop.gallery.length})` : ''}
+                            </TabsTrigger>
+                        </TabsList>
 
-                    <TabsContent value="products" className="space-y-6">
-                        <div className="flex items-center justify-between">
-                            <h2 className="text-2xl font-bold">منتجات المتجر</h2>
-                            <div className="flex border rounded-lg">
-                                <Button
-                                    variant={viewMode === 'grid' ? 'default' : 'ghost'}
-                                    size="sm"
-                                    onClick={() => setViewMode('grid')}
-                                    className="rounded-r-none"
-                                >
-                                    <Grid className="w-4 h-4" />
-                                </Button>
-                                <Button
-                                    variant={viewMode === 'list' ? 'default' : 'ghost'}
-                                    size="sm"
-                                    onClick={() => setViewMode('list')}
-                                    className="rounded-l-none"
-                                >
-                                    <List className="w-4 h-4" />
-                                </Button>
+                        <TabsContent value="products" className="p-6 lg:p-8">
+                            <div className="flex items-center justify-between mb-10">
+                                <div>
+                                    <h2 className="text-4xl font-bold text-gray-900 mb-3">Shop Products</h2>
+                                    <p className="text-gray-600 text-lg">Discover our exclusive collection</p>
+                                </div>
+                                <div className="flex items-center gap-4">
+                                    <div className="flex bg-gray-100 rounded-full p-2">
+                                        <Button
+                                            variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                                            size="lg"
+                                            onClick={() => setViewMode('grid')}
+                                            className={`rounded-full px-6 py-3 font-semibold ${viewMode === 'grid' ? 'bg-white shadow-lg' : 'hover:bg-gray-200'}`}
+                                        >
+                                            <Grid className="w-5 h-5 mr-2" />
+                                            Grid
+                                        </Button>
+                                        <Button
+                                            variant={viewMode === 'list' ? 'default' : 'ghost'}
+                                            size="lg"
+                                            onClick={() => setViewMode('list')}
+                                            className={`rounded-full px-6 py-3 font-semibold ${viewMode === 'list' ? 'bg-white shadow-lg' : 'hover:bg-gray-200'}`}
+                                        >
+                                            <List className="w-5 h-5 mr-2" />
+                                            List
+                                        </Button>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
 
-                        {safeProducts.length > 0 ? (
-                            <div>
-                                <div className="mb-4 text-sm text-gray-600">
-                                    عرض {safeProducts.length} منتج من متجر {safeShop.name}
+                            {safeProducts.length > 0 ? (
+                                <div>
+                                    <div className="mb-6 text-base text-gray-600 font-medium">
+                                        Showing {safeProducts.length} products from {safeShop.name}
+                                    </div>
+                                    <div className={`grid gap-6 ${viewMode === 'grid'
+                                        ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+                                        : 'grid-cols-1'
+                                        }`}>
+                                        {safeProducts.map((product) => {
+                                            const productKey = product.id || product._id || Math.random();
+                                            return (
+                                                <ProductCard key={productKey} product={product} />
+                                            );
+                                        })}
+                                    </div>
                                 </div>
-                                <div className={`grid gap-6 ${viewMode === 'grid'
-                                    ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-                                    : 'grid-cols-1'
-                                    }`}>
-                                    {safeProducts.map((product) => {
-                                        const productKey = product.id || product._id || Math.random();
-                                        return (
-                                            <ProductCard key={productKey} product={product} />
-                                        );
-                                    })}
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="text-center py-12 bg-gray-50 rounded-lg">
-                                <div className="text-6xl mb-4">📦</div>
-                                <h3 className="text-xl font-medium text-gray-900 mb-2">
-                                    لا توجد منتجات في هذا المتجر
-                                </h3>
-                                <p className="text-gray-600 mb-4">
-                                    لم يتم إضافة منتجات لمتجر "{safeShop.name}" بعد
-                                </p>
-                                {user?.role === 'admin' || user?.id === safeShop.ownerId ? (
-                                    <Button
-                                        variant="outline"
-                                        onClick={() => navigate(ROUTES.PRODUCTS_CREATE)}
-                                    >
-                                        إضافة منتج جديد
-                                    </Button>
-                                ) : (
-                                    <p className="text-sm text-gray-500">
-                                        تواصل مع صاحب المتجر لإضافة منتجات
+                            ) : (
+                                <div className="text-center py-12 bg-gray-50 rounded-lg">
+                                    <div className="text-6xl mb-4">📦</div>
+                                    <h3 className="text-xl font-medium text-gray-900 mb-2">
+                                        لا توجد منتجات في هذا المتجر
+                                    </h3>
+                                    <p className="text-gray-600 mb-4">
+                                        لم يتم إضافة منتجات لمتجر "{safeShop.name}" بعد
                                     </p>
-                                )}
+                                    {user?.role === 'admin' || user?.id === safeShop.ownerId ? (
+                                        <Button
+                                            variant="outline"
+                                            onClick={() => navigate(ROUTES.PRODUCTS_CREATE)}
+                                        >
+                                            إضافة منتج جديد
+                                        </Button>
+                                    ) : (
+                                        <p className="text-sm text-gray-500">
+                                            تواصل مع صاحب المتجر لإضافة منتجات
+                                        </p>
+                                    )}
+                                </div>
+                            )}
+                        </TabsContent>
+
+                        <TabsContent value="reviews" className="p-8">
+                            <div className="mb-8">
+                                <h2 className="text-3xl font-bold text-gray-900 mb-2">تقييمات العملاء</h2>
+                                <p className="text-gray-600">اقرأ آراء عملائنا وتجاربهم معنا</p>
                             </div>
-                        )}
-                    </TabsContent>
 
-                    <TabsContent value="reviews" className="space-y-6">
-                        <h2 className="text-2xl font-bold">تقييمات العملاء</h2>
+                            {safeReviews.length > 0 ? (
+                                <div className="space-y-6">
+                                    {safeReviews.map((review) => (
+                                        <Card key={review.id} className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-2xl overflow-hidden">
+                                            <CardContent className="p-8">
+                                                <div className="flex items-start gap-4">
+                                                    <Avatar className="w-12 h-12 border-2 border-gray-200">
+                                                        <AvatarImage src={review.userAvatar} />
+                                                        <AvatarFallback className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-white font-bold">
+                                                            {review.userName?.charAt(0) || 'ع'}
+                                                        </AvatarFallback>
+                                                    </Avatar>
 
-                        {safeReviews.length > 0 ? (
-                            <div className="space-y-6">
-                                {safeReviews.map((review) => (
-                                    <Card key={review.id}>
-                                        <CardContent className="p-6">
-                                            <div className="flex items-start justify-between mb-4">
-                                                <div>
-                                                    <div className="flex items-center gap-2 mb-2">
-                                                        <span className="font-medium">{review.userName}</span>
-                                                        {review.verified && (
-                                                            <Badge variant="secondary" className="text-xs">
-                                                                عميل موثق
-                                                            </Badge>
-                                                        )}
-                                                    </div>
-                                                    <div className="flex items-center">
-                                                        {[...Array(5)].map((_, i) => (
-                                                            <Star
-                                                                key={i}
-                                                                className={`w-4 h-4 ${i < review.rating
-                                                                    ? 'fill-yellow-400 text-yellow-400'
-                                                                    : 'text-gray-300'
-                                                                    }`}
-                                                            />
-                                                        ))}
+                                                    <div className="flex-1">
+                                                        <div className="flex items-center justify-between mb-3">
+                                                            <div className="flex items-center gap-3">
+                                                                <span className="font-bold text-lg text-gray-900">{review.userName}</span>
+                                                                {review.verified && (
+                                                                    <Badge className="bg-green-100 text-green-700 border-green-200">
+                                                                        <Verified className="w-3 h-3 mr-1" />
+                                                                        عميل موثق
+                                                                    </Badge>
+                                                                )}
+                                                            </div>
+                                                            <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                                                                {review.date}
+                                                            </span>
+                                                        </div>
+
+                                                        <div className="flex items-center mb-4">
+                                                            <div className="flex mr-2">
+                                                                {[...Array(5)].map((_, i) => (
+                                                                    <Star
+                                                                        key={i}
+                                                                        className={`w-5 h-5 ${i < review.rating
+                                                                            ? 'fill-yellow-400 text-yellow-400'
+                                                                            : 'text-gray-300'
+                                                                            }`}
+                                                                    />
+                                                                ))}
+                                                            </div>
+                                                            <span className="text-sm font-medium text-gray-700">
+                                                                {review.rating}/5
+                                                            </span>
+                                                        </div>
+
+                                                        <p className="text-gray-700 leading-relaxed text-lg">
+                                                            "{review.comment}"
+                                                        </p>
                                                     </div>
                                                 </div>
-                                                <span className="text-sm text-gray-500">{review.date}</span>
-                                            </div>
-                                            <p className="text-gray-700">{review.comment}</p>
-                                        </CardContent>
-                                    </Card>
-                                ))}
-                            </div>
-                        ) : (
-                            <div className="text-center py-12">
-                                <div className="text-6xl mb-4">⭐</div>
-                                <h3 className="text-xl font-medium text-gray-900 mb-2">
-                                    لا توجد تقييمات
-                                </h3>
-                                <p className="text-gray-600">
-                                    لم يتم تقييم هذا المتجر بعد
-                                </p>
-                            </div>
-                        )}
-                    </TabsContent>
-
-                    <TabsContent value="gallery" className="space-y-6">
-                        <h2 className="text-2xl font-bold">معرض صور المتجر</h2>
-
-                        {safeShop.gallery && safeShop.gallery.length > 0 ? (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {safeShop.gallery.map((image, index) => (
-                                    <div key={index} className="aspect-square rounded-lg overflow-hidden shadow-lg">
-                                        <img
-                                            src={image}
-                                            alt={`${safeShop.name} - صورة ${index + 1}`}
-                                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300 cursor-pointer"
-                                            onError={(e) => {
-                                                e.target.src = '/placeholder-image.jpg';
-                                            }}
-                                            onClick={() => {
-                                                // يمكن إضافة modal لعرض الصورة بحجم كبير
-                                                window.open(image, '_blank');
-                                            }}
-                                        />
-                                    </div>
-                                ))}
-                            </div>
-                        ) : (
-                            <div className="text-center py-12 bg-gray-50 rounded-lg">
-                                <div className="text-6xl mb-4">📸</div>
-                                <h3 className="text-xl font-medium text-gray-900 mb-2">
-                                    لا توجد صور في المعرض
-                                </h3>
-                                <p className="text-gray-600">
-                                    لم يتم إضافة صور لمعرض المتجر بعد
-                                </p>
-                                {user?.role === 'admin' || user?.id === safeShop.ownerId && (
+                                            </CardContent>
+                                        </Card>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="text-center py-16 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl">
+                                    <div className="text-8xl mb-6">⭐</div>
+                                    <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                                        لا توجد تقييمات بعد
+                                    </h3>
+                                    <p className="text-gray-600 text-lg mb-6">
+                                        كن أول من يقيم هذا المتجر ويشارك تجربته
+                                    </p>
                                     <Button
-                                        variant="outline"
-                                        className="mt-4"
-                                        onClick={() => navigate(ROUTES.EDIT_SHOP)}
+                                        className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-8 py-3 rounded-full font-semibold"
                                     >
-                                        إضافة صور للمعرض
+                                        اكتب تقييماً
                                     </Button>
-                                )}
+                                </div>
+                            )}
+                        </TabsContent>
+
+                        <TabsContent value="gallery" className="p-8">
+                            <div className="mb-8">
+                                <h2 className="text-3xl font-bold text-gray-900 mb-2">معرض صور المتجر</h2>
+                                <p className="text-gray-600">استكشف صور المتجر والأعمال المميزة</p>
                             </div>
-                        )}
-                    </TabsContent>
-                </Tabs>
+
+                            {safeShop.gallery && safeShop.gallery.length > 0 ? (
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    {safeShop.gallery.map((image, index) => (
+                                        <div key={index} className="group relative aspect-square rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500">
+                                            <img
+                                                src={image}
+                                                alt={`${safeShop.name} - صورة ${index + 1}`}
+                                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-pointer"
+                                                onError={(e) => {
+                                                    e.target.src = 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop&crop=center&auto=format&q=60';
+                                                }}
+                                                onClick={() => {
+                                                    // يمكن إضافة modal لعرض الصورة بحجم كبير
+                                                    window.open(image, '_blank');
+                                                }}
+                                            />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                            <div className="absolute bottom-4 left-4 right-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                <p className="text-sm font-medium">صورة {index + 1}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="text-center py-16 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl">
+                                    <div className="text-8xl mb-6">📸</div>
+                                    <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                                        لا توجد صور في المعرض
+                                    </h3>
+                                    <p className="text-gray-600 text-lg mb-6">
+                                        لم يتم إضافة صور لمعرض المتجر بعد
+                                    </p>
+                                    {user?.role === 'admin' || user?.id === safeShop.ownerId ? (
+                                        <Button
+                                            className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-8 py-3 rounded-full font-semibold"
+                                            onClick={() => navigate(ROUTES.EDIT_SHOP)}
+                                        >
+                                            إضافة صور للمعرض
+                                        </Button>
+                                    ) : null}
+                                </div>
+                            )}
+                        </TabsContent>
+                    </Tabs>
+                </div>
             </div>
         </div>
     );
