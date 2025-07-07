@@ -1,4 +1,5 @@
 import api from "./api.js";
+import { STORAGE_KEYS } from "../utils/constants.js";
 
 export const shopService = {
   // Get all shops (authenticated - role-based filtering)
@@ -92,19 +93,65 @@ export const shopService = {
   // Approve shop (admin only)
   approveShop: async (shopId) => {
     try {
-      const response = await api.put(`/shop/${shopId}/approve`);
+      console.log("=== SHOP SERVICE APPROVE ===");
+      console.log("Shop ID:", shopId);
+      console.log("API URL:", `/shop/${shopId}/approve`);
+      console.log(
+        "Token from localStorage:",
+        localStorage.getItem(STORAGE_KEYS.TOKEN)
+      );
+
+      const response = await api.patch(`/shop/${shopId}/approve`);
+      console.log("API Response:", response);
+      console.log("Response data:", response.data);
+
       return response.data;
     } catch (error) {
-      throw new Error(
-        error.response?.data?.message || "Failed to approve shop"
-      );
+      console.error("=== SHOP SERVICE ERROR ===");
+      console.error("Error:", error);
+      console.error("Error response:", error.response);
+      console.error("Error response data:", error.response?.data);
+      console.error("Error response status:", error.response?.status);
+      console.error("Error response headers:", error.response?.headers);
+      console.error("Error request:", error.request);
+      console.error("Error config:", error.config);
+      console.error("Error message:", error.message);
+
+      // More detailed error message
+      let errorMessage = "Failed to approve shop";
+
+      if (error.response) {
+        // Server responded with error status
+        const status = error.response.status;
+        const data = error.response.data;
+
+        if (status === 401) {
+          errorMessage = "غير مصرح لك بالوصول - يرجى تسجيل الدخول مرة أخرى";
+        } else if (status === 403) {
+          errorMessage = "ليس لديك صلاحية للموافقة على المتاجر";
+        } else if (status === 404) {
+          errorMessage = "المتجر غير موجود";
+        } else if (status === 500) {
+          errorMessage = "خطأ في الخادم";
+        } else {
+          errorMessage = data?.message || `خطأ HTTP ${status}`;
+        }
+      } else if (error.request) {
+        // Network error
+        errorMessage = "خطأ في الاتصال بالخادم";
+      } else {
+        // Other error
+        errorMessage = error.message || "خطأ غير معروف";
+      }
+
+      throw new Error(errorMessage);
     }
   },
 
   // Reject shop (admin only)
   rejectShop: async (shopId) => {
     try {
-      const response = await api.put(`/shop/${shopId}/reject`);
+      const response = await api.patch(`/shop/${shopId}/reject`);
       return response.data;
     } catch (error) {
       throw new Error(error.response?.data?.message || "Failed to reject shop");
@@ -134,15 +181,15 @@ export const shopService = {
       );
     }
   },
-// Get current user's shop
-getMyShop: async () => {
-  try {
-    const response = await api.get("/shop/my-shop");
-    return response.data;
-  } catch (error) {
-    throw new Error(
-      error.response?.data?.message || "Failed to fetch user shop"
-    );
-  }
-},
+  // Get current user's shop
+  getMyShop: async () => {
+    try {
+      const response = await api.get("/shop/my-shop");
+      return response.data;
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.message || "Failed to fetch user shop"
+      );
+    }
+  },
 };

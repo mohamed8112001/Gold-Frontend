@@ -4,7 +4,7 @@ export const bookingService = {
   // Get all bookings for the current user
   async getUserBookings(params = {}) {
     try {
-      const response = await api.get("/dashboard/user/bookings", {
+      const response = await api.get("/booking/my-bookings", {
         params,
       });
       return response.data;
@@ -17,7 +17,7 @@ export const bookingService = {
   // Get all bookings for shop owner
   async getShopBookings(params = {}) {
     try {
-      const response = await api.get("/booking/shop", { params });
+      const response = await api.get("/booking/shop/bookings", { params });
       return response.data;
     } catch (error) {
       console.error("Error fetching shop bookings:", error);
@@ -49,24 +49,12 @@ export const bookingService = {
     }
   },
 
-  // Cancel a booking
-  async cancelBooking(bookingId) {
-    try {
-      const response = await api.delete(
-        `/dashboard/user/bookings/${bookingId}/cancel`
-      );
-      return response.data;
-    } catch (error) {
-      console.error("Error cancelling booking:", error);
-      throw error;
-    }
-  },
-
   // Get available time slots for a shop
-  async getAvailableTimeSlots(shopId, date) {
+  async getAvailableTimesForShop(shopId, date = null) {
     try {
-      const response = await api.get(`/booking/available-times/${shopId}`, {
-        params: { date },
+      const params = date ? { date } : {};
+      const response = await api.get(`/booking/available/${shopId}`, {
+        params,
       });
       return response.data;
     } catch (error) {
@@ -89,9 +77,7 @@ export const bookingService = {
   // Remove available time slot (for shop owners)
   async removeAvailableTime(timeId) {
     try {
-      const response = await api.delete(
-        `/booking/available-time/${timeId}`
-      );
+      const response = await api.delete(`/booking/available-time/${timeId}`);
       return response.data;
     } catch (error) {
       console.error("Error removing available time:", error);
@@ -100,12 +86,23 @@ export const bookingService = {
   },
 
   // Book a time slot
-  async bookTimeSlot(timeSlotId) {
+  async bookTime(bookingData) {
     try {
-      const response = await api.post(`/booking/book/${timeSlotId}`);
+      const response = await api.post("/booking/book", bookingData);
       return response.data;
     } catch (error) {
       console.error("Error booking time slot:", error);
+      throw error;
+    }
+  },
+
+  // Cancel a booking
+  async cancelBooking(timeId) {
+    try {
+      const response = await api.delete(`/booking/cancel/${timeId}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error cancelling booking:", error);
       throw error;
     }
   },

@@ -25,9 +25,12 @@ export const AuthProvider = ({ children }) => {
       const token = authService.getToken();
       const userData = authService.getCurrentUser();
 
+
+
       if (token && userData) {
         setUser(userData);
         setIsAuthenticated(true);
+
 
         // Verify token is still valid (optional - remove if causing issues)
         // try {
@@ -38,6 +41,7 @@ export const AuthProvider = ({ children }) => {
         // }
       } else {
         // No token or user data, but don't redirect automatically
+
         setUser(null);
         setIsAuthenticated(false);
       }

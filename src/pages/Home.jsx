@@ -747,45 +747,42 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Clean CTA Section */}
+{/* Clean CTA Section */}
+<section className="py-20 bg-gradient-to-r from-yellow-500 to-yellow-600">
 
-      
-      <section className="py-20 bg-gradient-to-r from-yellow-500 to-yellow-600">
+  <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+    <h2 className="text-5xl font-bold text-white mb-6">
+      Ready to Discover Your Perfect Jewelry?
+    </h2>
+    <p className="text-xl text-yellow-100 mb-8 max-w-2xl mx-auto">
+      Join thousands of satisfied customers who found their dream jewelry through Dibla
+    </p>
 
-        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-5xl font-bold text-white mb-6">
-            Ready to Discover Your Perfect Jewelry?
-          </h2>
-          <p className="text-xl text-yellow-100 mb-8 max-w-2xl mx-auto">
-            Join thousands of satisfied customers who found their dream jewelry through Dibla
-          </p>
+    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+      <Button
+        size="lg"
+        onClick={() => navigate('/shops')}
+        className="bg-white text-yellow-600 hover:bg-yellow-50 px-8 py-3 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+      >
+        Explore Stores Now
+      </Button>
+      <Button
+        size="lg"
+        variant="outline"
+        onClick={() => navigate('/register')}
+        className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-yellow-600 px-8 py-3 text-lg font-semibold rounded-full transition-all duration-300 transform hover:scale-105"
+      >
+        Join Us Now
+      </Button>
+    </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              size="lg"
-              onClick={() => navigate('/shops')}
-              className="bg-white text-yellow-600 hover:bg-yellow-50 px-8 py-3 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-            >
-              Explore Stores Now
-
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              onClick={() => navigate('/register')}
-              className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-yellow-600 px-8 py-3 text-lg font-semibold rounded-full transition-all duration-300 transform hover:scale-105"
-            >
-              Join Us Now
-            </Button>
-          </div>
-
-          <div className="mt-8 text-yellow-100">
-            <p className="text-lg">
-              More than <span className="font-bold text-white">{stats.totalReviews || '1000'}</span> satisfied customers trust us
-            </p>
-          </div>
-        </div>
-      </section>
+    <div className="mt-8 text-yellow-100">
+      <p className="text-lg">
+        More than <span className="font-bold text-white">{stats.totalReviews || '1000'}</span> satisfied customers trust us
+      </p>
+    </div>
+  </div>
+</section>
 
 
       {/* Admin Access Section */}

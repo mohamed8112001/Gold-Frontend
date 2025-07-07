@@ -225,9 +225,9 @@ const AdminDashboard = () => {
 
         // Find legacy shops (no status fields)
         const legacyShops = allShops.filter(shop =>
-          !shop.hasOwnProperty('status') &&
-          !shop.hasOwnProperty('approved') &&
-          !shop.hasOwnProperty('isActive')
+          !Object.prototype.hasOwnProperty.call(shop, 'status') &&
+          !Object.prototype.hasOwnProperty.call(shop, 'approved') &&
+          !Object.prototype.hasOwnProperty.call(shop, 'isActive')
         );
 
         console.log('Found legacy shops:', legacyShops.length);
@@ -433,7 +433,7 @@ const AdminDashboard = () => {
                 <CardContent>
                   <div className="space-y-4">
                     {pendingShops.length > 0 ? (
-                      pendingShops.slice(0, 3).map((shop, index) => (
+                      pendingShops.slice(0, 3).map((shop) => (
                         <div key={shop.id} className="flex items-center gap-3">
                           <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
                           <p className="text-sm">طلب جديد من متجر "{shop.name}"</p>

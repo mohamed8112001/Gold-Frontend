@@ -9,7 +9,7 @@ import {
   Star,
   ShoppingBag,
   Clock,
-  MapPin,
+
   Eye,
   Edit,
   Trash2,
@@ -26,7 +26,7 @@ import dashboardService from '../../services/dashboardService.js';
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { user, isShopOwner } = useAuth();
+  const { user, isShopOwner, isRegularUser } = useAuth();
   const [activeTab, setActiveTab] = useState('overview');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -45,6 +45,15 @@ const Dashboard = () => {
 
   const [favorites, setFavorites] = useState([]);
   const [bookings, setBookings] = useState([]);
+
+  // Check if user has access to dashboard
+  useEffect(() => {
+    if (isRegularUser) {
+      // Redirect regular users away from dashboard
+      navigate('/');
+      return;
+    }
+  }, [isRegularUser, navigate]);
 
   // Load dashboard data
   useEffect(() => {
@@ -530,6 +539,29 @@ const Dashboard = () => {
           <p className="text-red-600 mb-4">{error}</p>
           <Button onClick={() => window.location.reload()}>
             إعادة المحاولة
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // Show access denied message for regular users
+  if (isRegularUser) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-yellow-50 flex items-center justify-center" dir="ltr">
+        <div className="max-w-md mx-auto text-center">
+          <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <span className="text-4xl">🚫</span>
+          </div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">Access Denied</h1>
+          <p className="text-lg text-gray-600 mb-8">
+            Dashboard access is restricted to shop owners and administrators only.
+          </p>
+          <Button
+            onClick={() => navigate('/')}
+            className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-8 py-3 rounded-full font-semibold"
+          >
+            Go to Home
           </Button>
         </div>
       </div>

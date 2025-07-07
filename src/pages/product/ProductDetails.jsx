@@ -104,74 +104,76 @@ const ProductDetails = () => {
         navigate(ROUTES.BOOK_APPOINTMENT(product.shopId));
     };
 
+    // Default gold jewelry images
+    const defaultGoldImages = [
+        'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600&h=600&fit=crop&crop=center&auto=format&q=60',
+        'https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=600&h=600&fit=crop&crop=center&auto=format&q=60',
+        'https://images.unsplash.com/photo-1602173574767-37ac01994b2a?w=600&h=600&fit=crop&crop=center&auto=format&q=60'
+    ];
+
     // Mock data for demo
     const mockProduct = {
         id: parseInt(id),
-        name: 'خاتم ذهبي كلاسيكي فاخر',
-        description: 'خاتم ذهب عيار 21 بتصميم كلاسيكي أنيق مصنوع بعناية فائقة من أجود أنواع الذهب. يتميز بتصميم راقي يناسب جميع المناسبات الخاصة.',
-        price: 2500,
+        name: 'Classic Gold Ring',
+        description: 'Elegant 21-karat gold ring with classic design, crafted with exceptional care from the finest gold. Features a sophisticated design suitable for all special occasions.',
         category: 'rings',
-        images: [
-            '/api/placeholder/600/600',
-            '/api/placeholder/600/600',
-            '/api/placeholder/600/600'
-        ],
+        images: defaultGoldImages,
         rating: 4.5,
         reviewCount: 23,
         shopId: 1,
-        shopName: 'مجوهرات الإسكندرية',
+        shopName: 'Alexandria Jewelry',
         specifications: {
-            'العيار': '21 قيراط',
-            'الوزن': '5.2 جرام',
-            'المقاس': 'قابل للتعديل',
-            'المادة': 'ذهب خالص',
-            'بلد المنشأ': 'مصر'
+            'Karat': '21K',
+            'Weight': '5.2 grams',
+            'Size': 'Adjustable',
+            'Material': 'Pure Gold',
+            'Origin': 'Egypt'
         },
         features: [
-            'تصميم كلاسيكي أنيق',
-            'ذهب عيار 21 قيراط',
-            'صناعة يدوية فاخرة',
-            'ضمان لمدة سنتين',
-            'قابل للتعديل والتخصيص'
+            'Classic elegant design',
+            '21-karat gold',
+            'Handcrafted luxury',
+            '2-year warranty',
+            'Adjustable and customizable'
         ],
-        availability: 'متوفر',
+        availability: 'Available',
         createdAt: '2024-01-15'
     };
 
     const mockShop = {
         id: 1,
-        name: 'مجوهرات الإسكندرية',
-        description: 'متجر مجوهرات فاخر متخصص في الذهب والمجوهرات الثمينة',
-        address: 'شارع فؤاد، الإسكندرية',
+        name: 'Alexandria Jewelry',
+        description: 'Luxury jewelry store specializing in gold and precious jewelry',
+        address: 'Fouad Street, Alexandria',
         phone: '+20 3 123 4567',
         rating: 4.7,
         reviewCount: 156,
-        workingHours: 'السبت - الخميس: 10:00 ص - 10:00 م',
-        image: '/api/placeholder/400/300'
+        workingHours: 'Saturday - Thursday: 10:00 AM - 10:00 PM',
+        image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=300&fit=crop&crop=center&auto=format&q=60'
     };
 
     const mockReviews = [
         {
             id: 1,
-            userName: 'أحمد محمد',
+            userName: 'Ahmed Mohamed',
             rating: 5,
-            comment: 'منتج رائع وجودة ممتازة، أنصح بالشراء',
+            comment: 'Excellent product with amazing quality, highly recommend!',
             date: '2024-01-10',
             verified: true
         },
         {
             id: 2,
-            userName: 'فاطمة علي',
+            userName: 'Fatima Ali',
             rating: 4,
-            comment: 'جميل جداً ولكن السعر مرتفع قليلاً',
+            comment: 'Very beautiful design and great craftsmanship',
             date: '2024-01-08',
             verified: true
         },
         {
             id: 3,
-            userName: 'محمود حسن',
+            userName: 'Mahmoud Hassan',
             rating: 5,
-            comment: 'تصميم راقي وخدمة ممتازة من المتجر',
+            comment: 'Elegant design and excellent service from the store',
             date: '2024-01-05',
             verified: false
         }
@@ -179,10 +181,10 @@ const ProductDetails = () => {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+            <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600 mx-auto mb-4"></div>
-                    <p className="text-gray-600">جاري تحميل تفاصيل المنتج...</p>
+                    <p className="text-gray-600">Loading product details...</p>
                 </div>
             </div>
         );
@@ -190,13 +192,13 @@ const ProductDetails = () => {
 
     if (!product) {
         return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+            <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
                 <div className="text-center">
                     <div className="text-6xl mb-4">❌</div>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-2">المنتج غير موجود</h2>
-                    <p className="text-gray-600 mb-4">لم يتم العثور على المنتج المطلوب</p>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Product Not Found</h2>
+                    <p className="text-gray-600 mb-4">The requested product could not be found</p>
                     <Button onClick={() => navigate(ROUTES.PRODUCTS)}>
-                        العودة للمنتجات
+                        Back to Products
                     </Button>
                 </div>
             </div>
@@ -204,335 +206,321 @@ const ProductDetails = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                {/* Breadcrumb */}
-                <div className="flex items-center gap-2 text-sm text-gray-600 mb-6">
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+            <div className="w-full px-4 sm:px-6 lg:px-8 py-8">
+                {/* Enhanced Breadcrumb */}
+                <div className="flex items-center gap-2 text-sm text-gray-600 mb-8 max-w-7xl mx-auto">
                     <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => navigate(-1)}
-                        className="flex items-center gap-1 p-0 h-auto"
+                        className="flex items-center gap-2 hover:bg-white hover:shadow-sm transition-all duration-200 rounded-full px-4 py-2"
                     >
                         <ArrowLeft className="w-4 h-4" />
-                        العودة
+                        Back
                     </Button>
-                    <span>/</span>
-                    <span onClick={() => navigate(ROUTES.PRODUCTS)} className="cursor-pointer hover:text-yellow-600">
-                        المنتجات
+                    <span className="text-gray-400">/</span>
+                    <span onClick={() => navigate(ROUTES.PRODUCTS)} className="cursor-pointer hover:text-yellow-600 transition-colors">
+                        Products
                     </span>
-                    <span>/</span>
-                    <span className="text-gray-900">{product.name || product.title || 'منتج غير محدد'}</span>
+                    <span className="text-gray-400">/</span>
+                    <span className="text-gray-900 font-medium">{product.name || product.title || 'Untitled Product'}</span>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-                    {/* Product Images */}
-                    <div className="space-y-4">
-                        <div className="aspect-square bg-white rounded-lg overflow-hidden">
-                            <img
-                                src={product.images?.[selectedImage] || product.image || '/api/placeholder/600/600'}
-                                alt={product.name}
-                                className="w-full h-full object-cover"
-                            />
+                <div className="max-w-7xl mx-auto">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
+                        {/* Product Images */}
+                        <div className="space-y-6">
+                            <div className="aspect-square bg-white rounded-3xl overflow-hidden shadow-xl">
+                                <img
+                                    src={product.images?.[selectedImage] || product.image || defaultGoldImages[0]}
+                                    alt={product.name}
+                                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                                    onError={(e) => {
+                                        e.target.src = defaultGoldImages[0];
+                                    }}
+                                />
+                            </div>
+
+                            {product.images && product.images.length > 1 && (
+                                <div className="flex gap-2 overflow-x-auto">
+                                    {product.images.map((image, index) => (
+                                        <button
+                                            key={index}
+                                            onClick={() => setSelectedImage(index)}
+                                            className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 ${selectedImage === index ? 'border-yellow-500' : 'border-gray-200'
+                                                }`}
+                                        >
+                                            <img
+                                                src={image}
+                                                alt={`${product.name} ${index + 1}`}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
                         </div>
 
-                        {product.images && product.images.length > 1 && (
-                            <div className="flex gap-2 overflow-x-auto">
-                                {product.images.map((image, index) => (
-                                    <button
-                                        key={index}
-                                        onClick={() => setSelectedImage(index)}
-                                        className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 ${selectedImage === index ? 'border-yellow-500' : 'border-gray-200'
-                                            }`}
+                        {/* Product Info */}
+                        <div className="space-y-8">
+                            <div className="bg-white rounded-3xl p-8 shadow-xl">
+                                <div className="flex items-start justify-between mb-4">
+                                    <h1 className="text-4xl font-bold text-gray-900">
+                                        {product.name || product.title || 'Untitled Product'}
+                                    </h1>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={handleAddToFavorites}
+                                        className="flex-shrink-0"
                                     >
-                                        <img
-                                            src={image}
-                                            alt={`${product.name} ${index + 1}`}
-                                            className="w-full h-full object-cover"
-                                        />
-                                    </button>
-                                ))}
-                            </div>
-                        )}
-                    </div>
+                                        <Heart className={`w-5 h-5 ${isFavorited ? 'fill-red-500 text-red-500' : ''}`} />
+                                    </Button>
+                                </div>
 
-                    {/* Product Info */}
-                    <div className="space-y-6">
-                        <div>
-                            <div className="flex items-start justify-between mb-2">
-                                <h1 className="text-3xl font-bold text-gray-900">
-                                    {product.name || product.title || 'منتج غير محدد'}
-                                </h1>
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={handleAddToFavorites}
-                                    className="flex-shrink-0"
-                                >
-                                    <Heart className={`w-5 h-5 ${isFavorited ? 'fill-red-500 text-red-500' : ''}`} />
-                                </Button>
-                            </div>
+                                {product.category && (
+                                    <Badge className="mb-4">
+                                        {PRODUCT_CATEGORIES[product.category.toUpperCase()] || product.category}
+                                    </Badge>
+                                )}
 
-                            {product.category && (
-                                <Badge className="mb-4">
-                                    {PRODUCT_CATEGORIES[product.category.toUpperCase()] || product.category}
-                                </Badge>
-                            )}
+                                <div className="flex items-center gap-4 mb-4">
+                                    <div className="flex items-center">
+                                        {[...Array(5)].map((_, i) => (
+                                            <Star
+                                                key={i}
+                                                className={`w-4 h-4 ${i < Math.floor(product.rating || 0)
+                                                    ? 'fill-yellow-400 text-yellow-400'
+                                                    : 'text-gray-300'
+                                                    }`}
+                                            />
+                                        ))}
+                                        <span className="text-sm font-medium ml-2">
+                                            {typeof product.rating === 'number' ? product.rating.toFixed(1) : '0.0'}
+                                        </span>
+                                        <span className="text-sm text-gray-500 ml-1">
+                                            ({product.reviewCount || product.reviews?.length || 0} reviews)
+                                        </span>
+                                    </div>
+                                </div>
 
-                            <div className="flex items-center gap-4 mb-4">
-                                <div className="flex items-center">
-                                    {[...Array(5)].map((_, i) => (
-                                        <Star
-                                            key={i}
-                                            className={`w-4 h-4 ${i < Math.floor(product.rating || 0)
-                                                ? 'fill-yellow-400 text-yellow-400'
-                                                : 'text-gray-300'
-                                                }`}
-                                        />
-                                    ))}
-                                    <span className="text-sm font-medium ml-2">
-                                        {typeof product.rating === 'number' ? product.rating.toFixed(1) : '0.0'}
-                                    </span>
-                                    <span className="text-sm text-gray-500 ml-1">
-                                        ({product.reviewCount || product.reviews?.length || 0} تقييم)
+
+
+                                <p className="text-gray-700 leading-relaxed mb-6">
+                                    {product.description}
+                                </p>
+
+                                {/* Availability */}
+                                <div className="flex items-center gap-2 mb-6">
+                                    <div className={`w-3 h-3 rounded-full ${product.availability === 'متوفر' ? 'bg-green-500' : 'bg-red-500'
+                                        }`}></div>
+                                    <span className={`font-medium ${product.availability === 'متوفر' ? 'text-green-600' : 'text-red-600'
+                                        }`}>
+                                        {product.availability || 'Available'}
                                     </span>
                                 </div>
-                            </div>
 
-                            <div className="text-3xl font-bold text-yellow-600 mb-6">
-                                {(() => {
-                                    // Handle different price formats
-                                    let price = product.price;
-
-                                    if (typeof price === 'object' && price !== null) {
-                                        // If price is an object, try to extract the value
-                                        price = price.value || price.amount || price.price || 0;
-                                    }
-
-                                    if (typeof price === 'string') {
-                                        // If price is a string, try to parse it
-                                        price = parseFloat(price) || 0;
-                                    }
-
-                                    if (typeof price === 'number' && price > 0) {
-                                        return price.toLocaleString();
-                                    }
-
-                                    return 'غير محدد';
-                                })()} ج.م
-                            </div>
-
-                            <p className="text-gray-700 leading-relaxed mb-6">
-                                {product.description}
-                            </p>
-
-                            {/* Availability */}
-                            <div className="flex items-center gap-2 mb-6">
-                                <div className={`w-3 h-3 rounded-full ${product.availability === 'متوفر' ? 'bg-green-500' : 'bg-red-500'
-                                    }`}></div>
-                                <span className={`font-medium ${product.availability === 'متوفر' ? 'text-green-600' : 'text-red-600'
-                                    }`}>
-                                    {product.availability || 'متوفر'}
-                                </span>
-                            </div>
-
-                            {/* Action Buttons */}
-                            <div className="flex flex-col sm:flex-row gap-4">
-                                <Button
-                                    size="lg"
-                                    onClick={handleBookAppointment}
-                                    className="flex-1"
-                                >
-                                    <Calendar className="w-5 h-5 mr-2" />
-                                    حجز موعد للمعاينة
-                                </Button>
-                                <Button
-                                    variant="outline"
-                                    size="lg"
-                                    onClick={() => navigate(ROUTES.SHOP_DETAILS(product.shopId))}
-                                >
-                                    <ShoppingBag className="w-5 h-5 mr-2" />
-                                    زيارة المتجر
-                                </Button>
-                                <Button
-                                    variant="outline"
-                                    size="lg"
-                                >
-                                    <Share2 className="w-5 h-5" />
-                                </Button>
+                                {/* Action Buttons */}
+                                <div className="flex flex-col sm:flex-row gap-4">
+                                    <Button
+                                        size="lg"
+                                        onClick={handleBookAppointment}
+                                        className="flex-1 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white py-4 rounded-full font-semibold text-lg shadow-lg hover:shadow-xl transition-all"
+                                    >
+                                        <Calendar className="w-5 h-5 mr-2" />
+                                        Book Appointment
+                                    </Button>
+                                    <Button
+                                        variant="outline"
+                                        size="lg"
+                                        onClick={() => navigate(ROUTES.SHOP_DETAILS(product.shopId))}
+                                        className="flex-1 border-2 border-gray-300 hover:border-gray-400 py-4 rounded-full font-semibold text-lg"
+                                    >
+                                        <ShoppingBag className="w-5 h-5 mr-2" />
+                                        Visit Shop
+                                    </Button>
+                                    <Button
+                                        variant="outline"
+                                        size="lg"
+                                        className="border-2 border-gray-300 hover:border-gray-400 py-4 px-6 rounded-full"
+                                    >
+                                        <Share2 className="w-5 h-5" />
+                                    </Button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                {/* Product Details Tabs */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <div className="lg:col-span-2 space-y-8">
-                        {/* Specifications */}
-                        {product.specifications && (
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle>المواصفات</CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        {Object.entries(product.specifications).map(([key, value]) => (
-                                            <div key={key} className="flex justify-between py-2 border-b border-gray-100">
-                                                <span className="font-medium text-gray-700">{key}</span>
-                                                <span className="text-gray-900">{value}</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        )}
-
-                        {/* Features */}
-                        {product.features && product.features.length > 0 && (
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle>المميزات</CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <ul className="space-y-2">
-                                        {product.features.map((feature, index) => (
-                                            <li key={index} className="flex items-center">
-                                                <div className="w-2 h-2 bg-yellow-500 rounded-full mr-3"></div>
-                                                {feature}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </CardContent>
-                            </Card>
-                        )}
-
-                        {/* Reviews */}
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>التقييمات والمراجعات</CardTitle>
-                                <CardDescription>
-                                    {reviews.length} تقييم من العملاء
-                                </CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                {reviews.length > 0 ? (
-                                    <div className="space-y-6">
-                                        {reviews.map((review) => (
-                                            <div key={review.id} className="border-b border-gray-100 pb-4 last:border-b-0">
-                                                <div className="flex items-start justify-between mb-2">
-                                                    <div>
-                                                        <div className="flex items-center gap-2">
-                                                            <span className="font-medium">{review.userName}</span>
-                                                            {review.verified && (
-                                                                <Badge variant="secondary" className="text-xs">
-                                                                    مشتري موثق
-                                                                </Badge>
-                                                            )}
-                                                        </div>
-                                                        <div className="flex items-center mt-1">
-                                                            {[...Array(5)].map((_, i) => (
-                                                                <Star
-                                                                    key={i}
-                                                                    className={`w-4 h-4 ${i < review.rating
-                                                                        ? 'fill-yellow-400 text-yellow-400'
-                                                                        : 'text-gray-300'
-                                                                        }`}
-                                                                />
-                                                            ))}
-                                                        </div>
-                                                    </div>
-                                                    <span className="text-sm text-gray-500">{review.date}</span>
+                    {/* Product Details Tabs */}
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div className="lg:col-span-2 space-y-8">
+                            {/* Specifications */}
+                            {product.specifications && (
+                                <Card className="border-0 shadow-xl rounded-3xl">
+                                    <CardHeader className="pb-4">
+                                        <CardTitle className="text-2xl font-bold">Specifications</CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            {Object.entries(product.specifications).map(([key, value]) => (
+                                                <div key={key} className="flex justify-between py-2 border-b border-gray-100">
+                                                    <span className="font-medium text-gray-700">{key}</span>
+                                                    <span className="text-gray-900">{value}</span>
                                                 </div>
-                                                <p className="text-gray-700">{review.comment}</p>
-                                            </div>
-                                        ))}
-                                    </div>
-                                ) : (
-                                    <div className="text-center py-8">
-                                        <div className="text-4xl mb-2">⭐</div>
-                                        <p className="text-gray-600">لا توجد تقييمات بعد</p>
-                                        <p className="text-sm text-gray-500">كن أول من يقيم هذا المنتج</p>
-                                    </div>
-                                )}
-                            </CardContent>
-                        </Card>
-                    </div>
-
-                    {/* Shop Info Sidebar */}
-                    <div className="space-y-6">
-                        {shop && (
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle>معلومات المتجر</CardTitle>
-                                </CardHeader>
-                                <CardContent className="space-y-4">
-                                    <div className="text-center">
-                                        <img
-                                            src={shop.image}
-                                            alt={shop.name}
-                                            className="w-20 h-20 rounded-full mx-auto mb-3 object-cover"
-                                        />
-                                        <h3 className="font-semibold text-lg">{shop.name}</h3>
-                                        <div className="flex items-center justify-center mt-2">
-                                            <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                                            <span className="text-sm font-medium ml-1">{shop.rating}</span>
-                                            <span className="text-sm text-gray-500 ml-1">({shop.reviewCount})</span>
+                                            ))}
                                         </div>
-                                    </div>
+                                    </CardContent>
+                                </Card>
+                            )}
 
-                                    <Separator />
+                            {/* Features */}
+                            {product.features && product.features.length > 0 && (
+                                <Card className="border-0 shadow-xl rounded-3xl">
+                                    <CardHeader className="pb-4">
+                                        <CardTitle className="text-2xl font-bold">Features</CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <ul className="space-y-2">
+                                            {product.features.map((feature, index) => (
+                                                <li key={index} className="flex items-center">
+                                                    <div className="w-2 h-2 bg-yellow-500 rounded-full mr-3"></div>
+                                                    {feature}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </CardContent>
+                                </Card>
+                            )}
 
-                                    <div className="space-y-3">
-                                        <div className="flex items-start gap-3">
-                                            <MapPin className="w-4 h-4 text-gray-500 mt-1 flex-shrink-0" />
-                                            <span className="text-sm">{shop.address}</span>
-                                        </div>
-                                        <div className="flex items-center gap-3">
-                                            <Phone className="w-4 h-4 text-gray-500 flex-shrink-0" />
-                                            <span className="text-sm">{shop.phone}</span>
-                                        </div>
-                                        <div className="flex items-start gap-3">
-                                            <Clock className="w-4 h-4 text-gray-500 mt-1 flex-shrink-0" />
-                                            <span className="text-sm">{shop.workingHours}</span>
-                                        </div>
-                                    </div>
-
-                                    <Separator />
-
-                                    <div className="space-y-2">
-                                        <Button
-                                            className="w-full"
-                                            onClick={() => navigate(ROUTES.SHOP_DETAILS(shop.id))}
-                                        >
-                                            <Eye className="w-4 h-4 mr-2" />
-                                            زيارة المتجر
-                                        </Button>
-                                        <Button
-                                            variant="outline"
-                                            className="w-full"
-                                            onClick={handleBookAppointment}
-                                        >
-                                            <Calendar className="w-4 h-4 mr-2" />
-                                            حجز موعد
-                                        </Button>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        )}
-
-                        {/* Related Products - Hidden for now until we have real data */}
-                        {false && (
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle>منتجات مشابهة</CardTitle>
+                            {/* Reviews */}
+                            <Card className="border-0 shadow-xl rounded-3xl">
+                                <CardHeader className="pb-4">
+                                    <CardTitle className="text-2xl font-bold">Reviews & Ratings</CardTitle>
+                                    <CardDescription className="text-lg">
+                                        {reviews.length} customer reviews
+                                    </CardDescription>
                                 </CardHeader>
                                 <CardContent>
-                                    <div className="text-center py-8 text-gray-500">
-                                        <p>سيتم عرض المنتجات المشابهة قريباً</p>
-                                    </div>
+                                    {reviews.length > 0 ? (
+                                        <div className="space-y-6">
+                                            {reviews.map((review) => (
+                                                <div key={review.id} className="border-b border-gray-100 pb-4 last:border-b-0">
+                                                    <div className="flex items-start justify-between mb-2">
+                                                        <div>
+                                                            <div className="flex items-center gap-2">
+                                                                <span className="font-medium">{review.userName}</span>
+                                                                {review.verified && (
+                                                                    <Badge variant="secondary" className="text-xs">
+                                                                        مشتري موثق
+                                                                    </Badge>
+                                                                )}
+                                                            </div>
+                                                            <div className="flex items-center mt-1">
+                                                                {[...Array(5)].map((_, i) => (
+                                                                    <Star
+                                                                        key={i}
+                                                                        className={`w-4 h-4 ${i < review.rating
+                                                                            ? 'fill-yellow-400 text-yellow-400'
+                                                                            : 'text-gray-300'
+                                                                            }`}
+                                                                    />
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                        <span className="text-sm text-gray-500">{review.date}</span>
+                                                    </div>
+                                                    <p className="text-gray-700">{review.comment}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <div className="text-center py-8">
+                                            <div className="text-4xl mb-2">⭐</div>
+                                            <p className="text-gray-600">No reviews yet</p>
+                                            <p className="text-sm text-gray-500">Be the first to review this product</p>
+                                        </div>
+                                    )}
                                 </CardContent>
                             </Card>
-                        )}
+                        </div>
+
+                        {/* Shop Info Sidebar */}
+                        <div className="space-y-6">
+                            {shop && (
+                                <Card className="border-0 shadow-xl rounded-3xl">
+                                    <CardHeader className="pb-4">
+                                        <CardTitle className="text-2xl font-bold">Shop Information</CardTitle>
+                                    </CardHeader>
+                                    <CardContent className="space-y-4">
+                                        <div className="text-center">
+                                            <img
+                                                src={shop.image}
+                                                alt={shop.name}
+                                                className="w-20 h-20 rounded-full mx-auto mb-3 object-cover"
+                                            />
+                                            <h3 className="font-semibold text-lg">{shop.name}</h3>
+                                            <div className="flex items-center justify-center mt-2">
+                                                <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                                                <span className="text-sm font-medium ml-1">{shop.rating}</span>
+                                                <span className="text-sm text-gray-500 ml-1">({shop.reviewCount})</span>
+                                            </div>
+                                        </div>
+
+                                        <Separator />
+
+                                        <div className="space-y-3">
+                                            <div className="flex items-start gap-3">
+                                                <MapPin className="w-4 h-4 text-gray-500 mt-1 flex-shrink-0" />
+                                                <span className="text-sm">{shop.address}</span>
+                                            </div>
+                                            <div className="flex items-center gap-3">
+                                                <Phone className="w-4 h-4 text-gray-500 flex-shrink-0" />
+                                                <span className="text-sm">{shop.phone}</span>
+                                            </div>
+                                            <div className="flex items-start gap-3">
+                                                <Clock className="w-4 h-4 text-gray-500 mt-1 flex-shrink-0" />
+                                                <span className="text-sm">{shop.workingHours}</span>
+                                            </div>
+                                        </div>
+
+                                        <Separator />
+
+                                        <div className="space-y-2">
+                                            <Button
+                                                className="w-full"
+                                                onClick={() => navigate(ROUTES.SHOP_DETAILS(shop.id))}
+                                            >
+                                                <Eye className="w-4 h-4 mr-2" />
+                                                Visit Shop
+                                            </Button>
+                                            <Button
+                                                variant="outline"
+                                                className="w-full"
+                                                onClick={handleBookAppointment}
+                                            >
+                                                <Calendar className="w-4 h-4 mr-2" />
+                                                Book Appointment
+                                            </Button>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            )}
+
+                            {/* Related Products - Hidden for now until we have real data */}
+                            {false && (
+                                <Card>
+                                    <CardHeader>
+                                        <CardTitle>منتجات مشابهة</CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="text-center py-8 text-gray-500">
+                                            <p>سيتم عرض المنتجات المشابهة قريباً</p>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>

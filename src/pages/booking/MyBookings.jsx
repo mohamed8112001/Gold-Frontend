@@ -15,7 +15,6 @@ import {
     Eye,
     Plus
 } from 'lucide-react';
-import { bookingService } from '../../services/bookingService.js';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES } from '../../utils/constants.js';
 
