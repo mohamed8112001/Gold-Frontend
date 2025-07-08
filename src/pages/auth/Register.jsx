@@ -83,7 +83,7 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
@@ -96,7 +96,15 @@ const Register = () => {
         password: formData.password,
         role: userType
       });
-      navigate(ROUTES.HOME);
+
+      // توجيه المستخدمين بناءً على نوع الحساب
+      if (userType === 'seller') {
+        // أصحاب المحلات يذهبون إلى صفحة تسجيل الدخول
+        navigate(ROUTES.LOGIN);
+      } else {
+        // المستخدمون العاديون يذهبون إلى الصفحة الرئيسية
+        navigate(ROUTES.HOME);
+      }
     } catch (error) {
       setErrors({ submit: error.message || 'حدث خطأ أثناء التسجيل' });
     }
