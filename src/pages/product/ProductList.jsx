@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button.jsx';
 import { Input } from '@/components/ui/input.jsx';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.jsx';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card.jsx';
 import { Badge } from '@/components/ui/badge.jsx';
 import {
     Search,
-    Filter,
     Grid,
     List,
     Heart,
@@ -31,42 +30,198 @@ const ProductList = () => {
     const [viewMode, setViewMode] = useState('grid');
     const [filters, setFilters] = useState({
         category: searchParams.get('category') || '',
-        priceRange: '',
         rating: '',
-        sortBy: 'newest'
+        sortBy: 'recommended'
     });
+    const [relatedProducts, setRelatedProducts] = useState([]);
     const [showFilters, setShowFilters] = useState(false);
+    const [userBehavior, setUserBehavior] = useState({
+        hasSearched: false,
+        hasFiltered: false,
+        viewedProducts: [],
+        favoriteCategories: [],
+        lastActivity: null
+    });
+    const [displayMode, setDisplayMode] = useState('initial'); // initial, searching, filtered, browsing
 
     useEffect(() => {
         loadProducts();
-    }, []);
+    }, [searchQuery, filters]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    useEffect(() => {
+        loadRelatedProducts();
+    }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
         applyFilters();
-    }, [products, searchQuery, filters]);
+    }, [products, searchQuery, filters]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    // Track user behavior
+    useEffect(() => {
+        const hasSearched = searchQuery.length > 0;
+        const hasFiltered = filters.category || filters.rating || filters.sortBy !== 'recommended';
+
+        setUserBehavior(prev => ({
+            ...prev,
+            hasSearched,
+            hasFiltered,
+            lastActivity: new Date()
+        }));
+
+        // Update display mode based on user behavior
+        if (hasSearched) {
+            setDisplayMode('searching');
+        } else if (hasFiltered) {
+            setDisplayMode('filtered');
+        } else if (filteredProducts.length > 0) {
+            setDisplayMode('browsing');
+        } else {
+            setDisplayMode('initial');
+        }
+    }, [searchQuery, filters, filteredProducts.length]);
+
+    const trackProductView = (productId) => {
+        setUserBehavior(prev => {
+            const newBehavior = {
+                ...prev,
+                viewedProducts: [...new Set([...prev.viewedProducts, productId])],
+                lastActivity: new Date()
+            };
+
+            // Save to localStorage
+            localStorage.setItem('userBehavior', JSON.stringify(newBehavior));
+            return newBehavior;
+        });
+    };
+
+    // Load user behavior from localStorage on mount
+    useEffect(() => {
+        const savedBehavior = localStorage.getItem('userBehavior');
+        if (savedBehavior) {
+            try {
+                const parsed = JSON.parse(savedBehavior);
+                setUserBehavior(prev => ({
+                    ...prev,
+                    ...parsed,
+                    lastActivity: parsed.lastActivity ? new Date(parsed.lastActivity) : null
+                }));
+            } catch (error) {
+                console.error('Failed to parse saved user behavior:', error);
+            }
+        }
+    }, []);
+
+    const getDisplayMessage = () => {
+        switch (displayMode) {
+            case 'searching':
+                return {
+                    title: `Search Results for "${searchQuery}"`,
+                    subtitle: `Found ${filteredProducts.length} products matching your search`,
+                    icon: '🔍'
+                };
+            case 'filtered':
+                return {
+                    title: 'Filtered Products',
+                    subtitle: `Showing ${filteredProducts.length} products based on your preferences`,
+                    icon: ' '
+                };
+            case 'browsing':
+                return {
+                    title: 'Browse Products',
+                    subtitle: `Discover ${filteredProducts.length} amazing products`,
+                    icon: ''
+                };
+            default:
+                return {
+                    title: 'Product Gallery',
+                    subtitle: 'Discover the finest jewelry and gold pieces from the best stores',
+                    icon: ''
+                };
+        }
+    };
+
+    const getSuggestionMessage = () => {
+        if (displayMode === 'searching' && filteredProducts.length === 0) {
+            return {
+                title: "No products found",
+                message: "Try adjusting your search terms or browse our categories",
+                action: "Clear Search",
+                actionFn: () => {
+                    setSearchQuery('');
+                    setSearchParams({});
+                }
+            };
+        }
+
+        if (displayMode === 'filtered' && filteredProducts.length === 0) {
+            return {
+                title: "No products match your filters",
+                message: "Try removing some filters to see more products",
+                action: "Clear Filters",
+                actionFn: clearFilters
+            };
+        }
+
+        if (userBehavior.viewedProducts.length > 3) {
+            return {
+                title: "Based on your browsing",
+                message: "You seem interested in jewelry! Check out our featured collections",
+                action: "View Collections",
+                actionFn: () => navigate('/collections')
+            };
+        }
+
+        return null;
+    };
 
     const loadProducts = async () => {
         try {
             setIsLoading(true);
-            const response = await productService.getAllProducts();
-            const data = response.data || response;
 
-            // Debug: Log products data to understand structure
-            console.log('🔍 Products loaded:', data);
-            if (data.length > 0) {
-                console.log('🔍 Sample product:', data[0]);
-                console.log('🔍 Product price:', data[0].price, typeof data[0].price);
-                console.log('🔍 Product shop:', data[0].shopName || data[0].shop);
-            }
+            // Build query parameters for backend filtering
+            const queryParams = new URLSearchParams();
+
+            if (searchQuery) queryParams.append('search', searchQuery);
+            if (filters.category) queryParams.append('category', filters.category);
+            if (filters.sortBy) queryParams.append('sortBy', filters.sortBy);
+
+            const url = `https://gold-backend-production.up.railway.app/product${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
+
+            const response = await fetch(url, {
+                headers: {
+                    'Authorization': user?.token ? `Bearer ${user.token}` : '',
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const result = await response.json();
+            const data = result.data || result;
 
             setProducts(data);
         } catch (error) {
             console.error('Error loading products:', error);
-            // Use mock data for demo
-            console.log('🔍 Using mock products for demo');
-            setProducts(mockProducts);
         } finally {
             setIsLoading(false);
+        }
+    };
+
+    const loadRelatedProducts = async () => {
+        if (!user?.token) return;
+
+        try {
+            const response = await fetch('https://gold-backend-production.up.railway.app/product/related?limit=6', {
+                headers: {
+                    'Authorization': `Bearer ${user.token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                setRelatedProducts(data.data);
+            }
+        } catch (error) {
+            console.error('Error loading related products:', error);
         }
     };
 
@@ -83,17 +238,13 @@ const ProductList = () => {
 
         // Category filter
         if (filters.category) {
-            filtered = filtered.filter(product => product.category === filters.category);
+            filtered = filtered.filter(product =>
+                product.design_type === filters.category ||
+                product.category === filters.category
+            );
         }
 
-        // Price range filter
-        if (filters.priceRange) {
-            const [min, max] = filters.priceRange.split('-').map(Number);
-            filtered = filtered.filter(product => {
-                const price = product.price;
-                return price >= min && (max ? price <= max : true);
-            });
-        }
+
 
         // Rating filter
         if (filters.rating) {
@@ -103,12 +254,6 @@ const ProductList = () => {
 
         // Sort
         switch (filters.sortBy) {
-            case 'price-low':
-                filtered.sort((a, b) => a.price - b.price);
-                break;
-            case 'price-high':
-                filtered.sort((a, b) => b.price - a.price);
-                break;
             case 'rating':
                 filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
                 break;
@@ -151,9 +296,8 @@ const ProductList = () => {
     const clearFilters = () => {
         setFilters({
             category: '',
-            priceRange: '',
             rating: '',
-            sortBy: 'newest'
+            sortBy: 'recommended'
         });
         setSearchQuery('');
         setSearchParams({});
@@ -178,124 +322,51 @@ const ProductList = () => {
         }
     };
 
-    // Mock data for demo
-    const mockProducts = [
-        {
-            id: 1,
-            name: 'خاتم ذهبي كلاسيكي',
-            description: 'خاتم ذهب عيار 21 بتصميم كلاسيكي أنيق',
-            price: 2500,
-            category: 'rings',
-            image: '/api/placeholder/300/300',
-            rating: 4.5,
-            reviewCount: 23,
-            shopName: 'مجوهرات الإسكندرية',
-            shopId: 1,
-            isFavorited: false,
-            createdAt: '2024-01-15'
-        },
-        {
-            id: 2,
-            name: 'سلسلة ذهبية فاخرة',
-            description: 'سلسلة ذهب عيار 18 بتصميم عصري',
-            price: 4200,
-            category: 'chains',
-            image: '/api/placeholder/300/300',
-            rating: 4.8,
-            reviewCount: 45,
-            shopName: 'رويال جولد',
-            shopId: 2,
-            isFavorited: true,
-            createdAt: '2024-01-10'
-        },
-        {
-            id: 3,
-            name: 'أسورة ذهبية مرصعة',
-            description: 'أسورة ذهب مرصعة بالأحجار الكريمة',
-            price: 3800,
-            category: 'bracelets',
-            image: '/api/placeholder/300/300',
-            rating: 4.3,
-            reviewCount: 18,
-            shopName: 'الماس الشرق',
-            shopId: 3,
-            isFavorited: false,
-            createdAt: '2024-01-12'
-        },
-        {
-            id: 4,
-            name: 'قلادة ذهبية أنيقة',
-            description: 'قلادة ذهب عيار 18 بتصميم راقي',
-            price: 3200,
-            category: 'necklaces',
-            image: '/api/placeholder/300/300',
-            rating: 4.6,
-            reviewCount: 31,
-            shopName: 'مجوهرات الإسكندرية',
-            shopId: 1,
-            isFavorited: false,
-            createdAt: '2024-01-08'
-        },
-        {
-            id: 5,
-            name: 'أقراط ذهبية مميزة',
-            description: 'أقراط ذهب مرصعة بالألماس',
-            price: 2800,
-            category: 'earrings',
-            image: '/api/placeholder/300/300',
-            rating: 4.4,
-            reviewCount: 27,
-            shopName: 'رويال جولد',
-            shopId: 2,
-            isFavorited: true,
-            createdAt: '2024-01-05'
-        },
-        {
-            id: 6,
-            name: 'خاتم خطوبة فاخر',
-            description: 'خاتم خطوبة ذهب أبيض مرصع بالألماس',
-            price: 8500,
-            category: 'rings',
-            image: '/api/placeholder/300/300',
-            rating: 4.9,
-            reviewCount: 52,
-            shopName: 'الماس الشرق',
-            shopId: 3,
-            isFavorited: false,
-            createdAt: '2024-01-03'
-        }
-    ];
+
 
     const ProductCard = ({ product, isListView = false }) => {
         const productId = product.id || product._id;
 
         // Safe data extraction
         const safeProduct = {
-            name: product.name || product.title || 'منتج غير محدد',
-            description: product.description || 'لا يوجد وصف متاح',
-            image: product.image || product.imageUrl || product.images?.[0] || '/api/placeholder/300/300',
-            rating: typeof product.rating === 'number' ? product.rating : 0,
+            name: product.name || product.title || 'Untitled Product',
+            description: product.description || 'No description available',
+            image: product.image || product.imageUrl || product.images?.[0] || product.images_urls?.[0] || '/api/placeholder/300/300',
+            rating: typeof product.rating === 'number' ? product.rating : 4.5,
             reviewCount: product.reviewCount || product.reviews?.length || 0,
-            shopName: product.shopName || product.shop?.name || 'متجر غير محدد',
+            shopName: product.shopName || product.shop?.name || 'Unknown Shop',
             shopId: product.shopId || product.shop?.id || product.shop?._id,
-            category: product.category || 'عام',
             isFavorited: product.isFavorited || false,
-            price: (() => {
-                let price = product.price;
-                if (typeof price === 'object' && price !== null) {
-                    price = price.value || price.amount || price.price || 0;
-                }
-                if (typeof price === 'string') {
-                    price = parseFloat(price) || 0;
-                }
-                return typeof price === 'number' ? price : 0;
-            })()
+            category: product.category || product.design_type || 'other',
+            design_type: product.design_type || product.category || 'other'
         };
 
         return (
             <Card
                 className={`group hover:shadow-xl transition-all duration-300 cursor-pointer border-0 shadow-md hover:shadow-2xl transform hover:-translate-y-1 ${isListView ? 'flex h-48' : 'flex flex-col h-full'}`}
-                onClick={() => navigate(ROUTES.PRODUCT_DETAILS(productId))}
+                onClick={async () => {
+                    try {
+                        // Track product view locally
+                        trackProductView(productId);
+
+                        // Track the click (interest)
+                        if (user) {
+                            await fetch("https://gold-backend-production.up.railway.app/product/track", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    Authorization: `Bearer ${user.token}`, // لو عندك user.token
+                                },
+                                body: JSON.stringify({ productId }),
+                            });
+                        }
+                    } catch (error) {
+                        console.error("Failed to track product click:", error);
+                    } finally {
+                        // Navigate to product details
+                        navigate(ROUTES.PRODUCT_DETAILS(productId));
+                    }
+                }}
             >
                 <div className={`relative overflow-hidden ${isListView ? 'w-48 flex-shrink-0' : 'w-full'}`}>
                     <img
@@ -326,11 +397,7 @@ const ProductList = () => {
                         </Badge>
                     )}
 
-                    {safeProduct.price > 0 && (
-                        <div className="absolute bottom-3 left-3 bg-black/70 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm font-bold">
-                            {safeProduct.price.toLocaleString()} ج.م
-                        </div>
-                    )}
+
                 </div>
 
                 <div className={`p-5 flex flex-col h-full ${isListView ? 'justify-between' : ''}`}>
@@ -367,13 +434,8 @@ const ProductList = () => {
                         </div>
                     </div>
 
-                    {/* Price and Actions - Fixed at bottom */}
+                    {/* Actions - Fixed at bottom */}
                     <div className="mt-auto pt-3 border-t border-gray-100">
-                        <div className="flex items-center justify-between mb-3">
-                            <div className="text-lg font-bold text-yellow-600 truncate">
-                                {safeProduct.price > 0 ? `${safeProduct.price.toLocaleString()} ج.م` : 'غير محدد'}
-                            </div>
-                        </div>
 
                         <div className="flex gap-2">
                             <Button
@@ -414,12 +476,20 @@ const ProductList = () => {
                 {/* Header */}
                 <div className="mb-12">
                     <div className="text-center mb-8">
-                        <h1 className="text-5xl font-bold text-gray-900 mb-4">
-                            💎 معرض المنتجات 💎
-                        </h1>
-                        <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                            اكتشف أجمل قطع المجوهرات والذهب من أفضل المتاجر في مصر
-                        </p>
+                        {(() => {
+                            const message = getDisplayMessage();
+                            return (
+                                <>
+                                    <div className="text-6xl mb-4">{message.icon}</div>
+                                    <h1 className="text-5xl font-bold text-gray-900 mb-4">
+                                        {message.title}
+                                    </h1>
+                                    <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                                        {message.subtitle}
+                                    </p>
+                                </>
+                            );
+                        })()}
                     </div>
 
                     {/* Search and Controls */}
@@ -431,7 +501,7 @@ const ProductList = () => {
                                     <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                                     <Input
                                         type="text"
-                                        placeholder="🔍 ابحث عن المنتجات، المجوهرات، الذهب..."
+                                        placeholder="Search for products, jewelry, gold..."
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}
                                         className="pl-12 pr-6 py-4 text-lg rounded-full border-0 focus:ring-0 bg-transparent placeholder-gray-500"
@@ -440,7 +510,7 @@ const ProductList = () => {
                                         type="submit"
                                         className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-6 py-2 rounded-full"
                                     >
-                                        بحث
+                                        Search
                                     </Button>
                                 </div>
                             </div>
@@ -449,7 +519,7 @@ const ProductList = () => {
                         <div className="flex items-center gap-4">
                             <div className="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-full">
                                 <span className="text-sm font-medium text-gray-600">
-                                    {filteredProducts.length} منتج
+                                    {filteredProducts.length} products
                                 </span>
                             </div>
 
@@ -460,7 +530,7 @@ const ProductList = () => {
                                 className="flex items-center gap-2 border-yellow-200 text-yellow-700 hover:bg-yellow-50 hover:border-yellow-300"
                             >
                                 <SlidersHorizontal className="w-4 h-4" />
-                                فلاتر
+                                Filters
                                 {Object.keys(filters).some(key => filters[key]) && (
                                     <span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
                                 )}
@@ -507,7 +577,7 @@ const ProductList = () => {
                                 <CardContent className="space-y-6">
                                     {/* Category Filter */}
                                     <div>
-                                        <h3 className="font-medium mb-3">الفئة</h3>
+                                        <h3 className="font-medium mb-3">Category</h3>
                                         <div className="space-y-2">
                                             <label className="flex items-center">
                                                 <input
@@ -518,7 +588,7 @@ const ProductList = () => {
                                                     onChange={(e) => handleFilterChange('category', e.target.value)}
                                                     className="mr-2"
                                                 />
-                                                الكل
+                                                All
                                             </label>
                                             {Object.entries(PRODUCT_CATEGORIES).map(([key, value]) => (
                                                 <label key={key} className="flex items-center">
@@ -536,41 +606,17 @@ const ProductList = () => {
                                         </div>
                                     </div>
 
-                                    {/* Price Range Filter */}
-                                    <div>
-                                        <h3 className="font-medium mb-3">السعر</h3>
-                                        <div className="space-y-2">
-                                            {[
-                                                { label: 'الكل', value: '' },
-                                                { label: 'أقل من 1000 ج.م', value: '0-1000' },
-                                                { label: '1000 - 3000 ج.م', value: '1000-3000' },
-                                                { label: '3000 - 5000 ج.م', value: '3000-5000' },
-                                                { label: 'أكثر من 5000 ج.م', value: '5000-' }
-                                            ].map((option) => (
-                                                <label key={option.value} className="flex items-center">
-                                                    <input
-                                                        type="radio"
-                                                        name="priceRange"
-                                                        value={option.value}
-                                                        checked={filters.priceRange === option.value}
-                                                        onChange={(e) => handleFilterChange('priceRange', e.target.value)}
-                                                        className="mr-2"
-                                                    />
-                                                    {option.label}
-                                                </label>
-                                            ))}
-                                        </div>
-                                    </div>
+
 
                                     {/* Rating Filter */}
                                     <div>
-                                        <h3 className="font-medium mb-3">التقييم</h3>
+                                        <h3 className="font-medium mb-3">Rating</h3>
                                         <div className="space-y-2">
                                             {[
-                                                { label: 'الكل', value: '' },
-                                                { label: '4 نجوم فأكثر', value: '4' },
-                                                { label: '3 نجوم فأكثر', value: '3' },
-                                                { label: '2 نجوم فأكثر', value: '2' }
+                                                { label: 'All', value: '' },
+                                                { label: '4+ Stars', value: '4' },
+                                                { label: '3+ Stars', value: '3' },
+                                                { label: '2+ Stars', value: '2' }
                                             ].map((option) => (
                                                 <label key={option.value} className="flex items-center">
                                                     <input
@@ -589,17 +635,15 @@ const ProductList = () => {
 
                                     {/* Sort */}
                                     <div>
-                                        <h3 className="font-medium mb-3">ترتيب حسب</h3>
+                                        <h3 className="font-medium mb-3">Sort By</h3>
                                         <select
                                             value={filters.sortBy}
                                             onChange={(e) => handleFilterChange('sortBy', e.target.value)}
                                             className="w-full p-2 border rounded-md"
                                         >
-                                            <option value="newest">الأحدث</option>
-                                            <option value="price-low">السعر: من الأقل للأعلى</option>
-                                            <option value="price-high">السعر: من الأعلى للأقل</option>
-                                            <option value="rating">التقييم</option>
-                                            <option value="name">الاسم</option>
+                                            <option value="recommended">Recommended for You</option>
+                                            <option value="newest">Newest</option>
+                                            <option value="name">Name</option>
                                         </select>
                                     </div>
 
@@ -608,7 +652,7 @@ const ProductList = () => {
                                         onClick={clearFilters}
                                         className="w-full"
                                     >
-                                        مسح الفلاتر
+                                        Clear All Filters
                                     </Button>
                                 </CardContent>
                             </Card>
@@ -621,22 +665,41 @@ const ProductList = () => {
                         <div className="flex items-center justify-between mb-8 bg-white rounded-xl p-4 shadow-sm">
                             <div>
                                 <p className="text-lg font-semibold text-gray-900">
-                                    {filteredProducts.length} منتج متاح
+                                    {filteredProducts.length} products available
                                 </p>
                                 {searchQuery && (
                                     <p className="text-sm text-gray-600">
-                                        نتائج البحث عن: <span className="font-medium text-yellow-600">"{searchQuery}"</span>
+                                        Search results for: <span className="font-medium text-yellow-600">"{searchQuery}"</span>
                                     </p>
                                 )}
                                 {filters.category && (
                                     <p className="text-sm text-gray-600">
-                                        في فئة: <span className="font-medium text-yellow-600">{PRODUCT_CATEGORIES[filters.category.toUpperCase()]}</span>
+                                        Category: <span className="font-medium text-yellow-600">{PRODUCT_CATEGORIES[filters.category.toUpperCase()]}</span>
+                                    </p>
+                                )}
+                                {userBehavior.viewedProducts.length > 0 && (
+                                    <p className="text-xs text-blue-600 mt-1">
+                                        You've viewed {userBehavior.viewedProducts.length} products
                                     </p>
                                 )}
                             </div>
                             <div className="text-right">
-                                <p className="text-sm text-gray-500">عرض النتائج</p>
+                                <p className="text-sm text-gray-500">Display mode</p>
                                 <p className="text-lg font-bold text-yellow-600">{viewMode === 'grid' ? '🔲' : '📋'}</p>
+                                {userBehavior.hasSearched && (
+                                    <div className="mt-2">
+                                        <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full">
+                                            Searching
+                                        </span>
+                                    </div>
+                                )}
+                                {userBehavior.hasFiltered && (
+                                    <div className="mt-2">
+                                        <span className="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full">
+                                            Filtered
+                                        </span>
+                                    </div>
+                                )}
                             </div>
                         </div>
 
@@ -666,19 +729,28 @@ const ProductList = () => {
                             </div>
                         ) : filteredProducts.length === 0 ? (
                             <div className="text-center py-20 bg-white rounded-2xl shadow-lg">
-                                <div className="text-8xl mb-6">💎</div>
-                                <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                                    لم يتم العثور على منتجات
-                                </h3>
-                                <p className="text-gray-600 text-lg mb-8 max-w-md mx-auto">
-                                    جرب تغيير معايير البحث أو الفلاتر للعثور على المنتجات المناسبة
-                                </p>
-                                <Button
-                                    onClick={clearFilters}
-                                    className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-8 py-3"
-                                >
-                                    مسح جميع الفلاتر
-                                </Button>
+                                {(() => {
+                                    const suggestion = getSuggestionMessage();
+                                    return (
+                                        <>
+                                            <div className="text-8xl mb-6">
+                                                {displayMode === 'searching' ? '🔍' : displayMode === 'filtered' ? '🎯' : '💎'}
+                                            </div>
+                                            <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                                                {suggestion?.title || "No products found"}
+                                            </h3>
+                                            <p className="text-gray-600 text-lg mb-8 max-w-md mx-auto">
+                                                {suggestion?.message || "Try adjusting your search or filters"}
+                                            </p>
+                                            <Button
+                                                onClick={suggestion?.actionFn || clearFilters}
+                                                className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-8 py-3"
+                                            >
+                                                {suggestion?.action || "Clear All Filters"}
+                                            </Button>
+                                        </>
+                                    );
+                                })()}
                             </div>
                         ) : (
                             <div className={`grid gap-6 ${viewMode === 'grid'
@@ -695,49 +767,175 @@ const ProductList = () => {
                             </div>
                         )}
 
-                        {/* Load More */}
-                        {filteredProducts.length > 0 && filteredProducts.length >= 12 && (
-                            <div className="text-center mt-16">
-                                <div className="bg-white rounded-2xl p-8 shadow-lg">
-                                    <h3 className="text-xl font-bold text-gray-900 mb-4">
-                                        هل تريد رؤية المزيد من المنتجات؟
+                        {/* Related Products Section */}
+                        {relatedProducts.length > 0 && userBehavior.viewedProducts.length > 0 && (
+                            <div className="mt-16">
+                                <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-2xl p-8 shadow-lg mb-8">
+                                    <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                                     Recommended Based on Your Views
                                     </h3>
                                     <p className="text-gray-600 mb-6">
-                                        اكتشف المزيد من المجوهرات والذهب الرائع
+                                        Products similar to what you've been browsing
                                     </p>
-                                    <Button
-                                        size="lg"
-                                        className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-12 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                                    >
-                                        ✨ تحميل المزيد من المنتجات
-                                    </Button>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                        {relatedProducts.slice(0, 6).map((product) => {
+                                            const safeProduct = {
+                                                id: product._id || product.id,
+                                                name: product.title || product.name || 'Untitled Product',
+                                                description: product.description || 'No description available',
+                                                image: product.images_urls?.[0] || 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop&crop=center&auto=format&q=60',
+                                                shopName: product.shop?.name || 'Unknown Shop',
+                                                shopId: product.shop?._id || product.shop?.id,
+                                                rating: product.rating || 4.5,
+                                                reviewCount: product.reviewCount || 0,
+                                                isFavorited: product.isFavorited || false
+                                            };
+
+                                            return (
+                                                <Card
+                                                    key={safeProduct.id}
+                                                    className="group hover:shadow-xl transition-all duration-300 cursor-pointer border-0 bg-white rounded-2xl shadow-md h-full flex flex-col"
+                                                    onClick={async () => {
+                                                        try {
+                                                            trackProductView(safeProduct.id);
+
+                                                            if (user) {
+                                                                await fetch("https://gold-backend-production.up.railway.app/product/track", {
+                                                                    method: "POST",
+                                                                    headers: {
+                                                                        "Content-Type": "application/json",
+                                                                        Authorization: `Bearer ${user.token}`,
+                                                                    },
+                                                                    body: JSON.stringify({ productId: safeProduct.id }),
+                                                                });
+                                                            }
+                                                        } catch (error) {
+                                                            console.error("Failed to track product click:", error);
+                                                        } finally {
+                                                            navigate(ROUTES.PRODUCT_DETAILS(safeProduct.id));
+                                                        }
+                                                    }}
+                                                >
+                                                    <div className="relative overflow-hidden rounded-t-2xl">
+                                                        <img
+                                                            src={safeProduct.image}
+                                                            alt={safeProduct.name}
+                                                            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                                                            onError={(e) => {
+                                                                e.target.src = 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop&crop=center&auto=format&q=60';
+                                                            }}
+                                                        />
+                                                        <div className="absolute top-3 right-3">
+                                                            <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full font-medium">
+                                                                Recommended
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <CardContent className="p-4 flex-1 flex flex-col">
+                                                        <h3 className="font-bold text-lg text-gray-900 mb-2 line-clamp-2">
+                                                            {safeProduct.name}
+                                                        </h3>
+                                                        <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                                                            {safeProduct.description}
+                                                        </p>
+                                                        <div className="flex items-center justify-between mt-auto">
+                                                            <div className="flex items-center">
+                                                                <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                                                                <span className="text-sm text-gray-600 ml-1">
+                                                                    {safeProduct.rating.toFixed(1)}
+                                                                </span>
+                                                            </div>
+                                                            <Button
+                                                                size="sm"
+                                                                className="bg-yellow-500 hover:bg-yellow-600 text-white"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    navigate(ROUTES.PRODUCT_DETAILS(safeProduct.id));
+                                                                }}
+                                                            >
+                                                                <Eye className="w-4 h-4 mr-1" />
+                                                                View
+                                                            </Button>
+                                                        </div>
+                                                    </CardContent>
+                                                </Card>
+                                            );
+                                        })}
+                                    </div>
                                 </div>
                             </div>
                         )}
 
-                        {/* Quick Stats */}
+                        {/* Smart Suggestions */}
                         {filteredProducts.length > 0 && (
-                            <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-2xl p-6 text-center">
-                                    <div className="text-3xl font-bold text-yellow-600 mb-2">
-                                        {filteredProducts.length}
+                            <div className="mt-16">
+                                {userBehavior.viewedProducts.length > 2 && (
+                                    <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-8 shadow-lg mb-8">
+                                        <h3 className="text-xl font-bold text-gray-900 mb-4">
+                                             Personalized for You
+                                        </h3>
+                                        <p className="text-gray-600 mb-6">
+                                            Based on your browsing, you might like these categories
+                                        </p>
+                                        <div className="flex flex-wrap gap-3">
+                                            {Object.entries(PRODUCT_CATEGORIES).slice(0, 4).map(([key, value]) => (
+                                                <Button
+                                                    key={key}
+                                                    variant="outline"
+                                                    onClick={() => handleFilterChange('category', key.toLowerCase())}
+                                                    className="border-blue-200 text-blue-700 hover:bg-blue-50"
+                                                >
+                                                    {value}
+                                                </Button>
+                                            ))}
+                                        </div>
                                     </div>
-                                    <div className="text-gray-700 font-medium">منتج متاح</div>
-                                </div>
-                                <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-6 text-center">
-                                    <div className="text-3xl font-bold text-blue-600 mb-2">
-                                        {new Set(filteredProducts.map(p => p.shopId || p.shop?.id)).size}
+                                )}
+
+                                {filteredProducts.length >= 12 && (
+                                    <div className="bg-white rounded-2xl p-8 shadow-lg text-center">
+                                        <h3 className="text-xl font-bold text-gray-900 mb-4">
+                                            Want to see more products?
+                                        </h3>
+                                        <p className="text-gray-600 mb-6">
+                                            Discover more amazing jewelry and gold pieces
+                                        </p>
+                                        <Button
+                                            size="lg"
+                                            className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-12 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                                        >
+                                             Load More Products
+                                        </Button>
                                     </div>
-                                    <div className="text-gray-700 font-medium">متجر مختلف</div>
-                                </div>
-                                <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl p-6 text-center">
-                                    <div className="text-3xl font-bold text-green-600 mb-2">
-                                        {new Set(filteredProducts.map(p => p.category)).size}
+                                )}
+                            </div>
+                        )}
+
+                        {/* User Activity Summary */}
+                        {(userBehavior.hasSearched || userBehavior.hasFiltered || userBehavior.viewedProducts.length > 0) && (
+                            <div className="mt-8 bg-gray-50 rounded-2xl p-6">
+                                <h4 className="text-lg font-semibold text-gray-900 mb-4">Your Activity</h4>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div className="bg-white rounded-lg p-4 text-center">
+                                        <div className="text-2xl font-bold text-blue-600">{userBehavior.viewedProducts.length}</div>
+                                        <div className="text-sm text-gray-600">Products Viewed</div>
                                     </div>
-                                    <div className="text-gray-700 font-medium">فئة مختلفة</div>
+                                    <div className="bg-white rounded-lg p-4 text-center">
+                                        <div className="text-2xl font-bold text-green-600">
+                                            {userBehavior.hasSearched ? '✓' : '○'}
+                                        </div>
+                                        <div className="text-sm text-gray-600">Search Used</div>
+                                    </div>
+                                    <div className="bg-white rounded-lg p-4 text-center">
+                                        <div className="text-2xl font-bold text-purple-600">
+                                            {userBehavior.hasFiltered ? '✓' : '○'}
+                                        </div>
+                                        <div className="text-sm text-gray-600">Filters Applied</div>
+                                    </div>
                                 </div>
                             </div>
                         )}
+
                     </div>
                 </div>
             </div>
