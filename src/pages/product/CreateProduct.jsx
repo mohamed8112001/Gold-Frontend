@@ -19,6 +19,7 @@ const CreateProduct = () => {
     const navigate = useNavigate();
     const { user, isShopOwner } = useAuth();
     const [isLoading, setIsLoading] = useState(false);
+    const [loadingMessage, setLoadingMessage] = useState('جاري الحفظ...');
     const [userShop, setUserShop] = useState(null);
     const [formData, setFormData] = useState({
         name: '',
@@ -58,19 +59,19 @@ const CreateProduct = () => {
                 );
 
                 if (userShopData) {
-                    console.log('✅ User shop found:', userShopData.name);
+                    console.log(' User shop found:', userShopData.name);
                     setUserShop(userShopData);
                 } else {
-                    console.error('❌ No shop found for user');
+                    console.error(' No shop found for user');
                     alert('يجب أن يكون لديك متجر لإضافة منتجات. يرجى إنشاء متجر أولاً.');
                     navigate(ROUTES.CREATE_SHOP);
                 }
             } catch (error) {
-                console.error('❌ Error loading user shop:', error);
+                console.error(' Error loading user shop:', error);
                 alert('خطأ في تحميل بيانات المتجر');
             }
         } catch (error) {
-            console.error('❌ Error in loadUserShop:', error);
+            console.error(' Error in loadUserShop:', error);
         }
     };
 
@@ -127,8 +128,9 @@ const CreateProduct = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!formData.name || !formData.description || !formData.price) {
-            alert('يرجى ملء جميع الحقول المطلوبة');
+        // التحقق من الحقول المطلوبة (الوصف أصبح اختياري)
+        if (!formData.name || !formData.price) {
+            alert('يرجى ملء جميع الحقول المطلوبة (اسم المنتج والسعر)');
             return;
         }
 
@@ -150,37 +152,121 @@ const CreateProduct = () => {
         try {
             setIsLoading(true);
 
-            console.log('🛍️ Creating product with data:', {
+            // تحديد رسالة التحميل بناءً على ما إذا كان سيتم توليد الوصف أم لا
+            const willGenerateAI = !formData.description || formData.description.trim() === '';
+            setLoadingMessage(willGenerateAI ? 'جاري توليد الوصف بالذكاء الاصطناعي...' : 'جاري حفظ المنتج...');
+
+            console.log(' Creating product with data:', {
                 title: formData.name,
-                description: formData.description,
+                description: formData.description || '[سيتم التوليد التلقائي]',
                 price: formData.price,
                 karat: formData.karat,
                 weight: formData.weight,
-                shop: userShop._id || userShop.id
+                design_type: formData.category,
+                shop: userShop._id || userShop.id,
+                willGenerateAI: !formData.description || formData.description.trim() === ''
             });
 
             // تحضير البيانات بالتنسيق المطلوب للباك إند
             const productData = {
                 title: formData.name, // الباك إند يتوقع title وليس name
-                description: formData.description,
+                // إذا كان الوصف فارغاً، لا نرسله أصلاً ليقوم الباك إند بتوليده تلقائياً
+                ...(formData.description && formData.description.trim() !== ''
+                    ? { description: formData.description }
+                    : {}),
                 price: parseFloat(formData.price),
                 karat: formData.karat, // يجب أن يكون بتنسيق "18K", "21K", "24K"
                 weight: parseFloat(formData.weight),
-                design_type: formData.category || formData.material || 'general',
+                design_type: formData.category || 'other', // الباك إند يتوقع design_type
+                category: formData.category || formData.material || 'other',
                 images_urls: [], // سيتم إضافة الصور لاحقاً
                 shop: userShop._id || userShop.id // معرف المتجر مطلوب
             };
 
-            console.log('📦 Final product data:', productData);
+            console.log(' Final product data:', productData);
 
             const response = await productService.createProduct(productData);
-            console.log('✅ Product created successfully:', response);
+            console.log(' Product created successfully:', response);
 
-            alert('تم إنشاء المنتج بنجاح!');
+            // رسالة نجاح مختلفة بناءً على ما إذا كان الوصف تم توليده تلقائياً أم لا
+            const successMessage = formData.description
+                ? 'تم إنشاء المنتج بنجاح!'
+                : 'تم إنشاء المنتج بنجاح! تم توليد الوصف تلقائياً باستخدام الذكاء الاصطناعي.';
+
+            alert(successMessage);
             navigate(ROUTES.DASHBOARD);
         } catch (error) {
-            console.error('❌ Error creating product:', error);
-            alert(`حدث خطأ في إنشاء المنتج: ${error.message}`);
+            console.error(' Error creating product:', error);
+
+            // معالجة خاصة لخطأ توليد الوصف التلقائي
+            if (error.message.includes('Failed to generate AI description')) {
+                console.error(' AI Description Error Details:', {
+                    error: error.message,
+                    productData: productData,
+                    hasOpenAIKey: !!process.env.VITE_OPENAI_API_KEY,
+                    timestamp: new Date().toISOString()
+                });
+
+                const choice = window.confirm(
+                    ' فشل في توليد الوصف التلقائي\n\n' +
+                    ' الأسباب المحتملة:\n' +
+                    '• مفتاح OpenAI API غير صحيح أو منتهي الصلاحية\n' +
+                    '• نفاد الرصيد في حساب OpenAI\n' +
+                    '• مشكلة في الاتصال بالإنترنت\n' +
+                    '• خطأ مؤقت في خدمة OpenAI\n\n' +
+                    ' الحلول المتاحة:\n' +
+                    'موافق = إضافة وصف يدوياً\n' +
+                    'إلغاء = إنشاء المنتج بوصف افتراضي'
+                );
+
+                if (choice) {
+                    // إضافة وصف يدوياً
+                    const descriptionField = document.querySelector('textarea[name="description"]');
+                    if (descriptionField) {
+                        descriptionField.focus();
+                        descriptionField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        // إضافة تلميح بصري
+                        descriptionField.style.borderColor = '#f59e0b';
+                        descriptionField.style.boxShadow = '0 0 0 3px rgba(245, 158, 11, 0.1)';
+                        setTimeout(() => {
+                            descriptionField.style.borderColor = '';
+                            descriptionField.style.boxShadow = '';
+                        }, 3000);
+                    }
+                    alert(' يرجى إضافة وصف للمنتج في الحقل المميز أعلاه ثم المحاولة مرة أخرى.');
+                } else {
+                    // إنشاء وصف افتراضي وإعادة المحاولة
+                    const categoryLabel = categories.find(cat => cat.value === formData.category)?.label || formData.category;
+                    const defaultDescription = `${formData.name} - ${categoryLabel} من الذهب عيار ${formData.karat} بوزن ${formData.weight} جرام. منتج عالي الجودة بسعر ${formData.price} جنيه مصري.`;
+
+                    const confirmDefault = window.confirm(
+                        ` سيتم إنشاء المنتج بالوصف التالي:\n\n"${defaultDescription}"\n\n هل تريد المتابعة؟`
+                    );
+
+                    if (confirmDefault) {
+                        // تحديث البيانات بالوصف الافتراضي وإعادة المحاولة
+                        const updatedProductData = {
+                            ...productData,
+                            description: defaultDescription
+                        };
+
+                        try {
+                            const response = await productService.createProduct(updatedProductData);
+                            console.log(' Product created with default description:', response);
+                            alert(' تم إنشاء المنتج بنجاح بوصف افتراضي!\n\nيمكنك تعديل الوصف لاحقاً من لوحة التحكم.');
+                            navigate(ROUTES.DASHBOARD);
+                            return;
+                        } catch (retryError) {
+                            console.error(' Retry failed:', retryError);
+                            alert(`فشل في إنشاء المنتج: ${retryError.message}`);
+                        }
+                    }
+                }
+            } else {
+                // أخطاء أخرى
+                console.error(' General Product Creation Error:', error);
+                alert(` حدث خطأ في إنشاء المنتج: ${error.message}\n\nيرجى التحقق من البيانات والمحاولة مرة أخرى.`);
+            }
         } finally {
             setIsLoading(false);
         }
@@ -209,7 +295,7 @@ const CreateProduct = () => {
                     {!userShop && (
                         <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
                             <p className="text-yellow-800 text-sm">
-                                🔄 جاري تحميل بيانات المتجر...
+                             جاري تحميل بيانات المتجر...
                             </p>
                         </div>
                     )}
@@ -319,16 +405,63 @@ const CreateProduct = () => {
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    الوصف *
+                                    الوصف
+                                    <span className="text-gray-500 text-sm font-normal"> (اختياري)</span>
                                 </label>
-                                <textarea
-                                    name="description"
-                                    value={formData.description}
-                                    onChange={handleInputChange}
-                                    placeholder="اكتب وصفاً مفصلاً للمنتج"
-                                    className="w-full p-3 border border-gray-300 rounded-md resize-none h-32"
-                                    required
-                                />
+                                <div className="relative">
+                                    <textarea
+                                        name="description"
+                                        value={formData.description}
+                                        onChange={handleInputChange}
+                                        placeholder="اكتب وصفاً مفصلاً للمنتج، أو اتركه فارغاً ليتم توليده تلقائياً بالذكاء الاصطناعي"
+                                        className={`w-full p-3 border rounded-md resize-none h-32 ${
+                                            formData.description.trim() === ''
+                                                ? 'border-blue-300 bg-blue-50'
+                                                : 'border-gray-300'
+                                        }`}
+                                    />
+                                    {formData.description.trim() === '' && (
+                                        <div className="absolute top-2 left-2 flex items-center text-blue-600 text-xs">
+                                            <span className="bg-blue-100 px-2 py-1 rounded-full">
+                                                 سيتم التوليد التلقائي
+                                            </span>
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="mt-2">
+                                    <p className="text-sm text-gray-500">
+                                         <strong>نصيحة:</strong> إذا تركت هذا الحقل فارغاً، سيتم توليد وصف تلقائي للمنتج باستخدام الذكاء الاصطناعي بناءً على اسم المنتج والفئة والسعر.
+                                    </p>
+                                    {formData.description.trim() === '' && (formData.name || formData.category || formData.price) && (
+                                        <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                                            <p className="text-sm font-medium text-blue-800 mb-2">
+                                                 معاينة البيانات للتوليد التلقائي:
+                                            </p>
+                                            <ul className="text-sm text-blue-700 space-y-1">
+                                                {formData.name && (
+                                                    <li>• <strong>اسم المنتج:</strong> {formData.name}</li>
+                                                )}
+                                                {formData.category && (
+                                                    <li>• <strong>الفئة:</strong> {categories.find(cat => cat.value === formData.category)?.label || formData.category}</li>
+                                                )}
+                                                {formData.price && (
+                                                    <li>• <strong>السعر:</strong> {formData.price} ج.م</li>
+                                                )}
+                                                {formData.karat && (
+                                                    <li>• <strong>العيار:</strong> {formData.karat}</li>
+                                                )}
+                                                {formData.weight && (
+                                                    <li>• <strong>الوزن:</strong> {formData.weight} جرام</li>
+                                                )}
+                                            </ul>
+                                            <div className="mt-3 pt-3 border-t border-blue-200">
+                                                <p className="text-xs text-blue-600">
+                                                     <strong>ملاحظة:</strong> إذا فشل التوليد التلقائي، يمكنك إضافة وصف يدوياً أو إنشاء المنتج بدون وصف وإضافته لاحقاً.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </CardContent>
                     </Card>
@@ -436,7 +569,7 @@ const CreateProduct = () => {
                             className="flex-1"
                         >
                             <Save className="w-4 h-4 mr-2" />
-                            {isLoading ? 'جاري الحفظ...' : 'حفظ المنتج'}
+                            {isLoading ? loadingMessage : 'حفظ المنتج'}
                         </Button>
                         <Button
                             type="button"
