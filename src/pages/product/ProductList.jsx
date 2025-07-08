@@ -94,6 +94,147 @@ const ProductList = () => {
         });
     };
 
+    // Generate personalized message based on user behavior
+    const getPersonalizedMessage = () => {
+        const viewedCount = userBehavior.viewedProducts.length;
+        const hasSearched = userBehavior.hasSearched;
+        const hasFiltered = userBehavior.hasFiltered;
+        const isFirstTime = viewedCount === 0 && !hasSearched && !hasFiltered;
+
+        // if (isFirstTime) {
+        //     return {
+        //         text: "Welcome! Start exploring our jewelry collection",
+        //         icon: "✨",
+        //         color: "text-purple-600",
+        //         bgColor: "bg-purple-50"
+        //     };
+        // }
+
+        // if (viewedCount === 0 && (hasSearched || hasFiltered)) {
+        //     return {
+        //         text: "No products viewed yet. Try browsing our recommendations",
+        //         icon: "🔍",
+        //         color: "text-blue-600",
+        //         bgColor: "bg-blue-50"
+        //     };
+        // }
+
+        // if (viewedCount >= 1 && viewedCount <= 3) {
+        //     return {
+        //         text: `Great start! You've explored ${viewedCount} product${viewedCount > 1 ? 's' : ''}`,
+        //         icon: "👀",
+        //         color: "text-green-600",
+        //         bgColor: "bg-green-50"
+        //     };
+        // }
+
+        // if (viewedCount >= 4 && viewedCount <= 10) {
+        //     return {
+        //         text: `You're getting the hang of it! ${viewedCount} products viewed`,
+        //         icon: "🎯",
+        //         color: "text-blue-600",
+        //         bgColor: "bg-blue-50"
+        //     };
+        // }
+
+        // if (viewedCount >= 11 && viewedCount <= 20) {
+        //     return {
+        //         text: `Impressive browsing! You've checked out ${viewedCount} products`,
+        //         icon: "🔥",
+        //         color: "text-orange-600",
+        //         bgColor: "bg-orange-50"
+        //     };
+        // }
+
+        // if (viewedCount >= 21 && viewedCount <= 50) {
+        //     return {
+        //         text: `You're a serious shopper! ${viewedCount} products explored`,
+        //         icon: "💎",
+        //         color: "text-yellow-600",
+        //         bgColor: "bg-yellow-50"
+        //     };
+        // }
+
+        // if (viewedCount > 50) {
+        //     return {
+        //         text: `Wow! You're a jewelry expert with ${viewedCount} products viewed`,
+        //         icon: "👑",
+        //         color: "text-purple-600",
+        //         bgColor: "bg-purple-50"
+        //     };
+        // }
+
+        return {
+            text: `You've viewed ${viewedCount} products`,
+            icon: "",
+            color: "text-gray-600",
+            bgColor: "bg-gray-50"
+        };
+    };
+
+    // Generate activity summary message
+    const getActivitySummaryMessage = () => {
+        const viewedCount = userBehavior.viewedProducts.length;
+
+        if (viewedCount === 0) {
+            return "Start your jewelry journey today!";
+        }
+
+        if (viewedCount >= 1 && viewedCount <= 5) {
+            return "You're just getting started - keep exploring!";
+        }
+
+        if (viewedCount >= 6 && viewedCount <= 15) {
+            return "Great progress! You're discovering our collection.";
+        }
+
+        if (viewedCount >= 16 && viewedCount <= 30) {
+            return "Impressive! You're becoming a jewelry connoisseur.";
+        }
+
+        if (viewedCount > 30) {
+            return "Amazing! You're a true jewelry enthusiast!";
+        }
+
+        return "Your shopping journey continues...";
+    };
+
+    // Generate motivational message based on results and behavior
+    const getMotivationalMessage = () => {
+        const viewedCount = userBehavior.viewedProducts.length;
+        const resultsCount = filteredProducts.length;
+
+        if (searchQuery && resultsCount === 0) {
+            return "🔍 No matches found. Try different keywords or browse our categories!";
+        }
+
+        if (filters.category && resultsCount === 0) {
+            return "🎯 No products in this category yet. Check back soon for new arrivals!";
+        }
+
+        if (resultsCount === 0) {
+            return "🌟 Start exploring our amazing jewelry collection!";
+        }
+
+        if (viewedCount === 0 && resultsCount > 0) {
+            return "✨ So many beautiful pieces to discover! Start browsing now.";
+        }
+
+        if (viewedCount > 0 && viewedCount < 5) {
+            return "👀 You're off to a great start! Keep exploring to find your perfect piece.";
+        }
+
+        if (viewedCount >= 5 && viewedCount < 15) {
+            return "🎯 You're really getting into it! Found anything you love yet?";
+        }
+
+        if (viewedCount >= 15) {
+            return "💎 You're a true jewelry enthusiast! Your taste is impeccable.";
+        }
+
+        return "🛍️ Happy shopping! Take your time to find the perfect piece.";
+    };
+
     // Load user behavior from localStorage on mount
     useEffect(() => {
         const savedBehavior = localStorage.getItem('userBehavior');
@@ -421,17 +562,22 @@ const ProductList = () => {
                             </div>
                         </div>
 
-                        <div className="flex items-center gap-2 mb-4">
-                            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                            <p className="text-xs text-gray-600 font-medium truncate">
-                                في <span className="text-yellow-600 hover:text-yellow-700 cursor-pointer" onClick={(e) => {
-                                    e.stopPropagation();
-                                    if (safeProduct.shopId) {
-                                        navigate(ROUTES.SHOP_DETAILS(safeProduct.shopId));
-                                    }
-                                }}>{safeProduct.shopName}</span>
-                            </p>
-                        </div>
+                        {safeProduct.shopName && safeProduct.shopName !== 'Unknown Shop' && (
+                            <div className="flex items-center gap-2 mb-4">
+                                <ShoppingBag className="w-3 h-3 text-gray-400" />
+                                <p className="text-xs text-gray-600 font-medium truncate">
+                                    by <span className="text-yellow-600 hover:text-yellow-700 cursor-pointer font-semibold" onClick={(e) => {
+                                        e.stopPropagation();
+                                        if (safeProduct.shopId) {
+                                            console.log('🏪 Navigating to shop:', safeProduct.shopId);
+                                            navigate(ROUTES.SHOP_DETAILS(safeProduct.shopId));
+                                        } else {
+                                            console.error('🏪 No shop ID available:', safeProduct);
+                                        }
+                                    }}>{safeProduct.shopName}</span>
+                                </p>
+                            </div>
+                        )}
                     </div>
 
                     {/* Actions - Fixed at bottom */}
@@ -448,19 +594,21 @@ const ProductList = () => {
                                 }}
                             >
                                 <Eye className="w-3 h-3 mr-1" />
-                                عرض
+                                View
                             </Button>
-                            {safeProduct.shopId && (
+                            {safeProduct.shopId && safeProduct.shopName && safeProduct.shopName !== 'Unknown Shop' && (
                                 <Button
                                     size="sm"
                                     className="flex-1 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white shadow-md hover:shadow-lg transition-all duration-300 text-xs"
                                     onClick={(e) => {
                                         e.stopPropagation();
+                                        console.log('🏪 Shop button clicked, navigating to:', safeProduct.shopId);
+                                        console.log('🏪 Shop data:', { id: safeProduct.shopId, name: safeProduct.shopName });
                                         navigate(ROUTES.SHOP_DETAILS(safeProduct.shopId));
                                     }}
                                 >
                                     <ShoppingBag className="w-3 h-3 mr-1" />
-                                    المتجر
+                                    Shop
                                 </Button>
                             )}
                         </div>
@@ -662,7 +810,7 @@ const ProductList = () => {
                     {/* Products Grid/List */}
                     <div className="flex-1">
                         {/* Results Info */}
-                        <div className="flex items-center justify-between mb-8 bg-white rounded-xl p-4 shadow-sm">
+                        <div className="flex items-center justify-between mb-8 bg-white rounded-xl p-4 shadow-sm border border-gray-100">
                             <div>
                                 <p className="text-lg font-semibold text-gray-900">
                                     {filteredProducts.length} products available
@@ -677,13 +825,22 @@ const ProductList = () => {
                                         Category: <span className="font-medium text-yellow-600">{PRODUCT_CATEGORIES[filters.category.toUpperCase()]}</span>
                                     </p>
                                 )}
-                                {userBehavior.viewedProducts.length > 0 && (
-                                    <p className="text-xs text-blue-600 mt-1">
-                                        You've viewed {userBehavior.viewedProducts.length} products
-                                    </p>
-                                )}
+                                {(() => {
+                                    const personalizedMsg = getPersonalizedMessage();
+                                    return (
+                                        <div className={`mt-2 p-2 rounded-lg ${personalizedMsg.bgColor} border border-opacity-20`}>
+                                            <p className={`text-xs font-medium ${personalizedMsg.color} flex items-center gap-1`}>
+                                                <span className="text-sm">{personalizedMsg.icon}</span>
+                                                {personalizedMsg.text}
+                                            </p>
+                                        </div>
+                                    );
+                                })()}
                             </div>
                             <div className="text-right">
+                                <div className="mb-2">
+                                    <p className="text-sm text-gray-600 font-medium">{getMotivationalMessage()}</p>
+                                </div>
                                 <p className="text-sm text-gray-500">Display mode</p>
                                 <p className="text-lg font-bold text-yellow-600">{viewMode === 'grid' ? '🔲' : '📋'}</p>
                                 {userBehavior.hasSearched && (
@@ -772,7 +929,7 @@ const ProductList = () => {
                             <div className="mt-16">
                                 <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-2xl p-8 shadow-lg mb-8">
                                     <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                                     Recommended Based on Your Views
+                                        Recommended Based on Your Views
                                     </h3>
                                     <p className="text-gray-600 mb-6">
                                         Products similar to what you've been browsing
@@ -872,7 +1029,7 @@ const ProductList = () => {
                                 {userBehavior.viewedProducts.length > 2 && (
                                     <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-8 shadow-lg mb-8">
                                         <h3 className="text-xl font-bold text-gray-900 mb-4">
-                                             Personalized for You
+                                            Personalized for You
                                         </h3>
                                         <p className="text-gray-600 mb-6">
                                             Based on your browsing, you might like these categories
@@ -904,7 +1061,7 @@ const ProductList = () => {
                                             size="lg"
                                             className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-12 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                                         >
-                                             Load More Products
+                                            Load More Products
                                         </Button>
                                     </div>
                                 )}
@@ -912,29 +1069,45 @@ const ProductList = () => {
                         )}
 
                         {/* User Activity Summary */}
-                        {(userBehavior.hasSearched || userBehavior.hasFiltered || userBehavior.viewedProducts.length > 0) && (
-                            <div className="mt-8 bg-gray-50 rounded-2xl p-6">
-                                <h4 className="text-lg font-semibold text-gray-900 mb-4">Your Activity</h4>
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    <div className="bg-white rounded-lg p-4 text-center">
-                                        <div className="text-2xl font-bold text-blue-600">{userBehavior.viewedProducts.length}</div>
-                                        <div className="text-sm text-gray-600">Products Viewed</div>
-                                    </div>
-                                    <div className="bg-white rounded-lg p-4 text-center">
-                                        <div className="text-2xl font-bold text-green-600">
-                                            {userBehavior.hasSearched ? '✓' : '○'}
-                                        </div>
-                                        <div className="text-sm text-gray-600">Search Used</div>
-                                    </div>
-                                    <div className="bg-white rounded-lg p-4 text-center">
-                                        <div className="text-2xl font-bold text-purple-600">
-                                            {userBehavior.hasFiltered ? '✓' : '○'}
-                                        </div>
-                                        <div className="text-sm text-gray-600">Filters Applied</div>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
+                        {/* {(userBehavior.hasSearched || userBehavior.hasFiltered || userBehavior.viewedProducts.length > 0) && (
+                            // <div className="mt-8 bg-gradient-to-r from-gray-50 to-blue-50 rounded-2xl p-6 border border-blue-100">
+                            //     <div className="flex items-center justify-between mb-4">
+                            //         <h4 className="text-lg font-semibold text-gray-900">Your Activity</h4>
+                            //         <span className="text-sm text-blue-600 font-medium">{getActivitySummaryMessage()}</span>
+                            //     </div>
+                            //     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            //         <div className="bg-white rounded-lg p-4 text-center shadow-sm border border-blue-100">
+                            //             <div className="text-3xl font-bold text-blue-600 mb-1">{userBehavior.viewedProducts.length}</div>
+                            //             <div className="text-sm text-gray-600">Products Viewed</div>
+                            //             {userBehavior.viewedProducts.length > 0 && (
+                            //                 <div className="text-xs text-blue-500 mt-1">
+                            //                     {userBehavior.viewedProducts.length >= 20 ? '🔥 On fire!' :
+                            //                         userBehavior.viewedProducts.length >= 10 ? '⭐ Great job!' :
+                            //                             userBehavior.viewedProducts.length >= 5 ? '👍 Good start!' : '🌟 Keep going!'}
+                            //                 </div>
+                            //             )}
+                            //         </div>
+                            //         <div className="bg-white rounded-lg p-4 text-center shadow-sm border border-green-100">
+                            //             <div className="text-3xl font-bold text-green-600 mb-1">
+                            //                 {userBehavior.hasSearched ? '✓' : '○'}
+                            //             </div>
+                            //             <div className="text-sm text-gray-600">Search Used</div>
+                            //             <div className="text-xs text-green-500 mt-1">
+                            //                 {userBehavior.hasSearched ? '🔍 Explorer!' : '💡 Try searching!'}
+                            //             </div>
+                            //         </div>
+                            //         <div className="bg-white rounded-lg p-4 text-center shadow-sm border border-purple-100">
+                            //             <div className="text-3xl font-bold text-purple-600 mb-1">
+                            //                 {userBehavior.hasFiltered ? '✓' : '○'}
+                            //             </div>
+                            //             <div className="text-sm text-gray-600">Filters Applied</div>
+                            //             <div className="text-xs text-purple-500 mt-1">
+                            //                 {userBehavior.hasFiltered ? '🎯 Focused!' : '🔧 Try filters!'}
+                            //             </div>
+                            //         </div>
+                            //     </div>
+                            // </div>
+                        )} */}
 
                     </div>
                 </div>

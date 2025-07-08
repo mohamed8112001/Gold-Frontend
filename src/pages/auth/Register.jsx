@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button.jsx';
 import { Input } from '@/components/ui/input.jsx';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.jsx';
-import { ArrowLeft, User, Eye, EyeOff, Phone, Mail, Lock, Check } from 'lucide-react';
+import { ArrowLeft, User, Eye, EyeOff, Phone, Mail, Lock } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES } from '../../utils/constants.js';
 
@@ -12,7 +12,7 @@ const Register = () => {
   const userType = searchParams.get('type') || 'regular';
   const navigate = useNavigate();
   const { register, isLoading } = useAuth();
-  
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -22,7 +22,7 @@ const Register = () => {
     confirmPassword: '',
     agreeToTerms: false
   });
-  
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState({});
@@ -33,7 +33,7 @@ const Register = () => {
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
-    
+
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
@@ -42,41 +42,41 @@ const Register = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!formData.firstName.trim()) {
       newErrors.firstName = 'الاسم الأول مطلوب';
     }
-    
+
     if (!formData.lastName.trim()) {
       newErrors.lastName = 'الاسم الأخير مطلوب';
     }
-    
+
     if (!formData.email.trim()) {
       newErrors.email = 'البريد الإلكتروني مطلوب';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'البريد الإلكتروني غير صحيح';
     }
-    
+
     if (!formData.phone.trim()) {
       newErrors.phone = 'رقم الهاتف مطلوب';
     } else if (!/^01[0-2,5]{1}[0-9]{8}$/.test(formData.phone)) {
       newErrors.phone = 'رقم الهاتف غير صحيح';
     }
-    
+
     if (!formData.password) {
       newErrors.password = 'كلمة المرور مطلوبة';
     } else if (formData.password.length < 6) {
       newErrors.password = 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
     }
-    
+
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'كلمة المرور غير متطابقة';
     }
-    
+
     if (!formData.agreeToTerms) {
       newErrors.agreeToTerms = 'يجب الموافقة على الشروط والأحكام';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -97,14 +97,13 @@ const Register = () => {
         role: userType
       });
 
-      // توجيه المستخدمين بناءً على نوع الحساب
-      if (userType === 'seller') {
-        // أصحاب المحلات يذهبون إلى صفحة تسجيل الدخول
-        navigate(ROUTES.LOGIN);
-      } else {
-        // المستخدمون العاديون يذهبون إلى الصفحة الرئيسية
-        navigate(ROUTES.HOME);
-      }
+      // توجيه جميع المستخدمين إلى صفحة تسجيل الدخول بعد التسجيل الناجح
+      navigate(ROUTES.LOGIN, {
+        state: {
+          message: 'Registration successful! Please log in with your credentials.',
+          email: formData.email
+        }
+      });
     } catch (error) {
       setErrors({ submit: error.message || 'حدث خطأ أثناء التسجيل' });
     }
@@ -122,7 +121,7 @@ const Register = () => {
     <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-yellow-50 flex items-center justify-center p-4">
       <div className="w-full max-w-4xl">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-          
+
           {/* Left Side - Branding */}
           <div className="hidden lg:block">
             <div className="text-center">
@@ -135,7 +134,7 @@ const Register = () => {
               <h2 className="text-3xl font-bold text-gray-900 mb-6">
                 compare and book your visit online.
               </h2>
-              
+
               {/* Pagination dots */}
               <div className="flex justify-center space-x-2">
                 <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
@@ -157,7 +156,7 @@ const Register = () => {
                 <ArrowLeft className="w-4 h-4" />
                 <span>Back To Account Type</span>
               </Button>
-              
+
               <div className="flex items-center space-x-2 rtl:space-x-reverse bg-yellow-100 px-3 py-1 rounded-full">
                 <User className="w-4 h-4 text-yellow-600" />
                 <span className="text-sm font-medium text-yellow-800">{typeInfo.titleAr}</span>
@@ -170,7 +169,7 @@ const Register = () => {
                 <div className="px-6 py-2 bg-yellow-100 text-yellow-800 rounded-md font-medium">
                   Sign Up
                 </div>
-                <Link 
+                <Link
                   to={ROUTES.LOGIN}
                   className="px-6 py-2 text-gray-600 hover:text-gray-900 rounded-md font-medium transition-colors"
                 >
@@ -186,7 +185,7 @@ const Register = () => {
                   Join The Dibla Community And Discover Exquisite Jewelry
                 </CardDescription>
               </CardHeader>
-              
+
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-4">
                   {/* Name Fields */}
@@ -207,7 +206,7 @@ const Register = () => {
                         <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>
                       )}
                     </div>
-                    
+
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         Last Name *
@@ -296,7 +295,7 @@ const Register = () => {
                         <p className="text-red-500 text-xs mt-1">{errors.password}</p>
                       )}
                     </div>
-                    
+
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         Confirm Password *
@@ -364,7 +363,7 @@ const Register = () => {
                   {/* Sign In Link */}
                   <div className="text-center">
                     <span className="text-gray-600">Already have account? </span>
-                    <Link 
+                    <Link
                       to={ROUTES.LOGIN}
                       className="text-yellow-600 hover:text-yellow-700 font-medium"
                     >

@@ -334,7 +334,20 @@ const ProductDetails = () => {
                                     <Button
                                         variant="outline"
                                         size="lg"
-                                        onClick={() => navigate(ROUTES.SHOP_DETAILS(product.shopId))}
+                                        onClick={() => {
+                                            console.log('🏪 Visit Shop button clicked from ProductDetails');
+                                            console.log('🏪 Product shop ID:', product.shopId);
+                                            console.log('🏪 Product shop data:', product.shop);
+
+                                            const shopId = product.shopId || product.shop?._id || product.shop?.id;
+                                            if (shopId) {
+                                                console.log('🏪 Navigating to shop:', shopId);
+                                                navigate(ROUTES.SHOP_DETAILS(shopId));
+                                            } else {
+                                                console.error('🏪 No shop ID found in product data');
+                                                alert('Shop information not available');
+                                            }
+                                        }}
                                         className="flex-1 border-2 border-gray-300 hover:border-gray-400 py-4 rounded-full font-semibold text-lg"
                                     >
                                         <ShoppingBag className="w-5 h-5 mr-2" />
@@ -489,7 +502,20 @@ const ProductDetails = () => {
                                         <div className="space-y-2">
                                             <Button
                                                 className="w-full"
-                                                onClick={() => navigate(ROUTES.SHOP_DETAILS(shop.id))}
+                                                onClick={() => {
+                                                    console.log('🏪 Visit Shop button clicked from shop card');
+                                                    console.log('🏪 Shop ID:', shop.id);
+                                                    console.log('🏪 Shop data:', shop);
+
+                                                    const shopId = shop.id || shop._id;
+                                                    if (shopId) {
+                                                        console.log('🏪 Navigating to shop:', shopId);
+                                                        navigate(ROUTES.SHOP_DETAILS(shopId));
+                                                    } else {
+                                                        console.error('🏪 No shop ID found in shop data');
+                                                        alert('Shop information not available');
+                                                    }
+                                                }}
                                             >
                                                 <Eye className="w-4 h-4 mr-2" />
                                                 Visit Shop

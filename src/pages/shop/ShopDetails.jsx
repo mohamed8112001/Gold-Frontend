@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button.jsx';
-import { Card, CardContent, CardHeader } from '@/components/ui/card.jsx';
+import { Card, CardContent } from '@/components/ui/card.jsx';
 import { Badge } from '@/components/ui/badge.jsx';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.jsx';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar.jsx';
@@ -49,51 +49,72 @@ const ShopDetails = () => {
         if (id) {
             loadShopDetails();
         }
-    }, [id]);
+    }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const loadShopDetails = async () => {
         try {
             setIsLoading(true);
+            console.log('🏪 Starting to load shop details for ID:', id);
+            console.log('🏪 Current user:', user ? `${user.role} (${user.id})` : 'Not authenticated');
 
-            // Load shop details
+            // Load shop details - Try both endpoints and allow access based on user role
             try {
                 let shopResponse;
                 let shopData;
+                let loadedSuccessfully = false;
 
-                // Try public endpoint first (for approved shops)
-                try {
-                    console.log('🏪 Trying public shop endpoint for shop:', id);
-                    shopResponse = await shopService.getPublicShop(id);
-                    shopData = shopResponse.data || shopResponse;
-                    console.log('🏪 Public shop loaded successfully:', shopData.name);
-                } catch (publicError) {
-                    console.log('🏪 Public endpoint failed, trying authenticated endpoint:', publicError.message);
-
-                    // Fallback to authenticated endpoint if user is logged in
-                    if (user) {
-                        try {
-                            shopResponse = await shopService.getShop(id);
-                            shopData = shopResponse.data || shopResponse;
-                            console.log('🏪 Authenticated shop loaded:', shopData.name);
-
-                            // Check if shop is approved for regular users (non-admin)
-                            if (user.role !== 'admin' && !shopData.isApproved) {
-                                console.log('🏪 Shop not approved for regular user');
-                                setShop(null);
-                                return;
-                            }
-                        } catch (authError) {
-                            console.error('🏪 Both endpoints failed:', authError);
-                            setShop(null);
-                            return;
-                        }
-                    } else {
-                        // User not authenticated and public endpoint failed
-                        console.error('🏪 Shop not available publicly and user not authenticated');
-                        setShop(null);
-                        return;
+                // Try authenticated endpoint first if user is logged in
+                if (user) {
+                    try {
+                        console.log('🏪 Trying authenticated shop endpoint for shop:', id);
+                        shopResponse = await shopService.getShop(id);
+                        shopData = shopResponse.data || shopResponse;
+                        console.log('🏪 Authenticated shop loaded:', shopData.name);
+                        loadedSuccessfully = true;
+                    } catch (authError) {
+                        console.log('🏪 Authenticated endpoint failed:', authError.message);
                     }
                 }
+
+                // If authenticated failed or user not logged in, try public endpoint
+                if (!loadedSuccessfully) {
+                    try {
+                        console.log('🏪 Trying public shop endpoint for shop:', id);
+                        shopResponse = await shopService.getPublicShop(id);
+                        shopData = shopResponse.data || shopResponse;
+                        console.log('🏪 Public shop loaded successfully:', shopData.name);
+                        loadedSuccessfully = true;
+                    } catch (publicError) {
+                        console.log('🏪 Public endpoint also failed:', publicError.message);
+                    }
+                }
+
+                // If both endpoints failed, show error
+                if (!loadedSuccessfully) {
+                    console.error('🏪 Both endpoints failed, shop not accessible');
+                    console.error('🏪 Shop ID:', id);
+                    console.error('🏪 User:', user ? `${user.role} - ${user.id}` : 'Not authenticated');
+                    setShop(null);
+                    return;
+                }
+
+                // Shop loaded successfully, now check access permissions
+                console.log('🏪 Shop data loaded, checking permissions...');
+                console.log('🏪 Shop approval status:', shopData.isApproved);
+                console.log('🏪 User role:', user?.role);
+                console.log('🏪 User ID:', user?.id);
+                console.log('🏪 Shop owner:', shopData.owner);
+
+                // Validate shop data
+                if (!shopData || !shopData.name) {
+                    console.error('🏪 Invalid shop data received:', shopData);
+                    setShop(null);
+                    return;
+                }
+
+                // Always allow access if we successfully loaded the shop data
+                // The backend will handle the access control
+                console.log('🏪 Shop loaded successfully, proceeding to display...');
 
                 // Default gold shop image
                 const defaultShopImage = 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=400&fit=crop&crop=center&auto=format&q=60';
@@ -111,6 +132,12 @@ const ShopDetails = () => {
                 setShop(processedShopData);
             } catch (shopError) {
                 console.error('🏪 Error loading shop details:', shopError);
+                console.error('🏪 Error details:', {
+                    message: shopError.message,
+                    status: shopError.response?.status,
+                    data: shopError.response?.data,
+                    shopId: id
+                });
                 setShop(null);
             }
 
