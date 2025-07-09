@@ -25,29 +25,15 @@ export const AuthProvider = ({ children }) => {
       const token = authService.getToken();
       const userData = authService.getCurrentUser();
 
-
-
       if (token && userData) {
         setUser(userData);
         setIsAuthenticated(true);
-
-
-        // Verify token is still valid (optional - remove if causing issues)
-        // try {
-        //   await authService.refreshToken();
-        // } catch (error) {
-        //   // Token is invalid, clear auth state
-        //   await logout();
-        // }
       } else {
-        // No token or user data, but don't redirect automatically
-
         setUser(null);
         setIsAuthenticated(false);
       }
     } catch (error) {
       console.error('Auth initialization error:', error);
-      // Don't logout automatically on initialization error
       setUser(null);
       setIsAuthenticated(false);
     } finally {
@@ -85,18 +71,21 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const googleLogin = () => {
-    authService.googleLogin();
-  };
-
-  const handleGoogleCallback = async () => {
+  const googleLogin = async (credentialResponse) => {
     try {
       setIsLoading(true);
-      const response = await authService.handleGoogleCallback();
-      setUser(response.user);
+      // Pass the Google ID token (credential) to authService.googleAuth
+      const response = await authService.googleAuth(credentialResponse.credential);
+      
+      // Assuming authService.googleAuth returns { user, isNewUser }
+      const { user: googleUser, isNewUser } = response;
+      
+      setUser(googleUser);
       setIsAuthenticated(true);
+      
       return response;
     } catch (error) {
+      console.error('Google auth error:', error);
       throw error;
     } finally {
       setIsLoading(false);
@@ -118,7 +107,6 @@ export const AuthProvider = ({ children }) => {
     setUser(prev => ({ ...prev, ...userData }));
   };
 
-  // Update role checks to match backend user model
   const isShopOwner = user?.role === 'seller';
   const isRegularUser = user?.role === 'customer';
   const isAdmin = user?.role === 'admin';
@@ -135,7 +123,6 @@ export const AuthProvider = ({ children }) => {
     logout,
     updateUser,
     googleLogin,
-    handleGoogleCallback
   };
 
   return (

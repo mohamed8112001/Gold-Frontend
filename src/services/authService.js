@@ -6,8 +6,6 @@ export const authService = {
   register: async (userData) => {
     try {
       const response = await api.post("/auth/register", userData);
-      // Backend register doesn't return accessToken, just success message
-      // User needs to login separately after registration
       return response.data;
     } catch (error) {
       throw new Error(error.response?.data?.message || "Registration failed");
@@ -19,24 +17,19 @@ export const authService = {
     try {
       const response = await api.post("/auth/login", credentials);
       if (response.data.accessToken) {
-        // Save token first
         localStorage.setItem(STORAGE_KEYS.TOKEN, response.data.accessToken);
-
-        // Wait a bit to ensure token is saved, then get user data
         try {
           const userResponse = await api.get("/user/me", {
             headers: {
               Authorization: `Bearer ${response.data.accessToken}`,
             },
           });
-          // Backend returns { status: "success", data: userData }
           localStorage.setItem(
             STORAGE_KEYS.USER,
             JSON.stringify(userResponse.data.data)
           );
         } catch (userError) {
           console.warn("Failed to fetch user data:", userError);
-          // Continue with login even if user data fetch fails
         }
       }
       return response.data;
@@ -98,40 +91,39 @@ export const authService = {
     }
   },
 
-  // Google OAuth login
-  googleLogin: () => {
-    window.location.href = `${import.meta.env.VITE_API_BASE_URL}/auth/google`;
-  },
-
-  // Handle Google OAuth callback
-  handleGoogleCallback: async () => {
+  // Google OAuth authentication
+  googleAuth: async (credential) => {
     try {
-      // The backend will handle the callback and set cookies
-      // We need to get the user data after successful OAuth
-      const userResponse = await api.get("/user/me");
-      localStorage.setItem(
-        STORAGE_KEYS.USER,
-        JSON.stringify(userResponse.data.user)
-      );
-      return userResponse.data;
+      // Send the Google ID token (credential) to the backend
+      const response = await api.post("/auth/google", { credential });
+      
+      // Assuming backend returns { accessToken, user, isNewUser }
+      if (response.data.accessToken) {
+        localStorage.setItem(STORAGE_KEYS.TOKEN, response.data.accessToken);
+        localStorage.setItem(
+          STORAGE_KEYS.USER,
+          JSON.stringify(response.data.user)
+        );
+      }
+      
+      return {
+        user: response.data.user,
+        isNewUser: response.data.isNewUser || false,
+      };
     } catch (error) {
-      throw new Error("Google authentication failed");
+      throw new Error(error.response?.data?.message || "Google authentication failed");
     }
   },
 
   // Get current user
   getCurrentUser: () => {
     const user = localStorage.getItem(STORAGE_KEYS.USER);
-    const parsedUser = user ? JSON.parse(user) : null;
-
-    return parsedUser;
+    return user ? JSON.parse(user) : null;
   },
 
   // Get token
   getToken: () => {
-    const token = localStorage.getItem(STORAGE_KEYS.TOKEN);
-
-    return token;
+    return localStorage.getItem(STORAGE_KEYS.TOKEN);
   },
 
   // Check if user is authenticated
