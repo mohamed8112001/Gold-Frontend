@@ -111,6 +111,8 @@ export const authService = {
         isNewUser: response.data.isNewUser || false,
       };
     } catch (error) {
+      console.log(`error: ${error}`);
+      
       throw new Error(error.response?.data?.message || "Google authentication failed");
     }
   },

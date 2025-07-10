@@ -42,7 +42,12 @@ export const productService = {
   // Create new product (shop owner only)
   createProduct: async (productData) => {
     try {
-      const response = await api.post("/product/create", productData);
+      const response = await api.post(`/product/create`, productData, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'multipart/form-data'
+        }
+      });
       return response.data;
     } catch (error) {
       throw new Error(

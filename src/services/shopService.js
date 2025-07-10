@@ -51,10 +51,17 @@ export const shopService = {
   // Create new shop (shop owner only)
   createShop: async (shopData) => {
     try {
-      const response = await api.post("/shop/create", shopData);
+      const response = await api.post(`/shop/create`, shopData, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'multipart/form-data'
+        }
+      });
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || "Failed to create shop");
+      console.log(error);
+      
+      throw new Error(JSON.stringify(error));
     }
   },
 

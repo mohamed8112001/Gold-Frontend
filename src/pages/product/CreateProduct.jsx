@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button.jsx';
 import { Input } from '@/components/ui/input.jsx';
@@ -7,8 +7,7 @@ import {
     Save,
     ArrowLeft,
     Upload,
-    X,
-    Plus
+    X
 } from 'lucide-react';
 import { productService } from '../../services/productService.js';
 import { shopService } from '../../services/shopService.js';
@@ -22,19 +21,18 @@ const CreateProduct = () => {
     const [loadingMessage, setLoadingMessage] = useState('جاري الحفظ...');
     const [userShop, setUserShop] = useState(null);
     const [formData, setFormData] = useState({
-        name: '',
+        title: '',
         description: '',
         price: '',
-        category: '',
-        weight: '',
         karat: '',
-        material: '',
-        specifications: {},
-        features: ['']
+        weight: '',
+        design_type: '',
+        category: ''
     });
-    const [images, setImages] = useState([]);
+    const [logo, setLogo] = useState(null); // Single logo file
+    const [images, setImages] = useState([]); // Multiple image files
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (!user || !isShopOwner) {
             navigate(ROUTES.LOGIN);
             return;
@@ -45,33 +43,25 @@ const CreateProduct = () => {
     const loadUserShop = async () => {
         try {
             console.log('🏪 Loading user shop for product creation...');
+            const response = await shopService.getAllShops();
+            const shopsData = Array.isArray(response) ? response : response.data || [];
+            const userShopData = shopsData.find(shop =>
+                shop.owner === user.id ||
+                shop.owner?._id === user.id ||
+                shop.ownerId === user.id
+            );
 
-            // Try to get user's shop
-            try {
-                const response = await shopService.getAllShops();
-                const shopsData = Array.isArray(response) ? response : response.data || [];
-
-                // Find user's shop
-                const userShopData = shopsData.find(shop =>
-                    shop.owner === user.id ||
-                    shop.owner?._id === user.id ||
-                    shop.ownerId === user.id
-                );
-
-                if (userShopData) {
-                    console.log(' User shop found:', userShopData.name);
-                    setUserShop(userShopData);
-                } else {
-                    console.error(' No shop found for user');
-                    alert('يجب أن يكون لديك متجر لإضافة منتجات. يرجى إنشاء متجر أولاً.');
-                    navigate(ROUTES.CREATE_SHOP);
-                }
-            } catch (error) {
-                console.error(' Error loading user shop:', error);
-                alert('خطأ في تحميل بيانات المتجر');
+            if (userShopData) {
+                console.log('User shop found:', userShopData.name);
+                setUserShop(userShopData);
+            } else {
+                console.error('No shop found for user');
+                alert('يجب أن يكون لديك متجر لإضافة منتجات. يرجى إنشاء متجر أولاً.');
+                navigate(ROUTES.CREATE_SHOP);
             }
         } catch (error) {
-            console.error(' Error in loadUserShop:', error);
+            console.error('Error loading user shop:', error);
+            alert('خطأ في تحميل بيانات المتجر');
         }
     };
 
@@ -81,43 +71,36 @@ const CreateProduct = () => {
         { value: 'bracelets', label: 'أساور' },
         { value: 'earrings', label: 'أقراط' },
         { value: 'necklaces', label: 'قلادات' },
-        { value: 'sets', label: 'طقم' }
+        { value: 'pendants', label: 'معلقات' },
+        { value: 'sets', label: 'طقم' },
+        { value: 'watches', label: 'ساعات' },
+        { value: 'other', label: 'أخرى' }
     ];
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
+        console.log(`Input changed: ${name}=${value}`); // Debug
         setFormData(prev => ({
             ...prev,
             [name]: value
         }));
     };
 
-    const handleFeatureChange = (index, value) => {
-        const newFeatures = [...formData.features];
-        newFeatures[index] = value;
-        setFormData(prev => ({
-            ...prev,
-            features: newFeatures
-        }));
+    const handleLogoUpload = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            console.log('Uploaded logo:', file.name); // Debug
+            setLogo(file);
+        }
     };
 
-    const addFeature = () => {
-        setFormData(prev => ({
-            ...prev,
-            features: [...prev.features, '']
-        }));
-    };
-
-    const removeFeature = (index) => {
-        const newFeatures = formData.features.filter((_, i) => i !== index);
-        setFormData(prev => ({
-            ...prev,
-            features: newFeatures
-        }));
+    const removeLogo = () => {
+        setLogo(null);
     };
 
     const handleImageUpload = (e) => {
         const files = Array.from(e.target.files);
+        console.log('Uploaded images:', files.map(file => file.name)); // Debug
         setImages(prev => [...prev, ...files]);
     };
 
@@ -128,9 +111,9 @@ const CreateProduct = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // التحقق من الحقول المطلوبة (الوصف أصبح اختياري)
-        if (!formData.name || !formData.price) {
-            alert('يرجى ملء جميع الحقول المطلوبة (اسم المنتج والسعر)');
+        // Validate required fields
+        if (!formData.title || !formData.price || !formData.karat || !formData.weight || !formData.design_type) {
+            alert('يرجى ملء جميع الحقول المطلوبة (اسم المنتج، السعر، العيار، الوزن، نوع التصميم)');
             return;
         }
 
@@ -139,93 +122,79 @@ const CreateProduct = () => {
             return;
         }
 
-        if (!formData.karat) {
-            alert('يرجى اختيار العيار');
-            return;
-        }
-
-        if (!formData.weight) {
-            alert('يرجى إدخال الوزن');
-            return;
-        }
-
         try {
             setIsLoading(true);
-
-            // تحديد رسالة التحميل بناءً على ما إذا كان سيتم توليد الوصف أم لا
             const willGenerateAI = !formData.description || formData.description.trim() === '';
             setLoadingMessage(willGenerateAI ? 'جاري توليد الوصف بالذكاء الاصطناعي...' : 'جاري حفظ المنتج...');
 
-            console.log(' Creating product with data:', {
-                title: formData.name,
-                description: formData.description || '[سيتم التوليد التلقائي]',
-                price: formData.price,
-                karat: formData.karat,
-                weight: formData.weight,
-                design_type: formData.category,
-                shop: userShop._id || userShop.id,
-                willGenerateAI: !formData.description || formData.description.trim() === ''
+            // Create FormData object for multipart/form-data
+            const formDataToSend = new FormData();
+            formDataToSend.append('title', formData.title);
+            if (formData.description && formData.description.trim() !== '') {
+                formDataToSend.append('description', formData.description);
+            }
+            formDataToSend.append('price', parseFloat(formData.price));
+            formDataToSend.append('karat', formData.karat);
+            formDataToSend.append('weight', parseFloat(formData.weight));
+            formDataToSend.append('design_type', formData.design_type || 'other');
+            formDataToSend.append('category', formData.category || 'other');
+            formDataToSend.append('shop', userShop._id || userShop.id);
+
+            // Append logo file
+            if (logo) {
+                formDataToSend.append('logo', logo);
+            }
+
+            // Append image files
+            images.forEach((image) => {
+                formDataToSend.append('images', image);
             });
 
-            // تحضير البيانات بالتنسيق المطلوب للباك إند
-            const productData = {
-                title: formData.name, // الباك إند يتوقع title وليس name
-                // إذا كان الوصف فارغاً، لا نرسله أصلاً ليقوم الباك إند بتوليده تلقائياً
-                ...(formData.description && formData.description.trim() !== ''
-                    ? { description: formData.description }
-                    : {}),
-                price: parseFloat(formData.price),
-                karat: formData.karat, // يجب أن يكون بتنسيق "18K", "21K", "24K"
-                weight: parseFloat(formData.weight),
-                design_type: formData.category || 'other', // الباك إند يتوقع design_type
-                category: formData.category || formData.material || 'other',
-                images_urls: [], // سيتم إضافة الصور لاحقاً
-                shop: userShop._id || userShop.id // معرف المتجر مطلوب
-            };
+            // Debug: Log FormData contents
+            console.log('Creating product with FormData:');
+            for (const [key, value] of formDataToSend.entries()) {
+                console.log(`${key}:`, value instanceof File ? `File(${value.name})` : value);
+            }
 
-            console.log(' Final product data:', productData);
+            // Debug: Log state
+            console.log('Form state:', {
+                formData,
+                logo: logo ? `File(${logo.name})` : null,
+                images: images.map(image => `File(${image.name})`),
+                shop: userShop._id || userShop.id
+            });
 
-            const response = await productService.createProduct(productData);
-            console.log(' Product created successfully:', response);
+            const response = await productService.createProduct(formDataToSend);
+            console.log('Product created successfully:', response);
 
-            // رسالة نجاح مختلفة بناءً على ما إذا كان الوصف تم توليده تلقائياً أم لا
             const successMessage = formData.description
                 ? 'تم إنشاء المنتج بنجاح!'
                 : 'تم إنشاء المنتج بنجاح! تم توليد الوصف تلقائياً باستخدام الذكاء الاصطناعي.';
-
             alert(successMessage);
             navigate(ROUTES.DASHBOARD);
         } catch (error) {
-            console.error(' Error creating product:', error);
+            console.error('Error creating product:', error);
+            const errorMessage = error.response?.data?.message || error.message;
 
-            // معالجة خاصة لخطأ توليد الوصف التلقائي
-            if (error.message.includes('Failed to generate AI description')) {
-                console.error(' AI Description Error Details:', {
-                    error: error.message,
-                    productData: productData,
-                    hasOpenAIKey: !!process.env.VITE_OPENAI_API_KEY,
-                    timestamp: new Date().toISOString()
-                });
-
+            // Handle AI description generation error
+            if (errorMessage.includes('Failed to generate AI description')) {
                 const choice = window.confirm(
-                    ' فشل في توليد الوصف التلقائي\n\n' +
-                    ' الأسباب المحتملة:\n' +
+                    'فشل في توليد الوصف التلقائي\n\n' +
+                    'الأسباب المحتملة:\n' +
                     '• مفتاح OpenAI API غير صحيح أو منتهي الصلاحية\n' +
                     '• نفاد الرصيد في حساب OpenAI\n' +
                     '• مشكلة في الاتصال بالإنترنت\n' +
                     '• خطأ مؤقت في خدمة OpenAI\n\n' +
-                    ' الحلول المتاحة:\n' +
+                    'الحلول المتاحة:\n' +
                     'موافق = إضافة وصف يدوياً\n' +
                     'إلغاء = إنشاء المنتج بوصف افتراضي'
                 );
 
                 if (choice) {
-                    // إضافة وصف يدوياً
                     const descriptionField = document.querySelector('textarea[name="description"]');
                     if (descriptionField) {
                         descriptionField.focus();
                         descriptionField.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        // إضافة تلميح بصري
                         descriptionField.style.borderColor = '#f59e0b';
                         descriptionField.style.boxShadow = '0 0 0 3px rgba(245, 158, 11, 0.1)';
                         setTimeout(() => {
@@ -233,39 +202,31 @@ const CreateProduct = () => {
                             descriptionField.style.boxShadow = '';
                         }, 3000);
                     }
-                    alert(' يرجى إضافة وصف للمنتج في الحقل المميز أعلاه ثم المحاولة مرة أخرى.');
+                    alert('يرجى إضافة وصف للمنتج في الحقل المميز أعلاه ثم المحاولة مرة أخرى.');
                 } else {
-                    // إنشاء وصف افتراضي وإعادة المحاولة
-                    const categoryLabel = categories.find(cat => cat.value === formData.category)?.label || formData.category;
-                    const defaultDescription = `${formData.name} - ${categoryLabel} من الذهب عيار ${formData.karat} بوزن ${formData.weight} جرام. منتج عالي الجودة بسعر ${formData.price} جنيه مصري.`;
+                    const categoryLabel = categories.find(cat => cat.value === formData.category)?.label || formData.category || 'منتج';
+                    const defaultDescription = `${formData.title} - ${categoryLabel} من الذهب عيار ${formData.karat} بوزن ${formData.weight} جرام. منتج عالي الجودة بسعر ${formData.price} جنيه مصري.`;
 
                     const confirmDefault = window.confirm(
-                        ` سيتم إنشاء المنتج بالوصف التالي:\n\n"${defaultDescription}"\n\n هل تريد المتابعة؟`
+                        `سيتم إنشاء المنتج بالوصف التالي:\n\n"${defaultDescription}"\n\nهل تريد المتابعة؟`
                     );
 
                     if (confirmDefault) {
-                        // تحديث البيانات بالوصف الافتراضي وإعادة المحاولة
-                        const updatedProductData = {
-                            ...productData,
-                            description: defaultDescription
-                        };
-
+                        formDataToSend.set('description', defaultDescription);
                         try {
-                            const response = await productService.createProduct(updatedProductData);
-                            console.log(' Product created with default description:', response);
-                            alert(' تم إنشاء المنتج بنجاح بوصف افتراضي!\n\nيمكنك تعديل الوصف لاحقاً من لوحة التحكم.');
+                            const response = await productService.createProduct(formDataToSend);
+                            console.log('Product created with default description:', response);
+                            alert('تم إنشاء المنتج بنجاح بوصف افتراضي!\n\nيمكنك تعديل الوصف لاحقاً من لوحة التحكم.');
                             navigate(ROUTES.DASHBOARD);
                             return;
                         } catch (retryError) {
-                            console.error(' Retry failed:', retryError);
-                            alert(`فشل في إنشاء المنتج: ${retryError.message}`);
+                            console.error('Retry failed:', retryError);
+                            alert(`فشل في إنشاء المنتج: ${retryError.response?.data?.message || retryError.message}`);
                         }
                     }
                 }
             } else {
-                // أخطاء أخرى
-                console.error(' General Product Creation Error:', error);
-                alert(` حدث خطأ في إنشاء المنتج: ${error.message}\n\nيرجى التحقق من البيانات والمحاولة مرة أخرى.`);
+                alert(`حدث خطأ في إنشاء المنتج: ${errorMessage}`);
             }
         } finally {
             setIsLoading(false);
@@ -295,13 +256,13 @@ const CreateProduct = () => {
                     {!userShop && (
                         <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
                             <p className="text-yellow-800 text-sm">
-                             جاري تحميل بيانات المتجر...
+                                جاري تحميل بيانات المتجر...
                             </p>
                         </div>
                     )}
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-8">
+                <form onSubmit={handleSubmit} encType="multipart/form-data" className="space-y-8">
                     {/* Basic Information */}
                     <Card>
                         <CardHeader>
@@ -317,24 +278,41 @@ const CreateProduct = () => {
                                         اسم المنتج *
                                     </label>
                                     <Input
-                                        name="name"
-                                        value={formData.name}
+                                        name="title"
+                                        value={formData.title}
                                         onChange={handleInputChange}
                                         placeholder="أدخل اسم المنتج"
                                         required
                                     />
                                 </div>
-
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        الفئة *
+                                        نوع التصميم *
+                                    </label>
+                                    <select
+                                        name="design_type"
+                                        value={formData.design_type}
+                                        onChange={handleInputChange}
+                                        className="w-full p-2 border border-gray-300 rounded-md"
+                                        required
+                                    >
+                                        <option value="">اختر نوع التصميم</option>
+                                        {categories.map((category) => (
+                                            <option key={category.value} value={category.value}>
+                                                {category.label}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        الفئة
                                     </label>
                                     <select
                                         name="category"
                                         value={formData.category}
                                         onChange={handleInputChange}
                                         className="w-full p-2 border border-gray-300 rounded-md"
-                                        required
                                     >
                                         <option value="">اختر الفئة</option>
                                         {categories.map((category) => (
@@ -344,7 +322,6 @@ const CreateProduct = () => {
                                         ))}
                                     </select>
                                 </div>
-
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
                                         السعر (ج.م) *
@@ -360,28 +337,16 @@ const CreateProduct = () => {
                                         required
                                     />
                                 </div>
-
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        الوزن (جرام)
-                                    </label>
-                                    <Input
-                                        name="weight"
-                                        value={formData.weight}
-                                        onChange={handleInputChange}
-                                        placeholder="الوزن بالجرام"
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        العيار
+                                        العيار *
                                     </label>
                                     <select
                                         name="karat"
                                         value={formData.karat}
                                         onChange={handleInputChange}
                                         className="w-full p-2 border border-gray-300 rounded-md"
+                                        required
                                     >
                                         <option value="">اختر العيار</option>
                                         <option value="18K">18 قيراط</option>
@@ -389,20 +354,22 @@ const CreateProduct = () => {
                                         <option value="24K">24 قيراط</option>
                                     </select>
                                 </div>
-
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        المادة
+                                        الوزن (جرام) *
                                     </label>
                                     <Input
-                                        name="material"
-                                        value={formData.material}
+                                        name="weight"
+                                        type="number"
+                                        value={formData.weight}
                                         onChange={handleInputChange}
-                                        placeholder="مثل: ذهب أصفر، ذهب أبيض"
+                                        placeholder="الوزن بالجرام"
+                                        min="0"
+                                        step="0.01"
+                                        required
                                     />
                                 </div>
                             </div>
-
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
                                     الوصف
@@ -423,23 +390,26 @@ const CreateProduct = () => {
                                     {formData.description.trim() === '' && (
                                         <div className="absolute top-2 left-2 flex items-center text-blue-600 text-xs">
                                             <span className="bg-blue-100 px-2 py-1 rounded-full">
-                                                 سيتم التوليد التلقائي
+                                                سيتم التوليد التلقائي
                                             </span>
                                         </div>
                                     )}
                                 </div>
                                 <div className="mt-2">
                                     <p className="text-sm text-gray-500">
-                                         <strong>نصيحة:</strong> إذا تركت هذا الحقل فارغاً، سيتم توليد وصف تلقائي للمنتج باستخدام الذكاء الاصطناعي بناءً على اسم المنتج والفئة والسعر.
+                                        <strong>نصيحة:</strong> إذا تركت هذا الحقل فارغاً، سيتم توليد وصف تلقائي للمنتج باستخدام الذكاء الاصطناعي بناءً على اسم المنتج، الفئة، والسعر.
                                     </p>
-                                    {formData.description.trim() === '' && (formData.name || formData.category || formData.price) && (
+                                    {formData.description.trim() === '' && (formData.title || formData.design_type || formData.price) && (
                                         <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                                             <p className="text-sm font-medium text-blue-800 mb-2">
-                                                 معاينة البيانات للتوليد التلقائي:
+                                                معاينة البيانات للتوليد التلقائي:
                                             </p>
                                             <ul className="text-sm text-blue-700 space-y-1">
-                                                {formData.name && (
-                                                    <li>• <strong>اسم المنتج:</strong> {formData.name}</li>
+                                                {formData.title && (
+                                                    <li>• <strong>اسم المنتج:</strong> {formData.title}</li>
+                                                )}
+                                                {formData.design_type && (
+                                                    <li>• <strong>نوع التصميم:</strong> {categories.find(cat => cat.value === formData.design_type)?.label || formData.design_type}</li>
                                                 )}
                                                 {formData.category && (
                                                     <li>• <strong>الفئة:</strong> {categories.find(cat => cat.value === formData.category)?.label || formData.category}</li>
@@ -456,7 +426,7 @@ const CreateProduct = () => {
                                             </ul>
                                             <div className="mt-3 pt-3 border-t border-blue-200">
                                                 <p className="text-xs text-blue-600">
-                                                     <strong>ملاحظة:</strong> إذا فشل التوليد التلقائي، يمكنك إضافة وصف يدوياً أو إنشاء المنتج بدون وصف وإضافته لاحقاً.
+                                                    <strong>ملاحظة:</strong> إذا فشل التوليد التلقائي، يمكنك إضافة وصف يدوياً أو إنشاء المنتج بدون وصف وإضافته لاحقاً.
                                                 </p>
                                             </div>
                                         </div>
@@ -466,98 +436,105 @@ const CreateProduct = () => {
                         </CardContent>
                     </Card>
 
-                    {/* Features */}
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>المميزات</CardTitle>
-                            <CardDescription>
-                                أضف المميزات الخاصة بالمنتج
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            {formData.features.map((feature, index) => (
-                                <div key={index} className="flex gap-2">
-                                    <Input
-                                        value={feature}
-                                        onChange={(e) => handleFeatureChange(index, e.target.value)}
-                                        placeholder="أدخل ميزة المنتج"
-                                        className="flex-1"
-                                    />
-                                    {formData.features.length > 1 && (
-                                        <Button
-                                            type="button"
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() => removeFeature(index)}
-                                        >
-                                            <X className="w-4 h-4" />
-                                        </Button>
-                                    )}
-                                </div>
-                            ))}
-                            <Button
-                                type="button"
-                                variant="outline"
-                                onClick={addFeature}
-                                className="w-full"
-                            >
-                                <Plus className="w-4 h-4 mr-2" />
-                                إضافة ميزة
-                            </Button>
-                        </CardContent>
-                    </Card>
-
                     {/* Images */}
                     <Card>
                         <CardHeader>
                             <CardTitle>صور المنتج</CardTitle>
                             <CardDescription>
-                                أضف صوراً للمنتج (اختياري)
+                                أضف شعار المنتج وصوراً إضافية (اختياري)
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                                <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                                <p className="text-gray-600 mb-4">اسحب الصور هنا أو انقر للاختيار</p>
-                                <input
-                                    type="file"
-                                    multiple
-                                    accept="image/*"
-                                    onChange={handleImageUpload}
-                                    className="hidden"
-                                    id="image-upload"
-                                />
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    onClick={() => document.getElementById('image-upload').click()}
-                                >
-                                    اختيار الصور
-                                </Button>
+                            {/* Logo Upload */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    شعار المنتج
+                                </label>
+                                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                                    <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                                    <p className="text-gray-600 mb-4">اسحب شعار المنتج أو انقر للاختيار</p>
+                                    <input
+                                        type="file"
+                                        accept="image/jpeg,image/jpg,image/png"
+                                        onChange={handleLogoUpload}
+                                        className="hidden"
+                                        id="logo-upload"
+                                    />
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        onClick={() => document.getElementById('logo-upload').click()}
+                                    >
+                                        اختيار الشعار
+                                    </Button>
+                                </div>
+                                {logo && (
+                                    <div className="relative mt-4">
+                                        <img
+                                            src={URL.createObjectURL(logo)}
+                                            alt="Logo Preview"
+                                            className="w-24 h-24 object-cover rounded-lg"
+                                        />
+                                        <Button
+                                            type="button"
+                                            variant="destructive"
+                                            size="sm"
+                                            className="absolute -top-2 -right-2 rounded-full w-6 h-6 p-0"
+                                            onClick={removeLogo}
+                                        >
+                                            <X className="w-3 h-3" />
+                                        </Button>
+                                    </div>
+                                )}
                             </div>
 
-                            {images.length > 0 && (
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                    {images.map((image, index) => (
-                                        <div key={index} className="relative">
-                                            <img
-                                                src={URL.createObjectURL(image)}
-                                                alt={`Preview ${index + 1}`}
-                                                className="w-full h-24 object-cover rounded-lg"
-                                            />
-                                            <Button
-                                                type="button"
-                                                variant="destructive"
-                                                size="sm"
-                                                className="absolute -top-2 -right-2 rounded-full w-6 h-6 p-0"
-                                                onClick={() => removeImage(index)}
-                                            >
-                                                <X className="w-3 h-3" />
-                                            </Button>
-                                        </div>
-                                    ))}
+                            {/* Images Upload */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    صور إضافية
+                                </label>
+                                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                                    <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                                    <p className="text-gray-600 mb-4">اسحب الصور هنا أو انقر للاختيار</p>
+                                    <input
+                                        type="file"
+                                        multiple
+                                        accept="image/jpeg,image/jpg,image/png"
+                                        onChange={handleImageUpload}
+                                        className="hidden"
+                                        id="image-upload"
+                                    />
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        onClick={() => document.getElementById('image-upload').click()}
+                                    >
+                                        اختيار الصور
+                                    </Button>
                                 </div>
-                            )}
+                                {images.length > 0 && (
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                                        {images.map((image, index) => (
+                                            <div key={index} className="relative">
+                                                <img
+                                                    src={URL.createObjectURL(image)}
+                                                    alt={`Preview ${index + 1}`}
+                                                    className="w-full h-24 object-cover rounded-lg"
+                                                />
+                                                <Button
+                                                    type="button"
+                                                    variant="destructive"
+                                                    size="sm"
+                                                    className="absolute -top-2 -right-2 rounded-full w-6 h-6 p-0"
+                                                    onClick={() => removeImage(index)}
+                                                >
+                                                    <X className="w-3 h-3" />
+                                                </Button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
                         </CardContent>
                     </Card>
 

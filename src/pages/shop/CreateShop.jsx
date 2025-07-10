@@ -11,7 +11,6 @@ import {
     Plus,
     MapPin,
     Phone,
-    Mail,
     Clock
 } from 'lucide-react';
 import { shopService } from '../../services/shopService.js';
@@ -25,12 +24,15 @@ const CreateShop = () => {
     const [formData, setFormData] = useState({
         name: '',
         description: '',
+        city: '',
+        area: '',
         address: '',
         phone: '',
-        email: '',
+        whatsapp: '',
         workingHours: '',
         specialties: ['']
     });
+    const [logo, setLogo] = useState(null);
     const [images, setImages] = useState([]);
 
     React.useEffect(() => {
@@ -72,6 +74,17 @@ const CreateShop = () => {
         }));
     };
 
+    const handleLogoUpload = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setLogo(file);
+        }
+    };
+
+    const removeLogo = () => {
+        setLogo(null);
+    };
+
     const handleImageUpload = (e) => {
         const files = Array.from(e.target.files);
         setImages(prev => [...prev, ...files]);
@@ -92,35 +105,52 @@ const CreateShop = () => {
         try {
             setIsLoading(true);
 
-            const shopData = {
-                ...formData,
-                specialties: formData.specialties.filter(specialty => specialty.trim() !== ''),
-                status: 'pending', // Shop needs admin approval
-                approved: false, // Explicitly set as not approved
-                isActive: false, // Not active until approved
-                createdAt: new Date().toISOString() // Add creation timestamp
-            };
+            // Create FormData object for multipart/form-data
+            const formDataToSend = new FormData();
+            formDataToSend.append('name', formData.name);
+            formDataToSend.append('description', formData.description);
+            formDataToSend.append('city', formData.city);
+            formDataToSend.append('area', formData.area);
+            formDataToSend.append('address', formData.address);
+            formDataToSend.append('phone', formData.phone);
+            formDataToSend.append('whatsapp', formData.whatsapp);
+            formDataToSend.append('workingHours', formData.workingHours);
+            formData.specialties.filter(specialty => specialty.trim() !== '').forEach((specialty, index) => {
+                formDataToSend.append(`specialties[${index}]`, specialty);
+            });
 
-            console.log('Creating shop with data:', shopData);
+            // Append logo file
+            if (logo) {
+                formDataToSend.append('logo', logo);
+            }
 
-            const response = await shopService.createShop(shopData);
+            // Append image files
+            images.forEach((image) => {
+                formDataToSend.append('images', image);
+            });
+
+            console.log('Creating shop with FormData:');
+            for (const [key, value] of formDataToSend.entries()) {
+                console.log(`${key}:`, value instanceof File ? `File(${value.name})` : value);
+            }
+
+            const response = await shopService.createShop(formDataToSend);
             console.log('Shop creation response:', response);
 
-            // Double check the response to ensure status was set correctly
+            // Double-check the response
             if (response && response.data) {
                 console.log('Created shop status check:', {
                     status: response.data.status,
-                    approved: response.data.approved,
+                    approved: response.data.isApproved,
                     isActive: response.data.isActive
                 });
             }
 
-            // Show success message
             alert('تم إرسال طلب إنشاء المتجر بنجاح! سيتم مراجعته من قبل الإدارة قبل ظهوره للعملاء.');
             navigate(ROUTES.DASHBOARD);
         } catch (error) {
             console.error('Error creating shop:', error);
-            alert('حدث خطأ في إنشاء المتجر');
+            alert(`حدث خطأ في إنشاء المتجر: ${error.response?.data?.message || error.message}`);
         } finally {
             setIsLoading(false);
         }
@@ -143,7 +173,7 @@ const CreateShop = () => {
                     <p className="text-gray-600">أنشئ متجرك الخاص لبيع المجوهرات والذهب</p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-8">
+                <form onSubmit={handleSubmit} encType="multipart/form-data" className="space-y-8">
                     {/* Basic Information */}
                     <Card>
                         <CardHeader>
@@ -165,7 +195,6 @@ const CreateShop = () => {
                                     required
                                 />
                             </div>
-
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
                                     وصف المتجر *
@@ -191,6 +220,34 @@ const CreateShop = () => {
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        <MapPin className="w-4 h-4 inline mr-1" />
+                                        المدينة *
+                                    </label>
+                                    <Input
+                                        name="city"
+                                        value={formData.city}
+                                        onChange={handleInputChange}
+                                        placeholder="أدخل المدينة (مثل: الرياض)"
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        <MapPin className="w-4 h-4 inline mr-1" />
+                                        المنطقة *
+                                    </label>
+                                    <Input
+                                        name="area"
+                                        value={formData.area}
+                                        onChange={handleInputChange}
+                                        placeholder="أدخل المنطقة (مثل: وسط المدينة)"
+                                        required
+                                    />
+                                </div>
+                            </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
                                     <MapPin className="w-4 h-4 inline mr-1" />
@@ -204,7 +261,6 @@ const CreateShop = () => {
                                     required
                                 />
                             </div>
-
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -215,26 +271,23 @@ const CreateShop = () => {
                                         name="phone"
                                         value={formData.phone}
                                         onChange={handleInputChange}
-                                        placeholder="+20 1XX XXX XXXX"
+                                        placeholder="+966 123 456 789"
                                         required
                                     />
                                 </div>
-
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        <Mail className="w-4 h-4 inline mr-1" />
-                                        البريد الإلكتروني
+                                        <Phone className="w-4 h-4 inline mr-1" />
+                                        واتساب
                                     </label>
                                     <Input
-                                        name="email"
-                                        type="email"
-                                        value={formData.email}
+                                        name="whatsapp"
+                                        value={formData.whatsapp}
                                         onChange={handleInputChange}
-                                        placeholder="shop@example.com"
+                                        placeholder="+966 987 654 321"
                                     />
                                 </div>
                             </div>
-
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
                                     <Clock className="w-4 h-4 inline mr-1" />
@@ -296,52 +349,100 @@ const CreateShop = () => {
                         <CardHeader>
                             <CardTitle>صور المتجر</CardTitle>
                             <CardDescription>
-                                أضف صوراً لمتجرك ومنتجاتك (اختياري)
+                                أضف شعار المتجر وصوراً إضافية (اختياري)
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                                <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                                <p className="text-gray-600 mb-4">اسحب الصور هنا أو انقر للاختيار</p>
-                                <input
-                                    type="file"
-                                    multiple
-                                    accept="image/*"
-                                    onChange={handleImageUpload}
-                                    className="hidden"
-                                    id="image-upload"
-                                />
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    onClick={() => document.getElementById('image-upload').click()}
-                                >
-                                    اختيار الصور
-                                </Button>
+                            {/* Logo Upload */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    شعار المتجر
+                                </label>
+                                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                                    <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                                    <p className="text-gray-600 mb-4">اسحب شعار المتجر أو انقر للاختيار</p>
+                                    <input
+                                        type="file"
+                                        accept="image/jpeg,image/jpg,image/png"
+                                        onChange={handleLogoUpload}
+                                        className="hidden"
+                                        id="logo-upload"
+                                    />
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        onClick={() => document.getElementById('logo-upload').click()}
+                                    >
+                                        اختيار الشعار
+                                    </Button>
+                                </div>
+                                {logo && (
+                                    <div className="relative mt-4">
+                                        <img
+                                            src={URL.createObjectURL(logo)}
+                                            alt="Logo Preview"
+                                            className="w-24 h-24 object-cover rounded-lg"
+                                        />
+                                        <Button
+                                            type="button"
+                                            variant="destructive"
+                                            size="sm"
+                                            className="absolute -top-2 -right-2 rounded-full w-6 h-6 p-0"
+                                            onClick={removeLogo}
+                                        >
+                                            <X className="w-3 h-3" />
+                                        </Button>
+                                    </div>
+                                )}
                             </div>
 
-                            {images.length > 0 && (
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                    {images.map((image, index) => (
-                                        <div key={index} className="relative">
-                                            <img
-                                                src={URL.createObjectURL(image)}
-                                                alt={`Preview ${index + 1}`}
-                                                className="w-full h-24 object-cover rounded-lg"
-                                            />
-                                            <Button
-                                                type="button"
-                                                variant="destructive"
-                                                size="sm"
-                                                className="absolute -top-2 -right-2 rounded-full w-6 h-6 p-0"
-                                                onClick={() => removeImage(index)}
-                                            >
-                                                <X className="w-3 h-3" />
-                                            </Button>
-                                        </div>
-                                    ))}
+                            {/* Images Upload */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    صور إضافية
+                                </label>
+                                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                                    <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                                    <p className="text-gray-600 mb-4">اسحب الصور هنا أو انقر للاختيار</p>
+                                    <input
+                                        type="file"
+                                        multiple
+                                        accept="image/jpeg,image/jpg,image/png"
+                                        onChange={handleImageUpload}
+                                        className="hidden"
+                                        id="image-upload"
+                                    />
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        onClick={() => document.getElementById('image-upload').click()}
+                                    >
+                                        اختيار الصور
+                                    </Button>
                                 </div>
-                            )}
+                                {images.length > 0 && (
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                                        {images.map((image, index) => (
+                                            <div key={index} className="relative">
+                                                <img
+                                                    src={URL.createObjectURL(image)}
+                                                    alt={`Preview ${index + 1}`}
+                                                    className="w-full h-24 object-cover rounded-lg"
+                                                />
+                                                <Button
+                                                    type="button"
+                                                    variant="destructive"
+                                                    size="sm"
+                                                    className="absolute -top-2 -right-2 rounded-full w-6 h-6 p-0"
+                                                    onClick={() => removeImage(index)}
+                                                >
+                                                    <X className="w-3 h-3" />
+                                                </Button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
                         </CardContent>
                     </Card>
 
