@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { ROUTES } from '../utils/constants.js';
 import { shopService } from '../services/shopService.js';
+import FloatingChat from '../components/ui/FloatingChat.jsx';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -824,6 +825,8 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Floating Chat Component */}
+      <FloatingChat />
 
     </div>
   );

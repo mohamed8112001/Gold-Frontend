@@ -1,6 +1,6 @@
 // API Base URL
 export const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:5001";
 
 // API Endpoints
 export const API_ENDPOINTS = {
@@ -63,6 +63,11 @@ export const API_ENDPOINTS = {
     FORGOT_PASSWORD: "/user/forgot-password",
     RESET_PASSWORD_TOKEN: (token) => `/user/reset-password/${token}`,
     GET_ME: "/user/me",
+  },
+
+  // Chatbot endpoints
+  CHATBOT: {
+    SEND_MESSAGE: "/chatbot",
   },
 };
 
