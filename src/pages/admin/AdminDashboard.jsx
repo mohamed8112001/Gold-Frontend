@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button.jsx';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.jsx';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.jsx';
+
 import { Badge } from '@/components/ui/badge.jsx';
 import {
   Users,
@@ -321,365 +321,523 @@ const AdminDashboard = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">جاري تحميل لوحة التحكم...</p>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center">
+        <div className="bg-white rounded-2xl shadow-2xl border border-white/20 backdrop-blur-sm p-12 text-center">
+          <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6 animate-pulse">
+            <BarChart3 className="w-8 h-8 text-white" />
+          </div>
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-100 border-t-blue-600 mx-auto mb-6"></div>
+          <h3 className="text-xl font-bold text-gray-900 mb-2">Loading Dashboard...</h3>
+          <p className="text-gray-600">Please wait while we fetch the latest data</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="mb-8 flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">لوحة تحكم الأدمن</h1>
-            <p className="text-gray-600">إدارة المتاجر والمستخدمين والموافقات</p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex">
+      {/* Sidebar Navigation */}
+      <div className="w-80 bg-white shadow-2xl border-r border-gray-100 flex flex-col">
+        {/* Sidebar Header */}
+        <div className="p-8 border-b border-gray-100">
+          <div className="flex items-center space-x-4 space-x-reverse">
+            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+              <BarChart3 className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                Admin Dashboard
+              </h1>
+              <p className="text-sm text-gray-500">Management Panel</p>
+            </div>
           </div>
+        </div>
+
+        {/* Navigation Menu */}
+        <div className="flex-1 p-6">
+          <nav className="space-y-3">
+            <button
+              onClick={() => setActiveTab('overview')}
+              className={`w-full flex items-center px-4 py-3 rounded-xl text-left transition-all duration-200 ${activeTab === 'overview'
+                ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg'
+                : 'text-gray-700 hover:bg-gray-50'
+                }`}
+            >
+              <TrendingUp className="w-5 h-5 mr-3" />
+              <span className="font-medium">Overview</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('pending')}
+              className={`w-full flex items-center px-4 py-3 rounded-xl text-left transition-all duration-200 ${activeTab === 'pending'
+                ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg'
+                : 'text-gray-700 hover:bg-gray-50'
+                }`}
+            >
+              <Clock className="w-5 h-5 mr-3" />
+              <div className="flex items-center justify-between w-full">
+                <span className="font-medium">Pending Requests</span>
+                {stats.pendingShops > 0 && (
+                  <span className={`px-2 py-1 rounded-full text-xs font-bold ${activeTab === 'pending' ? 'bg-white/20' : 'bg-amber-100 text-amber-800'
+                    }`}>
+                    {stats.pendingShops}
+                  </span>
+                )}
+              </div>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('shops')}
+              className={`w-full flex items-center px-4 py-3 rounded-xl text-left transition-all duration-200 ${activeTab === 'shops'
+                ? 'bg-gradient-to-r from-emerald-500 to-green-500 text-white shadow-lg'
+                : 'text-gray-700 hover:bg-gray-50'
+                }`}
+            >
+              <Store className="w-5 h-5 mr-3" />
+              <div className="flex items-center justify-between w-full">
+                <span className="font-medium">All Stores</span>
+                <span className={`px-2 py-1 rounded-full text-xs font-bold ${activeTab === 'shops' ? 'bg-white/20' : 'bg-gray-100 text-gray-600'
+                  }`}>
+                  {stats.totalShops}
+                </span>
+              </div>
+            </button>
+          </nav>
+
+          {/* Quick Stats in Sidebar */}
+          <div className="mt-8 space-y-4">
+            <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Quick Stats</h3>
+
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-100">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-blue-700 font-medium">Total Users</p>
+                  <p className="text-2xl font-bold text-blue-900">{stats.totalUsers}</p>
+                </div>
+                <Users className="w-8 h-8 text-blue-600" />
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-100">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-purple-700 font-medium">Products</p>
+                  <p className="text-2xl font-bold text-purple-900">{stats.totalProducts}</p>
+                </div>
+                <Package className="w-8 h-8 text-purple-600" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Sidebar Footer */}
+        <div className="p-6 border-t border-gray-100">
           <Button
             onClick={loadAdminData}
             disabled={isLoading}
-            variant="outline"
-            className="flex items-center gap-2"
+            className="w-full bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white shadow-lg hover:shadow-xl transition-all duration-200 py-3 rounded-xl"
           >
-            <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
-            {isLoading ? 'جاري التحديث...' : 'تحديث البيانات'}
+            <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
+            {isLoading ? 'Refreshing...' : 'Refresh Data'}
           </Button>
+          <p className="text-xs text-gray-500 text-center mt-3">
+            Last updated: {new Date().toLocaleTimeString('en-US')}
+          </p>
         </div>
+      </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center">
-                <Store className="w-8 h-8 text-blue-600" />
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">إجمالي المتاجر</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.totalShops}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+      {/* Main Content Area */}
+      <div className="flex-1 overflow-auto">
+        <div className="max-w-6xl mx-auto px-8 py-8">
 
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center">
-                <Clock className="w-8 h-8 text-yellow-600" />
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">في الانتظار</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.pendingShops}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center">
-                <CheckCircle className="w-8 h-8 text-green-600" />
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">مُوافق عليها</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.approvedShops}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center">
-                <Users className="w-8 h-8 text-purple-600" />
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">المستخدمين</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.totalUsers}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center">
-                <Package className="w-8 h-8 text-indigo-600" />
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">المنتجات</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.totalProducts}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="overview">نظرة عامة</TabsTrigger>
-            <TabsTrigger value="pending">
-              الطلبات المعلقة ({stats.pendingShops})
-            </TabsTrigger>
-            <TabsTrigger value="shops">جميع المتاجر ({stats.totalShops})</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="overview" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Recent Activity */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>النشاط الأخير</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {pendingShops.length > 0 ? (
-                      pendingShops.slice(0, 3).map((shop) => (
-                        <div key={shop.id} className="flex items-center gap-3">
-                          <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                          <p className="text-sm">طلب جديد من متجر "{shop.name}"</p>
-                          <span className="text-xs text-gray-500 mr-auto">
-                            {shop.createdAt ? new Date(shop.createdAt).toLocaleDateString('ar-EG') : 'حديث'}
-                          </span>
-                        </div>
-                      ))
-                    ) : (
-                      <>
-                        <div className="flex items-center gap-3">
-                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                          <p className="text-sm">لا توجد طلبات معلقة</p>
-                          <span className="text-xs text-gray-500 mr-auto">الآن</span>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                          <p className="text-sm">النظام يعمل بشكل طبيعي</p>
-                          <span className="text-xs text-gray-500 mr-auto">مستمر</span>
-                        </div>
-                      </>
-                    )}
-                    {stats.totalShops > 0 && (
-                      <div className="flex items-center gap-3">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                        <p className="text-sm">إجمالي {stats.totalShops} متجر في النظام</p>
-                        <span className="text-xs text-gray-500 mr-auto">إحصائية</span>
-                      </div>
-                    )}
+          {/* Enhanced Stats Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-10">
+            <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-blue-700 mb-1">Total Stores</p>
+                    <p className="text-3xl font-bold text-blue-900">{stats.totalShops}</p>
+                    <p className="text-xs text-blue-600 mt-1">Active in system</p>
                   </div>
-                </CardContent>
-              </Card>
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+                    <Store className="w-6 h-6 text-white" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-              {/* Quick Actions */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>إجراءات سريعة</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <Button
-                    className="w-full justify-start"
-                    variant="outline"
-                    onClick={() => setActiveTab('pending')}
-                    disabled={stats.pendingShops === 0}
-                  >
-                    <Clock className="w-4 h-4 mr-2" />
-                    مراجعة الطلبات المعلقة ({stats.pendingShops})
-                  </Button>
-                  <Button
-                    className="w-full justify-start"
-                    variant="outline"
-                    onClick={() => setActiveTab('shops')}
-                  >
-                    <Store className="w-4 h-4 mr-2" />
-                    إدارة جميع المتاجر ({stats.totalShops})
-                  </Button>
-                  <Button
-                    className="w-full justify-start"
-                    variant="outline"
-                    onClick={loadAdminData}
-                  >
-                    <RefreshCw className="w-4 h-4 mr-2" />
-                    تحديث البيانات
-                  </Button>
-                  <Button
-                    className="w-full justify-start"
-                    variant="outline"
-                    onClick={handleUpdateLegacyShops}
-                    disabled={isLoading}
-                  >
-                    <CheckCircle className="w-4 h-4 mr-2" />
-                    تحديث المحلات القديمة
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
+            <Card className="bg-gradient-to-br from-amber-50 to-amber-100 border-amber-200 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-amber-700 mb-1">Pending</p>
+                    <p className="text-3xl font-bold text-amber-900">{stats.pendingShops}</p>
+                    <p className="text-xs text-amber-600 mt-1">Awaiting approval</p>
+                  </div>
+                  <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl flex items-center justify-center shadow-lg">
+                    <Clock className="w-6 h-6 text-white" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-          <TabsContent value="pending" className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">الطلبات المعلقة</h2>
-              <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
-                {stats.pendingShops} طلب في الانتظار
-              </Badge>
-            </div>
+            <Card className="bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-emerald-700 mb-1">Approved</p>
+                    <p className="text-3xl font-bold text-emerald-900">{stats.approvedShops}</p>
+                    <p className="text-xs text-emerald-600 mt-1">Live stores</p>
+                  </div>
+                  <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg">
+                    <CheckCircle className="w-6 h-6 text-white" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-            {pendingShops.length > 0 ? (
-              <div className="grid gap-6">
-                {pendingShops.map((shop) => (
-                  <Card key={shop.id} className="border-l-4 border-l-yellow-500">
+            <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-purple-700 mb-1">Users</p>
+                    <p className="text-3xl font-bold text-purple-900">{stats.totalUsers}</p>
+                    <p className="text-xs text-purple-600 mt-1">Registered users</p>
+                  </div>
+                  <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                    <Users className="w-6 h-6 text-white" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient-to-br from-indigo-50 to-indigo-100 border-indigo-200 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-indigo-700 mb-1">Products</p>
+                    <p className="text-3xl font-bold text-indigo-900">{stats.totalProducts}</p>
+                    <p className="text-xs text-indigo-600 mt-1">Total products</p>
+                  </div>
+                  <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+                    <Package className="w-6 h-6 text-white" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Content based on active tab */}
+          <div className="space-y-8">
+
+            {activeTab === 'overview' && (
+              <div className="space-y-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  {/* Enhanced Recent Activity */}
+                  <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
+                    <CardHeader className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-6">
+                      <CardTitle className="flex items-center text-xl font-semibold">
+                        <Calendar className="w-5 h-5 mr-3" />
+                        Recent Activity
+                      </CardTitle>
+                    </CardHeader>
                     <CardContent className="p-6">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-3 mb-2">
-                            <h3 className="font-semibold text-lg">{shop.name}</h3>
-                            {getStatusBadge(shop)}
+                      <div className="space-y-4">
+                        {pendingShops.length > 0 ? (
+                          pendingShops.slice(0, 3).map((shop) => (
+                            <div key={shop.id} className="flex items-center gap-4 p-4 bg-amber-50 rounded-xl border border-amber-100">
+                              <div className="w-3 h-3 bg-gradient-to-r from-amber-400 to-amber-500 rounded-full animate-pulse"></div>
+                              <div className="flex-1">
+                                <p className="text-sm font-medium text-gray-900">New request from "{shop.name}"</p>
+                                <p className="text-xs text-gray-500 mt-1">
+                                  {shop.createdAt ? new Date(shop.createdAt).toLocaleDateString('en-US') : 'Recent'}
+                                </p>
+                              </div>
+                              <Badge variant="secondary" className="bg-amber-100 text-amber-800 text-xs">
+                                Pending
+                              </Badge>
+                            </div>
+                          ))
+                        ) : (
+                          <>
+                            <div className="flex items-center gap-4 p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+                              <div className="w-3 h-3 bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-full"></div>
+                              <div className="flex-1">
+                                <p className="text-sm font-medium text-gray-900">No pending requests</p>
+                                <p className="text-xs text-gray-500 mt-1">All caught up!</p>
+                              </div>
+                              <Badge variant="secondary" className="bg-emerald-100 text-emerald-800 text-xs">
+                                Clear
+                              </Badge>
+                            </div>
+                            <div className="flex items-center gap-4 p-4 bg-blue-50 rounded-xl border border-blue-100">
+                              <div className="w-3 h-3 bg-gradient-to-r from-blue-400 to-blue-500 rounded-full"></div>
+                              <div className="flex-1">
+                                <p className="text-sm font-medium text-gray-900">System running normally</p>
+                                <p className="text-xs text-gray-500 mt-1">All services operational</p>
+                              </div>
+                              <Badge variant="secondary" className="bg-blue-100 text-blue-800 text-xs">
+                                Active
+                              </Badge>
+                            </div>
+                          </>
+                        )}
+                        {stats.totalShops > 0 && (
+                          <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-gray-100">
+                            <div className="w-3 h-3 bg-gradient-to-r from-gray-400 to-gray-500 rounded-full"></div>
+                            <div className="flex-1">
+                              <p className="text-sm font-medium text-gray-900">Total {stats.totalShops} stores in system</p>
+                              <p className="text-xs text-gray-500 mt-1">System statistics</p>
+                            </div>
+                            <Badge variant="secondary" className="bg-gray-100 text-gray-800 text-xs">
+                              Info
+                            </Badge>
                           </div>
-                          <p className="text-gray-600 mb-3">{shop.description}</p>
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                            <div>
-                              <span className="font-medium">العنوان:</span>
-                              <p className="text-gray-600">{shop.address}</p>
-                            </div>
-                            <div>
-                              <span className="font-medium">الهاتف:</span>
-                              <p className="text-gray-600">{shop.phone}</p>
-                            </div>
-                            <div>
-                              <span className="font-medium">تاريخ الطلب:</span>
-                              <p className="text-gray-600">
-                                {new Date(shop.createdAt || Date.now()).toLocaleDateString('ar-EG')}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex gap-2 ml-4">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => navigate(ROUTES.SHOP_DETAILS(shop._id || shop.id))}
-                          >
-                            <Eye className="w-4 h-4 mr-1" />
-                            عرض
-                          </Button>
-                          <Button
-                            size="sm"
-                            className="bg-green-600 hover:bg-green-700"
-                            onClick={() => handleApproveShop(shop._id || shop.id)}
-                          >
-                            <CheckCircle className="w-4 h-4 mr-1" />
-                            موافقة
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="destructive"
-                            onClick={() => handleRejectShop(shop._id || shop.id)}
-                          >
-                            <XCircle className="w-4 h-4 mr-1" />
-                            رفض
-                          </Button>
-                        </div>
+                        )}
                       </div>
                     </CardContent>
                   </Card>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-                <h3 className="text-xl font-medium text-gray-900 mb-2">
-                  لا توجد طلبات معلقة
-                </h3>
-                <p className="text-gray-600">
-                  جميع طلبات المتاجر تم مراجعتها
-                </p>
+
+                  {/* Enhanced Quick Actions */}
+                  <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
+                    <CardHeader className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-6">
+                      <CardTitle className="flex items-center text-xl font-semibold">
+                        <TrendingUp className="w-5 h-5 mr-3" />
+                        Quick Actions
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-6 space-y-4">
+                      <Button
+                        className="w-full justify-start bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-lg hover:shadow-xl transition-all duration-200 py-3 rounded-xl"
+                        onClick={() => setActiveTab('pending')}
+                        disabled={stats.pendingShops === 0}
+                      >
+                        <Clock className="w-5 h-5 mr-3" />
+                        Review Pending Requests ({stats.pendingShops})
+                      </Button>
+                      <Button
+                        className="w-full justify-start bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white shadow-lg hover:shadow-xl transition-all duration-200 py-3 rounded-xl"
+                        onClick={() => setActiveTab('shops')}
+                      >
+                        <Store className="w-5 h-5 mr-3" />
+                        Manage All Stores ({stats.totalShops})
+                      </Button>
+                      <Button
+                        className="w-full justify-start bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-lg hover:shadow-xl transition-all duration-200 py-3 rounded-xl"
+                        onClick={loadAdminData}
+                      >
+                        <RefreshCw className="w-5 h-5 mr-3" />
+                        Refresh Data
+                      </Button>
+                      <Button
+                        className="w-full justify-start bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl transition-all duration-200 py-3 rounded-xl"
+                        onClick={handleUpdateLegacyShops}
+                        disabled={isLoading}
+                      >
+                        <CheckCircle className="w-5 h-5 mr-3" />
+                        Update Legacy Stores
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </div>
               </div>
             )}
-          </TabsContent>
 
-          <TabsContent value="shops" className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">جميع المتاجر</h2>
-              <div className="flex gap-2">
-                <select className="px-3 py-2 border border-gray-300 rounded-md text-sm">
-                  <option value="">جميع الحالات</option>
-                  <option value="approved">مُوافق عليها</option>
-                  <option value="pending">في الانتظار</option>
-                  <option value="rejected">مرفوضة</option>
-                </select>
-              </div>
-            </div>
+            {activeTab === 'pending' && (
+              <div className="space-y-8">
+                <div className="bg-white rounded-2xl shadow-lg border border-white/20 p-6">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-2xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
+                      Pending Requests
+                    </h2>
+                    <Badge className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-4 py-2 text-sm font-medium">
+                      {stats.pendingShops} Requests Waiting
+                    </Badge>
+                  </div>
+                </div>
 
-            {allShops.length > 0 ? (
-              <div className="grid gap-4">
-                {allShops.map((shop) => (
-                  <Card key={shop.id}>
-                    <CardContent className="p-4">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-lg flex items-center justify-center">
-                            <Store className="w-6 h-6 text-yellow-600" />
-                          </div>
-                          <div>
-                            <div className="flex items-center gap-2 mb-1">
-                              <h4 className="font-medium">{shop.name}</h4>
-                              {getStatusBadge(shop)}
+                {pendingShops.length > 0 ? (
+                  <div className="grid gap-6">
+                    {pendingShops.map((shop) => (
+                      <Card key={shop.id} className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 border-l-4 border-l-amber-500">
+                        <CardContent className="p-8">
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-4 mb-4">
+                                <div className="w-12 h-12 bg-gradient-to-br from-amber-100 to-amber-200 rounded-xl flex items-center justify-center">
+                                  <Store className="w-6 h-6 text-amber-600" />
+                                </div>
+                                <div>
+                                  <h3 className="font-bold text-xl text-gray-900 mb-1">{shop.name}</h3>
+                                  {getStatusBadge(shop)}
+                                </div>
+                              </div>
+                              <p className="text-gray-600 mb-6 text-base leading-relaxed">{shop.description}</p>
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div className="bg-gray-50 rounded-xl p-4">
+                                  <span className="font-semibold text-gray-900 block mb-2">Address:</span>
+                                  <p className="text-gray-600">{shop.address}</p>
+                                </div>
+                                <div className="bg-gray-50 rounded-xl p-4">
+                                  <span className="font-semibold text-gray-900 block mb-2">Phone:</span>
+                                  <p className="text-gray-600">{shop.phone}</p>
+                                </div>
+                                <div className="bg-gray-50 rounded-xl p-4">
+                                  <span className="font-semibold text-gray-900 block mb-2">Request Date:</span>
+                                  <p className="text-gray-600">
+                                    {new Date(shop.createdAt || Date.now()).toLocaleDateString('en-US')}
+                                  </p>
+                                </div>
+                              </div>
                             </div>
-                            <p className="text-sm text-gray-600">{shop.address}</p>
-                          </div>
-                        </div>
-                        <div className="flex gap-2">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => navigate(ROUTES.SHOP_DETAILS(shop._id || shop.id))}
-                          >
-                            <Eye className="w-4 h-4 mr-1" />
-                            عرض
-                          </Button>
-                          {!shop.isApproved && (
-                            <>
+                            <div className="flex flex-col gap-3 ml-6">
                               <Button
                                 size="sm"
-                                className="bg-green-600 hover:bg-green-700"
+                                variant="outline"
+                                className="bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100 px-4 py-2 rounded-xl"
+                                onClick={() => navigate(ROUTES.SHOP_DETAILS(shop._id || shop.id))}
+                              >
+                                <Eye className="w-4 h-4 mr-2" />
+                                View
+                              </Button>
+                              <Button
+                                size="sm"
+                                className="bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-4 py-2 rounded-xl"
                                 onClick={() => handleApproveShop(shop._id || shop.id)}
                               >
-                                <CheckCircle className="w-4 h-4 mr-1" />
-                                موافقة
+                                <CheckCircle className="w-4 h-4 mr-2" />
+                                Approve
                               </Button>
                               <Button
                                 size="sm"
-                                variant="destructive"
+                                className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-4 py-2 rounded-xl"
                                 onClick={() => handleRejectShop(shop._id || shop.id)}
                               >
-                                <XCircle className="w-4 h-4 mr-1" />
-                                رفض
+                                <XCircle className="w-4 h-4 mr-2" />
+                                Reject
                               </Button>
-                            </>
-                          )}
-                          <Button
-                            size="sm"
-                            variant="destructive"
-                            onClick={() => handleDeleteShop(shop._id || shop.id)}
-                          >
-                            <Trash2 className="w-4 h-4 mr-1" />
-                            حذف
-                          </Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <Store className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-xl font-medium text-gray-900 mb-2">
-                  لا توجد متاجر
-                </h3>
-                <p className="text-gray-600">
-                  لم يتم إنشاء أي متاجر بعد
-                </p>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="bg-white rounded-2xl shadow-lg border border-white/20 p-12 text-center">
+                    <div className="w-24 h-24 bg-gradient-to-br from-emerald-100 to-emerald-200 rounded-full flex items-center justify-center mx-auto mb-6">
+                      <CheckCircle className="w-12 h-12 text-emerald-600" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                      No Pending Requests
+                    </h3>
+                    <p className="text-gray-600 text-lg">
+                      All store requests have been reviewed
+                    </p>
+                  </div>
+                )}
               </div>
             )}
-          </TabsContent>
-        </Tabs>
+
+            {activeTab === 'shops' && (
+              <div className="space-y-8">
+                <div className="bg-white rounded-2xl shadow-lg border border-white/20 p-6">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                      All Stores
+                    </h2>
+                    <div className="flex gap-3">
+                      <select className="px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="">All Status</option>
+                        <option value="approved">Approved</option>
+                        <option value="pending">Pending</option>
+                        <option value="rejected">Rejected</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                {allShops.length > 0 ? (
+                  <div className="grid gap-6">
+                    {allShops.map((shop) => (
+                      <Card key={shop.id} className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300">
+                        <CardContent className="p-6">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-6">
+                              <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-indigo-200 rounded-2xl flex items-center justify-center shadow-lg">
+                                <Store className="w-8 h-8 text-blue-600" />
+                              </div>
+                              <div>
+                                <div className="flex items-center gap-3 mb-2">
+                                  <h4 className="font-bold text-lg text-gray-900">{shop.name}</h4>
+                                  {getStatusBadge(shop)}
+                                </div>
+                                <p className="text-gray-600 font-medium">{shop.address}</p>
+                                <p className="text-sm text-gray-500 mt-1">
+                                  Created: {new Date(shop.createdAt || Date.now()).toLocaleDateString('en-US')}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex gap-2">
+                              <Button
+                                size="sm"
+                                className="bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100 px-4 py-2 rounded-xl"
+                                onClick={() => navigate(ROUTES.SHOP_DETAILS(shop._id || shop.id))}
+                              >
+                                <Eye className="w-4 h-4 mr-2" />
+                                View
+                              </Button>
+                              {!shop.isApproved && (
+                                <>
+                                  <Button
+                                    size="sm"
+                                    className="bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-4 py-2 rounded-xl"
+                                    onClick={() => handleApproveShop(shop._id || shop.id)}
+                                  >
+                                    <CheckCircle className="w-4 h-4 mr-2" />
+                                    Approve
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-4 py-2 rounded-xl"
+                                    onClick={() => handleRejectShop(shop._id || shop.id)}
+                                  >
+                                    <XCircle className="w-4 h-4 mr-2" />
+                                    Reject
+                                  </Button>
+                                </>
+                              )}
+                              <Button
+                                size="sm"
+                                className="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-4 py-2 rounded-xl"
+                                onClick={() => handleDeleteShop(shop._id || shop.id)}
+                              >
+                                <Trash2 className="w-4 h-4 mr-2" />
+                                Delete
+                              </Button>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="bg-white rounded-2xl shadow-lg border border-white/20 p-12 text-center">
+                    <div className="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mx-auto mb-6">
+                      <Store className="w-12 h-12 text-gray-500" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                      No Stores Found
+                    </h3>
+                    <p className="text-gray-600 text-lg">
+                      No stores have been created yet
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
