@@ -18,6 +18,7 @@ import {
 import { productService } from '../../services/productService.js';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES, PRODUCT_CATEGORIES } from '../../utils/constants.js';
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 const ProductList = () => {
     const navigate = useNavigate();
@@ -97,72 +98,9 @@ const ProductList = () => {
     // Generate personalized message based on user behavior
     const getPersonalizedMessage = () => {
         const viewedCount = userBehavior.viewedProducts.length;
-        const hasSearched = userBehavior.hasSearched;
-        const hasFiltered = userBehavior.hasFiltered;
-        const isFirstTime = viewedCount === 0 && !hasSearched && !hasFiltered;
-
-        // if (isFirstTime) {
-        //     return {
-        //         text: "Welcome! Start exploring our jewelry collection",
-        //         icon: "✨",
-        //         color: "text-purple-600",
-        //         bgColor: "bg-purple-50"
-        //     };
-        // }
-
-        // if (viewedCount === 0 && (hasSearched || hasFiltered)) {
-        //     return {
-        //         text: "No products viewed yet. Try browsing our recommendations",
-        //         icon: "🔍",
-        //         color: "text-blue-600",
-        //         bgColor: "bg-blue-50"
-        //     };
-        // }
-
-        // if (viewedCount >= 1 && viewedCount <= 3) {
-        //     return {
-        //         text: `Great start! You've explored ${viewedCount} product${viewedCount > 1 ? 's' : ''}`,
-        //         icon: "👀",
-        //         color: "text-green-600",
-        //         bgColor: "bg-green-50"
-        //     };
-        // }
-
-        // if (viewedCount >= 4 && viewedCount <= 10) {
-        //     return {
-        //         text: `You're getting the hang of it! ${viewedCount} products viewed`,
-        //         icon: "🎯",
-        //         color: "text-blue-600",
-        //         bgColor: "bg-blue-50"
-        //     };
-        // }
-
-        // if (viewedCount >= 11 && viewedCount <= 20) {
-        //     return {
-        //         text: `Impressive browsing! You've checked out ${viewedCount} products`,
-        //         icon: "🔥",
-        //         color: "text-orange-600",
-        //         bgColor: "bg-orange-50"
-        //     };
-        // }
-
-        // if (viewedCount >= 21 && viewedCount <= 50) {
-        //     return {
-        //         text: `You're a serious shopper! ${viewedCount} products explored`,
-        //         icon: "💎",
-        //         color: "text-yellow-600",
-        //         bgColor: "bg-yellow-50"
-        //     };
-        // }
-
-        // if (viewedCount > 50) {
-        //     return {
-        //         text: `Wow! You're a jewelry expert with ${viewedCount} products viewed`,
-        //         icon: "👑",
-        //         color: "text-purple-600",
-        //         bgColor: "bg-purple-50"
-        //     };
-        // }
+        // const hasSearched = userBehavior.hasSearched;
+        // const hasFiltered = userBehavior.hasFiltered;
+        // const isFirstTime = viewedCount === 0 && !hasSearched && !hasFiltered;
 
         return {
             text: `You've viewed ${viewedCount} products`,
@@ -173,31 +111,31 @@ const ProductList = () => {
     };
 
     // Generate activity summary message
-    const getActivitySummaryMessage = () => {
-        const viewedCount = userBehavior.viewedProducts.length;
+    // const getActivitySummaryMessage = () => {
+    //     const viewedCount = userBehavior.viewedProducts.length;
 
-        if (viewedCount === 0) {
-            return "Start your jewelry journey today!";
-        }
+    //     if (viewedCount === 0) {
+    //         return "Start your jewelry journey today!";
+    //     }
 
-        if (viewedCount >= 1 && viewedCount <= 5) {
-            return "You're just getting started - keep exploring!";
-        }
+    //     if (viewedCount >= 1 && viewedCount <= 5) {
+    //         return "You're just getting started - keep exploring!";
+    //     }
 
-        if (viewedCount >= 6 && viewedCount <= 15) {
-            return "Great progress! You're discovering our collection.";
-        }
+    //     if (viewedCount >= 6 && viewedCount <= 15) {
+    //         return "Great progress! You're discovering our collection.";
+    //     }
 
-        if (viewedCount >= 16 && viewedCount <= 30) {
-            return "Impressive! You're becoming a jewelry connoisseur.";
-        }
+    //     if (viewedCount >= 16 && viewedCount <= 30) {
+    //         return "Impressive! You're becoming a jewelry connoisseur.";
+    //     }
 
-        if (viewedCount > 30) {
-            return "Amazing! You're a true jewelry enthusiast!";
-        }
+    //     if (viewedCount > 30) {
+    //         return "Amazing! You're a true jewelry enthusiast!";
+    //     }
 
-        return "Your shopping journey continues...";
-    };
+    //     return "Your shopping journey continues...";
+    // };
 
     // Generate motivational message based on results and behavior
     const getMotivationalMessage = () => {
@@ -318,7 +256,7 @@ const ProductList = () => {
     const loadProducts = async () => {
         try {
             setIsLoading(true);
-
+            console.log(`baseUrl: ${baseUrl}`);
             // Build query parameters for backend filtering
             const queryParams = new URLSearchParams();
 
@@ -326,7 +264,7 @@ const ProductList = () => {
             if (filters.category) queryParams.append('category', filters.category);
             if (filters.sortBy) queryParams.append('sortBy', filters.sortBy);
 
-            const url = `https://gold-backend-production.up.railway.app/product${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
+            const url = `${baseUrl}/product${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
 
             const response = await fetch(url, {
                 headers: {
@@ -350,7 +288,7 @@ const ProductList = () => {
         if (!user?.token) return;
 
         try {
-            const response = await fetch('https://gold-backend-production.up.railway.app/product/related?limit=6', {
+            const response = await fetch(`${baseUrl}/product/related?limit=6`, {
                 headers: {
                     'Authorization': `Bearer ${user.token}`,
                     'Content-Type': 'application/json'
@@ -492,7 +430,7 @@ const ProductList = () => {
 
                         // Track the click (interest)
                         if (user) {
-                            await fetch("https://gold-backend-production.up.railway.app/product/track", {
+                            await fetch(`${baseUrl}/product/track`, {
                                 method: "POST",
                                 headers: {
                                     "Content-Type": "application/json",
@@ -957,7 +895,7 @@ const ProductList = () => {
                                                             trackProductView(safeProduct.id);
 
                                                             if (user) {
-                                                                await fetch("https://gold-backend-production.up.railway.app/product/track", {
+                                                                await fetch(`${baseUrl}/product/track`, {
                                                                     method: "POST",
                                                                     headers: {
                                                                         "Content-Type": "application/json",
