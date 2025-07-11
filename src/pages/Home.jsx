@@ -17,6 +17,7 @@ import {
 import { ROUTES } from '../utils/constants.js';
 import { shopService } from '../services/shopService.js';
 import FloatingChat from '../components/ui/FloatingChat.jsx';
+import { motion } from 'framer-motion';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -179,9 +180,11 @@ const Home = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`${ROUTES.SHOPS}?search=${encodeURIComponent(searchQuery)}`);
-    }
+    console.log('hello');
+    
+    navigate(`${ROUTES.SHOPS}?search=${encodeURIComponent(searchQuery)}`);
+    // if (searchQuery.trim()) {
+    // }
   };
 
 
@@ -286,7 +289,14 @@ const Home = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50" dir="ltr">
+    <motion.div
+      initial={{ opacity: 0, x: 100 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -100 }}
+      transition={{ duration: 0.5 }}
+      className="min-h-screen bg-gray-50"
+      dir="ltr"
+    >
       {/* Enhanced Hero Slider */}
       <section className="relative h-screen overflow-hidden">
         <div className="absolute inset-0 bg-black/30 z-10"></div>
@@ -435,7 +445,6 @@ const Home = () => {
 
           {/* Simple Search Bar */}
           <div className="max-w-4xl mx-auto mb-16">
-            <form onSubmit={handleSearch} className="relative">
               <div className="relative bg-gray-50 rounded-2xl p-2 shadow-lg border border-gray-200 hover:border-yellow-300 transition-all duration-300">
                 <div className="flex items-center gap-4">
                   <div className="flex-1 relative">
@@ -444,6 +453,7 @@ const Home = () => {
                       type="text"
                       placeholder="Search for jewelry, gold, stores..."
                       value={searchQuery}
+                      onFocus={handleSearch}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="w-full pl-12 pr-4 py-4 text-lg rounded-xl border-0 focus:ring-2 focus:ring-yellow-300 bg-transparent text-gray-900 placeholder-gray-500"
                     />
@@ -456,7 +466,6 @@ const Home = () => {
                   </Button>
                 </div>
               </div>
-            </form>
           </div>
 
           {/* Simple Categories */}
@@ -828,7 +837,7 @@ const Home = () => {
       {/* Floating Chat Component */}
       <FloatingChat />
 
-    </div>
+    </motion.div>
   );
 };
 

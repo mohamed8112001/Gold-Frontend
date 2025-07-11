@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { ROUTES } from '../../utils/constants.js';
 import { shopService } from '../../services/shopService.js';
+import { motion } from 'framer-motion';
 
 const ShopList = () => {
   const navigate = useNavigate();
@@ -423,7 +424,14 @@ const ShopList = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-yellow-50" dir="ltr">
+    <motion.div
+      initial={{ opacity: 0, x: 100 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -100 }}
+      transition={{ duration: 0.5 }}
+      className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-yellow-50"
+      dir="ltr"
+    >
       {/* Enhanced Header */}
       <div className="relative bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-700 overflow-hidden">
         {/* Background Pattern */}
@@ -724,7 +732,7 @@ const ShopList = () => {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

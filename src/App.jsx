@@ -1,5 +1,6 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import { AuthProvider } from './context/AuthContext.jsx';
 import Layout from './components/layout/Layout.jsx';
 import Home from './pages/Home.jsx';
@@ -36,54 +37,57 @@ function App() {
     <AuthProvider>
       <Router>
         <Layout>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/test" element={<TestPage />} />
+          <AnimatePresence mode="wait">
+            
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/home" element={<Home />} />
+              <Route path="/test" element={<TestPage />} />
 
-            {/* Auth Routes */}
-            <Route path="/auth/login" element={<Login />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/auth/register" element={<Register />} />
-            <Route path="/register" element={<UserTypeSelection />} />
-            <Route path="/auth/user-type" element={<UserTypeSelection />} />
-            <Route path="/auth/forgot-password" element={<ForgotPassword />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/auth/google/callback" element={<GoogleCallback />} />
+              {/* Auth Routes */}
+              <Route path="/auth/login" element={<Login />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/auth/register" element={<Register />} />
+              <Route path="/register" element={<UserTypeSelection />} />
+              <Route path="/auth/user-type" element={<UserTypeSelection />} />
+              <Route path="/auth/forgot-password" element={<ForgotPassword />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/auth/google/callback" element={<GoogleCallback />} />
 
-            {/* Shop Routes */}
-            <Route path="/shops" element={<ShopList />} />
-            <Route path="/shops/:id" element={<ShopDetails />} />
-            <Route path="/shop/create" element={<CreateShop />} />
-            <Route path="/shop/edit" element={<EditShop />} />
-            <Route path="/shop/edit/:id" element={<EditShop />} />
-            <Route path="/shop/manage" element={<ManageShop />} />
+              {/* Shop Routes */}
+              <Route path="/shops" element={<ShopList />} />
+              <Route path="/shops/:id" element={<ShopDetails />} />
+              <Route path="/shop/create" element={<CreateShop />} />
+              <Route path="/shop/edit" element={<EditShop />} />
+              <Route path="/shop/edit/:id" element={<EditShop />} />
+              <Route path="/shop/manage" element={<ManageShop />} />
 
-            {/* Product Routes */}
-            <Route path="/products" element={<ProductList />} />
-            <Route path="/products/:id" element={<ProductDetails />} />
-            <Route path="/products/create" element={<CreateProduct />} />
-            <Route path="/favorites" element={<Favorites />} />
+              {/* Product Routes */}
+              <Route path="/products" element={<ProductList />} />
+              <Route path="/products/:id" element={<ProductDetails />} />
+              <Route path="/products/create" element={<CreateProduct />} />
+              <Route path="/favorites" element={<Favorites />} />
 
-            {/* User Routes */}
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/settings" element={<Settings />} />
+              {/* User Routes */}
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/settings" element={<Settings />} />
 
-            {/* Booking Routes */}
-            <Route path="/book-appointment" element={<BookAppointment />} />
-            <Route path="/booking/:shopId" element={<BookAppointment />} />
-            <Route path="/my-bookings" element={<MyBookings />} />
-            <Route path="/bookings/manage" element={<ManageBookings />} />
+              {/* Booking Routes */}
+              <Route path="/book-appointment" element={<BookAppointment />} />
+              <Route path="/booking/:shopId" element={<BookAppointment />} />
+              <Route path="/my-bookings" element={<MyBookings />} />
+              <Route path="/bookings/manage" element={<ManageBookings />} />
 
-            {/* Admin Routes */}
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/admin/create" element={<CreateAdmin />} />
-            <Route path="/admin/promote" element={<PromoteToAdmin />} />
-            <Route path="/demo-login" element={<DemoAdminLogin />} />
+              {/* Admin Routes */}
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/admin/create" element={<CreateAdmin />} />
+              <Route path="/admin/promote" element={<PromoteToAdmin />} />
+              <Route path="/demo-login" element={<DemoAdminLogin />} />
 
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </AnimatePresence>
         </Layout>
       </Router>
     </AuthProvider>

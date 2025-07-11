@@ -116,8 +116,10 @@ const ShopDetails = () => {
                 // The backend will handle the access control
                 console.log('🏪 Shop loaded successfully, proceeding to display...');
 
+                console.log(`images: ${shopData['images']}`);
+                
                 // Default gold shop image
-                const defaultShopImage = 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=400&fit=crop&crop=center&auto=format&q=60';
+                const defaultShopImage = shopData['images'][0];
 
                 // Ensure shop has all required fields
                 const processedShopData = {
