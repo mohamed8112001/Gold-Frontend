@@ -321,12 +321,12 @@ const AdminDashboard = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center">
-        <div className="bg-white rounded-2xl shadow-2xl border border-white/20 backdrop-blur-sm p-12 text-center">
-          <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6 animate-pulse">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-yellow-50/30 to-amber-50/20 flex items-center justify-center pt-20">
+        <div className="bg-white rounded-2xl shadow-2xl border border-yellow-200/30 backdrop-blur-sm p-12 text-center">
+          <div className="w-16 h-16 bg-gradient-to-br from-yellow-500 to-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-6 animate-pulse">
             <BarChart3 className="w-8 h-8 text-white" />
           </div>
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-100 border-t-blue-600 mx-auto mb-6"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-yellow-100 border-t-yellow-600 mx-auto mb-6"></div>
           <h3 className="text-xl font-bold text-gray-900 mb-2">Loading Dashboard...</h3>
           <p className="text-gray-600">Please wait while we fetch the latest data</p>
         </div>
@@ -335,13 +335,13 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-yellow-50/30 to-amber-50/20 flex pt-20">
       {/* Sidebar Navigation */}
       <div className="w-80 bg-white shadow-2xl border-r border-gray-100 flex flex-col">
         {/* Sidebar Header */}
         <div className="p-8 border-b border-gray-100">
           <div className="flex items-center space-x-4 space-x-reverse">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+            <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-amber-600 rounded-xl flex items-center justify-center shadow-lg">
               <BarChart3 className="w-6 h-6 text-white" />
             </div>
             <div>
@@ -359,8 +359,8 @@ const AdminDashboard = () => {
             <button
               onClick={() => setActiveTab('overview')}
               className={`w-full flex items-center px-4 py-3 rounded-xl text-left transition-all duration-200 ${activeTab === 'overview'
-                ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg'
-                : 'text-gray-700 hover:bg-gray-50'
+                ? 'bg-gradient-to-r from-yellow-500 to-amber-600 text-white shadow-lg'
+                : 'text-gray-700 hover:bg-yellow-50'
                 }`}
             >
               <TrendingUp className="w-5 h-5 mr-3" />
@@ -371,7 +371,7 @@ const AdminDashboard = () => {
               onClick={() => setActiveTab('pending')}
               className={`w-full flex items-center px-4 py-3 rounded-xl text-left transition-all duration-200 ${activeTab === 'pending'
                 ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg'
-                : 'text-gray-700 hover:bg-gray-50'
+                : 'text-gray-700 hover:bg-yellow-50'
                 }`}
             >
               <Clock className="w-5 h-5 mr-3" />
@@ -389,8 +389,8 @@ const AdminDashboard = () => {
             <button
               onClick={() => setActiveTab('shops')}
               className={`w-full flex items-center px-4 py-3 rounded-xl text-left transition-all duration-200 ${activeTab === 'shops'
-                ? 'bg-gradient-to-r from-emerald-500 to-green-500 text-white shadow-lg'
-                : 'text-gray-700 hover:bg-gray-50'
+                ? 'bg-gradient-to-r from-yellow-500 to-amber-500 text-white shadow-lg'
+                : 'text-gray-700 hover:bg-yellow-50'
                 }`}
             >
               <Store className="w-5 h-5 mr-3" />
@@ -408,23 +408,23 @@ const AdminDashboard = () => {
           <div className="mt-8 space-y-4">
             <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Quick Stats</h3>
 
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-100">
+            <div className="bg-gradient-to-r from-yellow-50 to-amber-50 rounded-xl p-4 border border-yellow-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-blue-700 font-medium">Total Users</p>
-                  <p className="text-2xl font-bold text-blue-900">{stats.totalUsers}</p>
+                  <p className="text-sm text-yellow-700 font-medium">Total Users</p>
+                  <p className="text-2xl font-bold text-yellow-900">{stats.totalUsers}</p>
                 </div>
-                <Users className="w-8 h-8 text-blue-600" />
+                <Users className="w-8 h-8 text-yellow-600" />
               </div>
             </div>
 
-            <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-100">
+            <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-4 border border-amber-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-purple-700 font-medium">Products</p>
-                  <p className="text-2xl font-bold text-purple-900">{stats.totalProducts}</p>
+                  <p className="text-sm text-amber-700 font-medium">Products</p>
+                  <p className="text-2xl font-bold text-amber-900">{stats.totalProducts}</p>
                 </div>
-                <Package className="w-8 h-8 text-purple-600" />
+                <Package className="w-8 h-8 text-amber-600" />
               </div>
             </div>
           </div>
@@ -452,15 +452,15 @@ const AdminDashboard = () => {
 
           {/* Enhanced Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-10">
-            <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+            <Card className="bg-gradient-to-br from-yellow-50 to-yellow-100 border-yellow-200 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-blue-700 mb-1">Total Stores</p>
-                    <p className="text-3xl font-bold text-blue-900">{stats.totalShops}</p>
-                    <p className="text-xs text-blue-600 mt-1">Active in system</p>
+                    <p className="text-sm font-medium text-yellow-700 mb-1">Total Stores</p>
+                    <p className="text-3xl font-bold text-yellow-900">{stats.totalShops}</p>
+                    <p className="text-xs text-yellow-600 mt-1">Active in system</p>
                   </div>
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+                  <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl flex items-center justify-center shadow-lg">
                     <Store className="w-6 h-6 text-white" />
                   </div>
                 </div>
@@ -482,45 +482,45 @@ const AdminDashboard = () => {
               </CardContent>
             </Card>
 
-            <Card className="bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+            <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-emerald-700 mb-1">Approved</p>
-                    <p className="text-3xl font-bold text-emerald-900">{stats.approvedShops}</p>
-                    <p className="text-xs text-emerald-600 mt-1">Live stores</p>
+                    <p className="text-sm font-medium text-green-700 mb-1">Approved</p>
+                    <p className="text-3xl font-bold text-green-900">{stats.approvedShops}</p>
+                    <p className="text-xs text-green-600 mt-1">Live stores</p>
                   </div>
-                  <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg">
+                  <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg">
                     <CheckCircle className="w-6 h-6 text-white" />
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+            <Card className="bg-gradient-to-br from-gray-50 to-gray-100 border-gray-200 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-purple-700 mb-1">Users</p>
-                    <p className="text-3xl font-bold text-purple-900">{stats.totalUsers}</p>
-                    <p className="text-xs text-purple-600 mt-1">Registered users</p>
+                    <p className="text-sm font-medium text-gray-700 mb-1">Users</p>
+                    <p className="text-3xl font-bold text-gray-900">{stats.totalUsers}</p>
+                    <p className="text-xs text-gray-600 mt-1">Registered users</p>
                   </div>
-                  <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                  <div className="w-12 h-12 bg-gradient-to-br from-gray-500 to-gray-600 rounded-xl flex items-center justify-center shadow-lg">
                     <Users className="w-6 h-6 text-white" />
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-gradient-to-br from-indigo-50 to-indigo-100 border-indigo-200 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+            <Card className="bg-gradient-to-br from-amber-50 to-amber-100 border-amber-200 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-indigo-700 mb-1">Products</p>
-                    <p className="text-3xl font-bold text-indigo-900">{stats.totalProducts}</p>
-                    <p className="text-xs text-indigo-600 mt-1">Total products</p>
+                    <p className="text-sm font-medium text-amber-700 mb-1">Products</p>
+                    <p className="text-3xl font-bold text-amber-900">{stats.totalProducts}</p>
+                    <p className="text-xs text-amber-600 mt-1">Total products</p>
                   </div>
-                  <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+                  <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl flex items-center justify-center shadow-lg">
                     <Package className="w-6 h-6 text-white" />
                   </div>
                 </div>

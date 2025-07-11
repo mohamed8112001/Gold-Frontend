@@ -17,7 +17,8 @@ import {
 import { ROUTES } from '../utils/constants.js';
 import { shopService } from '../services/shopService.js';
 import FloatingChat from '../components/ui/FloatingChat.jsx';
-import { motion } from 'framer-motion';
+// eslint-disable-next-line no-unused-vars
+import { motion } from "framer-motion";
 
 const Home = () => {
   const navigate = useNavigate();
