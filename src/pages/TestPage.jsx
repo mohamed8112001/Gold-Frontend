@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const TestPage = () => {
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center pt-20">
       <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full">
         <h1 className="text-3xl font-bold text-gray-800 mb-4">
           مرحباً بك في Dibla
