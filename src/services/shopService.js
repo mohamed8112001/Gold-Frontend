@@ -2,26 +2,116 @@ import api from "./api.js";
 import { STORAGE_KEYS } from "../utils/constants.js";
 
 export const shopService = {
-  // Get all shops (authenticated - role-based filtering)
-  getAllShops: async (params = {}) => {
+  /**
+   * Get all shops with optional filters
+   * @param {Object} [params={}] - Filter parameters
+   * @param {string} [params.location] - Location filter
+   * @param {number|string} [params.rating] - Minimum rating
+   * @param {Array<string>|string} [params.specialties] - Shop specialties
+   * @param {string} [params.sortBy] - Sorting criteria
+   * @param {number} [params.page] - Page number for pagination
+   * @param {number} [params.limit] - Items per page
+   * @param {AbortSignal} [signal] - Optional abort controller signal
+   * @returns {Promise<{success: boolean, data?: any, message?: string, meta?: Object}>}
+   */
+  getAllShops: async function(params = {}, signal = null) {
     try {
-      const response = await api.get("/shop", { params });
-      return response.data;
+      // Clean and normalize parameters
+      const cleanParams = {
+        // Convert rating to number if exists
+        ...(params.rating && { rating: Number(params.rating) }),
+        // Convert specialties array to string if needed
+        ...(params.specialties && { 
+          specialties: Array.isArray(params.specialties) 
+            ? params.specialties.join(',') 
+            : params.specialties 
+        }),
+        // Copy other params
+        ...params
+      };
+      
+      // Remove undefined values
+      Object.keys(cleanParams).forEach(key => 
+        cleanParams[key] === undefined && delete cleanParams[key]
+      );
+
+      const config = {
+        params: cleanParams,
+        ...(signal && { signal })
+      };
+
+      const response = await api.get('/shop', config);
+
+      return {
+        success: true,
+        data: response.data.data,
+        meta: {
+          total: response.data.results,
+          page: params.page || 1,
+          limit: params.limit || response.data.data.length
+        }
+      };
     } catch (error) {
-      throw new Error(error.response?.data?.message || "Failed to fetch shops");
+      // Handle abort errors differently
+      if (error.name === 'AbortError') {
+        return { 
+          success: false, 
+          message: 'Request cancelled',
+          isAborted: true
+        };
+      }
+
+      // Extract error message from different possible locations
+      const errorMessage = error.response?.data?.message || 
+                         error.message || 
+                         'Failed to fetch shops';
+
+      return {
+        success: false,
+        message: errorMessage,
+        status: error.response?.status,
+        error: error
+      };
     }
   },
 
-  // Get public shops (no authentication required - only approved shops)
-  getPublicShops: async (params = {}) => {
-    try {
-      const response = await api.get("/shop/public", { params });
-      return response.data;
-    } catch (error) {
-      throw new Error(
-        error.response?.data?.message || "Failed to fetch public shops"
-      );
+  // Simple caching mechanism (5 minute cache)
+  _shopCache: {
+    data: null,
+    timestamp: 0,
+    paramsKey: ''
+  },
+
+  /**
+   * Get shops with basic caching
+   * @param {Object} params - Same as getAllShops
+   * @returns {Promise} Cached or fresh data
+   */
+  getShopsCached: async function(params = {}) {
+    const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+    const now = Date.now();
+    const paramsKey = JSON.stringify(params);
+
+    // Return cached data if available and fresh
+    if (this._shopCache.data && 
+        this._shopCache.paramsKey === paramsKey &&
+        (now - this._shopCache.timestamp) < CACHE_DURATION) {
+      return this._shopCache.data;
     }
+
+    // Otherwise fetch fresh data
+    const result = await this.getAllShops(params);
+    
+    // Only cache successful responses
+    if (result.success) {
+      this._shopCache = {
+        data: result,
+        timestamp: now,
+        paramsKey: paramsKey
+      };
+    }
+
+    return result;
   },
 
   // Get shop by ID (authenticated)

@@ -41,62 +41,55 @@ const ShopList = () => {
   const [filters, setFilters] = useState({
     location: '',
     rating: '',
-    specialty: '',
+    specialties: '',
     sortBy: 'rating'
   });
   const [showFilters, setShowFilters] = useState(false);
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 12,
+    total: 0
+  });
 
   useEffect(() => {
     loadShops();
-  }, []);
+  }, [pagination.page, filters]);
 
   useEffect(() => {
     applyFilters();
-  }, [shops, searchQuery, filters]);
+  }, [shops, searchQuery]);
 
   const loadShops = async () => {
     try {
       setIsLoading(true);
-      console.log('🏪 Loading shops for ShopList page...');
-      console.log('🏪 User authentication status:', user ? 'Authenticated' : 'Not authenticated');
-      console.log('🏪 User role:', user?.role || 'No role');
+      console.log('🏪 Loading shops for ShopList page...' , JSON.stringify(filters));
+      
+      const params = {
+        ...filters,
+        page: pagination.page,
+        limit: pagination.limit
+      };
 
-      let response;
-      let shopsData = [];
-
-      if (user) {
-        // User is authenticated - use authenticated endpoint for role-based filtering
-        console.log('🏪 Using authenticated endpoint for role-based shop access');
-        try {
-          response = await shopService.getAllShops();
-          shopsData = Array.isArray(response) ? response : response.data || response.shops || [];
-          console.log('🏪 Authenticated shops loaded:', shopsData.length);
-        } catch (authError) {
-          console.warn('🏪 Authenticated endpoint failed, falling back to public:', authError);
-          // Fallback to public endpoint
-          response = await shopService.getPublicShops();
-          shopsData = Array.isArray(response) ? response : response.data || [];
-          console.log('🏪 Fallback to public shops:', shopsData.length);
-        }
+      const response = await shopService.getAllShops(params);
+      
+      if (response.success) {
+        const shopsData = response.data || [];
+        console.log('🏪 Shops loaded:', shopsData.length);
+        
+        setShops(prevShops => 
+          pagination.page === 1 
+            ? shopsData 
+            : [...prevShops, ...shopsData]
+        );
+        
+        setPagination(prev => ({
+          ...prev,
+          total: response.meta?.total || 0
+        }));
       } else {
-        // User is not authenticated - use public endpoint (only approved shops)
-        console.log('🏪 Using public endpoint for approved shops only');
-        response = await shopService.getPublicShops();
-        shopsData = Array.isArray(response) ? response : response.data || [];
-        console.log('🏪 Public approved shops loaded:', shopsData.length);
+        console.error('Failed to load shops:', response.message);
+        setShops([]);
       }
-
-      console.log('🏪 ShopList - Total shops loaded:', shopsData.length);
-      console.log('🏪 ShopList - Sample shop data:', shopsData[0]);
-
-      // Remove duplicates based on _id
-      const uniqueShops = shopsData.filter((shop, index, self) =>
-        index === self.findIndex(s => (s._id || s.id) === (shop._id || shop.id))
-      );
-
-      console.log('🏪 ShopList - Unique shops after deduplication:', uniqueShops.length);
-      setShops(uniqueShops);
-      console.log('✅ Shops loaded successfully for ShopList page');
     } catch (error) {
       console.error('❌ Error loading shops:', error);
       setShops([]);
@@ -110,7 +103,6 @@ const ShopList = () => {
 
     console.log('🔍 Applying filters to', shops.length, 'shops');
     console.log('🔍 Search query:', searchQuery);
-    console.log('🔍 Active filters:', filters);
 
     // Search filter
     if (searchQuery) {
@@ -121,7 +113,7 @@ const ShopList = () => {
         const specialties = shop.specialties || [];
         const ownerName = shop.ownerName || '';
 
-        const searchMatch = (
+        return (
           name.toLowerCase().includes(searchQuery.toLowerCase()) ||
           description.toLowerCase().includes(searchQuery.toLowerCase()) ||
           address.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -130,55 +122,7 @@ const ShopList = () => {
             specialty.toLowerCase().includes(searchQuery.toLowerCase())
           ))
         );
-
-        return searchMatch;
       });
-      console.log('🔍 After search filter:', filtered.length, 'shops');
-    }
-
-    // Location filter
-    if (filters.location) {
-      filtered = filtered.filter(shop => {
-        const address = shop.address || shop.area || '';
-        const locationMatch = address.toLowerCase().includes(filters.location.toLowerCase());
-        return locationMatch;
-      });
-      console.log('🔍 After location filter:', filtered.length, 'shops');
-    }
-
-    // Rating filter
-    if (filters.rating) {
-      filtered = filtered.filter(shop => {
-        const rating = shop.rating || 0;
-        const ratingMatch = rating >= parseFloat(filters.rating);
-        return ratingMatch;
-      });
-      console.log('🔍 After rating filter:', filtered.length, 'shops');
-    }
-
-    // Specialty filter
-    if (filters.specialty) {
-      filtered = filtered.filter(shop => {
-        const specialties = shop.specialties || [];
-        return Array.isArray(specialties) && specialties.some(specialty =>
-          specialty.toLowerCase().includes(filters.specialty.toLowerCase())
-        );
-      });
-    }
-
-    // Sort
-    switch (filters.sortBy) {
-      case 'rating':
-        filtered.sort((a, b) => b.rating - a.rating);
-        break;
-      case 'reviews':
-        filtered.sort((a, b) => b.reviewCount - a.reviewCount);
-        break;
-      case 'name':
-        filtered.sort((a, b) => a.nameAr.localeCompare(b.nameAr));
-        break;
-      default:
-        break;
     }
 
     console.log('🔍 Final filtered shops:', filtered.length);
@@ -188,11 +132,17 @@ const ShopList = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     setSearchParams(searchQuery ? { search: searchQuery } : {});
+    setPagination(prev => ({ ...prev, page: 1 }));
   };
 
+  const loadMore = () => {
+    setPagination(prev => ({
+      ...prev,
+      page: prev.page + 1
+    }));
+  };
 
   const ShopCard = ({ shop, isListView = false }) => {
-    // Handle missing data gracefully
     const shopName = shop.name || 'متجر غير محدد';
     const shopAddress = shop.address || shop.area || shop.city || 'العنوان غير محدد';
     const shopPhone = shop.phone || shop.whatsapp || 'غير محدد';
@@ -215,8 +165,7 @@ const ShopList = () => {
           }
         }}
       >
-        <div className={`relative overflow-hidden ${isListView ? 'lg:w-64 lg:flex-shrink-0' : 'w-full'
-          }`}>
+        <div className={`relative overflow-hidden ${isListView ? 'lg:w-64 lg:flex-shrink-0' : 'w-full'}`}>
           {shopImage ? (
             <img
               src={shopImage}
@@ -227,8 +176,7 @@ const ShopList = () => {
               }}
             />
           ) : (
-            <div className={`bg-gradient-to-br from-yellow-100 to-yellow-200 flex items-center justify-center group-hover:from-yellow-200 group-hover:to-yellow-300 transition-colors duration-300 ${isListView ? 'h-full lg:h-48' : 'h-52'
-              }`}>
+            <div className={`bg-gradient-to-br from-yellow-100 to-yellow-200 flex items-center justify-center group-hover:from-yellow-200 group-hover:to-yellow-300 transition-colors duration-300 ${isListView ? 'h-full lg:h-48' : 'h-52'}`}>
               <div className="text-5xl">💍</div>
             </div>
           )}
@@ -238,8 +186,7 @@ const ShopList = () => {
               variant="ghost"
               className="bg-white/80 hover:bg-white"
               onClick={(e) => {
-                e.stopPropagation(); // Prevent card click
-                // Handle favorite functionality here
+                e.stopPropagation();
               }}
             >
               <Heart className="w-4 h-4" />
@@ -301,13 +248,10 @@ const ShopList = () => {
                 size="sm"
                 className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-4 py-2 rounded-full font-semibold shadow-md hover:shadow-lg transition-all duration-300"
                 onClick={(e) => {
-                  e.stopPropagation(); // Prevent card click
+                  e.stopPropagation();
                   const shopId = shop._id || shop.id;
-                  console.log('Button click - navigating to shop:', shopId, shop.name);
                   if (shopId) {
                     navigate(ROUTES.SHOP_DETAILS(shopId));
-                  } else {
-                    console.error('Shop ID is missing:', shop);
                   }
                 }}
               >
@@ -327,7 +271,6 @@ const ShopList = () => {
 
   const FilterPanel = () => (
     <div className={`bg-white rounded-3xl shadow-xl border-0 p-8 h-fit sticky top-8 ${showFilters ? 'block' : 'hidden lg:block'}`}>
-      {/* Filter Header */}
       <div className="flex items-center gap-4 mb-8">
         <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-2xl flex items-center justify-center shadow-lg">
           <SlidersHorizontal className="w-6 h-6 text-white" />
@@ -336,7 +279,6 @@ const ShopList = () => {
       </div>
 
       <div className="space-y-8">
-        {/* Location Filter */}
         <div>
           <label className="block text-base font-bold text-gray-800 mb-4">
             Location
@@ -352,7 +294,6 @@ const ShopList = () => {
           </div>
         </div>
 
-        {/* Rating Filter */}
         <div>
           <label className="block text-base font-bold text-gray-800 mb-4">
             Minimum Rating
@@ -373,20 +314,20 @@ const ShopList = () => {
           </div>
         </div>
 
-        {/* Specialty Filter */}
         <div>
           <label className="block text-base font-bold text-gray-800 mb-4">
             Specialty
           </label>
           <Input
             placeholder="e.g: Rings, Necklaces, Bracelets"
-            value={filters.specialty}
-            onChange={(e) => setFilters(prev => ({ ...prev, specialty: e.target.value }))}
+            value={filters.specialties}
+            onChange={(e) => {
+              setFilters(prev => ({ ...prev, specialties: e.target.value }))
+            }}
             className="py-4 rounded-2xl border-2 border-gray-200 focus:border-yellow-400 transition-colors duration-300 text-base font-medium"
           />
         </div>
 
-        {/* Sort By */}
         <div>
           <label className="block text-base font-bold text-gray-800 mb-4">
             Sort By
@@ -402,18 +343,18 @@ const ShopList = () => {
           </select>
         </div>
 
-        {/* Clear Filters */}
         <Button
           variant="outline"
           onClick={() => {
             setFilters({
               location: '',
               rating: '',
-              specialty: '',
+              specialties: '',
               sortBy: 'rating'
             });
             setSearchQuery('');
             setSearchParams({});
+            setPagination(prev => ({ ...prev, page: 1 }));
           }}
           className="w-full py-4 rounded-2xl border-2 border-gray-300 hover:border-red-400 hover:bg-red-50 hover:text-red-600 transition-all duration-300 font-bold text-base"
         >
@@ -432,9 +373,7 @@ const ShopList = () => {
       className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-yellow-50"
       dir="ltr"
     >
-      {/* Enhanced Header */}
       <div className="relative bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-700 overflow-hidden">
-        {/* Background Pattern */}
         <div className="absolute inset-0 bg-black/10"></div>
         <div className="absolute top-0 left-0 w-full h-full">
           <div className="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl"></div>
@@ -444,22 +383,12 @@ const ShopList = () => {
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center mb-12">
-            {/* Main Title */}
-            {/* <div className="inline-flex items-center px-6 py-3 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 shadow-lg mb-6">
-              <span className="text-white font-semibold text-lg">Premium Jewelry Stores</span>
-            </div> */}
-
             <h1 className="text-6xl md:text-7xl font-black text-white mb-6 leading-tight">
               <span className="bg-gradient-to-r from-white to-yellow-100 bg-clip-text text-transparent drop-shadow-2xl m-10">
                 Discover Stores
               </span>
             </h1>
 
-            {/* <p className="text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed mb-8 drop-shadow-lg">
-              Explore a comprehensive collection of the finest jewelry and gold stores in Egypt
-            </p> */}
-
-            {/* Enhanced Search Bar */}
             <form onSubmit={handleSearch} className="max-w-2xl mx-auto ">
               <div className="relative">
                 <div className="absolute inset-0 bg-white/20 rounded-2xl blur-sm"></div>
@@ -486,7 +415,6 @@ const ShopList = () => {
               </div>
             </form>
 
-            {/* Stats */}
             <div className="flex flex-wrap justify-center gap-6 mt-12">
               <div className="flex items-center gap-3 bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full border border-white/30">
                 <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
@@ -494,7 +422,7 @@ const ShopList = () => {
               </div>
               <div className="flex items-center gap-3 bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full border border-white/30">
                 <div className="w-3 h-3 bg-blue-400 rounded-full animate-pulse"></div>
-                <span className="text-white font-medium">{filteredShops.length} Stores Available</span>
+                <span className="text-white font-medium">{pagination.total} Stores Available</span>
               </div>
               {user && (
                 <div className="flex items-center gap-3 bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full border border-white/30">
@@ -505,35 +433,12 @@ const ShopList = () => {
                 </div>
               )}
             </div>
-
-            {/* Personalized welcome message */}
-            {/* {user && (
-              <div className="mt-8 max-w-2xl mx-auto">
-                <div className="bg-white/15 backdrop-blur-md rounded-2xl p-6 border border-white/30 shadow-xl">
-                  <p className="text-white text-lg font-medium">
-                    {user.role === 'admin' && (
-                      <>👑 Welcome Admin! You can view and manage all stores in the system</>
-                    )}
-                    {user.role === 'shop_owner' && (
-                      <>🏪 Welcome Shop Owner! Explore other stores and get inspiration</>
-                    )}
-                    {user.role === 'customer' && (
-                      <>💎 Welcome Dear Customer! Discover the most beautiful jewelry stores and choose the best for you</>
-                    )}
-                    {!user.role && (
-                      <>🌟 Welcome! Explore all available jewelry stores</>
-                    )}
-                  </p>
-                </div>
-              </div>
-            )} */}
           </div>
         </div>
       </div>
 
       <div className="w-full px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex flex-col lg:flex-row gap-8 max-w-[1600px] mx-auto">
-          {/* Enhanced Filters Sidebar */}
           <div className="lg:w-72 xl:w-80 flex-shrink-0">
             <div className="lg:hidden mb-6">
               <Button
@@ -548,15 +453,13 @@ const ShopList = () => {
             <FilterPanel />
           </div>
 
-          {/* Enhanced Main Content */}
           <div className="flex-1">
-            {/* Enhanced View Controls */}
             <div className="flex items-center justify-between mb-8 bg-white rounded-2xl p-6 shadow-lg border-0">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
                   <span className="text-lg font-semibold text-gray-800">
-                    {filteredShops.length} Stores Found
+                    {filteredShops.length} of {pagination.total} Stores
                   </span>
                 </div>
                 {searchQuery && (
@@ -595,13 +498,12 @@ const ShopList = () => {
               </div>
             </div>
 
-            {/* Enhanced Shops Grid/List */}
-            {isLoading ? (
+            {isLoading && pagination.page === 1 ? (
               <div className="space-y-8">
                 <div className="text-center py-12">
                   <div className="inline-flex items-center gap-4 bg-gradient-to-r from-yellow-50 to-yellow-100 text-yellow-800 px-8 py-4 rounded-2xl shadow-lg border border-yellow-200">
                     <div className="animate-spin w-6 h-6 border-3 border-yellow-600 border-t-transparent rounded-full"></div>
-                    <span className="font-semibold text-lg">Loading all jewelry stores...</span>
+                    <span className="font-semibold text-lg">Loading jewelry stores...</span>
                   </div>
                 </div>
                 <div className={`grid gap-6 ${viewMode === 'grid'
@@ -610,10 +512,8 @@ const ShopList = () => {
                   }`}>
                   {[...Array(6)].map((_, index) => (
                     <div key={index} className="bg-white rounded-3xl shadow-lg overflow-hidden">
-                      {/* Enhanced Skeleton matching the new card design */}
                       <div className="relative">
                         <div className="h-56 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-pulse"></div>
-                        {/* Badges Skeleton */}
                         <div className="absolute top-4 left-4">
                           <div className="w-20 h-8 bg-gray-300 rounded-full animate-pulse"></div>
                         </div>
@@ -625,7 +525,6 @@ const ShopList = () => {
                         </div>
                       </div>
 
-                      {/* Content Skeleton */}
                       <div className="p-6">
                         <div className="h-6 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded-full mb-3 animate-pulse"></div>
                         <div className="h-4 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded-full mb-4 w-3/4 animate-pulse"></div>
@@ -666,11 +565,12 @@ const ShopList = () => {
                         setFilters({
                           location: '',
                           rating: '',
-                          specialty: '',
+                          specialties: '',
                           sortBy: 'rating'
                         });
                         setSearchQuery('');
                         setSearchParams({});
+                        setPagination(prev => ({ ...prev, page: 1 }));
                       }}
                       className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-8 py-3 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 font-semibold"
                     >
@@ -680,54 +580,62 @@ const ShopList = () => {
                 </div>
               </div>
             ) : (
-              <div className={`grid gap-6 ${viewMode === 'grid'
-                ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-                : 'grid-cols-1'
-                }`}>
-                {filteredShops.map((shop, index) => (
-                  <div
-                    key={shop._id || shop.id}
-                    className="opacity-0 animate-fade-in"
-                    style={{
-                      animationDelay: `${index * 0.1}s`,
-                      animationFillMode: 'forwards'
-                    }}
-                  >
-                    <ShopCard
-                      shop={shop}
-                      isListView={viewMode === 'list'}
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Enhanced Load More */}
-            {filteredShops.length > 0 && (
-              <div className="text-center mt-16">
-                <div className="relative inline-block">
-                  {/* Background Glow Effect */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full blur-lg opacity-20 animate-pulse"></div>
-
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="relative border-2 border-yellow-300 text-yellow-700 hover:bg-yellow-50 hover:border-yellow-400 px-12 py-4 text-lg font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                  >
-                    <span className="flex items-center gap-3">
-                      <span>Load More Stores</span>
-                      <div className="w-6 h-6 bg-yellow-100 rounded-full flex items-center justify-center">
-                        <span className="text-sm">+</span>
-                      </div>
-                    </span>
-                  </Button>
+              <>
+                <div className={`grid gap-6 ${viewMode === 'grid'
+                  ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+                  : 'grid-cols-1'
+                  }`}>
+                  {filteredShops.map((shop, index) => (
+                    <div
+                      key={shop._id || shop.id || index}
+                      className="opacity-0 animate-fade-in"
+                      style={{
+                        animationDelay: `${index * 0.1}s`,
+                        animationFillMode: 'forwards'
+                      }}
+                    >
+                      <ShopCard
+                        shop={shop}
+                        isListView={viewMode === 'list'}
+                      />
+                    </div>
+                  ))}
                 </div>
 
-                {/* Subtitle */}
-                <p className="text-gray-600 mt-4 text-lg">
-                  Showing <span className="font-bold text-yellow-600">{filteredShops.length}</span> of many amazing stores
-                </p>
-              </div>
+                {filteredShops.length < pagination.total && (
+                  <div className="text-center mt-16">
+                    <div className="relative inline-block">
+                      <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full blur-lg opacity-20 animate-pulse"></div>
+                      <Button
+                        variant="outline"
+                        size="lg"
+                        onClick={loadMore}
+                        disabled={isLoading}
+                        className="relative border-2 border-yellow-300 text-yellow-700 hover:bg-yellow-50 hover:border-yellow-400 px-12 py-4 text-lg font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                      >
+                        <span className="flex items-center gap-3">
+                          {isLoading ? (
+                            <>
+                              <span>Loading...</span>
+                              <div className="w-6 h-6 border-2 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
+                            </>
+                          ) : (
+                            <>
+                              <span>Load More Stores</span>
+                              <div className="w-6 h-6 bg-yellow-100 rounded-full flex items-center justify-center">
+                                <span className="text-sm">+</span>
+                              </div>
+                            </>
+                          )}
+                        </span>
+                      </Button>
+                    </div>
+                    <p className="text-gray-600 mt-4 text-lg">
+                      Showing {filteredShops.length} of {pagination.total} stores
+                    </p>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>
