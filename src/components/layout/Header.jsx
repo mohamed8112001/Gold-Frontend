@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button.jsx';
 import { Menu, X, User, LogOut } from 'lucide-react';
@@ -8,8 +8,45 @@ const Header = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated, isAdmin, isShopOwner, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
+  // Enhanced scroll detection effect
+  useEffect(() => {
+    const controlHeader = () => {
+      const currentScrollY = window.scrollY;
 
+      // Show header when at top of page (more sensitive)
+      if (currentScrollY < 5) {
+        setIsVisible(true);
+      }
+      // Hide header when scrolling down (faster response)
+      else if (currentScrollY > lastScrollY && currentScrollY > 80) {
+        setIsVisible(false);
+      }
+      // Show header when scrolling up (immediate response)
+      else if (currentScrollY < lastScrollY) {
+        setIsVisible(true);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    // Throttle scroll events for better performance
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          controlHeader();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
 
   const handleLogout = async () => {
     await logout();
@@ -18,25 +55,32 @@ const Header = () => {
 
   return (
     <>
-      <header className="bg-white/98 backdrop-blur-xl shadow-2xl border-b border-gradient-to-r from-yellow-200 via-yellow-100 to-yellow-200 sticky top-0 z-50" dir="ltr">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-24">
-            {/* Minimalist Logo */}
-            <Link to="/" className="flex items-center group">
+      <header
+        className={`fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-xl shadow-lg border-b border-yellow-200/30 z-50 transition-all duration-300 ${isVisible ? 'translate-y-0' : '-translate-y-full'
+          }`}
+        dir="ltr"
+      >
+        <div className="absolute inset-0 bg-gradient-to-r from-yellow-50/20 via-white/40 to-yellow-50/20"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-20">
+            {/* Enhanced Logo */}
+            <Link to="/" className="flex items-center group relative">
               <div className="flex items-center space-x-4">
                 <div className="relative">
-                  <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full shadow-lg group-hover:shadow-xl transition-all duration-300 transform group-hover:scale-105"></div>
-                  <div className="absolute inset-0 rounded-full border-2 border-white/30"></div>
+                  <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-600 rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-300 transform group-hover:scale-105 group-hover:rotate-3"></div>
+                  <div className="absolute inset-0 rounded-2xl border-2 border-white/30"></div>
+                  <div className="absolute inset-2 bg-white/20 rounded-xl"></div>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-3xl font-bold bg-gradient-to-r from-yellow-600 to-yellow-500 bg-clip-text text-transparent tracking-wide">
+                  <span className="text-3xl font-black bg-gradient-to-r from-yellow-600 via-yellow-500 to-amber-600 bg-clip-text text-transparent tracking-wide group-hover:tracking-wider transition-all duration-300">
                     Dibla
                   </span>
-                  <span className="text-xs text-gray-500 font-medium tracking-wider">
-                    Premium Jewelry
+                  <span className="text-xs text-gray-600 font-semibold tracking-widest uppercase group-hover:text-yellow-600 transition-all duration-300">
+                    Premium Gold
                   </span>
                 </div>
               </div>
+              <div className="absolute -inset-2 bg-gradient-to-r from-yellow-400/0 via-yellow-400/5 to-yellow-400/0 rounded-2xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
             </Link>
 
             {/* Clean Desktop Navigation */}
@@ -55,7 +99,7 @@ const Header = () => {
                 <span className="relative z-10">Stores</span>
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-yellow-400 to-yellow-600 group-hover:w-full transition-all duration-300"></span>
               </Link>
-              {(isAuthenticated && user && (isAdmin || isShopOwner)) && (
+              {(isAuthenticated && user && ( isShopOwner)) && (
                 <Link
                   to="/dashboard"
                   className="relative text-gray-700 hover:text-yellow-600 font-medium text-lg transition-all duration-300 group px-3 py-2"
