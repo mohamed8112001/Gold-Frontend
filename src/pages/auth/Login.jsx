@@ -10,6 +10,7 @@ import { GoogleLogin } from '@react-oauth/google';
 
 const Login = () => {
   const navigate = useNavigate();
+
   const location = useLocation();
   const { login,googleLogin, isLoading } = useAuth();
 
