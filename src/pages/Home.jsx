@@ -39,7 +39,6 @@ const Home = () => {
       id: 1,
       title: 'Luxury Jewelry',
       subtitle: 'Discover the finest gold and jewelry pieces',
-      description: 'Modern and classic designs from the best stores in Egypt with guaranteed quality and authenticity',
       image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
       gradient: 'from-yellow-400 to-yellow-600'
     },
@@ -47,7 +46,6 @@ const Home = () => {
       id: 2,
       title: 'Wedding Rings',
       subtitle: 'Unforgettable moments with the most beautiful rings',
-      description: 'A curated collection of wedding and engagement rings with romantic and elegant designs',
       image: 'https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
       gradient: 'from-rose-400 to-pink-600'
     },
@@ -55,7 +53,6 @@ const Home = () => {
       id: 3,
       title: 'Precious Stones',
       subtitle: 'Jewelry adorned with natural gemstones',
-      description: 'Unique and distinctive pieces adorned with diamonds, emeralds and sapphires for all special occasions',
       image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
       gradient: 'from-purple-400 to-indigo-600'
     },
@@ -63,7 +60,6 @@ const Home = () => {
       id: 4,
       title: '21K Gold',
       subtitle: 'High quality with authenticity guarantee',
-      description: 'Chains, bracelets and necklaces made of pure gold at the best prices and latest designs',
       image: 'https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
       gradient: 'from-amber-400 to-orange-600'
     },
@@ -71,7 +67,6 @@ const Home = () => {
       id: 5,
       title: 'Diamond Collection',
       subtitle: 'Sparkling diamonds for special moments',
-      description: 'Exquisite diamond jewelry crafted with precision and elegance for your most precious occasions',
       image: 'https://images.unsplash.com/photo-1544376664-80b17f09d399?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
       gradient: 'from-blue-400 to-cyan-600'
     },
@@ -79,7 +74,6 @@ const Home = () => {
       id: 6,
       title: 'Pearl Elegance',
       subtitle: 'Timeless beauty of natural pearls',
-      description: 'Classic and sophisticated pearl jewelry that adds grace and elegance to every occasion',
       image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
       gradient: 'from-gray-400 to-gray-600'
     }
@@ -182,7 +176,7 @@ const Home = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     console.log('hello');
-    
+
     navigate(`${ROUTES.SHOPS}?search=${encodeURIComponent(searchQuery)}`);
     // if (searchQuery.trim()) {
     // }
@@ -379,6 +373,9 @@ const Home = () => {
                       <span className="flex items-center gap-3">
                         View Products
                         <span className="text-2xl">✨</span>
+
+
+
                       </span>
                     </Button>
                   </div>
@@ -446,27 +443,27 @@ const Home = () => {
 
           {/* Simple Search Bar */}
           <div className="max-w-4xl mx-auto mb-16">
-              <div className="relative bg-gray-50 rounded-2xl p-2 shadow-lg border border-gray-200 hover:border-yellow-300 transition-all duration-300">
-                <div className="flex items-center gap-4">
-                  <div className="flex-1 relative">
-                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                    <Input
-                      type="text"
-                      placeholder="Search for jewelry, gold, stores..."
-                      value={searchQuery}
-                      onFocus={handleSearch}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-12 pr-4 py-4 text-lg rounded-xl border-0 focus:ring-2 focus:ring-yellow-300 bg-transparent text-gray-900 placeholder-gray-500"
-                    />
-                  </div>
-                  <Button
-                    type="submit"
-                    className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-8 py-4 text-lg rounded-xl transition-all duration-300 transform hover:scale-105"
-                  >
-                    Search
-                  </Button>
+            <div className="relative bg-gray-50 rounded-2xl p-2 shadow-lg border border-gray-200 hover:border-yellow-300 transition-all duration-300">
+              <div className="flex items-center gap-4">
+                <div className="flex-1 relative">
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <Input
+                    type="text"
+                    placeholder="Search for jewelry, gold, stores..."
+                    value={searchQuery}
+                    onFocus={handleSearch}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-12 pr-4 py-4 text-lg rounded-xl border-0 focus:ring-2 focus:ring-yellow-300 bg-transparent text-gray-900 placeholder-gray-500"
+                  />
                 </div>
+                <Button
+                  type="submit"
+                  className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-8 py-4 text-lg rounded-xl transition-all duration-300 transform hover:scale-105"
+                >
+                  Search
+                </Button>
               </div>
+            </div>
           </div>
 
           {/* Simple Categories */}
@@ -758,42 +755,42 @@ const Home = () => {
         </div>
       </section>
 
-{/* Clean CTA Section */}
-<section className="py-20 bg-gradient-to-r from-yellow-500 to-yellow-600">
+      {/* Clean CTA Section */}
+      <section className="py-20 bg-gradient-to-r from-yellow-500 to-yellow-600">
 
-  <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-    <h2 className="text-5xl font-bold text-white mb-6">
-      Ready to Discover Your Perfect Jewelry?
-    </h2>
-    <p className="text-xl text-yellow-100 mb-8 max-w-2xl mx-auto">
-      Join thousands of satisfied customers who found their dream jewelry through Dibla
-    </p>
+        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+          <h2 className="text-5xl font-bold text-white mb-6">
+            Ready to Discover Your Perfect Jewelry?
+          </h2>
+          <p className="text-xl text-yellow-100 mb-8 max-w-2xl mx-auto">
+            Join thousands of satisfied customers who found their dream jewelry through Dibla
+          </p>
 
-    <div className="flex flex-col sm:flex-row gap-4 justify-center">
-      <Button
-        size="lg"
-        onClick={() => navigate('/shops')}
-        className="bg-white text-yellow-600 hover:bg-yellow-50 px-8 py-3 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-      >
-        Explore Stores Now
-      </Button>
-      <Button
-        size="lg"
-        variant="outline"
-        onClick={() => navigate('/register')}
-        className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-yellow-600 px-8 py-3 text-lg font-semibold rounded-full transition-all duration-300 transform hover:scale-105"
-      >
-        Join Us Now
-      </Button>
-    </div>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button
+              size="lg"
+              onClick={() => navigate('/shops')}
+              className="bg-white text-yellow-600 hover:bg-yellow-50 px-8 py-3 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+            >
+              Explore Stores Now
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              onClick={() => navigate('/register')}
+              className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-yellow-600 px-8 py-3 text-lg font-semibold rounded-full transition-all duration-300 transform hover:scale-105"
+            >
+              Join Us Now
+            </Button>
+          </div>
 
-    <div className="mt-8 text-yellow-100">
-      <p className="text-lg">
-        More than <span className="font-bold text-white">{stats.totalReviews || '1000'}</span> satisfied customers trust us
-      </p>
-    </div>
-  </div>
-</section>
+          <div className="mt-8 text-yellow-100">
+            <p className="text-lg">
+              More than <span className="font-bold text-white">{stats.totalReviews || '1000'}</span> satisfied customers trust us
+            </p>
+          </div>
+        </div>
+      </section>
 
 
       {/* Admin Access Section */}

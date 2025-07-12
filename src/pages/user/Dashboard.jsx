@@ -45,6 +45,7 @@ const Dashboard = () => {
 
   const [favorites, setFavorites] = useState([]);
   const [bookings, setBookings] = useState([]);
+  const [availableTimes, setAvailableTimes] = useState([]);
 
   // Check if user has access to dashboard
   useEffect(() => {
@@ -78,6 +79,54 @@ const Dashboard = () => {
         // Load bookings
         const bookingsData = await dashboardService.getBookings();
         setBookings(bookingsData.data || []);
+
+        // Load available times for shop owners
+        if (isShopOwner) {
+          try {
+            const response = await dashboardService.getAvailableTimes();
+            console.log('Dashboard - Shop owner available times FULL RESPONSE:', response);
+            console.log('Dashboard - Response data type:', typeof response.data);
+            console.log('Dashboard - Response data length:', response.data?.length);
+            console.log('Dashboard - Response data content:', response.data);
+
+            if (response && response.data) {
+              console.log('Setting availableTimes with response.data:', response.data);
+              setAvailableTimes(response.data);
+            } else if (Array.isArray(response)) {
+              console.log('Setting availableTimes with response array:', response);
+              setAvailableTimes(response);
+            } else {
+              console.log('No valid data found, setting empty array');
+              setAvailableTimes([]);
+            }
+          } catch (error) {
+            console.error('Error loading available times:', error);
+            setAvailableTimes([]);
+          }
+        } else {
+          // Load user bookings for regular users
+          try {
+            const response = await dashboardService.getUserBookings();
+            console.log('Dashboard - User bookings FULL RESPONSE:', response);
+            console.log('Dashboard - Response data type:', typeof response.data);
+            console.log('Dashboard - Response data length:', response.data?.length);
+            console.log('Dashboard - Response data content:', response.data);
+
+            if (response && response.data) {
+              console.log('Setting availableTimes with response.data:', response.data);
+              setAvailableTimes(response.data);
+            } else if (Array.isArray(response)) {
+              console.log('Setting availableTimes with response array:', response);
+              setAvailableTimes(response);
+            } else {
+              console.log('No valid data found, setting empty array');
+              setAvailableTimes([]);
+            }
+          } catch (error) {
+            console.error('Error loading user bookings:', error);
+            setAvailableTimes([]);
+          }
+        }
 
         // Load favorites (placeholder for now)
         // const favoritesData = await dashboardService.getFavorites();
@@ -237,21 +286,29 @@ const Dashboard = () => {
       <CardContent className="p-4">
         <div className="flex items-center justify-between">
           <div>
-            <h4 className="font-medium text-gray-900">{booking.shop}</h4>
+            <h4 className="font-medium text-gray-900">{booking.shop?.name || booking.shopName || 'متجر غير محدد'}</h4>
             <div className="flex items-center space-x-2 rtl:space-x-reverse text-sm text-gray-600 mt-1">
               <Calendar className="w-4 h-4" />
-              <span>{booking.date}</span>
+              <span>{booking.date || booking.appointmentDate || 'تاريخ غير محدد'}</span>
               <Clock className="w-4 h-4" />
-              <span>{booking.time}</span>
+              <span>{booking.time || booking.appointmentTime || 'وقت غير محدد'}</span>
             </div>
-            <p className="text-xs text-gray-500 mt-1">{booking.type}</p>
+            <p className="text-xs text-gray-500 mt-1">{booking.type || booking.serviceType || 'خدمة عامة'}</p>
           </div>
           <div className="flex flex-col items-end space-y-2">
-            <span className={`text-xs px-2 py-1 rounded-full ${booking.status === 'confirmed'
+            <span className={`text-xs px-2 py-1 rounded-full ${(booking.status === 'confirmed' || booking.status === 'approved')
               ? 'text-green-600 bg-green-100'
-              : 'text-yellow-600 bg-yellow-100'
+              : booking.status === 'pending'
+                ? 'text-yellow-600 bg-yellow-100'
+                : booking.status === 'cancelled'
+                  ? 'text-red-600 bg-red-100'
+                  : 'text-gray-600 bg-gray-100'
               }`}>
-              {booking.status}
+              {booking.status === 'confirmed' ? 'مؤكد' :
+                booking.status === 'approved' ? 'موافق عليه' :
+                  booking.status === 'pending' ? 'في الانتظار' :
+                    booking.status === 'cancelled' ? 'ملغي' :
+                      booking.status || 'غير محدد'}
             </span>
             <div className="flex space-x-1">
               {booking.status !== 'cancelled' && booking.status !== 'completed' && (
@@ -263,7 +320,7 @@ const Dashboard = () => {
                     size="sm"
                     variant="outline"
                     title="إلغاء الحجز"
-                    onClick={() => handleCancelBooking(booking.id)}
+                    onClick={() => handleCancelBooking(booking._id || booking.id)}
                   >
                     <Trash2 className="w-3 h-3" />
                   </Button>
@@ -419,7 +476,7 @@ const Dashboard = () => {
           <h2 className="text-2xl font-bold text-gray-900">المواعيد</h2>
           <p className="text-gray-600">مواعيدك المحجوزة</p>
         </div>
-        <Button onClick={() => navigate(ROUTES.BOOK_APPOINTMENT)}>
+        <Button onClick={() => navigate(ROUTES.SHOPS)}>
           <Plus className="w-4 h-4 mr-2" />
           حجز موعد جديد
         </Button>
@@ -428,7 +485,7 @@ const Dashboard = () => {
       <div className="space-y-4">
         {bookings.length > 0 ? (
           bookings.map((booking) => (
-            <BookingItem key={booking.id} booking={booking} />
+            <BookingItem key={booking._id || booking.id} booking={booking} />
           ))
         ) : (
           <div className="text-center py-12 text-gray-500">
@@ -511,17 +568,260 @@ const Dashboard = () => {
     </div>
   );
 
+  const AvailableTimesTab = () => {
+    const [newTimeSlot, setNewTimeSlot] = useState({
+      date: '',
+      time: '',
+      duration: 60 // مدة الموعد بالدقائق
+    });
+    const [isAdding, setIsAdding] = useState(false);
+
+
+
+
+
+
+
+    const handleAddTimeSlot = async () => {
+      if (!newTimeSlot.date || !newTimeSlot.time) {
+        alert('يرجى ملء جميع الحقول');
+        return;
+      }
+
+      try {
+        setIsAdding(true);
+
+        // استدعاء API لإضافة الموعد المتاح في قاعدة البيانات
+        const response = await dashboardService.addAvailableTime(newTimeSlot);
+        console.log('Add time slot response:', response);
+
+        // إضافة الموعد الجديد للقائمة
+        if (response && response.data) {
+          setAvailableTimes(prev => [...prev, response.data]);
+        } else if (response) {
+          setAvailableTimes(prev => [...prev, response]);
+        }
+
+        // مسح النموذج
+        setNewTimeSlot({ date: '', time: '', duration: 60 });
+
+        // رسالة نجاح
+        alert('تم إضافة الموعد بنجاح وحفظه في قاعدة البيانات');
+
+      } catch (error) {
+        console.error('Error adding time slot:', error);
+        alert(error.message || 'حدث خطأ في إضافة الموعد');
+      } finally {
+        setIsAdding(false);
+      }
+    };
+
+    const handleDeleteTimeSlot = async (timeId) => {
+      if (!confirm('هل أنت متأكد من حذف هذا الموعد؟')) return;
+
+      try {
+        // استدعاء API لحذف الموعد من قاعدة البيانات
+        await dashboardService.deleteAvailableTime(timeId);
+
+        // إزالة الموعد من القائمة
+        setAvailableTimes(prev => prev.filter(time => time._id !== timeId));
+
+        // رسالة نجاح
+        alert('تم حذف الموعد بنجاح من قاعدة البيانات');
+
+      } catch (error) {
+        console.error('Error deleting time slot:', error);
+        alert(error.message || 'حدث خطأ في حذف الموعد');
+      }
+    };
+
+
+
+    const getTomorrowDate = () => {
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      return tomorrow.toISOString().split('T')[0];
+    };
+
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900">
+              {isShopOwner ? 'إدارة المواعيد المتاحة' : 'مواعيدي المحجوزة'}
+            </h2>
+            <p className="text-gray-600">
+              {isShopOwner ? 'إدارة المواعيد المتاحة للحجز' : 'مواعيدك المحجوزة في المتاجر'}
+            </p>
+          </div>
+        </div>
+
+        {/* إضافة موعد جديد - للمالكين فقط */}
+        {isShopOwner && (
+          <Card>
+            <CardHeader>
+              <CardTitle>إضافة موعد متاح</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    التاريخ
+                  </label>
+                  <input
+                    type="date"
+                    min={getTomorrowDate()}
+                    value={newTimeSlot.date}
+                    onChange={(e) => setNewTimeSlot(prev => ({ ...prev, date: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    الوقت
+                  </label>
+                  <input
+                    type="time"
+                    value={newTimeSlot.time}
+                    onChange={(e) => setNewTimeSlot(prev => ({ ...prev, time: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    المدة (دقيقة)
+                  </label>
+                  <select
+                    value={newTimeSlot.duration}
+                    onChange={(e) => setNewTimeSlot(prev => ({ ...prev, duration: parseInt(e.target.value) }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                  >
+                    <option value={30}>30 دقيقة</option>
+                    <option value={60}>60 دقيقة</option>
+                    <option value={90}>90 دقيقة</option>
+                    <option value={120}>120 دقيقة</option>
+                  </select>
+                </div>
+                <div className="flex items-end">
+                  <Button
+                    onClick={handleAddTimeSlot}
+                    disabled={isAdding}
+                    className="w-full"
+                  >
+                    {isAdding ? 'جاري الإضافة...' : 'إضافة موعد'}
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* قائمة المواعيد */}
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              {isShopOwner ? `المواعيد المتاحة (${availableTimes.length})` : `مواعيدي المحجوزة (${availableTimes.length})`}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {(() => {
+              console.log('Rendering availableTimes:', availableTimes);
+              console.log('availableTimes length:', availableTimes.length);
+              console.log('availableTimes type:', typeof availableTimes);
+              return null;
+            })()}
+            {availableTimes.length > 0 ? (
+              <div className="space-y-3">
+                {availableTimes.map((timeSlot, index) => {
+                  console.log(`Rendering timeSlot ${index}:`, timeSlot);
+                  return (
+                    <div key={timeSlot._id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                      <div className="flex items-center space-x-4 rtl:space-x-reverse">
+                        {!isShopOwner && (
+                          <div className="flex items-center space-x-2 rtl:space-x-reverse">
+                            <Store className="w-4 h-4 text-gray-500" />
+                            <span className="font-medium">{timeSlot.shop?.name || 'متجر غير محدد'}</span>
+                          </div>
+                        )}
+                        <div className="flex items-center space-x-2 rtl:space-x-reverse">
+                          <Calendar className="w-4 h-4 text-gray-500" />
+                          <span className="font-medium">{timeSlot.date}</span>
+                        </div>
+                        <div className="flex items-center space-x-2 rtl:space-x-reverse">
+                          <Clock className="w-4 h-4 text-gray-500" />
+                          <span>{timeSlot.time}</span>
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          ({timeSlot.duration} دقيقة)
+                        </div>
+                        <span className={`text-xs px-2 py-1 rounded-full ${isShopOwner
+                          ? (timeSlot.isBooked ? 'text-red-600 bg-red-100' : 'text-green-600 bg-green-100')
+                          : 'text-blue-600 bg-blue-100'
+                          }`}>
+                          {isShopOwner
+                            ? (timeSlot.isBooked ? 'محجوز' : 'متاح')
+                            : (timeSlot.status === 'confirmed' ? 'مؤكد' : timeSlot.status || 'محجوز')
+                          }
+                        </span>
+                      </div>
+                      <div className="flex space-x-2 rtl:space-x-reverse">
+                        {isShopOwner && !timeSlot.isBooked && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleDeleteTimeSlot(timeSlot._id)}
+                            className="text-red-600 hover:text-red-700"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        )}
+                        {!isShopOwner && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleCancelBooking(timeSlot._id)}
+                            className="text-red-600 hover:text-red-700"
+                          >
+                            إلغاء الحجز
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="text-center py-8 text-gray-500">
+                <Clock className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+                <p>{isShopOwner ? 'لا توجد مواعيد متاحة' : 'لا توجد مواعيد محجوزة'}</p>
+                <p className="text-sm">
+                  {isShopOwner
+                    ? 'أضف مواعيد متاحة ليتمكن العملاء من حجزها'
+                    : 'ابدأ بحجز مواعيد من المتاجر المختلفة'
+                  }
+                </p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    );
+  };
+
   const tabs = [
     { id: 'overview', label: 'نظرة عامة', icon: BarChart3 },
     { id: 'favorites', label: 'المفضلة', icon: Heart },
     { id: 'bookings', label: 'المواعيد', icon: Calendar },
-    ...(isShopOwner ? [{ id: 'shop', label: 'إدارة المتجر', icon: Store }] : [])
+    { id: 'available-times', label: isShopOwner ? 'إدارة المواعيد' : 'مواعيدي', icon: Clock },
+    ...(isShopOwner ? [
+      { id: 'shop', label: 'إدارة المتجر', icon: Store }
+    ] : [])
   ];
 
   // Loading state
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center pt-20">
         <div className="text-center">
           <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-yellow-600" />
           <p className="text-gray-600">جاري تحميل البيانات...</p>
@@ -533,7 +833,7 @@ const Dashboard = () => {
   // Error state
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center pt-20">
         <div className="text-center">
           <div className="text-red-600 mb-4">❌</div>
           <p className="text-red-600 mb-4">{error}</p>
@@ -569,7 +869,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 pt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
@@ -611,6 +911,7 @@ const Dashboard = () => {
           {activeTab === 'favorites' && <FavoritesTab />}
           {activeTab === 'bookings' && <BookingsTab />}
           {activeTab === 'shop' && isShopOwner && <ShopOwnerTab />}
+          {activeTab === 'available-times' && <AvailableTimesTab />}
         </div>
       </div>
     </div>

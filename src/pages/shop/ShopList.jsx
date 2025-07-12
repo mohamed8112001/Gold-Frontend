@@ -64,8 +64,8 @@ const ShopList = () => {
   const loadShops = async () => {
     try {
       setIsLoading(true);
-      console.log('🏪 Loading shops for ShopList page...' , JSON.stringify(filters));
-      
+      console.log('🏪 Loading shops for ShopList page...', JSON.stringify(filters));
+
       const params = {
         ...filters,
         page: pagination.page,
@@ -73,17 +73,17 @@ const ShopList = () => {
       };
 
       const response = await shopService.getAllShops(params);
-      
+
       if (response.success) {
         const shopsData = response.data || [];
         console.log('🏪 Shops loaded:', shopsData.length);
-        
-        setShops(prevShops => 
-          pagination.page === 1 
-            ? shopsData 
+
+        setShops(prevShops =>
+          pagination.page === 1
+            ? shopsData
             : [...prevShops, ...shopsData]
         );
-        
+
         setPagination(prev => ({
           ...prev,
           total: response.meta?.total || 0
@@ -93,7 +93,7 @@ const ShopList = () => {
         setShops([]);
       }
     } catch (error) {
-      console.error('❌ Error loading shops:', error);
+      console.error(' Error loading shops:', error);
       setShops([]);
     } finally {
       setIsLoading(false);
@@ -371,10 +371,10 @@ const ShopList = () => {
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -100 }}
       transition={{ duration: 0.5 }}
-      className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-yellow-50 pt-20"
+      className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-yellow-50 "
       dir="ltr"
     >
-      <div className="relative bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-700 overflow-hidden">
+      <div className="relative bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-700 overflow-hidden mt-4">
         <div className="absolute inset-0 bg-black/10"></div>
         <div className="absolute top-0 left-0 w-full h-full">
           <div className="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl"></div>
@@ -382,7 +382,7 @@ const ShopList = () => {
           <div className="absolute bottom-10 left-1/3 w-40 h-40 bg-white/5 rounded-full blur-2xl"></div>
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 ">
           <div className="text-center mb-12">
             <h1 className="text-6xl md:text-7xl font-black text-white mb-6 leading-tight">
               <span className="bg-gradient-to-r from-white to-yellow-100 bg-clip-text text-transparent drop-shadow-2xl m-10">
