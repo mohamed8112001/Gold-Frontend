@@ -14,33 +14,33 @@ export const shopService = {
    * @param {AbortSignal} [signal] - Optional abort controller signal
    * @returns {Promise<{success: boolean, data?: any, message?: string, meta?: Object}>}
    */
-  getAllShops: async function(params = {}, signal = null) {
+  getAllShops: async function (params = {}, signal = null) {
     try {
       // Clean and normalize parameters
       const cleanParams = {
         // Convert rating to number if exists
         ...(params.rating && { rating: Number(params.rating) }),
         // Convert specialties array to string if needed
-        ...(params.specialties && { 
-          specialties: Array.isArray(params.specialties) 
-            ? params.specialties.join(',') 
-            : params.specialties 
+        ...(params.specialties && {
+          specialties: Array.isArray(params.specialties)
+            ? params.specialties.join(",")
+            : params.specialties,
         }),
         // Copy other params
-        ...params
+        ...params,
       };
-      
+
       // Remove undefined values
-      Object.keys(cleanParams).forEach(key => 
-        cleanParams[key] === undefined && delete cleanParams[key]
+      Object.keys(cleanParams).forEach(
+        (key) => cleanParams[key] === undefined && delete cleanParams[key]
       );
 
       const config = {
         params: cleanParams,
-        ...(signal && { signal })
+        ...(signal && { signal }),
       };
 
-      const response = await api.get('/shop', config);
+      const response = await api.get("/shop", config);
 
       return {
         success: true,
@@ -48,29 +48,30 @@ export const shopService = {
         meta: {
           total: response.data.results,
           page: params.page || 1,
-          limit: params.limit || response.data.data.length
-        }
+          limit: params.limit || response.data.data.length,
+        },
       };
     } catch (error) {
       // Handle abort errors differently
-      if (error.name === 'AbortError') {
-        return { 
-          success: false, 
-          message: 'Request cancelled',
-          isAborted: true
+      if (error.name === "AbortError") {
+        return {
+          success: false,
+          message: "Request cancelled",
+          isAborted: true,
         };
       }
 
       // Extract error message from different possible locations
-      const errorMessage = error.response?.data?.message || 
-                         error.message || 
-                         'Failed to fetch shops';
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to fetch shops";
 
       return {
         success: false,
         message: errorMessage,
         status: error.response?.status,
-        error: error
+        error: error,
       };
     }
   },
@@ -79,7 +80,7 @@ export const shopService = {
   _shopCache: {
     data: null,
     timestamp: 0,
-    paramsKey: ''
+    paramsKey: "",
   },
 
   /**
@@ -87,27 +88,29 @@ export const shopService = {
    * @param {Object} params - Same as getAllShops
    * @returns {Promise} Cached or fresh data
    */
-  getShopsCached: async function(params = {}) {
+  getShopsCached: async function (params = {}) {
     const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
     const now = Date.now();
     const paramsKey = JSON.stringify(params);
 
     // Return cached data if available and fresh
-    if (this._shopCache.data && 
-        this._shopCache.paramsKey === paramsKey &&
-        (now - this._shopCache.timestamp) < CACHE_DURATION) {
+    if (
+      this._shopCache.data &&
+      this._shopCache.paramsKey === paramsKey &&
+      now - this._shopCache.timestamp < CACHE_DURATION
+    ) {
       return this._shopCache.data;
     }
 
     // Otherwise fetch fresh data
     const result = await this.getAllShops(params);
-    
+
     // Only cache successful responses
     if (result.success) {
       this._shopCache = {
         data: result,
         timestamp: now,
-        paramsKey: paramsKey
+        paramsKey: paramsKey,
       };
     }
 
@@ -124,6 +127,11 @@ export const shopService = {
         error.response?.data?.message || "Failed to fetch shop details"
       );
     }
+  },
+
+  // Alias for getShop
+  getShopById: async (shopId) => {
+    return shopService.getShop(shopId);
   },
 
   // Get public shop by ID (no authentication required - only approved shops)
@@ -143,14 +151,14 @@ export const shopService = {
     try {
       const response = await api.post(`/shop/create`, shopData, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'multipart/form-data'
-        }
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "multipart/form-data",
+        },
       });
       return response.data;
     } catch (error) {
       console.log(error);
-      
+
       throw new Error(JSON.stringify(error));
     }
   },

@@ -33,19 +33,24 @@ const BookAppointment = () => {
       setError(null);
 
       // Load shop details
-      const shopResponse = await shopService.getShopById(shopId);
+      const shopResponse = await shopService.getShop(shopId);
       console.log('Shop details:', shopResponse);
       setShop(shopResponse.data || shopResponse);
 
       // Load available times for this shop
       const timesResponse = await dashboardService.getShopAvailableTimes(shopId);
-      console.log('Available times:', timesResponse);
+      console.log('📅 Available times response:', timesResponse);
+      console.log('📅 Available times response type:', typeof timesResponse);
+      console.log('📅 Available times response.data:', timesResponse?.data);
 
       if (timesResponse && timesResponse.data) {
+        console.log('📅 Setting available times from response.data:', timesResponse.data);
         setAvailableTimes(timesResponse.data);
       } else if (Array.isArray(timesResponse)) {
+        console.log('📅 Setting available times from response array:', timesResponse);
         setAvailableTimes(timesResponse);
       } else {
+        console.log('📅 No available times found, setting empty array');
         setAvailableTimes([]);
       }
 
@@ -71,13 +76,23 @@ const BookAppointment = () => {
         duration: timeSlot.duration
       };
 
-      await dashboardService.bookAvailableTime(bookingData);
+      console.log('🔄 Booking data being sent:', bookingData);
+      console.log('🔄 Time slot details:', timeSlot);
+      console.log('🔄 Shop ID:', shopId);
+
+      const response = await dashboardService.bookAvailableTime(bookingData);
+      console.log('✅ Booking response:', response);
 
       alert('تم حجز الموعد بنجاح! يمكنك مراجعته في الداشبورد');
       navigate('/dashboard');
 
     } catch (error) {
-      console.error('Error booking appointment:', error);
+      console.error('❌ Error booking appointment:', error);
+      console.error('❌ Error details:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status
+      });
       alert(error.message || 'حدث خطأ في حجز الموعد');
     } finally {
       setBooking(false);

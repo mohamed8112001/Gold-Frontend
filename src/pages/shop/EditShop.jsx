@@ -8,6 +8,7 @@ import { ArrowLeft, Upload, X, Plus } from 'lucide-react';
 import { shopService } from '../../services/shopService.js';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES } from '../../utils/constants.js';
+import MapPicker from '../../components/ui/MapPicker.jsx';
 
 const EditShop = () => {
     const navigate = useNavigate();
@@ -23,7 +24,9 @@ const EditShop = () => {
         workingHours: '',
         specialties: [''],
         image: null,
-        gallery: []
+        gallery: [],
+        latitude: null,
+        longitude: null
     });
     const [imagePreview, setImagePreview] = useState(null);
     const [galleryPreviews, setGalleryPreviews] = useState([]);
@@ -57,6 +60,14 @@ const EditShop = () => {
                 }
             }
 
+            // Extract location data from GeoJSON format
+            let latitude = null;
+            let longitude = null;
+            if (shopData.location && shopData.location.coordinates) {
+                longitude = shopData.location.coordinates[0];
+                latitude = shopData.location.coordinates[1];
+            }
+
             setShop(shopData);
             setFormData({
                 name: shopData.name || '',
@@ -68,7 +79,9 @@ const EditShop = () => {
                     ? shopData.specialties
                     : [''],
                 image: null,
-                gallery: []
+                gallery: [],
+                latitude: latitude,
+                longitude: longitude
             });
 
             if (shopData.image) {
@@ -120,6 +133,14 @@ const EditShop = () => {
                 specialties: newSpecialties
             }));
         }
+    };
+
+    const handleLocationChange = ({ latitude, longitude }) => {
+        setFormData(prev => ({
+            ...prev,
+            latitude,
+            longitude
+        }));
     };
 
     const handleImageChange = (e) => {
@@ -183,8 +204,16 @@ const EditShop = () => {
                 specialties: formData.specialties.filter(specialty => specialty.trim() !== '')
             };
 
-            // Remove file objects for API call (handle file upload separately)
-            const { image, gallery, ...shopData } = updateData;
+            // Remove file objects and location fields for API call
+            const { image, gallery, latitude, longitude, ...shopData } = updateData;
+
+            // Add location data in GeoJSON format if coordinates exist
+            if (latitude && longitude) {
+                shopData.location = {
+                    type: "Point",
+                    coordinates: [longitude, latitude] // [longitude, latitude] for GeoJSON
+                };
+            }
 
             console.log('Updating shop with data:', shopData);
 
@@ -242,9 +271,10 @@ const EditShop = () => {
 
                 <form onSubmit={handleSubmit}>
                     <Tabs defaultValue="basic" className="space-y-6">
-                        <TabsList className="grid w-full grid-cols-3">
+                        <TabsList className="grid w-full grid-cols-4">
                             <TabsTrigger value="basic">المعلومات الأساسية</TabsTrigger>
                             <TabsTrigger value="details">التفاصيل</TabsTrigger>
+                            <TabsTrigger value="location">الموقع</TabsTrigger>
                             <TabsTrigger value="media">الصور</TabsTrigger>
                         </TabsList>
 
@@ -373,6 +403,17 @@ const EditShop = () => {
                                     </div>
                                 </CardContent>
                             </Card>
+                        </TabsContent>
+
+                        <TabsContent value="location" className="space-y-6">
+                            <MapPicker
+                                latitude={formData.latitude || 30.0444}
+                                longitude={formData.longitude || 31.2357}
+                                onLocationChange={handleLocationChange}
+                                height="400px"
+                                showSearch={true}
+                                showCurrentLocation={true}
+                            />
                         </TabsContent>
 
                         <TabsContent value="media" className="space-y-6">

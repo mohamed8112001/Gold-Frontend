@@ -394,6 +394,17 @@ const ManageShop = () => {
                                         <p className="text-sm font-medium text-gray-600">الهاتف</p>
                                         <p className="text-gray-900">{shop?.phone}</p>
                                     </div>
+                                    <div>
+                                        <p className="text-sm font-medium text-gray-600">الموقع</p>
+                                        <div className="flex items-center gap-2">
+                                            <MapPin className={`w-4 h-4 ${shop?.location && shop?.location.coordinates ? 'text-green-500' : 'text-gray-400'}`} />
+                                            <p className="text-gray-900">
+                                                {shop?.location && shop?.location.coordinates
+                                                    ? 'تم تحديد الموقع على الخريطة'
+                                                    : 'لم يتم تحديد الموقع'}
+                                            </p>
+                                        </div>
+                                    </div>
                                 </CardContent>
                             </Card>
 
