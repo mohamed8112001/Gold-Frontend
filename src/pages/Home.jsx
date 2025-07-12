@@ -183,105 +183,198 @@ const Home = () => {
   };
 
 
-  const ShopCard = ({ shop }) => (
-    <Card className="group relative overflow-hidden bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer transform hover:-translate-y-2 border-0">
-      {/* Background Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-yellow-50/50 via-transparent to-yellow-100/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+  const ShopCard = ({ shop }) => {
+    // Debug shop image
+    console.log('🖼️ Home Shop image debug:', {
+      shopName: shop.name,
+      logoUrl: shop.logoUrl,
+      image: shop.image,
+      imageUrl: shop.imageUrl,
+      fullImageUrl: shop.logoUrl ? `${import.meta.env.VITE_API_BASE_URL}/shop-image/${shop.logoUrl}` : 'No image'
+    });
 
-      {/* Image Section */}
-      <div className="relative overflow-hidden rounded-t-3xl">
-        <img
-          src={shop.image || 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'}
-          alt={shop.name}
-          className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-700"
-        />
+    return (
+      <Card
+        className="group relative overflow-hidden bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer transform hover:-translate-y-2 border-0"
+        onClick={() => {
+          const shopId = shop._id || shop.id;
+          if (shopId) {
+            navigate(ROUTES.SHOP_DETAILS(shopId));
+          }
+        }}
+      >
+        {/* Background Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-yellow-50/50 via-transparent to-yellow-100/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-        {/* Gradient Overlay on Image */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
-
-        {/* Favorite Button */}
-        <div className="absolute top-4 right-4">
-          <Button
-            size="sm"
-            variant="ghost"
-            className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm hover:bg-white hover:scale-110 transition-all duration-300 shadow-lg border-0 p-0"
-          >
-            <Heart className="w-5 h-5 text-gray-600 hover:text-red-500 transition-colors duration-300" />
-          </Button>
-        </div>
-
-        {/* Verified Badge */}
-        <div className="absolute top-4 left-4">
-          <div className="bg-gradient-to-r from-green-500 to-green-600 text-white text-sm px-4 py-2 rounded-full shadow-lg backdrop-blur-sm border border-white/20">
-            <span className="font-semibold">✓ Verified</span>
-          </div>
-        </div>
-
-        {/* Rating Badge */}
-        <div className="absolute bottom-4 right-4">
-          <div className="flex items-center space-x-2 bg-white/95 backdrop-blur-sm px-3 py-2 rounded-full shadow-lg">
-            <Star className="w-4 h-4 text-yellow-500 fill-current" />
-            <span className="text-sm font-bold text-gray-800">{shop.rating}</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Content Section */}
-      <CardContent className="p-6 relative z-10">
-        {/* Store Name */}
-        <h3 className="font-bold text-xl text-gray-900 mb-3 line-clamp-1 group-hover:text-yellow-600 transition-colors duration-300">
-          {shop.name}
-        </h3>
-
-        {/* Location */}
-        <div className="flex items-center text-gray-600 mb-4">
-          <div className="w-5 h-5 bg-gray-100 rounded-full flex items-center justify-center mr-3">
-            <MapPin className="w-3 h-3" />
-          </div>
-          <span className="text-sm font-medium line-clamp-1">{shop.area}</span>
-        </div>
-
-        {/* Specialties */}
-        <div className="flex flex-wrap gap-2 mb-6">
-          {shop.specialties?.slice(0, 2).map((specialty, index) => (
-            <span
-              key={index}
-              className="text-xs bg-gradient-to-r from-yellow-100 to-yellow-200 text-yellow-800 px-3 py-1.5 rounded-full font-medium border border-yellow-200"
-            >
-              {specialty}
-            </span>
-          ))}
-          {shop.specialties?.length > 2 && (
-            <span className="text-xs text-gray-500 bg-gray-100 px-3 py-1.5 rounded-full font-medium">
-              +{shop.specialties.length - 2} more
-            </span>
+        {/* Enhanced Image Section */}
+        <div className="relative overflow-hidden rounded-t-3xl">
+          {/* Try to show real shop image first */}
+          {shop.logoUrl && shop.logoUrl !== 'undefined' && shop.logoUrl !== '' && shop.logoUrl !== null ? (
+            <img
+              src={`${import.meta.env.VITE_API_BASE_URL}/shop-image/${shop.logoUrl}`}
+              alt={shop.name}
+              className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-700"
+              onError={(e) => {
+                console.log('❌ Home image failed to load:', e.target.src);
+                // Hide the image and show fallback
+                e.target.style.display = 'none';
+                const fallback = e.target.parentElement.querySelector('.fallback-image');
+                if (fallback) {
+                  fallback.style.display = 'flex';
+                }
+              }}
+              onLoad={(e) => {
+                console.log('✅ Home image loaded successfully:', e.target.src);
+              }}
+            />
+          ) : (
+            console.log('🖼️ No logoUrl for home shop:', shop.name, 'logoUrl:', shop.logoUrl)
           )}
-        </div>
 
-        {/* Action Section */}
-        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-          <Button
-            size="lg"
-            className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-6 py-3 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 font-semibold"
-            onClick={() => navigate(ROUTES.SHOP_DETAILS(shop._id))}
+          {/* Premium fallback image */}
+          <div
+            className={`fallback-image absolute inset-0 bg-gradient-to-br from-yellow-100 via-amber-50 to-yellow-200 flex items-center justify-center group-hover:from-yellow-200 group-hover:via-amber-100 group-hover:to-yellow-300 transition-all duration-700 ${shop.logoUrl && shop.logoUrl !== 'undefined' && shop.logoUrl !== '' && shop.logoUrl !== null ? 'hidden' : 'flex'}`}
           >
-            <span className="flex items-center gap-2">
-              View Store
-              <Eye className="w-4 h-4" />
-            </span>
-          </Button>
-
-          <div className="text-right">
-            <div className="text-sm font-semibold text-gray-800">{shop.reviews}</div>
-            <div className="text-xs text-gray-500">reviews</div>
+            <div className="text-center transform group-hover:scale-110 transition-transform duration-700">
+              <div className="relative mb-4">
+                <div className="text-7xl mb-2 filter drop-shadow-2xl">💍</div>
+                <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/30 to-orange-400/30 rounded-full blur-xl"></div>
+              </div>
+              <div className="text-lg text-gray-800 font-bold px-4 py-2 bg-white/90 rounded-xl backdrop-blur-md shadow-lg border border-yellow-300">
+                {shop.name}
+              </div>
+              <div className="mt-2 text-sm text-gray-600 font-semibold bg-yellow-100 px-3 py-1 rounded-full">Jewelry Store</div>
+            </div>
+            {/* Decorative elements */}
+            <div className="absolute top-4 left-4 w-3 h-3 bg-yellow-400 rounded-full opacity-60 animate-ping"></div>
+            <div className="absolute bottom-4 right-4 w-2 h-2 bg-orange-400 rounded-full opacity-40 animate-pulse"></div>
           </div>
-        </div>
-      </CardContent>
 
-      {/* Hover Effect Border */}
-      <div className="absolute inset-0 rounded-3xl border-2 border-transparent group-hover:border-yellow-200 transition-all duration-500"></div>
-    </Card>
-  );
+          {/* Enhanced Gradient Overlay on Image */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+          {/* Favorite Button */}
+          <div className="absolute top-4 right-4">
+            <Button
+              size="sm"
+              variant="ghost"
+              className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm hover:bg-white hover:scale-110 transition-all duration-300 shadow-lg border-0 p-0"
+            >
+              <Heart className="w-5 h-5 text-gray-600 hover:text-red-500 transition-colors duration-300" />
+            </Button>
+          </div>
+
+          {/* Verified Badge */}
+          <div className="absolute top-4 left-4">
+            <div className="bg-gradient-to-r from-green-500 to-green-600 text-white text-sm px-4 py-2 rounded-full shadow-lg backdrop-blur-sm border border-white/20">
+              <span className="font-semibold">✓ Verified</span>
+            </div>
+          </div>
+
+          {/* Premium Badge */}
+          {/* <div className="absolute bottom-4 right-4">
+            <div className="flex items-center space-x-2 bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-4 py-2 rounded-full shadow-xl border border-yellow-400/50">
+              <span className="text-sm font-bold">Premium</span>
+            </div>
+          </div> */}
+        </div>
+
+        {/* Enhanced Content Section */}
+        <CardContent className="p-8 relative z-10">
+          {/* Store Name */}
+          <h3 className="font-bold text-2xl text-gray-900 mb-4 line-clamp-1 group-hover:text-yellow-600 transition-colors duration-300">
+            {shop.name || 'Jewelry Store'}
+          </h3>
+
+          {/* Location */}
+          <div className="flex items-center text-gray-600 mb-5">
+            <div className="w-6 h-6 bg-gradient-to-r from-blue-100 to-blue-200 rounded-full flex items-center justify-center mr-3">
+              <MapPin className="w-4 h-4 text-blue-600" />
+            </div>
+            <span className="text-base font-semibold line-clamp-1 text-gray-700">{shop.address || shop.area || shop.city || 'Location not specified'}</span>
+          </div>
+
+          {/* Description */}
+          {/* {shop.description && (
+            <div className="mb-5">
+              <p className="text-sm text-gray-600 leading-relaxed line-clamp-2 bg-gray-50 p-3 rounded-lg">
+                {shop.description}
+              </p>
+            </div>
+          )} */}
+
+          {/* Specialties */}
+          {/* <div className="flex flex-wrap gap-3 mb-6">
+            {shop.specialties?.slice(0, 2).map((specialty, index) => (
+              <span
+                key={index}
+                className="text-sm bg-gradient-to-r from-yellow-100 to-yellow-200 text-yellow-800 px-4 py-2 rounded-full font-bold border border-yellow-300 shadow-sm hover:shadow-md transition-shadow duration-200"
+              >
+                ✨ {specialty}
+              </span>
+            ))}
+            {shop.specialties?.length > 2 && (
+              <span className="text-sm text-blue-600 bg-gradient-to-r from-blue-100 to-blue-200 px-4 py-2 rounded-full font-bold border border-blue-300 shadow-sm">
+                +{shop.specialties.length - 2} More
+              </span>
+            )}
+          </div> */}
+
+          {/* Enhanced Action Section */}
+          <div className="pt-6">
+            <div className="flex flex-col gap-3">
+              {/* Main Visit Button */}
+              <Button
+                size="lg"
+                className="w-full bg-gradient-to-r from-yellow-500 via-yellow-600 to-orange-500 hover:from-yellow-600 hover:via-orange-500 hover:to-orange-600 text-white px-6 py-4 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 font-bold text-lg border border-yellow-400/50"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const shopId = shop._id || shop.id;
+                  if (shopId) {
+                    navigate(ROUTES.SHOP_DETAILS(shopId));
+                  }
+                }}
+              >
+                <span className="flex items-center justify-center gap-3">
+                  <Eye className="w-5 h-5" />
+                  Visit Store
+                </span>
+              </Button>
+
+              {/* Secondary Actions */}
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="md"
+                  className="flex-1 border-2 border-gray-300 hover:border-blue-500 hover:bg-blue-50 text-gray-700 hover:text-blue-700 py-3 rounded-xl font-semibold transition-all duration-300"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                >
+                  <Phone className="w-4 h-4 mr-2" />
+                  Call
+                </Button>
+                <Button
+                  variant="outline"
+                  size="md"
+                  className="flex-1 border-2 border-gray-300 hover:border-green-500 hover:bg-green-50 text-gray-700 hover:text-green-700 py-3 rounded-xl font-semibold transition-all duration-300"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                >
+                  <MapPin className="w-4 h-4 mr-2" />
+                  Map
+                </Button>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+
+        {/* Hover Effect Border */}
+        <div className="absolute inset-0 rounded-3xl border-2 border-transparent group-hover:border-yellow-200 transition-all duration-500"></div>
+      </Card>
+    );
+  };
 
   return (
     <motion.div

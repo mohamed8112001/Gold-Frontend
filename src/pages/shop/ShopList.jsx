@@ -193,13 +193,12 @@ const ShopList = () => {
   };
 
   const ShopCard = ({ shop, isListView = false }) => {
-    const shopName = shop.name || 'متجر غير محدد';
-    const shopAddress = shop.address || shop.area || shop.city || 'العنوان غير محدد';
-    const shopPhone = shop.phone || shop.whatsapp || 'غير محدد';
-    const shopDescription = shop.description || 'لا يوجد وصف';
-    const shopRating = shop.rating || shop.averageRating || 0;
+    const shopName = shop.name || 'Unnamed Shop';
+    const shopAddress = shop.address || shop.area || shop.city || 'Address not specified';
+    const shopPhone = shop.phone || shop.whatsapp || 'Not specified';
+    const shopDescription = shop.description || 'No description available';
     const shopSpecialties = shop.specialties || [];
-    const shopWorkingHours = shop.workingHours || '9:00 ص - 9:00 م';
+    const shopWorkingHours = shop.workingHours || '9:00 AM - 9:00 PM';
 
     // Debug shop image
     console.log('🖼️ Shop image debug:', {
@@ -212,7 +211,7 @@ const ShopList = () => {
 
     return (
       <Card
-        className={`group hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 cursor-pointer border-0 bg-white rounded-3xl shadow-lg h-full flex flex-col ${isListView ? 'lg:flex-row lg:h-auto' : ''}`}
+        className={`group relative overflow-hidden hover:shadow-2xl hover:-translate-y-4 transition-all duration-700 cursor-pointer border-0 bg-white rounded-3xl shadow-xl h-full flex flex-col ${isListView ? 'lg:flex-row lg:h-auto' : ''} backdrop-blur-sm hover:shadow-yellow-200/25`}
         onClick={() => {
           const shopId = shop._id || shop.id;
           console.log('Navigating to shop:', shopId, shop.name);
@@ -223,113 +222,153 @@ const ShopList = () => {
           }
         }}
       >
-        <div className={`relative overflow-hidden ${isListView ? 'lg:w-64 lg:flex-shrink-0' : 'w-full'}`}>
-          {/* Try to show shop image */}
-          {shop.logoUrl && shop.logoUrl !== 'undefined' && shop.logoUrl !== '' && shop.logoUrl !== null ? (
-            <img
-              src={`${import.meta.env.VITE_API_BASE_URL}/shop-image/${shop.logoUrl}`}
-              alt={shopName}
-              className={`w-full object-cover group-hover:scale-105 transition-transform duration-500 ${isListView ? 'h-full lg:h-48' : 'h-52'}`}
-              onError={(e) => {
-                console.log('❌ Image failed to load:', e.target.src);
-                // Hide the image and show fallback
-                e.target.style.display = 'none';
-                const fallback = e.target.parentElement.querySelector('.fallback-image');
-                if (fallback) {
-                  fallback.style.display = 'flex';
-                }
-              }}
-              onLoad={(e) => {
-                console.log('✅ Image loaded successfully:', e.target.src);
-              }}
-            />
-          ) : (
-            console.log('🖼️ No logoUrl for shop:', shopName, 'logoUrl:', shop.logoUrl)
-          )}
+        {/* Enhanced gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-yellow-50/30 via-orange-50/20 to-yellow-100/40 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none z-10"></div>
 
-          {/* Default fallback image - always present but hidden when image loads */}
-          <div
-            className={`fallback-image bg-gradient-to-br from-yellow-100 to-yellow-200 flex items-center justify-center group-hover:from-yellow-200 group-hover:to-yellow-300 transition-colors duration-300 ${isListView ? 'h-full lg:h-48' : 'h-52'} ${shop.logoUrl && shop.logoUrl !== 'undefined' && shop.logoUrl !== '' && shop.logoUrl !== null ? 'hidden' : 'flex'}`}
-          >
-            <div className="text-center">
-              <div className="text-5xl mb-2">💍</div>
-              <div className="text-xs text-gray-600 font-medium px-2">{shopName}</div>
+        {/* Animated border glow */}
+        <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-yellow-400/20 via-orange-400/20 to-yellow-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-sm -z-10"></div>
+        <div className={`relative overflow-hidden rounded-t-3xl ${isListView ? 'lg:w-80 lg:flex-shrink-0 lg:rounded-l-3xl lg:rounded-tr-none' : 'w-full'} group-hover:rounded-t-2xl transition-all duration-700`}>
+          {/* Premium image container with enhanced effects */}
+          <div className="relative w-full h-96 md:h-80 lg:h-72 overflow-hidden">
+            {shop.logoUrl && shop.logoUrl !== 'undefined' && shop.logoUrl !== '' && shop.logoUrl !== null ? (
+              <>
+                <img
+                  src={`${import.meta.env.VITE_API_BASE_URL}/shop-image/${shop.logoUrl}`}
+                  alt={shopName}
+                  className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-1000 ease-out"
+                  onError={(e) => {
+                    console.log('❌ Image failed to load:', e.target.src);
+                    e.target.style.display = 'none';
+                    const fallback = e.target.parentElement.querySelector('.fallback-image');
+                    if (fallback) {
+                      fallback.style.display = 'flex';
+                    }
+                  }}
+                  onLoad={(e) => {
+                    console.log('✅ Image loaded successfully:', e.target.src);
+                  }}
+                />
+                {/* Image overlay effects */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 via-transparent to-orange-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+              </>
+            ) : (
+              console.log('🖼️ No logoUrl for shop:', shopName, 'logoUrl:', shop.logoUrl)
+            )}
+
+            {/* Premium fallback image with luxury design */}
+            <div
+              className={`fallback-image absolute inset-0 bg-gradient-to-br from-yellow-100 via-amber-50 to-yellow-200 flex items-center justify-center group-hover:from-yellow-200 group-hover:via-amber-100 group-hover:to-yellow-300 transition-all duration-700 ${shop.logoUrl && shop.logoUrl !== 'undefined' && shop.logoUrl !== '' && shop.logoUrl !== null ? 'hidden' : 'flex'}`}
+            >
+              <div className="text-center transform group-hover:scale-110 transition-transform duration-700">
+                <div className="relative mb-6">
+                  <div className="text-9xl mb-2 filter drop-shadow-2xl">💍</div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/30 to-orange-400/30 rounded-full blur-2xl"></div>
+                </div>
+                <div className="text-xl text-gray-800 font-bold px-6 py-3 bg-white/90 rounded-2xl backdrop-blur-md shadow-xl border-2 border-yellow-300 mb-3">
+                  {shopName}
+                </div>
+                <div className="text-base text-gray-600 font-bold bg-yellow-100 px-4 py-2 rounded-full">Premium Jewelry Store</div>
+              </div>
+              {/* Enhanced decorative elements */}
+              <div className="absolute top-6 left-6 w-4 h-4 bg-yellow-400 rounded-full opacity-70 animate-ping"></div>
+              <div className="absolute bottom-6 right-6 w-3 h-3 bg-orange-400 rounded-full opacity-50 animate-pulse"></div>
+              <div className="absolute top-1/3 left-4 w-2 h-2 bg-yellow-500 rounded-full opacity-60 animate-bounce"></div>
+              <div className="absolute bottom-1/3 right-4 w-2 h-2 bg-amber-500 rounded-full opacity-60 animate-bounce" style={{ animationDelay: '0.5s' }}></div>
             </div>
           </div>
 
-          {/* Favorite button overlay */}
-          <div className="absolute top-2 right-2">
+          {/* Image overlay gradient */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+          {/* Premium favorite button with enhanced design */}
+          <div className="absolute top-5 right-5 z-20">
             <Button
-              size="sm"
+              size="lg"
               variant="ghost"
-              className="bg-white/80 hover:bg-white"
+              className="bg-white/95 hover:bg-white backdrop-blur-md rounded-full w-14 h-14 p-0 shadow-2xl opacity-0 group-hover:opacity-100 transition-all duration-500 hover:scale-125 border-2 border-white/70"
               onClick={(e) => {
                 e.stopPropagation();
               }}
             >
-              <Heart className="w-4 h-4" />
+              <Heart className="w-6 h-6 text-red-500 hover:text-red-600 transition-colors duration-200" />
             </Button>
+          </div>
+
+          {/* Premium status badge */}
+          <div className="absolute top-5 left-5 z-20">
+            <div className="bg-gradient-to-r from-green-500 to-green-600 text-white text-sm font-bold px-5 py-3 rounded-full shadow-2xl opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-3 group-hover:translate-y-0 border-2 border-green-400/50">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
+                <span className="text-sm font-bold">Open Now</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <CardContent className={`p-6 flex-1 flex flex-col ${isListView ? 'lg:justify-center' : ''}`}>
-          <div className="flex items-start justify-between mb-3">
+        <CardContent className={`p-10 flex-1 flex flex-col ${isListView ? 'lg:justify-center' : ''} relative z-20`}>
+          <div className="flex items-start justify-between mb-6">
             <div className="flex-1">
-              <h3 className="font-bold text-xl text-gray-900 mb-2 line-clamp-2 leading-tight">{shopName}</h3>
-              <div className="flex items-center text-sm text-gray-600 mb-2">
-                <MapPin className={`w-4 h-4 mr-2 ${shop.location && shop.location.coordinates ? 'text-green-500' : 'text-gray-400'}`} />
-                <span className="line-clamp-1">{shopAddress}</span>
-                {shop.location && shop.location.coordinates && (
-                  <span className="ml-2 text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
-                    موقع محدد
+              <h3 className="font-bold text-3xl text-gray-900 mb-5 line-clamp-2 leading-tight group-hover:text-yellow-700 transition-colors duration-300 group-hover:scale-105 transform origin-left">
+                {shopName}
+              </h3>
+              <div className="flex items-center text-base text-gray-600 ">
+                <MapPin className={`w-6 h-6 mr-4 ${shop.location && shop.location.coordinates ? 'text-green-500' : 'text-gray-400'}`} />
+                <span className="line-clamp-1 font-semibold text-gray-700">{shopAddress}</span>
+                {/* {shop.location && shop.location.coordinates && (
+                  <span className="ml-4 text-sm bg-gradient-to-r from-green-100 to-green-200 text-green-700 px-4 py-2 rounded-full font-bold shadow-md border border-green-300/50">
+                    ✓ Verified Location
                   </span>
-                )}
+                )} */}
               </div>
               {isListView && (
-                <div className="mt-2 space-y-1">
-                  <div className="flex items-center text-sm text-gray-600">
-                    <Phone className="w-4 h-4 mr-1" />
-                    <span>{shopPhone}</span>
+                <div className="mt-5 space-y-4">
+                  <div className="flex items-center text-base text-gray-700 bg-blue-50 px-4 py-3 rounded-xl">
+                    <Phone className="w-6 h-6 mr-4 text-blue-500" />
+                    <span className="font-bold">{shopPhone}</span>
                   </div>
-                  <div className="flex items-center text-sm text-gray-600">
-                    <Clock className="w-4 h-4 mr-1" />
-                    <span>{shopWorkingHours}</span>
+                  <div className="flex items-center text-base text-gray-700 bg-purple-50 px-4 py-3 rounded-xl">
+                    <Clock className="w-6 h-6 mr-4 text-purple-500" />
+                    <span className="font-bold">{shopWorkingHours}</span>
                   </div>
-                  <p className="text-sm text-gray-600 mt-2">{shopDescription}</p>
+                  {/* <p className="text-base text-gray-600 mt-5 leading-relaxed bg-gray-50 p-4 rounded-xl">{shopDescription}</p> */}
                 </div>
               )}
             </div>
-            {shopRating > 0 && (
-              <div className="flex items-center gap-1 bg-gradient-to-r from-yellow-100 to-yellow-200 px-3 py-2 rounded-full ml-2 shadow-sm">
-                <Star className="w-4 h-4 text-yellow-600 fill-current" />
-                <span className="text-sm font-bold text-yellow-700">{shopRating.toFixed(1)}</span>
-              </div>
-            )}
           </div>
 
           {shopSpecialties.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-4">
-              {shopSpecialties.slice(0, 2).map((specialty, index) => (
+            <div className="flex flex-wrap gap-4 mb-8">
+              {/* {shopSpecialties.slice(0, 3).map((specialty, index) => (
                 <span
                   key={index}
-                  className="text-xs bg-gray-100 text-gray-700 px-3 py-1.5 rounded-full font-medium border border-gray-200"
+                  className="text-base bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 px-5 py-3 rounded-full font-bold border border-gray-300/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 hover:from-gray-200 hover:to-gray-300"
                 >
-                  {specialty}
+                  ✨ {specialty}
                 </span>
-              ))}
-              {shopSpecialties.length > 2 && (
-                <span className="text-xs bg-gray-50 text-gray-500 px-3 py-1.5 rounded-full font-medium border border-gray-200">
-                  +{shopSpecialties.length - 2}
+              ))} */}
+              {shopSpecialties.length > 3 && (
+                <span className="text-base bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-700 px-5 py-3 rounded-full font-bold border border-blue-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                  +{shopSpecialties.length - 3} More
                 </span>
               )}
             </div>
           )}
 
-          <div className="mt-auto pt-4 border-t border-gray-100">
-            <div className="flex items-center justify-between">
+          {/* Enhanced description for grid view */}
+          {/* {!isListView && shopDescription && shopDescription !== 'No description available' && (
+            <div className="mb-8">
+              <p className="text-base text-gray-600 leading-relaxed line-clamp-3 bg-gray-50 p-5 rounded-xl border border-gray-200/50 font-medium">{shopDescription}</p>
+            </div>
+          )} */}
+
+          {/* Premium footer section with enhanced buttons */}
+          <div className="mt-auto pt-8">
+            <div className="flex flex-col gap-4">
+              {/* Main Visit Button */}
               <Button
-                size="sm"
-                className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-4 py-2 rounded-full font-semibold shadow-md hover:shadow-lg transition-all duration-300"
+                size="lg"
+                className="w-full bg-gradient-to-r from-yellow-500 via-yellow-600 to-orange-500 hover:from-yellow-600 hover:via-orange-500 hover:to-orange-600 text-white px-8 py-5 rounded-2xl font-bold shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-2 border border-yellow-400/50 text-lg"
                 onClick={(e) => {
                   e.stopPropagation();
                   const shopId = shop._id || shop.id;
@@ -338,12 +377,34 @@ const ShopList = () => {
                   }
                 }}
               >
-                <Eye className="w-4 h-4 mr-2" />
-                View Shop
+                <Eye className="w-6 h-6 mr-3" />
+                <span>Visit Shop</span>
               </Button>
-              <div className="text-right">
-                <div className="text-sm font-semibold text-gray-900">{shop.reviewCount || 0}</div>
-                <div className="text-xs text-gray-500">reviews</div>
+
+              {/* Secondary Actions */}
+              <div className="flex gap-3">
+                <Button
+                  variant="outline"
+                  size="md"
+                  className="flex-1 border-2 border-gray-300 hover:border-yellow-500 hover:bg-yellow-50 text-gray-700 hover:text-yellow-700 py-3 rounded-xl font-semibold transition-all duration-300"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                >
+                  <Phone className="w-5 h-5 mr-2" />
+                  Call
+                </Button>
+                <Button
+                  variant="outline"
+                  size="md"
+                  className="flex-1 border-2 border-gray-300 hover:border-green-500 hover:bg-green-50 text-gray-700 hover:text-green-700 py-3 rounded-xl font-semibold transition-all duration-300"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                >
+                  <MapPin className="w-5 h-5 mr-2" />
+                  Location
+                </Button>
               </div>
             </div>
           </div>
@@ -589,9 +650,9 @@ const ShopList = () => {
                     <span className="font-semibold text-lg">Loading jewelry stores...</span>
                   </div>
                 </div>
-                <div className={`grid gap-6 ${viewMode === 'grid'
-                  ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-                  : 'grid-cols-1'
+                <div className={`grid gap-10 ${viewMode === 'grid'
+                  ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4'
+                  : 'grid-cols-1 max-w-5xl mx-auto'
                   }`}>
                   {[...Array(6)].map((_, index) => (
                     <div key={index} className="bg-white rounded-3xl shadow-lg overflow-hidden">
@@ -664,17 +725,18 @@ const ShopList = () => {
               </div>
             ) : (
               <>
-                <div className={`grid gap-6 ${viewMode === 'grid'
-                  ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-                  : 'grid-cols-1'
+                <div className={`grid gap-12 ${viewMode === 'grid'
+                  ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
+                  : 'grid-cols-1 max-w-6xl mx-auto'
                   }`}>
                   {filteredShops.map((shop, index) => (
                     <div
                       key={shop._id || shop.id || index}
-                      className="opacity-0 animate-fade-in"
+                      className="opacity-0 animate-fade-in transform translate-y-4"
                       style={{
-                        animationDelay: `${index * 0.1}s`,
-                        animationFillMode: 'forwards'
+                        animationDelay: `${index * 0.15}s`,
+                        animationFillMode: 'forwards',
+                        animationDuration: '0.8s'
                       }}
                     >
                       <ShopCard

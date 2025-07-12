@@ -422,7 +422,7 @@ const ProductList = () => {
 
         return (
             <Card
-                className={`group hover:shadow-xl transition-all duration-300 cursor-pointer border-0 shadow-md hover:shadow-2xl transform hover:-translate-y-1 ${isListView ? 'flex h-48' : 'flex flex-col h-full'}`}
+                className={`group hover:shadow-2xl transition-all duration-700 cursor-pointer border-0 shadow-xl hover:shadow-3xl transform hover:-translate-y-4 hover:scale-105 ${isListView ? 'flex h-64' : 'flex flex-col h-full'} bg-white rounded-3xl overflow-hidden backdrop-blur-sm`}
                 onClick={async () => {
                     try {
                         // Track product view locally
@@ -447,64 +447,101 @@ const ProductList = () => {
                     }
                 }}
             >
-                <div className={`relative overflow-hidden ${isListView ? 'w-48 flex-shrink-0' : 'w-full'}`}>
-                    <img
-                        src={`${import.meta.env.VITE_API_BASE_URL}/product-image/${safeProduct.image}`}
-                        alt={safeProduct.name}
-                        className={`w-full object-cover group-hover:scale-110 transition-transform duration-500 ${isListView ? 'h-full' : 'h-48'}`}
-                        onError={(e) => {
-                            e.target.src = 'https://via.placeholder.com/300x300/f3f4f6/9ca3af?text=منتج';
-                        }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className={`relative overflow-hidden rounded-t-3xl ${isListView ? 'w-64 flex-shrink-0 rounded-l-3xl rounded-tr-none' : 'w-full'}`}>
+                    <div className={`relative ${isListView ? 'h-full' : 'h-64'} overflow-hidden`}>
+                        <img
+                            src={`${import.meta.env.VITE_API_BASE_URL}/product-image/${safeProduct.image}`}
+                            alt={safeProduct.name}
+                            className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-1000 ease-out"
+                            onError={(e) => {
+                                console.log('❌ Product image failed to load:', e.target.src);
+                                e.target.style.display = 'none';
+                                const fallback = e.target.parentElement.querySelector('.fallback-image');
+                                if (fallback) {
+                                    fallback.style.display = 'flex';
+                                }
+                            }}
+                        />
 
+                        {/* Premium fallback image */}
+                        <div className="fallback-image absolute inset-0 bg-gradient-to-br from-yellow-100 via-amber-50 to-yellow-200 hidden items-center justify-center group-hover:from-yellow-200 group-hover:via-amber-100 group-hover:to-yellow-300 transition-all duration-700">
+                            <div className="text-center transform group-hover:scale-110 transition-transform duration-700">
+                                <div className="relative mb-4">
+                                    <div className="text-6xl mb-2 filter drop-shadow-2xl">💎</div>
+                                    <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/30 to-orange-400/30 rounded-full blur-xl"></div>
+                                </div>
+                                <div className="text-sm text-gray-800 font-bold px-3 py-1 bg-white/90 rounded-xl backdrop-blur-md shadow-lg border border-yellow-300">
+                                    {safeProduct.name}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Enhanced gradient overlays */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 via-transparent to-orange-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+
+                    {/* Premium favorite button */}
                     <Button
-                        size="sm"
+                        size="lg"
                         variant="ghost"
-                        className="absolute top-3 right-3 bg-white/90 hover:bg-white shadow-lg backdrop-blur-sm"
+                        className="absolute top-4 right-4 bg-white/95 hover:bg-white shadow-2xl backdrop-blur-md rounded-full w-12 h-12 p-0 opacity-0 group-hover:opacity-100 transition-all duration-500 hover:scale-125 border-2 border-white/70 z-20"
                         onClick={(e) => {
                             e.stopPropagation();
                             handleAddToFavorites(productId);
                         }}
                     >
-                        <Heart className={`w-4 h-4 ${safeProduct.isFavorited ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
+                        <Heart className={`w-5 h-5 ${safeProduct.isFavorited ? 'fill-red-500 text-red-500' : 'text-gray-600 hover:text-red-500'} transition-colors duration-200`} />
                     </Button>
 
+                    {/* Premium category badge */}
                     {safeProduct.category && (
-                        <Badge className="absolute top-3 left-3 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white shadow-lg">
+                        <Badge className="absolute top-4 left-4 bg-gradient-to-r from-yellow-500 via-yellow-600 to-orange-500 text-white shadow-2xl px-4 py-2 text-sm font-bold border border-yellow-400/50 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-2 group-hover:translate-y-0 z-20">
                             {PRODUCT_CATEGORIES[safeProduct.category.toUpperCase()] || safeProduct.category}
                         </Badge>
                     )}
 
+                    {/* Premium quality badge */}
+                    <div className="absolute bottom-4 right-4 z-20">
+                        <div className="bg-gradient-to-r from-green-500 to-green-600 text-white px-3 py-1.5 rounded-full shadow-xl text-xs font-bold opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-2 group-hover:translate-y-0 border border-green-400/50">
+                            Premium Quality
+                        </div>
+                    </div>
+
 
                 </div>
 
-                <div className={`p-5 flex flex-col h-full ${isListView ? 'justify-between' : ''}`}>
+                <div className={`p-8 flex flex-col h-full ${isListView ? 'justify-between' : ''} relative z-10`}>
                     <div className="flex-1">
-                        <h3 className="font-bold text-lg mb-2 group-hover:text-yellow-600 transition-colors line-clamp-2 leading-tight">
+                        <h3 className="font-bold text-2xl mb-4 group-hover:text-yellow-600 transition-colors line-clamp-2 leading-tight group-hover:scale-105 transform origin-left duration-300">
                             {safeProduct.name}
                         </h3>
-                        <p className="text-gray-600 text-sm mb-3 line-clamp-2 leading-relaxed">
+                        <p className="text-gray-600 text-base mb-5 line-clamp-3 leading-relaxed bg-gray-50 p-3 rounded-xl">
                             {safeProduct.description}
                         </p>
 
-                        <div className="flex items-center gap-2 mb-3">
-                            <div className="flex items-center bg-yellow-50 px-2 py-1 rounded-full">
-                                <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                                <span className="text-xs font-semibold ml-1 text-yellow-700">
+                        {/* Enhanced rating display */}
+                        <div className="flex items-center gap-3 mb-5">
+                            <div className="flex items-center bg-gradient-to-r from-yellow-100 to-yellow-200 px-4 py-2 rounded-full shadow-md border border-yellow-300/50">
+                                <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                                <span className="text-sm font-bold ml-2 text-yellow-700">
                                     {safeProduct.rating.toFixed(1)}
                                 </span>
-                                <span className="text-xs text-gray-500 ml-1">
-                                    ({safeProduct.reviewCount})
+                                <span className="text-sm text-gray-600 ml-1 font-medium">
+                                    ({safeProduct.reviewCount} reviews)
                                 </span>
                             </div>
                         </div>
 
+                        {/* Enhanced shop information */}
                         {safeProduct.shopName && safeProduct.shopName !== 'Unknown Shop' && (
-                            <div className="flex items-center gap-2 mb-4">
-                                <ShoppingBag className="w-3 h-3 text-gray-400" />
-                                <p className="text-xs text-gray-600 font-medium truncate">
-                                    by <span className="text-yellow-600 hover:text-yellow-700 cursor-pointer font-semibold" onClick={(e) => {
+                            <div className="flex items-center gap-3 mb-6 bg-blue-50 p-3 rounded-xl border border-blue-200/50">
+                                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
+                                    <ShoppingBag className="w-4 h-4 text-white" />
+                                </div>
+                                <div className="flex-1">
+                                    <p className="text-sm text-gray-600 font-medium">Available at</p>
+                                    <p className="text-base font-bold text-blue-700 hover:text-blue-800 cursor-pointer transition-colors duration-200" onClick={(e) => {
                                         e.stopPropagation();
                                         if (safeProduct.shopId) {
                                             console.log('🏪 Navigating to shop:', safeProduct.shopId);
@@ -512,42 +549,59 @@ const ProductList = () => {
                                         } else {
                                             console.error('🏪 No shop ID available:', safeProduct);
                                         }
-                                    }}>{safeProduct.shopName}</span>
-                                </p>
+                                    }}>
+                                        {safeProduct.shopName}
+                                    </p>
+                                </div>
                             </div>
                         )}
                     </div>
 
-                    {/* Actions - Fixed at bottom */}
-                    <div className="mt-auto pt-3 border-t border-gray-100">
-
-                        <div className="flex gap-2">
+                    {/* Enhanced Actions Section */}
+                    <div className="mt-auto pt-6">
+                        <div className="flex flex-col gap-3">
+                            {/* Main View Product Button */}
                             <Button
-                                size="sm"
-                                variant="outline"
-                                className="flex-1 border-yellow-200 text-yellow-700 hover:bg-yellow-50 hover:border-yellow-300 transition-all duration-300 text-xs"
+                                size="lg"
+                                className="w-full bg-gradient-to-r from-yellow-500 via-yellow-600 to-orange-500 hover:from-yellow-600 hover:via-orange-500 hover:to-orange-600 text-white px-6 py-4 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 font-bold text-base border border-yellow-400/50"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     navigate(ROUTES.PRODUCT_DETAILS(productId));
                                 }}
                             >
-                                <Eye className="w-3 h-3 mr-1" />
-                                View
+                                <Eye className="w-5 h-5 mr-3" />
+                                View Product Details
                             </Button>
+
+                            {/* Secondary Actions */}
                             {safeProduct.shopId && safeProduct.shopName && safeProduct.shopName !== 'Unknown Shop' && (
-                                <Button
-                                    size="sm"
-                                    className="flex-1 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white shadow-md hover:shadow-lg transition-all duration-300 text-xs"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        console.log('🏪 Shop button clicked, navigating to:', safeProduct.shopId);
-                                        console.log('🏪 Shop data:', { id: safeProduct.shopId, name: safeProduct.shopName });
-                                        navigate(ROUTES.SHOP_DETAILS(safeProduct.shopId));
-                                    }}
-                                >
-                                    <ShoppingBag className="w-3 h-3 mr-1" />
-                                    Shop
-                                </Button>
+                                <div className="flex gap-2">
+                                    <Button
+                                        variant="outline"
+                                        size="md"
+                                        className="flex-1 border-2 border-blue-300 hover:border-blue-500 hover:bg-blue-50 text-blue-700 hover:text-blue-800 py-3 rounded-xl font-semibold transition-all duration-300"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            console.log('🏪 Shop button clicked, navigating to:', safeProduct.shopId);
+                                            navigate(ROUTES.SHOP_DETAILS(safeProduct.shopId));
+                                        }}
+                                    >
+                                        <ShoppingBag className="w-4 h-4 mr-2" />
+                                        Visit Shop
+                                    </Button>
+                                    <Button
+                                        variant="outline"
+                                        size="md"
+                                        className="flex-1 border-2 border-green-300 hover:border-green-500 hover:bg-green-50 text-green-700 hover:text-green-800 py-3 rounded-xl font-semibold transition-all duration-300"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleAddToFavorites(productId);
+                                        }}
+                                    >
+                                        <Heart className={`w-4 h-4 mr-2 ${safeProduct.isFavorited ? 'fill-current' : ''}`} />
+                                        {safeProduct.isFavorited ? 'Saved' : 'Save'}
+                                    </Button>
+                                </div>
                             )}
                         </div>
                     </div>
@@ -800,9 +854,9 @@ const ProductList = () => {
 
                         {/* Products Grid/List */}
                         {isLoading ? (
-                            <div className={`grid gap-6 ${viewMode === 'grid'
-                                ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-                                : 'grid-cols-1'
+                            <div className={`grid gap-10 ${viewMode === 'grid'
+                                ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
+                                : 'grid-cols-1 max-w-5xl mx-auto'
                                 }`}>
                                 {[...Array(8)].map((_, index) => (
                                     <div key={index} className="animate-pulse bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col h-full">
@@ -848,9 +902,9 @@ const ProductList = () => {
                                 })()}
                             </div>
                         ) : (
-                            <div className={`grid gap-6 ${viewMode === 'grid'
-                                ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-                                : 'grid-cols-1 max-w-4xl mx-auto'
+                            <div className={`grid gap-10 ${viewMode === 'grid'
+                                ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
+                                : 'grid-cols-1 max-w-5xl mx-auto'
                                 }`}>
                                 {filteredProducts.map((product) => (
                                     <ProductCard
