@@ -623,9 +623,7 @@ const ShopDetails = () => {
                             <p className="text-gray-700 leading-relaxed text-xl bg-gray-50 p-6 rounded-2xl">
                                 {safeShop.description}
                             </p>
-                        </div>
-
-
+</div>
 
                         {/* Action Section */}
                         <div className="flex flex-col lg:flex-row items-center justify-between gap-8 p-8 bg-gradient-to-r from-gray-50 to-gray-100 rounded-3xl">
