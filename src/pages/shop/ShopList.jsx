@@ -59,7 +59,15 @@ const ShopList = () => {
 
   useEffect(() => {
     applyFilters();
-  }, [searchQuery]);
+  }, [searchQuery, shops]);
+
+  // Initialize filteredShops when shops are loaded
+  useEffect(() => {
+    if (shops.length > 0 && filteredShops.length === 0 && !searchQuery) {
+      console.log('🔄 Initializing filteredShops with', shops.length, 'shops');
+      setFilteredShops([...shops]);
+    }
+  }, [shops, filteredShops.length, searchQuery]);
 
   const loadShops = async () => {
     try {
@@ -73,25 +81,44 @@ const ShopList = () => {
       };
 
       const response = await shopService.getAllShops(params);
+      console.log('Shop API Response From page :', response);
 
-      if (response.success) {
-        const shopsData = response.data || [];
-        console.log('🏪 Shops loaded:', shopsData.length);
+      // Handle different response formats
+      let shopsData = [];
+      let total = 0;
 
-        setShops(prevShops =>
-          pagination.page === 1
-            ? shopsData
-            : [...prevShops, ...shopsData]
-        );
-
-        setPagination(prev => ({
-          ...prev,
-          total: response.meta?.total || 0
-        }));
-      } else {
-        console.error('Failed to load shops:', response.message);
-        setShops([]);
+      if (response.success && response.data) {
+        // Format: { success: true, data: [...], meta: {...} }
+        shopsData = response.data;
+        total = response.meta?.total || response.data.length;
+      } else if (Array.isArray(response)) {
+        // Format: [shop1, shop2, ...]
+        shopsData = response;
+        total = response.length;
+      } else if (response.data && Array.isArray(response.data)) {
+        // Format: { data: [...] }
+        shopsData = response.data;
+        total = response.data.length;
+      } else if (response.status === 'success' && response.data) {
+        // Format: { status: 'success', data: [...] }
+        shopsData = response.data;
+        total = response.data.length;
       }
+
+      console.log('🏪 Processed shops data:', shopsData.length, 'shops');
+      console.log('🏪 Sample shop:', shopsData[0]);
+      console.log('🏪 All shops:', shopsData);
+
+      const newShops = pagination.page === 1
+        ? shopsData
+        : [...shops, ...shopsData];
+
+      setShops(newShops);
+
+      setPagination(prev => ({
+        ...prev,
+        total: total
+      }));
     } catch (error) {
       console.error(' Error loading shops:', error);
       setShops([]);
@@ -101,13 +128,23 @@ const ShopList = () => {
   };
 
   const applyFilters = () => {
+    console.log('🔍 Starting applyFilters...');
+    console.log('🔍 shops.length:', shops.length);
+    console.log('🔍 searchQuery:', searchQuery);
+
+    if (shops.length === 0) {
+      console.log('🔍 No shops to filter, setting empty filtered shops');
+      setFilteredShops([]);
+      return;
+    }
+
     let filtered = [...shops];
 
     console.log('🔍 Applying filters to', shops.length, 'shops');
-    console.log('🔍 Search query:', searchQuery);
 
-    // Search filter
-    if (searchQuery) {
+    // Search filter - only apply if there's a search query
+    if (searchQuery && searchQuery.trim() !== '') {
+      console.log('🔍 Applying search filter for:', searchQuery);
       filtered = filtered.filter(shop => {
         const name = shop.name || '';
         const description = shop.description || '';
@@ -115,7 +152,7 @@ const ShopList = () => {
         const specialties = shop.specialties || [];
         const ownerName = shop.ownerName || '';
 
-        return (
+        const matches = (
           name.toLowerCase().includes(searchQuery.toLowerCase()) ||
           description.toLowerCase().includes(searchQuery.toLowerCase()) ||
           address.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -124,10 +161,21 @@ const ShopList = () => {
             specialty.toLowerCase().includes(searchQuery.toLowerCase())
           ))
         );
+
+        if (matches) {
+          console.log('🔍 Shop matches search:', shop.name);
+        }
+
+        return matches;
       });
+    } else {
+      console.log('🔍 No search query, showing all', shops.length, 'shops');
+      // When no search query, show all shops
+      filtered = [...shops];
     }
 
     console.log('🔍 Final filtered shops:', filtered.length);
+    console.log('🔍 Sample filtered shop:', filtered[0]?.name);
     setFilteredShops(filtered);
   };
 
@@ -152,7 +200,15 @@ const ShopList = () => {
     const shopRating = shop.rating || shop.averageRating || 0;
     const shopSpecialties = shop.specialties || [];
     const shopWorkingHours = shop.workingHours || '9:00 ص - 9:00 م';
-    const shopImage = shop.image || shop.logoUrl || null;
+
+    // Debug shop image
+    console.log('🖼️ Shop image debug:', {
+      shopName: shop.name,
+      logoUrl: shop.logoUrl,
+      image: shop.image,
+      imageUrl: shop.imageUrl,
+      fullImageUrl: shop.logoUrl ? `${import.meta.env.VITE_API_BASE_URL}/shop-image/${shop.logoUrl}` : 'No image'
+    });
 
     return (
       <Card
@@ -167,20 +223,41 @@ const ShopList = () => {
           }
         }}
       >
-        <p>{`${import.meta.env.VITE_API_BASE_URL}/shop-image/${shop.logoUrl}`}</p>
         <div className={`relative overflow-hidden ${isListView ? 'lg:w-64 lg:flex-shrink-0' : 'w-full'}`}>
-          {shop.logoUrl ? (
+          {/* Try to show shop image */}
+          {shop.logoUrl && shop.logoUrl !== 'undefined' && shop.logoUrl !== '' && shop.logoUrl !== null ? (
             <img
               src={`${import.meta.env.VITE_API_BASE_URL}/shop-image/${shop.logoUrl}`}
               alt={shopName}
               className={`w-full object-cover group-hover:scale-105 transition-transform duration-500 ${isListView ? 'h-full lg:h-48' : 'h-52'}`}
-             
+              onError={(e) => {
+                console.log('❌ Image failed to load:', e.target.src);
+                // Hide the image and show fallback
+                e.target.style.display = 'none';
+                const fallback = e.target.parentElement.querySelector('.fallback-image');
+                if (fallback) {
+                  fallback.style.display = 'flex';
+                }
+              }}
+              onLoad={(e) => {
+                console.log('✅ Image loaded successfully:', e.target.src);
+              }}
             />
           ) : (
-            <div className={`bg-gradient-to-br from-yellow-100 to-yellow-200 flex items-center justify-center group-hover:from-yellow-200 group-hover:to-yellow-300 transition-colors duration-300 ${isListView ? 'h-full lg:h-48' : 'h-52'}`}>
-              <div className="text-5xl">💍</div>
-            </div>
+            console.log('🖼️ No logoUrl for shop:', shopName, 'logoUrl:', shop.logoUrl)
           )}
+
+          {/* Default fallback image - always present but hidden when image loads */}
+          <div
+            className={`fallback-image bg-gradient-to-br from-yellow-100 to-yellow-200 flex items-center justify-center group-hover:from-yellow-200 group-hover:to-yellow-300 transition-colors duration-300 ${isListView ? 'h-full lg:h-48' : 'h-52'} ${shop.logoUrl && shop.logoUrl !== 'undefined' && shop.logoUrl !== '' && shop.logoUrl !== null ? 'hidden' : 'flex'}`}
+          >
+            <div className="text-center">
+              <div className="text-5xl mb-2">💍</div>
+              <div className="text-xs text-gray-600 font-medium px-2">{shopName}</div>
+            </div>
+          </div>
+
+          {/* Favorite button overlay */}
           <div className="absolute top-2 right-2">
             <Button
               size="sm"
@@ -271,7 +348,7 @@ const ShopList = () => {
             </div>
           </div>
         </CardContent>
-      </Card>
+      </Card >
     );
   };
 
