@@ -588,7 +588,7 @@ const ShopDetails = () => {
                         </div>
 
                         {/* Specialties */}
-                        <div className="mb-10">
+                        {/* <div className="mb-10">
                             <h3 className="text-2xl font-bold text-gray-900 mb-6">Specialties</h3>
                             <div className="flex flex-wrap gap-4">
                                 {safeShop.specialties && safeShop.specialties.length > 0 ? (
@@ -606,7 +606,7 @@ const ShopDetails = () => {
                                     </Badge>
                                 )}
                             </div>
-                        </div>
+                        </div> */}
 
                         {/* Action Section */}
                         <div className="flex flex-col lg:flex-row items-center justify-between gap-8 p-8 bg-gradient-to-r from-gray-50 to-gray-100 rounded-3xl">

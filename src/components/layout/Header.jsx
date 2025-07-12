@@ -6,7 +6,7 @@ import { useAuth } from '../../context/AuthContext.jsx';
 
 const Header = () => {
   const navigate = useNavigate();
-  const { user, isAuthenticated, isAdmin, isShopOwner, logout } = useAuth();
+  const { user, isAuthenticated, isAdmin, isShopOwner, logout ,isRegularUser} = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -99,12 +99,21 @@ const Header = () => {
                 <span className="relative z-10">Stores</span>
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-yellow-400 to-yellow-600 group-hover:w-full transition-all duration-300"></span>
               </Link>
-              {(isAuthenticated && user && ( isShopOwner)) && (
-                <Link
+              {(isAuthenticated && user && (isShopOwner)) && (
+                <Link   isRegularUser
                   to="/dashboard"
                   className="relative text-gray-700 hover:text-yellow-600 font-medium text-lg transition-all duration-300 group px-3 py-2"
                 >
                   <span className="relative z-10">Dashboard</span>
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-yellow-400 to-yellow-600 group-hover:w-full transition-all duration-300"></span>
+                </Link>
+              )}
+              {(isAuthenticated && user && (isRegularUser) ) && (
+                <Link
+                  to="/favorites"
+                  className="relative text-gray-700 hover:text-yellow-600 font-medium text-lg transition-all duration-300 group px-3 py-2"
+                >
+                  <span className="relative z-10">Favorites</span>
                   <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-yellow-400 to-yellow-600 group-hover:w-full transition-all duration-300"></span>
                 </Link>
               )}
