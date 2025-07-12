@@ -15,7 +15,11 @@ import {
     TrendingUp,
     Clock,
     CheckCircle,
-    AlertTriangle
+    AlertTriangle,
+    Heart,
+    Shield,
+    Tag,
+    ShoppingCart
 } from 'lucide-react';
 import { shopService } from '../../services/shopService.js';
 import { productService } from '../../services/productService.js';
@@ -435,57 +439,121 @@ const ManageShop = () => {
                                 {products.map((product) => (
                                     <Card key={product.id}>
                                         <CardContent className="p-6">
-                                            <div className="flex items-start gap-4">
-                                                <img
-                                                    src={product.image}
-                                                    alt={product.name}
-                                                    className="w-20 h-20 object-cover rounded-lg"
-                                                />
-                                                <div className="flex-1">
-                                                    <div className="flex items-start justify-between">
-                                                        <div>
-                                                            <h3 className="font-semibold text-lg">{product.name}</h3>
-                                                            <p className="text-yellow-600 font-bold text-xl">
-                                                                {product.price.toLocaleString()} ج.م
-                                                            </p>
-                                                        </div>
-                                                        <div className="flex items-center gap-2">
-                                                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${product.status === 'active'
-                                                                ? 'bg-green-100 text-green-800'
-                                                                : 'bg-gray-100 text-gray-800'
-                                                                }`}>
-                                                                {product.status === 'active' ? 'نشط' : 'مسودة'}
+                                            <p>{JSON.stringify(product)}</p>
+                                            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-200">
+                                                {/* Top Section - Image with Status and Quick Actions */}
+                                                <div className="relative group">
+                                                    <img
+                                                        src={`${import.meta.env.VITE_API_BASE_URL}/product-image/${product.logoUrl}` || '/placeholder-product.jpg'}
+                                                        alt={product.name}
+                                                        className="w-full h-48 object-cover"
+                                                    />
+
+                                                    {/* Status and Floating Actions */}
+                                                    <div className="absolute top-3 left-3 flex items-start gap-2">
+                                                        <span className={`px-2 py-1 rounded-full text-xs font-semibold ${product.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                                                            }`}>
+                                                            {product.status === 'active' ? 'نشط' : 'مسودة'}
+                                                        </span>
+
+                                                        {product.isFeatured && (
+                                                            <span className="px-2 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800">
+                                                                مميز
                                                             </span>
-                                                        </div>
+                                                        )}
                                                     </div>
-
-                                                    <div className="flex items-center gap-4 mt-4 text-sm text-gray-600">
-                                                        <span>المشاهدات: {product.views}</span>
-                                                        <span>المفضلة: {product.favorites}</span>
-                                                        <span>الفئة: {product.category}</span>
-                                                    </div>
-
-                                                    <div className="flex gap-2 mt-4">
+                                                    {/* Quick View Button (appears on hover) */}
+                                                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
                                                         <Button
                                                             size="sm"
-                                                            variant="outline"
+                                                            className="bg-white text-gray-800 shadow-md hover:bg-gray-50"
                                                             onClick={() => navigate(ROUTES.PRODUCT_DETAILS(product.id))}
                                                         >
                                                             <Eye className="w-4 h-4 mr-1" />
-                                                            عرض
+                                                            معاينة سريعة
+                                                        </Button>
+                                                    </div>
+                                                </div>
+
+                                                {/* Main Content Section */}
+                                                <div className="p-4">
+                                                    {/* Title and Price */}
+                                                    <div className="flex justify-between items-start mb-2">
+                                                        <div>
+                                                            <h3 className="font-bold text-lg text-gray-900">{product.name}</h3>
+                                                            {product.description && (
+                                                                <p className="text-gray-500 text-sm mt-1 line-clamp-2">{product.description}</p>
+                                                            )}
+                                                        </div>
+                                                        <div className="text-right">
+                                                            <p className="text-yellow-600 font-bold text-xl">
+                                                                {product.price['$numberDecimal'] * 50} ج.م
+                                                            </p>
+                                                            {product.oldPrice && (
+                                                                <p className="text-gray-400 text-sm line-through">
+                                                                    {product.oldPrice['$numberDecimal'] * 50} ج.م
+                                                                </p>
+                                                            )}
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Metadata Grid */}
+                                                    <div className="grid grid-cols-2 gap-2 my-3 text-sm">
+                                                        <div className="flex items-center text-gray-600">
+                                                            <Shield className="w-4 h-4 mr-1 text-gray-400" />
+                                                            <span>الضمان: {product.warranty || 'غير متوفر'}</span>
+                                                        </div>
+                                                        <div className="flex items-center text-gray-600">
+                                                            <Package className="w-4 h-4 mr-1 text-gray-400" />
+                                                            <span>المخزن: {product.stock || 0}</span>
+                                                        </div>
+                                                        <div className="flex items-center text-gray-600">
+                                                            <Tag className="w-4 h-4 mr-1 text-gray-400" />
+                                                            <span>الفئة: {product.category}</span>
+                                                        </div>
+                                                        <div className="flex items-center text-gray-600">
+                                                            <Calendar className="w-4 h-4 mr-1 text-gray-400" />
+                                                            <span>أضيف في: {new Date(product.createdAt).toLocaleDateString()}</span>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Stats Bar */}
+                                                    <div className="flex items-center justify-between bg-gray-50 rounded-lg px-3 py-2 mb-3 text-sm">
+                                                        <div className="flex items-center text-gray-600">
+                                                            <Eye className="w-4 h-4 mr-1" />
+                                                            <span>{product.views || 0} مشاهدات</span>
+                                                        </div>
+                                                        <div className="flex items-center text-gray-600">
+                                                            <Heart className="w-4 h-4 mr-1" />
+                                                            <span>{product.favorites || 0} مفضلة</span>
+                                                        </div>
+                                                        <div className="flex items-center text-gray-600">
+                                                            <ShoppingCart className="w-4 h-4 mr-1" />
+                                                            <span>{product.orders || 0} طلبات</span>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Action Buttons */}
+                                                    <div className="flex gap-2 border-t border-gray-100 pt-3">
+                                                        <Button
+                                                            size="sm"
+                                                            className="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-600"
+                                                            onClick={() => navigate(ROUTES.PRODUCT_DETAILS(product._id))}
+                                                        >
+                                                            <Eye className="w-4 h-4 mr-1" />
+                                                            عرض التفاصيل
                                                         </Button>
                                                         <Button
                                                             size="sm"
-                                                            variant="outline"
+                                                            className="flex-1 bg-gray-50 hover:bg-gray-100 text-gray-800"
                                                         >
                                                             <Edit className="w-4 h-4 mr-1" />
-                                                            تعديل
+                                                            تعديل المنتج
                                                         </Button>
                                                         <Button
                                                             size="sm"
-                                                            variant="outline"
-                                                            onClick={() => handleDeleteProduct(product.id)}
-                                                            className="text-red-600 hover:text-red-700"
+                                                            className="flex-1 bg-red-50 hover:bg-red-100 text-red-600"
+                                                            onClick={() => handleDeleteProduct(product._id)}
                                                         >
                                                             <Trash2 className="w-4 h-4 mr-1" />
                                                             حذف

@@ -59,7 +59,7 @@ const ShopList = () => {
 
   useEffect(() => {
     applyFilters();
-  }, [shops, searchQuery]);
+  }, [searchQuery]);
 
   const loadShops = async () => {
     try {
@@ -167,15 +167,14 @@ const ShopList = () => {
           }
         }}
       >
+        <p>{`${import.meta.env.VITE_API_BASE_URL}/shop-image/${shop.logoUrl}`}</p>
         <div className={`relative overflow-hidden ${isListView ? 'lg:w-64 lg:flex-shrink-0' : 'w-full'}`}>
-          {shopImage ? (
+          {shop.logoUrl ? (
             <img
-              src={shopImage}
+              src={`${import.meta.env.VITE_API_BASE_URL}/shop-image/${shop.logoUrl}`}
               alt={shopName}
               className={`w-full object-cover group-hover:scale-105 transition-transform duration-500 ${isListView ? 'h-full lg:h-48' : 'h-52'}`}
-              onError={(e) => {
-                e.target.src = 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=300&fit=crop&crop=center&auto=format&q=60';
-              }}
+             
             />
           ) : (
             <div className={`bg-gradient-to-br from-yellow-100 to-yellow-200 flex items-center justify-center group-hover:from-yellow-200 group-hover:to-yellow-300 transition-colors duration-300 ${isListView ? 'h-full lg:h-48' : 'h-52'}`}>

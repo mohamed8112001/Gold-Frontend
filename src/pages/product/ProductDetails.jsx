@@ -233,7 +233,7 @@ const ProductDetails = () => {
                         <div className="space-y-6">
                             <div className="aspect-square bg-white rounded-3xl overflow-hidden shadow-xl">
                                 <img
-                                    src={product.images?.[selectedImage] || product.image || defaultGoldImages[0]}
+                                    src={`${import.meta.env.VITE_API_BASE_URL}/product-image/${product.logoUrl}`}
                                     alt={product.name}
                                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                                     onError={(e) => {

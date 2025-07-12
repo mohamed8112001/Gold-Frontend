@@ -80,7 +80,7 @@ const ShopDetails = () => {
                 if (!loadedSuccessfully) {
                     try {
                         console.log('🏪 Trying public shop endpoint for shop:', id);
-                        shopResponse = await shopService.getPublicShop(id);
+                        shopResponse = await shopService.getShop(id);
                         shopData = shopResponse.data || shopResponse;
                         console.log('🏪 Public shop loaded successfully:', shopData.name);
                         loadedSuccessfully = true;
@@ -258,12 +258,12 @@ const ShopDetails = () => {
             >
                 <div className="relative overflow-hidden h-64">
                     <img
-                        src={product.image || product.imageUrl || product.images?.[0] || defaultProductImage}
+                        src={`${import.meta.env.VITE_API_BASE_URL}/product-image/${product.logoUrl}`}
                         alt={product.name || 'Product'}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        onError={(e) => {
-                            e.target.src = defaultProductImage;
-                        }}
+                        // onError={(e) => {
+                        //     e.target.src = defaultProductImage;
+                        // }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
@@ -417,7 +417,7 @@ const ShopDetails = () => {
                     {/* Hero Section */}
                     <div className="relative h-72 md:h-96">
                         <img
-                            src={safeShop.image}
+                            src={`${import.meta.env.VITE_API_BASE_URL}/shop-image/${safeShop.logoUrl}`}
                             alt={safeShop.name}
                             className="w-full h-full object-cover"
                             onError={(e) => {
@@ -802,17 +802,16 @@ const ShopDetails = () => {
                                     {safeShop.gallery.map((image, index) => (
                                         <div key={index} className="group relative aspect-square rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500">
                                             <img
-                                                src={image}
+                                                src={'sdfj'}
                                                 alt={`${safeShop.name} - صورة ${index + 1}`}
                                                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-pointer"
-                                                onError={(e) => {
-                                                    e.target.src = 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop&crop=center&auto=format&q=60';
-                                                }}
+                                              
                                                 onClick={() => {
                                                     // يمكن إضافة modal لعرض الصورة بحجم كبير
                                                     window.open(image, '_blank');
                                                 }}
                                             />
+                                            <div>{JSON.stringify(image)}</div>
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                                             <div className="absolute bottom-4 left-4 right-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                                 <p className="text-sm font-medium">صورة {index + 1}</p>
