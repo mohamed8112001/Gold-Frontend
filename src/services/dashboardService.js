@@ -181,11 +181,19 @@ export const dashboardService = {
   },
 
   // Book an available time slot
-  bookAvailableTime: async (timeId) => {
+  bookAvailableTime: async (bookingData) => {
     try {
-      const response = await api.post(`/available-times/${timeId}/book`);
+      console.log(
+        "📤 Sending booking request to /booking/book with data:",
+        bookingData
+      );
+      const response = await api.post("/booking/book", bookingData);
+      console.log("📥 Booking API response:", response);
       return response.data;
     } catch (error) {
+      console.error("❌ Booking API error:", error);
+      console.error("❌ Error response:", error.response?.data);
+      console.error("❌ Error status:", error.response?.status);
       throw new Error(
         error.response?.data?.message || "Failed to book available time"
       );

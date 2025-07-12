@@ -259,7 +259,6 @@ const MyBookings = () => {
                     </div>
                     <p className="text-gray-600">إدارة جميع مواعيدك المحجوزة</p>
                 </div>
-
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
                     <TabsList className="grid w-full grid-cols-3">
                         <TabsTrigger value="upcoming">
