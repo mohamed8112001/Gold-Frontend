@@ -16,7 +16,7 @@ import {
 import { shopService } from '../../services/shopService.js';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES } from '../../utils/constants.js';
-import MapPicker from '@/components/ui/MapPicker.jsx';
+import MapPicker from '../../components/ui/MapPicker.jsx';
 
 const CreateShop = () => {
     const navigate = useNavigate();
