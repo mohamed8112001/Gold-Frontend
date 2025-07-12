@@ -21,6 +21,7 @@ const EditShop = () => {
         description: '',
         address: '',
         phone: '',
+        whatsapp: '',
         workingHours: '',
         specialties: [''],
         image: null,
@@ -74,6 +75,7 @@ const EditShop = () => {
                 description: shopData.description || '',
                 address: shopData.address || '',
                 phone: shopData.phone || '',
+                whatsapp: shopData.whatsapp || '',
                 workingHours: shopData.workingHours || '',
                 specialties: shopData.specialties && shopData.specialties.length > 0
                     ? shopData.specialties
@@ -338,6 +340,18 @@ const EditShop = () => {
                                             onChange={handleInputChange}
                                             placeholder="رقم الهاتف"
                                             required
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            رقم الواتساب
+                                        </label>
+                                        <Input
+                                            name="whatsapp"
+                                            value={formData.whatsapp}
+                                            onChange={handleInputChange}
+                                            placeholder="رقم الواتساب"
                                         />
                                     </div>
                                 </CardContent>
