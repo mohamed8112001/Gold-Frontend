@@ -449,7 +449,7 @@ const ProductList = () => {
             >
                 <div className={`relative overflow-hidden ${isListView ? 'w-48 flex-shrink-0' : 'w-full'}`}>
                     <img
-                        src={safeProduct.image}
+                        src={`${import.meta.env.VITE_API_BASE_URL}/product-image/${safeProduct.image}`}
                         alt={safeProduct.name}
                         className={`w-full object-cover group-hover:scale-110 transition-transform duration-500 ${isListView ? 'h-full' : 'h-48'}`}
                         onError={(e) => {

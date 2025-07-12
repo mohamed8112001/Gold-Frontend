@@ -107,7 +107,7 @@ const Home = () => {
 
   const loadFeaturedShops = async () => {
     try {
-      const response = await shopService.getPublicShops();
+      const response = await shopService.getAllShops();
       const shops = Array.isArray(response) ? response : response.data || [];
       setFeaturedShops(shops.slice(0, 6));
     } catch (error) {
@@ -121,7 +121,7 @@ const Home = () => {
   const loadStats = async () => {
     try {
       // Load public shops data (only approved shops)
-      const response = await shopService.getPublicShops();
+      const response = await shopService.getAllShops();
       const approvedShops = Array.isArray(response) ? response : response.data || [];
 
       // Load products data (you might need to import productService)

@@ -71,7 +71,7 @@ export const productService = {
   // Delete product (shop owner only)
   deleteProduct: async (productId) => {
     try {
-      const response = await api.delete(`/product/${productId}`);
+      const response = await api.delete(`/product/favorite/${productId}`);
       return response.data;
     } catch (error) {
       throw new Error(
@@ -83,9 +83,13 @@ export const productService = {
   // Add to favorites
   addToFavorites: async (productId) => {
     try {
-      const response = await api.post("/product/favorite", { productId });
+      const response = await api.post(`/product/favorite/${ productId }`);
+      console.log(`success add to fav: ${JSON.stringify(response.data)}`);
+      
       return response.data;
     } catch (error) {
+      console.log(`error: ${error.response?.data?.message}`);
+      
       throw new Error(
         error.response?.data?.message || "Failed to add to favorites"
       );

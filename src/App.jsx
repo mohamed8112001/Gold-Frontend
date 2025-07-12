@@ -31,6 +31,7 @@ import DemoAdminLogin from './pages/admin/DemoAdminLogin.jsx';
 import NotFound from './pages/NotFound.jsx';
 import TestPage from './pages/TestPage.jsx';
 import './App.css';
+import FavoriteProducts from './pages/product/FavoriteProducts.jsx';
 
 function App() {
   return (
@@ -66,7 +67,7 @@ function App() {
               <Route path="/products" element={<ProductList />} />
               <Route path="/products/:id" element={<ProductDetails />} />
               <Route path="/products/create" element={<CreateProduct />} />
-              <Route path="/favorites" element={<Favorites />} />
+              <Route path="/favorites" element={<FavoriteProducts />} />
 
               {/* User Routes */}
               <Route path="/dashboard" element={<Dashboard />} />

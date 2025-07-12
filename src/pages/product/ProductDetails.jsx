@@ -49,6 +49,7 @@ const ProductDetails = () => {
             console.log('🔍 Product data loaded:', productData);
             console.log('🔍 Product price:', productData.price, typeof productData.price);
             console.log('🔍 Product rating:', productData.rating, typeof productData.rating);
+            
 
             setProduct(productData);
 
@@ -82,7 +83,8 @@ const ProductDetails = () => {
             navigate(ROUTES.LOGIN);
             return;
         }
-
+        console.log('add to Fav');
+        
         try {
             if (isFavorited) {
                 await productService.removeFromFavorites(id);
@@ -252,7 +254,7 @@ const ProductDetails = () => {
                                                 }`}
                                         >
                                             <img
-                                                src={image}
+                                                src={`${import.meta.env.VITE_API_BASE_URL}/product-image/${product.images[index]}`}
                                                 alt={`${product.name} ${index + 1}`}
                                                 className="w-full h-full object-cover"
                                             />

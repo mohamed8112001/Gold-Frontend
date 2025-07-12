@@ -92,10 +92,11 @@ export const authService = {
   },
 
   // Google OAuth authentication
-  googleAuth: async (credential) => {
+  googleAuth: async (credential, userType) => {
     try {
       // Send the Google ID token (credential) to the backend
-      const response = await api.post("/auth/google", { credential });
+      const response = await api.post("/auth/google", { credential , userType});
+      console.log(`response data: ${JSON.stringify(response.data)}`);
       
       // Assuming backend returns { accessToken, user, isNewUser }
       if (response.data.accessToken) {

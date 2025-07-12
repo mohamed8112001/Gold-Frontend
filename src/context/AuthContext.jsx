@@ -92,6 +92,27 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const googleRegister = async (credentialResponse,userType) => {
+    try {
+      setIsLoading(true);
+      // Pass the Google ID token (credential) to authService.googleAuth
+      const response = await authService.googleAuth(credentialResponse.credential, userType);
+      
+      // Assuming authService.googleAuth returns { user, isNewUser }
+      const { user: googleUser, isNewUser } = response;
+      
+      setUser(googleUser);
+      setIsAuthenticated(true);
+      
+      return response;
+    } catch (error) {
+      console.error('Google auth error:', error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const logout = async () => {
     try {
       await authService.logout();
