@@ -29,6 +29,7 @@ import { productService } from '../../services/productService.js';
 import { rateService } from '../../services/rateService.js';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES } from '../../utils/constants.js';
+import MapDisplay from '../../components/ui/MapDisplay.jsx';
 
 const ShopDetails = () => {
     const { id } = useParams();
@@ -374,6 +375,14 @@ const ShopDetails = () => {
     // Default gold shop image
     const defaultShopImage = 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=400&fit=crop&crop=center&auto=format&q=60';
 
+    // Extract location data from GeoJSON format
+    let latitude = null;
+    let longitude = null;
+    if (shop.location && shop.location.coordinates) {
+        longitude = shop.location.coordinates[0];
+        latitude = shop.location.coordinates[1];
+    }
+
     // Ensure shop has required properties to prevent errors
     const safeShop = {
         name: shop.name || 'Unnamed Shop',
@@ -385,6 +394,8 @@ const ShopDetails = () => {
         workingHours: shop.workingHours || 'Not specified',
         gallery: Array.isArray(shop.gallery) ? shop.gallery : [],
         image: shop.image || defaultShopImage,
+        latitude: latitude,
+        longitude: longitude,
         ...shop
     };
 
@@ -616,7 +627,7 @@ const ShopDetails = () => {
                 {/* Enhanced Shop Content Tabs */}
                 <div className="bg-white rounded-2xl shadow-xl overflow-hidden mx-4 lg:mx-8">
                     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                        <TabsList className="grid w-full grid-cols-3 bg-gray-50 p-3 rounded-none h-auto">
+                        <TabsList className="grid w-full grid-cols-4 bg-gray-50 p-3 rounded-none h-auto">
                             <TabsTrigger
                                 value="products"
                                 className="data-[state=active]:bg-white data-[state=active]:shadow-lg rounded-2xl py-5 px-8 font-bold text-lg transition-all"
@@ -630,6 +641,13 @@ const ShopDetails = () => {
                             >
                                 <Star className="w-6 h-6 mr-3" />
                                 Reviews ({safeReviews.length})
+                            </TabsTrigger>
+                            <TabsTrigger
+                                value="location"
+                                className="data-[state=active]:bg-white data-[state=active]:shadow-lg rounded-2xl py-5 px-8 font-bold text-lg transition-all"
+                            >
+                                <MapPin className="w-6 h-6 mr-3" />
+                                Location
                             </TabsTrigger>
                             <TabsTrigger
                                 value="gallery"
@@ -789,6 +807,23 @@ const ShopDetails = () => {
                                     </Button>
                                 </div>
                             )}
+                        </TabsContent>
+
+                        <TabsContent value="location" className="p-8">
+                            <div className="mb-8">
+                                <h2 className="text-3xl font-bold text-gray-900 mb-2">موقع المتجر</h2>
+                                <p className="text-gray-600">اعثر على المتجر واحصل على الاتجاهات</p>
+                            </div>
+
+                            <MapDisplay
+                                latitude={safeShop.latitude}
+                                longitude={safeShop.longitude}
+                                shopName={safeShop.name}
+                                shopAddress={safeShop.address}
+                                height="400px"
+                                showDirections={true}
+                                showHeader={false}
+                            />
                         </TabsContent>
 
                         <TabsContent value="gallery" className="p-8">

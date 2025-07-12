@@ -201,8 +201,13 @@ const ShopList = () => {
             <div className="flex-1">
               <h3 className="font-bold text-xl text-gray-900 mb-2 line-clamp-2 leading-tight">{shopName}</h3>
               <div className="flex items-center text-sm text-gray-600 mb-2">
-                <MapPin className="w-4 h-4 mr-2 text-gray-400" />
+                <MapPin className={`w-4 h-4 mr-2 ${shop.location && shop.location.coordinates ? 'text-green-500' : 'text-gray-400'}`} />
                 <span className="line-clamp-1">{shopAddress}</span>
+                {shop.location && shop.location.coordinates && (
+                  <span className="ml-2 text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
+                    موقع محدد
+                  </span>
+                )}
               </div>
               {isListView && (
                 <div className="mt-2 space-y-1">
