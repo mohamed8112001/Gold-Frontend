@@ -120,7 +120,7 @@ export const ROUTES = {
   FAVORITES: "/favorites",
 
   // Booking routes
-  BOOK_APPOINTMENT: (shopId) => `/booking/${shopId}`,
+  BOOK_APPOINTMENT: (shopId) => `/book-appointment/${shopId}`,
   MY_BOOKINGS: "/my-bookings",
   MANAGE_BOOKINGS: "/bookings/manage",
 

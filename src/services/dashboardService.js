@@ -130,6 +130,67 @@ export const dashboardService = {
       );
     }
   },
+
+  // Available Times Management (Shop Owner)
+  // Get available times for shop owner
+  getAvailableTimes: async () => {
+    try {
+      const response = await api.get("/booking/shop/bookings");
+      return response.data;
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.message || "Failed to fetch available times"
+      );
+    }
+  },
+
+  // Add new available time slot
+  addAvailableTime: async (timeSlotData) => {
+    try {
+      const response = await api.post("/booking/available-time", timeSlotData);
+      return response.data;
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.message || "Failed to add available time"
+      );
+    }
+  },
+
+  // Delete available time slot
+  deleteAvailableTime: async (timeId) => {
+    try {
+      const response = await api.delete(`/booking/available-time/${timeId}`);
+      return response.data;
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.message || "Failed to delete available time"
+      );
+    }
+  },
+
+  // Get available times for a specific shop (for booking)
+  getShopAvailableTimes: async (shopId) => {
+    try {
+      const response = await api.get(`/booking/available/${shopId}`);
+      return response.data;
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.message || "Failed to fetch shop available times"
+      );
+    }
+  },
+
+  // Book an available time slot
+  bookAvailableTime: async (timeId) => {
+    try {
+      const response = await api.post(`/available-times/${timeId}/book`);
+      return response.data;
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.message || "Failed to book available time"
+      );
+    }
+  },
 };
 
 export default dashboardService;

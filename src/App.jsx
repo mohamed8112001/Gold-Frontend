@@ -21,7 +21,7 @@ import Favorites from './pages/product/Favorites.jsx';
 import Dashboard from './pages/user/Dashboard.jsx';
 import Profile from './pages/user/Profile.jsx';
 import Settings from './pages/user/Settings.jsx';
-import BookAppointment from './pages/BookAppointment.jsx';
+import BookAppointment from './pages/booking/BookAppointment.jsx';
 import MyBookings from './pages/booking/MyBookings.jsx';
 import ManageBookings from './pages/seller/ManageBookings.jsx';
 import AdminDashboard from './pages/admin/AdminDashboard.jsx';
@@ -38,7 +38,7 @@ function App() {
       <Router>
         <Layout>
           <AnimatePresence mode="wait">
-            
+
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/home" element={<Home />} />
@@ -74,7 +74,7 @@ function App() {
               <Route path="/settings" element={<Settings />} />
 
               {/* Booking Routes */}
-              <Route path="/book-appointment" element={<BookAppointment />} />
+              <Route path="/book-appointment/:shopId" element={<BookAppointment />} />
               <Route path="/booking/:shopId" element={<BookAppointment />} />
               <Route path="/my-bookings" element={<MyBookings />} />
               <Route path="/bookings/manage" element={<ManageBookings />} />
