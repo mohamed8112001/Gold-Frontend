@@ -16,6 +16,7 @@ import {
 import { shopService } from '../../services/shopService.js';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES } from '../../utils/constants.js';
+import MapPicker from '@/components/ui/MapPicker.jsx';
 
 const CreateShop = () => {
     const navigate = useNavigate();
@@ -30,7 +31,9 @@ const CreateShop = () => {
         phone: '',
         whatsapp: '',
         workingHours: '',
-        specialties: ['']
+        specialties: [''],
+        latitude: null,
+        longitude: null
     });
     const [logo, setLogo] = useState(null);
     const [images, setImages] = useState([]);
@@ -63,6 +66,14 @@ const CreateShop = () => {
         setFormData(prev => ({
             ...prev,
             specialties: [...prev.specialties, '']
+        }));
+    };
+
+    const handleLocationChange = ({ latitude, longitude }) => {
+        setFormData(prev => ({
+            ...prev,
+            latitude,
+            longitude
         }));
     };
 
@@ -118,6 +129,15 @@ const CreateShop = () => {
             formData.specialties.filter(specialty => specialty.trim() !== '').forEach((specialty, index) => {
                 formDataToSend.append(`specialties[${index}]`, specialty);
             });
+
+            // Append location data in GeoJSON format
+            if (formData.latitude && formData.longitude) {
+                const locationData = {
+                    type: "Point",
+                    coordinates: [formData.longitude, formData.latitude] // [longitude, latitude] for GeoJSON
+                };
+                formDataToSend.append('location', JSON.stringify(locationData));
+            }
 
             // Append logo file
             if (logo) {
@@ -445,6 +465,16 @@ const CreateShop = () => {
                             </div>
                         </CardContent>
                     </Card>
+
+                    {/* Location Map */}
+                    <MapPicker
+                        latitude={formData.latitude || 30.0444}
+                        longitude={formData.longitude || 31.2357}
+                        onLocationChange={handleLocationChange}
+                        height="400px"
+                        showSearch={true}
+                        showCurrentLocation={true}
+                    />
 
                     {/* Submit */}
                     <div className="flex gap-4">
