@@ -150,11 +150,13 @@ const CreateShop = () => {
             navigate(ROUTES.DASHBOARD);
         } catch (error) {
             console.error('Error creating shop:', error);
-            alert(`حدث خطأ في إنشاء المتجر: ${error.response?.data?.message || error.message}`);
+            alert(    "لديك محل بالفعل، لا يمكنك إنشاء محل آخر")
         } finally {
             setIsLoading(false);
         }
     };
+    
+
 
     return (
         <div className="min-h-screen bg-gray-50">
