@@ -307,12 +307,20 @@ const ProductList = () => {
     const applyFilters = () => {
         let filtered = [...products];
 
-        // Search filter
-        if (searchQuery) {
-            filtered = filtered.filter(product =>
-                product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                product.description?.toLowerCase().includes(searchQuery.toLowerCase())
-            );
+        // Enhanced search filter
+        if (searchQuery && searchQuery.trim()) {
+            const searchTerm = searchQuery.toLowerCase().trim();
+            filtered = filtered.filter(product => {
+                const name = (product.name || '').toLowerCase();
+                const description = (product.description || '').toLowerCase();
+                const category = (product.category || '').toLowerCase();
+                const shopName = (product.shopName || '').toLowerCase();
+
+                return name.includes(searchTerm) ||
+                    description.includes(searchTerm) ||
+                    category.includes(searchTerm) ||
+                    shopName.includes(searchTerm);
+            });
         }
 
         // Category filter
@@ -348,14 +356,20 @@ const ProductList = () => {
 
     const handleSearch = (e) => {
         e.preventDefault();
+        console.log('🔍 Search triggered with query:', searchQuery);
+
+        // Update URL parameters
         setSearchParams(prev => {
-            if (searchQuery) {
-                prev.set('search', searchQuery);
+            if (searchQuery && searchQuery.trim()) {
+                prev.set('search', searchQuery.trim());
             } else {
                 prev.delete('search');
             }
             return prev;
         });
+
+        // Force re-apply filters immediately
+        applyFilters();
     };
 
     const handleFilterChange = (key, value) => {
@@ -448,7 +462,7 @@ const ProductList = () => {
                 }}
             >
                 <div className={`relative overflow-hidden rounded-t-3xl ${isListView ? 'w-64 flex-shrink-0 rounded-l-3xl rounded-tr-none' : 'w-full'}`}>
-                    <div className={`relative ${isListView ? 'h-full' : 'h-64'} overflow-hidden`}>
+                    <div className={`relative ${isListView ? 'h-full' : 'h-48'} overflow-hidden`}>
                         <img
                             src={`${import.meta.env.VITE_API_BASE_URL}/product-image/${safeProduct.image}`}
                             alt={safeProduct.name}
@@ -483,65 +497,42 @@ const ProductList = () => {
 
                     {/* Premium favorite button */}
                     <Button
-                        size="lg"
+                        size="sm"
                         variant="ghost"
-                        className="absolute top-4 right-4 bg-white/95 hover:bg-white shadow-2xl backdrop-blur-md rounded-full w-12 h-12 p-0 opacity-0 group-hover:opacity-100 transition-all duration-500 hover:scale-125 border-2 border-white/70 z-20"
+                        className="absolute top-3 right-3 bg-white/95 hover:bg-white shadow-lg backdrop-blur-md rounded-full w-8 h-8 p-0 opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 border border-white/70 z-20"
                         onClick={(e) => {
                             e.stopPropagation();
                             handleAddToFavorites(productId);
                         }}
                     >
-                        <Heart className={`w-5 h-5 ${safeProduct.isFavorited ? 'fill-red-500 text-red-500' : 'text-gray-600 hover:text-red-500'} transition-colors duration-200`} />
+                        <Heart className={`w-4 h-4 ${safeProduct.isFavorited ? 'fill-red-500 text-red-500' : 'text-gray-600 hover:text-red-500'} transition-colors duration-200`} />
                     </Button>
 
                     {/* Premium category badge */}
                     {safeProduct.category && (
-                        <Badge className="absolute top-4 left-4 bg-gradient-to-r from-yellow-500 via-yellow-600 to-orange-500 text-white shadow-2xl px-4 py-2 text-sm font-bold border border-yellow-400/50 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-2 group-hover:translate-y-0 z-20">
+                        <Badge className="absolute top-3 left-3 bg-gradient-to-r from-yellow-500 via-yellow-600 to-orange-500 text-white shadow-lg px-3 py-1 text-xs font-bold border border-yellow-400/50 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-1 group-hover:translate-y-0 z-20">
                             {PRODUCT_CATEGORIES[safeProduct.category.toUpperCase()] || safeProduct.category}
                         </Badge>
                     )}
 
-                    {/* Premium quality badge */}
-                    <div className="absolute bottom-4 right-4 z-20">
-                        <div className="bg-gradient-to-r from-green-500 to-green-600 text-white px-3 py-1.5 rounded-full shadow-xl text-xs font-bold opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-2 group-hover:translate-y-0 border border-green-400/50">
-                            Premium Quality
-                        </div>
-                    </div>
-
 
                 </div>
 
-                <div className={`p-8 flex flex-col h-full ${isListView ? 'justify-between' : ''} relative z-10`}>
+                <div className={`p-5 flex flex-col h-full ${isListView ? 'justify-between' : ''} relative z-10`}>
                     <div className="flex-1">
-                        <h3 className="font-bold text-2xl mb-4 group-hover:text-yellow-600 transition-colors line-clamp-2 leading-tight group-hover:scale-105 transform origin-left duration-300">
+                        <h3 className="font-bold text-lg mb-2 group-hover:text-yellow-600 transition-colors line-clamp-2 leading-tight group-hover:scale-105 transform origin-left duration-300">
                             {safeProduct.name}
                         </h3>
-                        <p className="text-gray-600 text-base mb-5 line-clamp-3 leading-relaxed bg-gray-50 p-3 rounded-xl">
-                            {safeProduct.description}
-                        </p>
-
-                        {/* Enhanced rating display */}
-                        <div className="flex items-center gap-3 mb-5">
-                            <div className="flex items-center bg-gradient-to-r from-yellow-100 to-yellow-200 px-4 py-2 rounded-full shadow-md border border-yellow-300/50">
-                                <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                                <span className="text-sm font-bold ml-2 text-yellow-700">
-                                    {safeProduct.rating.toFixed(1)}
-                                </span>
-                                <span className="text-sm text-gray-600 ml-1 font-medium">
-                                    ({safeProduct.reviewCount} reviews)
-                                </span>
-                            </div>
-                        </div>
 
                         {/* Enhanced shop information */}
                         {safeProduct.shopName && safeProduct.shopName !== 'Unknown Shop' && (
-                            <div className="flex items-center gap-3 mb-6 bg-blue-50 p-3 rounded-xl border border-blue-200/50">
-                                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
-                                    <ShoppingBag className="w-4 h-4 text-white" />
+                            <div className="flex items-center gap-2 mb-2 bg-blue-50 p-2 rounded-lg border border-blue-200/50">
+                                <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
+                                    <ShoppingBag className="w-3 h-3 text-white" />
                                 </div>
                                 <div className="flex-1">
-                                    <p className="text-sm text-gray-600 font-medium">Available at</p>
-                                    <p className="text-base font-bold text-blue-700 hover:text-blue-800 cursor-pointer transition-colors duration-200" onClick={(e) => {
+                                    <p className="text-xs text-gray-600 font-medium">Available at</p>
+                                    <p className="text-sm font-bold text-blue-700 hover:text-blue-800 cursor-pointer transition-colors duration-200 truncate" onClick={(e) => {
                                         e.stopPropagation();
                                         if (safeProduct.shopId) {
                                             console.log('🏪 Navigating to shop:', safeProduct.shopId);
@@ -558,51 +549,51 @@ const ProductList = () => {
                     </div>
 
                     {/* Enhanced Actions Section */}
-                    <div className="mt-auto pt-6">
-                        <div className="flex flex-col gap-3">
+                    <div className="mt-auto pt-2">
+                        <div className="flex flex-col gap-2">
                             {/* Main View Product Button */}
                             <Button
-                                size="lg"
-                                className="w-full bg-gradient-to-r from-yellow-500 via-yellow-600 to-orange-500 hover:from-yellow-600 hover:via-orange-500 hover:to-orange-600 text-white px-6 py-4 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 font-bold text-base border border-yellow-400/50"
+                                size="md"
+                                className="w-full bg-gradient-to-r from-yellow-500 via-yellow-600 to-orange-500 hover:from-yellow-600 hover:via-orange-500 hover:to-orange-600 text-white px-4 py-2.5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 font-semibold text-sm border border-yellow-400/50"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     navigate(ROUTES.PRODUCT_DETAILS(productId));
                                 }}
                             >
-                                <Eye className="w-5 h-5 mr-3" />
-                                View Product Details
+                                <Eye className="w-4 h-4 mr-2" />
+                                View Details
                             </Button>
 
                             {/* Secondary Actions */}
-                            {safeProduct.shopId && safeProduct.shopName && safeProduct.shopName !== 'Unknown Shop' && (
-                                <div className="flex gap-2">
+                            <div className="flex gap-2">
+                                {safeProduct.shopId && safeProduct.shopName && safeProduct.shopName !== 'Unknown Shop' && (
                                     <Button
                                         variant="outline"
-                                        size="md"
-                                        className="flex-1 border-2 border-blue-300 hover:border-blue-500 hover:bg-blue-50 text-blue-700 hover:text-blue-800 py-3 rounded-xl font-semibold transition-all duration-300"
+                                        size="sm"
+                                        className="flex-1 border border-blue-300 hover:border-blue-500 hover:bg-blue-50 text-blue-700 hover:text-blue-800 py-2 rounded-lg font-medium transition-all duration-300 text-xs"
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             console.log('🏪 Shop button clicked, navigating to:', safeProduct.shopId);
                                             navigate(ROUTES.SHOP_DETAILS(safeProduct.shopId));
                                         }}
                                     >
-                                        <ShoppingBag className="w-4 h-4 mr-2" />
-                                        Visit Shop
+                                        <ShoppingBag className="w-3 h-3 mr-1" />
+                                        Shop
                                     </Button>
-                                    <Button
-                                        variant="outline"
-                                        size="md"
-                                        className="flex-1 border-2 border-green-300 hover:border-green-500 hover:bg-green-50 text-green-700 hover:text-green-800 py-3 rounded-xl font-semibold transition-all duration-300"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleAddToFavorites(productId);
-                                        }}
-                                    >
-                                        <Heart className={`w-4 h-4 mr-2 ${safeProduct.isFavorited ? 'fill-current' : ''}`} />
-                                        {safeProduct.isFavorited ? 'Saved' : 'Save'}
-                                    </Button>
-                                </div>
-                            )}
+                                )}
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="flex-1 border border-red-300 hover:border-red-500 hover:bg-red-50 text-red-700 hover:text-red-800 py-2 rounded-lg font-medium transition-all duration-300 text-xs"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleAddToFavorites(productId);
+                                    }}
+                                >
+                                    <Heart className={`w-3 h-3 mr-1 ${safeProduct.isFavorited ? 'fill-current' : ''}`} />
+                                    {safeProduct.isFavorited ? 'Saved' : 'Save'}
+                                </Button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -632,29 +623,68 @@ const ProductList = () => {
                         })()}
                     </div>
 
-                    {/* Search and Controls */}
-                    <div className="flex flex-col lg:flex-row gap-6 items-start lg:items-center justify-between bg-white rounded-2xl p-6 shadow-lg">
-                        <form onSubmit={handleSearch} className="flex-1 max-w-2xl">
-                            <div className="relative group">
-                                <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full blur opacity-25 group-hover:opacity-40 transition-opacity duration-300"></div>
-                                <div className="relative bg-white rounded-full border-2 border-gray-200 focus-within:border-yellow-400 transition-colors duration-300">
-                                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                                    <Input
-                                        type="text"
-                                        placeholder="Search for products, jewelry, gold..."
-                                        value={searchQuery}
-                                        onChange={(e) => setSearchQuery(e.target.value)}
-                                        className="pl-12 pr-6 py-4 text-lg rounded-full border-0 focus:ring-0 bg-transparent placeholder-gray-500"
-                                    />
-                                    <Button
-                                        type="submit"
-                                        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-6 py-2 rounded-full"
-                                    >
-                                        Search
-                                    </Button>
+                    {/* Enhanced Search and Controls */}
+                    <div className="flex flex-col lg:flex-row gap-8 items-start lg:items-center justify-between bg-white rounded-3xl p-8 shadow-xl border border-gray-100">
+                        <div className="flex-1 max-w-4xl">
+                            <div className="flex gap-4 items-center">
+                                {/* Enhanced input container */}
+                                <div className="flex-1 relative group">
+                                    {/* Enhanced glow effect */}
+                                    <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-orange-400 to-yellow-600 rounded-full blur-lg opacity-20 group-hover:opacity-40 group-focus-within:opacity-50 transition-all duration-500"></div>
+
+                                    {/* Main input container */}
+                                    <div className="relative bg-white rounded-full border-2 border-gray-300 focus-within:border-yellow-500 hover:border-yellow-400 transition-all duration-300 shadow-lg hover:shadow-xl focus-within:shadow-2xl">
+                                        {/* Enhanced search icon with loading state */}
+                                        <div className="absolute left-5 top-1/2 transform -translate-y-1/2">
+                                            {isLoading && searchQuery ? (
+                                                <div className="w-6 h-6 border-2 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
+                                            ) : (
+                                                <Search className="text-gray-500 w-6 h-6 group-focus-within:text-yellow-600 transition-colors duration-300" />
+                                            )}
+                                        </div>
+
+                                        {/* Enhanced input field */}
+                                        <Input
+                                            type="text"
+                                            placeholder="Search for products, jewelry, gold items..."
+                                            value={searchQuery}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                setSearchQuery(value);
+                                                console.log('🔍 Search input changed:', value);
+
+                                                // Update URL immediately for better UX
+                                                setSearchParams(prev => {
+                                                    if (value && value.trim()) {
+                                                        prev.set('search', value.trim());
+                                                    } else {
+                                                        prev.delete('search');
+                                                    }
+                                                    return prev;
+                                                });
+                                            }}
+                                            className="pl-14 pr-6 py-5 text-lg rounded-full border-0 focus:ring-0 bg-transparent placeholder-gray-500 focus:placeholder-gray-400 font-medium transition-all duration-300"
+                                            onKeyPress={(e) => {
+                                                if (e.key === 'Enter') {
+                                                    e.preventDefault();
+                                                    handleSearch(e);
+                                                }
+                                            }}
+                                        />
+                                    </div>
                                 </div>
+
+                                {/* Separate search button */}
+                                <Button
+                                    type="button"
+                                    onClick={handleSearch}
+                                    className="bg-gradient-to-r from-yellow-500 via-yellow-600 to-orange-500 hover:from-yellow-600 hover:via-orange-500 hover:to-orange-600 text-white px-8 py-5 rounded-full font-bold shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-105 border border-yellow-400/50"
+                                >
+                                    <Search className="w-5 h-5 mr-2" />
+                                    <span className="text-base">Search</span>
+                                </Button>
                             </div>
-                        </form>
+                        </div>
 
                         <div className="flex items-center gap-4">
                             <div className="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-full">
@@ -663,16 +693,35 @@ const ProductList = () => {
                                 </span>
                             </div>
 
+                            {/* Enhanced Clear search button */}
+                            {searchQuery && (
+                                <Button
+                                    variant="outline"
+                                    size="md"
+                                    onClick={() => {
+                                        setSearchQuery('');
+                                        setSearchParams(prev => {
+                                            prev.delete('search');
+                                            return prev;
+                                        });
+                                    }}
+                                    className="flex items-center gap-2 border-2 border-red-300 text-red-600 hover:bg-red-50 hover:border-red-500 hover:text-red-700 px-4 py-2.5 rounded-full font-semibold shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                                >
+                                    <X className="w-4 h-4" />
+                                    <span>Clear Search</span>
+                                </Button>
+                            )}
+
                             <Button
                                 variant="outline"
-                                size="sm"
+                                size="md"
                                 onClick={() => setShowFilters(!showFilters)}
-                                className="flex items-center gap-2 border-yellow-200 text-yellow-700 hover:bg-yellow-50 hover:border-yellow-300"
+                                className="flex items-center gap-2 border-2 border-yellow-300 text-yellow-700 hover:bg-yellow-50 hover:border-yellow-500 hover:text-yellow-800 px-4 py-2.5 rounded-full font-semibold shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
                             >
                                 <SlidersHorizontal className="w-4 h-4" />
-                                Filters
+                                <span>Filters</span>
                                 {Object.keys(filters).some(key => filters[key]) && (
-                                    <span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
+                                    <span className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></span>
                                 )}
                             </Button>
 
@@ -854,8 +903,8 @@ const ProductList = () => {
 
                         {/* Products Grid/List */}
                         {isLoading ? (
-                            <div className={`grid gap-10 ${viewMode === 'grid'
-                                ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
+                            <div className={`grid gap-6 ${viewMode === 'grid'
+                                ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
                                 : 'grid-cols-1 max-w-5xl mx-auto'
                                 }`}>
                                 {[...Array(8)].map((_, index) => (
@@ -902,8 +951,8 @@ const ProductList = () => {
                                 })()}
                             </div>
                         ) : (
-                            <div className={`grid gap-10 ${viewMode === 'grid'
-                                ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
+                            <div className={`grid gap-6 ${viewMode === 'grid'
+                                ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
                                 : 'grid-cols-1 max-w-5xl mx-auto'
                                 }`}>
                                 {filteredProducts.map((product) => (
