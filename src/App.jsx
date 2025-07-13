@@ -32,7 +32,6 @@ import Careers from './pages/static/Careers.jsx';
 import News from './pages/static/News.jsx';
 import HelpCenter from './pages/static/HelpCenter.jsx';
 import FAQ from './pages/static/FAQ.jsx';
-import PrivacyPolicy from './pages/static/PrivacyPolicy.jsx';
 import TermsConditions from './pages/static/TermsConditions.jsx';
 import ReturnsPolicy from './pages/static/ReturnsPolicy.jsx';
 import ShippingPolicy from './pages/static/ShippingPolicy.jsx';
@@ -106,7 +105,6 @@ function App() {
               <Route path="/news" element={<News />} />
               <Route path="/help" element={<HelpCenter />} />
               <Route path="/faq" element={<FAQ />} />
-              <Route path="/privacy" element={<PrivacyPolicy />} />
               <Route path="/terms" element={<TermsConditions />} />
 
               {/* Legal Pages Routes */}
