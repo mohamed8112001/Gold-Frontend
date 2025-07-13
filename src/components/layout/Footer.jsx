@@ -60,44 +60,42 @@ const Footer = () => {
 
   return (
     <footer className="bg-black text-white relative">
-      {/* Uniform black color without any other color touches */}
-
       {/* Main Footer Content */}
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
           {/* Company Info */}
           <div className="lg:col-span-1">
-            <div className="flex items-center space-x-3 rtl:space-x-reverse mb-6">
-              <div className="w-12 h-12 bg-gray-800 rounded-xl flex items-center justify-center border border-gray-700">
-                <span className="text-white font-bold text-xl">D</span>
+            <div className="flex items-center space-x-3 rtl:space-x-reverse mb-4">
+              <div className="w-10 h-10 bg-gray-800 rounded-xl flex items-center justify-center border border-gray-700">
+                <span className="text-white font-bold text-lg">D</span>
               </div>
-              <span className="text-3xl font-bold text-white" style={{ fontFamily: 'serif' }}>
+              <span className="text-2xl font-bold text-white" style={{ fontFamily: 'serif' }}>
                 Dibla
               </span>
             </div>
 
-            <p className="text-gray-300 mb-8 leading-relaxed text-sm">
+            <p className="text-gray-300 mb-4 leading-relaxed text-sm">
               منصة Dibla تربط العملاء بأفضل متاجر الذهب والمجوهرات في مصر.
               اكتشف مجموعة واسعة من المجوهرات الفاخرة واحجز موعدك بسهولة.
             </p>
 
             {/* Contact Info */}
-            <div className="space-y-4">
+            <div className="space-y-2">
               <div className="flex items-center space-x-3 rtl:space-x-reverse text-gray-300 group hover:text-white transition-all duration-300">
-                <div className="w-10 h-10 bg-gray-800 rounded-xl flex items-center justify-center group-hover:bg-gray-700 transition-all duration-300 border border-gray-700">
-                  <Phone className="w-4 h-4 text-gray-300 group-hover:text-white transition-colors duration-300" />
+                <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center group-hover:bg-gray-700 transition-all duration-300 border border-gray-700">
+                  <Phone className="w-3 h-3 text-gray-300 group-hover:text-white transition-colors duration-300" />
                 </div>
                 <span className="text-sm font-medium">+20 123 456 7890</span>
               </div>
               <div className="flex items-center space-x-3 rtl:space-x-reverse text-gray-300 group hover:text-white transition-all duration-300">
-                <div className="w-10 h-10 bg-gray-800 rounded-xl flex items-center justify-center group-hover:bg-gray-700 transition-all duration-300 border border-gray-700">
-                  <Mail className="w-4 h-4 text-gray-300 group-hover:text-white transition-colors duration-300" />
+                <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center group-hover:bg-gray-700 transition-all duration-300 border border-gray-700">
+                  <Mail className="w-3 h-3 text-gray-300 group-hover:text-white transition-colors duration-300" />
                 </div>
                 <span className="text-sm font-medium">info@dibla.com</span>
               </div>
               <div className="flex items-center space-x-3 rtl:space-x-reverse text-gray-300 group hover:text-white transition-all duration-300">
-                <div className="w-10 h-10 bg-gray-800 rounded-xl flex items-center justify-center group-hover:bg-gray-700 transition-all duration-300 border border-gray-700">
-                  <MapPin className="w-4 h-4 text-gray-300 group-hover:text-white transition-colors duration-300" />
+                <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center group-hover:bg-gray-700 transition-all duration-300 border border-gray-700">
+                  <MapPin className="w-3 h-3 text-gray-300 group-hover:text-white transition-colors duration-300" />
                 </div>
                 <span className="text-sm font-medium">القاهرة، مصر</span>
               </div>
@@ -106,12 +104,12 @@ const Footer = () => {
 
           {/* Footer Links */}
           {Object.entries(footerSections).map(([key, section]) => (
-            <div key={key} className="space-y-6">
-              <h3 className="text-lg font-bold mb-6 text-white relative">
+            <div key={key} className="space-y-3">
+              <h3 className="text-base font-bold mb-3 text-white relative">
                 {section.title}
-                <div className="absolute bottom-0 left-0 w-12 h-0.5 bg-gray-600 rounded-full"></div>
+                <div className="absolute bottom-0 left-0 w-8 h-0.5 bg-gray-600 rounded-full"></div>
               </h3>
-              <ul className="space-y-4">
+              <ul className="space-y-2">
                 {section.links.map((link) => (
                   <li key={link.name}>
                     <Link
@@ -130,14 +128,12 @@ const Footer = () => {
             </div>
           ))}
         </div>
-
-
       </div>
 
       {/* Bottom Footer */}
-      <div className="border-t border-gray-700 mt-16">
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
+      <div className="border-t border-gray-700 mt-6">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-3 md:space-y-0">
             {/* Copyright */}
             <div className="flex items-center space-x-3 rtl:space-x-reverse text-gray-300 text-sm">
               <span className="font-medium">© {currentYear} Dibla. جميع الحقوق محفوظة.</span>
@@ -150,19 +146,19 @@ const Footer = () => {
             </div>
 
             {/* Social Links */}
-            <div className="flex items-center space-x-6 rtl:space-x-reverse">
+            <div className="flex items-center space-x-4 rtl:space-x-reverse">
               <span className="text-gray-300 text-sm font-medium">تابعنا:</span>
-              <div className="flex items-center space-x-4 rtl:space-x-reverse">
+              <div className="flex items-center space-x-3 rtl:space-x-reverse">
                 {socialLinks.map((social) => {
                   const Icon = social.icon;
                   return (
                     <a
                       key={social.name}
                       href={social.href}
-                      className="w-11 h-11 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-xl flex items-center justify-center transition-all duration-300 transform hover:scale-110 border border-gray-700"
+                      className="w-9 h-9 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-lg flex items-center justify-center transition-all duration-300 transform hover:scale-110 border border-gray-700"
                       aria-label={social.name}
                     >
-                      <Icon className="w-5 h-5" />
+                      <Icon className="w-4 h-4" />
                     </a>
                   );
                 })}
@@ -176,4 +172,3 @@ const Footer = () => {
 };
 
 export default Footer;
-
