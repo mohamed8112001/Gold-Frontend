@@ -25,6 +25,19 @@ import BookAppointment from './pages/booking/BookAppointment.jsx';
 import MyBookings from './pages/booking/MyBookings.jsx';
 import ManageBookings from './pages/seller/ManageBookings.jsx';
 import AdminDashboard from './pages/admin/AdminDashboard.jsx';
+// Static Pages
+import AboutUs from './pages/static/AboutUs.jsx';
+import ContactUs from './pages/static/ContactUs.jsx';
+import Careers from './pages/static/Careers.jsx';
+import News from './pages/static/News.jsx';
+import HelpCenter from './pages/static/HelpCenter.jsx';
+import FAQ from './pages/static/FAQ.jsx';
+import PrivacyPolicy from './pages/static/PrivacyPolicy.jsx';
+import TermsConditions from './pages/static/TermsConditions.jsx';
+import ReturnsPolicy from './pages/static/ReturnsPolicy.jsx';
+import ShippingPolicy from './pages/static/ShippingPolicy.jsx';
+import QualityAssurance from './pages/static/QualityAssurance.jsx';
+import CustomerComplaints from './pages/static/CustomerComplaints.jsx';
 import CreateAdmin from './pages/admin/CreateAdmin.jsx';
 import PromoteToAdmin from './pages/admin/PromoteToAdmin.jsx';
 import DemoAdminLogin from './pages/admin/DemoAdminLogin.jsx';
@@ -85,6 +98,22 @@ function App() {
               <Route path="/admin/create" element={<CreateAdmin />} />
               <Route path="/admin/promote" element={<PromoteToAdmin />} />
               <Route path="/demo-login" element={<DemoAdminLogin />} />
+
+              {/* Static Pages Routes */}
+              <Route path="/about" element={<AboutUs />} />
+              <Route path="/contact" element={<ContactUs />} />
+              <Route path="/careers" element={<Careers />} />
+              <Route path="/news" element={<News />} />
+              <Route path="/help" element={<HelpCenter />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/privacy" element={<PrivacyPolicy />} />
+              <Route path="/terms" element={<TermsConditions />} />
+
+              {/* Legal Pages Routes */}
+              <Route path="/returns" element={<ReturnsPolicy />} />
+              <Route path="/shipping" element={<ShippingPolicy />} />
+              <Route path="/quality" element={<QualityAssurance />} />
+              <Route path="/complaints" element={<CustomerComplaints />} />
 
               <Route path="*" element={<NotFound />} />
             </Routes>

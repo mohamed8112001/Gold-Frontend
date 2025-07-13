@@ -14,8 +14,11 @@ import {
   TrendingUp,
   CheckCircle
 } from 'lucide-react';
+import useScrollToTop from '../../hooks/useScrollToTop';
 
 const AboutUs = () => {
+  // Use scroll to top hook
+  useScrollToTop();
   const features = [
     {
       icon: Clock,

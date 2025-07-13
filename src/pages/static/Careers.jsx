@@ -19,8 +19,11 @@ import {
   Target,
   Award
 } from 'lucide-react';
+import useScrollToTop from '../../hooks/useScrollToTop';
 
 const Careers = () => {
+  // Use scroll to top hook
+  useScrollToTop();
   const [selectedJob, setSelectedJob] = useState(null);
 
   const jobOpenings = [
