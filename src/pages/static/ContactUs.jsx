@@ -16,8 +16,11 @@ import {
   Linkedin,
   CheckCircle
 } from 'lucide-react';
+import useScrollToTop from '../../hooks/useScrollToTop';
 
 const ContactUs = () => {
+  // Use scroll to top hook
+  useScrollToTop();
   const [formData, setFormData] = useState({
     name: '',
     email: '',

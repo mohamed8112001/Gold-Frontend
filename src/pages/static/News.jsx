@@ -15,8 +15,11 @@ import {
   Eye,
   Share2
 } from 'lucide-react';
+import useScrollToTop from '../../hooks/useScrollToTop';
 
 const News = () => {
+  // Use scroll to top hook
+  useScrollToTop();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
 
