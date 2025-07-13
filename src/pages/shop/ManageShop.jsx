@@ -19,7 +19,8 @@ import {
     Heart,
     Shield,
     Tag,
-    ShoppingCart
+    ShoppingCart,
+    MapPin
 } from 'lucide-react';
 import { shopService } from '../../services/shopService.js';
 import { productService } from '../../services/productService.js';
@@ -450,13 +451,15 @@ const ManageShop = () => {
                                 {products.map((product) => (
                                     <Card key={product.id}>
                                         <CardContent className="p-6">
-                                            <p>{JSON.stringify(product)}</p>
                                             <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-200">
                                                 {/* Top Section - Image with Status and Quick Actions */}
                                                 <div className="relative group">
                                                     <img
-                                                        src={`${import.meta.env.VITE_API_BASE_URL}/product-image/${product.logoUrl}` || '/placeholder-product.jpg'}
+                                                        src={`${import.meta.env.VITE_API_BASE_URL}/product-image/${product.images[0]}`}
                                                         alt={product.name}
+                                                        onError={e=>{
+                                                            e.target.src= '/placeholder-product.jpg'
+                                                        }}
                                                         className="w-full h-48 object-cover"
                                                     />
 
