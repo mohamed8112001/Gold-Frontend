@@ -33,9 +33,34 @@ const ProductDetails = () => {
     const [isFavorited, setIsFavorited] = useState(false);
     const [selectedImage, setSelectedImage] = useState(0);
 
+    const [mainImage, setMainImage] = useState('')
+
     useEffect(() => {
         loadProductDetails();
     }, [id]);
+
+
+    const changeImage = (index) => {
+        console.log(`change image clicked: ${index}`);
+        console.log('Current mainImage:', mainImage);
+        console.log('Product images:', product.images);
+        console.log('Selected image:', product.images[index]);
+        
+        // Update the selected image index
+        setSelectedImage(index);
+        
+        // Update the main image to show the selected thumbnail
+        if (product.images && product.images[index]) {
+            setMainImage(product.images[index]);
+            console.log('New mainImage set to:', product.images[index]);
+        }
+    }
+
+    const resetToLogo = () => {
+        console.log('Resetting to logo image');
+        setSelectedImage(-1); // No thumbnail selected
+        setMainImage(product.logoUrl);
+    }
 
     const loadProductDetails = async () => {
         try {
@@ -52,6 +77,13 @@ const ProductDetails = () => {
 
 
             setProduct(productData);
+
+            // Always start with the logoUrl as the main image
+            if (productData.logoUrl) {
+                setMainImage(productData.logoUrl);
+            } else if (productData.images && productData.images.length > 0) {
+                setMainImage(productData.images[0]);
+            }
 
             // Load shop details
             if (productData.shopId) {
@@ -71,6 +103,7 @@ const ProductDetails = () => {
             console.error('Error loading product details:', error);
             // Use mock data for demo
             setProduct(mockProduct);
+            setMainImage(mockProduct.logoUrl || mockProduct.images[0]); // Prioritize logoUrl
             setShop(mockShop);
             setReviews(mockReviews);
         } finally {
@@ -119,6 +152,7 @@ const ProductDetails = () => {
         name: 'Classic Gold Ring',
         description: 'Elegant 21-karat gold ring with classic design, crafted with exceptional care from the finest gold. Features a sophisticated design suitable for all special occasions.',
         category: 'rings',
+        logoUrl: 'default-gold-ring-logo.jpg', // Default logo image
         images: defaultGoldImages,
         rating: 4.5,
         reviewCount: 23,
@@ -235,23 +269,41 @@ const ProductDetails = () => {
                         <div className="space-y-6">
                             <div className="aspect-square bg-white rounded-3xl overflow-hidden shadow-xl">
                                 <img
-                                    src={`${import.meta.env.VITE_API_BASE_URL}/product-image/${product.logoUrl}`}
+                                    src={mainImage ? `${import.meta.env.VITE_API_BASE_URL}/product-image/${mainImage}` : defaultGoldImages[0]}
                                     alt={product.name}
                                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                                     onError={(e) => {
+                                        console.log('Image failed to load:', e.target.src);
                                         e.target.src = defaultGoldImages[0];
+                                    }}
+                                    onLoad={() => {
+                                        console.log('Main image loaded successfully:', mainImage);
                                     }}
                                 />
                             </div>
 
-                            {product.images && product.images.length > 1 && (
+                            {(product.logoUrl || (product.images && product.images.length > 0)) && (
                                 <div className="flex gap-2 overflow-x-auto">
-                                    {product.images.map((image, index) => (
+                                    {/* Logo/Default Image Thumbnail */}
+                                    {product.logoUrl && (
+                                        <button
+                                            onClick={resetToLogo}
+                                            className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 ${selectedImage === -1 ? 'border-yellow-500' : 'border-gray-200'}`}
+                                        >
+                                            <img
+                                                src={`${import.meta.env.VITE_API_BASE_URL}/product-image/${product.logoUrl}`}
+                                                alt={`${product.name} Logo`}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        </button>
+                                    )}
+                                    
+                                    {/* Additional Images Thumbnails */}
+                                    {product.images && product.images.map((image, index) => (
                                         <button
                                             key={index}
-                                            onClick={() => setSelectedImage(index)}
-                                            className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 ${selectedImage === index ? 'border-yellow-500' : 'border-gray-200'
-                                                }`}
+                                            onClick={() => changeImage(index)}
+                                            className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 ${selectedImage === index ? 'border-yellow-500' : 'border-gray-200'}`}
                                         >
                                             <img
                                                 src={`${import.meta.env.VITE_API_BASE_URL}/product-image/${product.images[index]}`}
