@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button.jsx';
-import { Menu, X, User, LogOut } from 'lucide-react';
+import { Menu, X, Globe } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.jsx';
+import { useTranslation } from 'react-i18next';
 
 const Header = () => {
   const navigate = useNavigate();
-  const { user, isAuthenticated, isAdmin, isShopOwner, logout ,isRegularUser} = useAuth();
+  const { user, isAuthenticated, isAdmin, isShopOwner, logout, isRegularUser } = useAuth();
+  const { i18n, t } = useTranslation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -53,6 +55,23 @@ const Header = () => {
     navigate('/');
   };
 
+  // Language toggle function
+  const toggleLanguage = () => {
+    console.log('🌐 Current language:', i18n.language);
+    const newLang = i18n.language === 'ar' ? 'en' : 'ar';
+    console.log('🌐 Switching to:', newLang);
+
+    i18n.changeLanguage(newLang).then(() => {
+      console.log('🌐 Language changed successfully to:', newLang);
+      // Update document direction
+      document.documentElement.dir = newLang === 'ar' ? 'rtl' : 'ltr';
+      document.documentElement.lang = newLang;
+      console.log('🌐 Document direction set to:', document.documentElement.dir);
+    }).catch((error) => {
+      console.error('🌐 Error changing language:', error);
+    });
+  };
+
   return (
     <>
       <header
@@ -89,18 +108,18 @@ const Header = () => {
                 to="/home"
                 className="relative text-gray-700 hover:text-yellow-600 font-medium text-lg transition-all duration-300 group px-3 py-2"
               >
-                <span className="relative z-10">Home</span>
+                <span className="relative z-10">{t('home')}</span>
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-yellow-400 to-yellow-600 group-hover:w-full transition-all duration-300"></span>
               </Link>
               <Link
                 to="/shops"
                 className="relative text-gray-700 hover:text-yellow-600 font-medium text-lg transition-all duration-300 group px-3 py-2"
               >
-                <span className="relative z-10">Stores</span>
+                <span className="relative z-10">{t('stores')}</span>
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-yellow-400 to-yellow-600 group-hover:w-full transition-all duration-300"></span>
               </Link>
               {(isAuthenticated && user && (isShopOwner)) && (
-                <Link   isRegularUser
+                <Link isRegularUser
                   to="/dashboard"
                   className="relative text-gray-700 hover:text-yellow-600 font-medium text-lg transition-all duration-300 group px-3 py-2"
                 >
@@ -108,7 +127,7 @@ const Header = () => {
                   <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-yellow-400 to-yellow-600 group-hover:w-full transition-all duration-300"></span>
                 </Link>
               )}
-              {(isAuthenticated && user && (isRegularUser) ) && (
+              {(isAuthenticated && user && (isRegularUser)) && (
                 <Link
                   to="/favorites"
                   className="relative text-gray-700 hover:text-yellow-600 font-medium text-lg transition-all duration-300 group px-3 py-2"
@@ -130,6 +149,20 @@ const Header = () => {
 
             {/* Clean Auth Buttons */}
             <div className="hidden lg:flex items-center space-x-4">
+              {/* Enhanced Language Toggle Button */}
+              <Button
+                variant="outline"
+                onClick={toggleLanguage}
+                className="border-2 border-blue-400 bg-blue-50 text-blue-700 hover:bg-blue-100 hover:border-blue-600 hover:text-blue-800 px-6 py-2.5 rounded-full font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 flex items-center gap-3 relative"
+              >
+                <Globe className="w-5 h-5" />
+                <span className="text-base font-extrabold">
+                  {i18n.language === 'ar' ? 'English' : 'عربي'}
+                </span>
+                {/* Current language indicator */}
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+              </Button>
+
               {isAuthenticated ? (
                 <div className="flex items-center space-x-4">
                   <div className="flex items-center gap-3 bg-white px-4 py-2 rounded-full border border-gray-200 shadow-md hover:shadow-lg transition-all duration-300">
@@ -199,6 +232,22 @@ const Header = () => {
                 >
                   Stores
                 </Link>
+
+                {/* Enhanced Mobile Language Toggle */}
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    console.log('🌐 Mobile language toggle clicked');
+                    toggleLanguage();
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="w-full justify-start border-2 border-blue-400 bg-blue-50 text-blue-700 hover:bg-blue-100 hover:border-blue-600 hover:text-blue-800 font-bold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-3 py-3"
+                >
+                  <Globe className="w-6 h-6" />
+                  <span className="text-lg">
+                    {i18n.language === 'ar' ? '🇺🇸 Switch to English' : '🇸🇦 ' + t('switch_to_arabic')}
+                  </span>
+                </Button>
                 {(isAuthenticated && user) ? (
                   <>
                     <div className="flex items-center gap-2 py-2 border-b border-gray-200 mb-2">

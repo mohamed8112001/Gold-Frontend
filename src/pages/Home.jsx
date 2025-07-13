@@ -1,27 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button.jsx';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.jsx';
+import { Card, CardContent } from '@/components/ui/card.jsx';
 import { Input } from '@/components/ui/input.jsx';
 import {
   Search,
   Star,
   MapPin,
-  Clock,
   Phone,
   Eye,
   Heart,
   Shield,
-  Award
+  Award,
+  Globe
 } from 'lucide-react';
 import { ROUTES } from '../utils/constants.js';
 import { shopService } from '../services/shopService.js';
 import FloatingChat from '../components/ui/FloatingChat.jsx';
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
+import { useTranslation } from 'react-i18next';
 
 const Home = () => {
   const navigate = useNavigate();
+  const { i18n, t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [featuredShops, setFeaturedShops] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -33,49 +35,65 @@ const Home = () => {
     totalReviews: 0
   });
 
-  // Hero slides with beautiful jewelry images
+  // Language toggle function
+  const toggleLanguage = () => {
+    console.log('🌐 Current language:', i18n.language);
+    const newLang = i18n.language === 'ar' ? 'en' : 'ar';
+    console.log('🌐 Switching to:', newLang);
+
+    i18n.changeLanguage(newLang).then(() => {
+      console.log('🌐 Language changed successfully to:', newLang);
+      // Update document direction
+      document.documentElement.dir = newLang === 'ar' ? 'rtl' : 'ltr';
+      document.documentElement.lang = newLang;
+      console.log('🌐 Document direction set to:', document.documentElement.dir);
+    }).catch((error) => {
+      console.error('🌐 Error changing language:', error);
+    });
+  };
+
   const heroSlides = [
     {
       id: 1,
-      title: 'Luxury Jewelry',
-      subtitle: 'Discover the finest gold and jewelry pieces',
+      title: t('hero.luxury_jewelry.title') || 'Luxury Jewelry',
+      subtitle: t('hero.luxury_jewelry.subtitle') || 'Discover the finest gold and jewelry pieces',
       image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
-      gradient: 'from-yellow-400 to-yellow-600'
+      gradient: 'from-amber-300 to-yellow-600'
     },
     {
       id: 2,
-      title: 'Wedding Rings',
-      subtitle: 'Unforgettable moments with the most beautiful rings',
+      title: t('hero.wedding_rings.title') || 'Wedding Rings',
+      subtitle: t('hero.wedding_rings.subtitle') || 'Unforgettable moments with the most beautiful rings',
       image: 'https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
-      gradient: 'from-rose-400 to-pink-600'
+      gradient: 'from-yellow-400 to-orange-500'
     },
     {
       id: 3,
-      title: 'Precious Stones',
-      subtitle: 'Jewelry adorned with natural gemstones',
+      title: t('hero.precious_stones.title') || 'Precious Stones',
+      subtitle: t('hero.precious_stones.subtitle') || 'Jewelry adorned with natural gemstones',
       image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
-      gradient: 'from-purple-400 to-indigo-600'
+      gradient: 'from-violet-400 to-indigo-700'
     },
     {
       id: 4,
-      title: '21K Gold',
-      subtitle: 'High quality with authenticity guarantee',
+      title: t('hero.gold_21k.title') || '21K Gold',
+      subtitle: t('hero.gold_21k.subtitle') || 'High quality with authenticity guarantee',
       image: 'https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
-      gradient: 'from-amber-400 to-orange-600'
+      gradient: 'from-yellow-400 to-orange-500'
     },
     {
       id: 5,
-      title: 'Diamond Collection',
-      subtitle: 'Sparkling diamonds for special moments',
+      title: t('hero.diamond_collection.title') || 'Diamond Collection',
+      subtitle: t('hero.diamond_collection.subtitle') || 'Sparkling diamonds for special moments',
       image: 'https://images.unsplash.com/photo-1544376664-80b17f09d399?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
-      gradient: 'from-blue-400 to-cyan-600'
+      gradient: 'from-gray-200 to-blue-300'
     },
     {
       id: 6,
-      title: 'Pearl Elegance',
-      subtitle: 'Timeless beauty of natural pearls',
+      title: t('hero.pearl_elegance.title') || 'Pearl Elegance',
+      subtitle: t('hero.pearl_elegance.subtitle') || 'Timeless beauty of natural pearls',
       image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
-      gradient: 'from-gray-400 to-gray-600'
+      gradient: 'from-slate-200 to-gray-500'
     }
   ];
 
@@ -385,6 +403,20 @@ const Home = () => {
       className="min-h-screen bg-gray-50"
       dir="ltr"
     >
+      {/* Language Toggle Button - Fixed Position */}
+      <div className="fixed top-24 right-6 z-50">
+        <Button
+          variant="outline"
+          onClick={toggleLanguage}
+          className="border-2 border-blue-400 bg-blue-50/90 backdrop-blur-md text-blue-700 hover:bg-blue-100 hover:border-blue-600 hover:text-blue-800 px-6 py-3 rounded-full font-bold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-110 flex items-center gap-3"
+        >
+          <Globe className="w-5 h-5" />
+          <span className="text-base font-extrabold">
+            {i18n.language === 'ar' ? 'English' : 'عربي'}
+          </span>
+        </Button>
+      </div>
+
       {/* Enhanced Hero Slider */}
       <section className="relative h-screen overflow-hidden">
         <div className="absolute inset-0 bg-black/30 z-10"></div>
@@ -542,7 +574,7 @@ const Home = () => {
                   <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                   <Input
                     type="text"
-                    placeholder="Search for jewelry, gold, stores..."
+                    placeholder={t('search.placeholder') || "Search for jewelry, gold, stores..."}
                     value={searchQuery}
                     onFocus={handleSearch}
                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -553,7 +585,7 @@ const Home = () => {
                   type="submit"
                   className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-8 py-4 text-lg rounded-xl transition-all duration-300 transform hover:scale-105"
                 >
-                  Search
+                  {t('search.button') || "Search"}
                 </Button>
               </div>
             </div>
@@ -629,7 +661,7 @@ const Home = () => {
               onClick={() => navigate('/shops')}
               className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-8 py-3 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
             >
-              Browse All Stores
+              {t('buttons.browse_all_stores') || "Browse All Stores"}
             </Button>
             <Button
               onClick={() => navigate('/products')}
@@ -648,23 +680,23 @@ const Home = () => {
           <div className="text-center mb-16">
             {/* Simple Badge */}
             <div className="inline-flex items-center px-4 py-2 rounded-full bg-yellow-100 text-yellow-800 text-sm font-medium mb-6">
-              Featured Stores
+              {t('sections.featured_stores') || 'Featured Stores'}
             </div>
 
             {/* Clean Title */}
             <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
               <span className="bg-gradient-to-r from-yellow-600 to-yellow-500 bg-clip-text text-transparent">
-                Discover the Best
+                {t('sections.discover_best') || 'Discover the Best'}
               </span>
               <br />
               <span className="text-gray-800">
-                Jewelry Stores
+                {t('sections.jewelry_stores') || 'Jewelry Stores'}
               </span>
             </h2>
 
             {/* Simple Subtitle */}
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed mb-12">
-              A curated collection of the finest jewelry stores offering the highest quality gold and precious metals
+              {t('sections.stores_description') || 'A curated collection of the finest jewelry stores offering the highest quality gold and precious metals'}
             </p>
 
             {/* Clean Stats Cards */}
@@ -677,7 +709,7 @@ const Home = () => {
                     `${stats.totalShops}+`
                   )}
                 </div>
-                <div className="text-gray-600 font-medium">Stores</div>
+                <div className="text-gray-600 font-medium">{t('stats.stores') || 'Stores'}</div>
               </div>
               <div className="bg-white rounded-2xl p-6 shadow-md text-center">
                 <div className="text-3xl font-bold text-yellow-600 mb-2">
@@ -687,7 +719,7 @@ const Home = () => {
                     `${stats.totalProducts.toLocaleString()}+`
                   )}
                 </div>
-                <div className="text-gray-600 font-medium">Products</div>
+                <div className="text-gray-600 font-medium">{t('stats.products') || 'Products'}</div>
               </div>
               <div className="bg-white rounded-2xl p-6 shadow-md text-center">
                 <div className="text-3xl font-bold text-yellow-600 mb-2">
@@ -697,7 +729,7 @@ const Home = () => {
                     `${stats.averageRating.toFixed(1)}`
                   )}
                 </div>
-                <div className="text-gray-600 font-medium">Rating</div>
+                <div className="text-gray-600 font-medium">{t('stats.rating') || 'Rating'}</div>
               </div>
             </div>
           </div>
@@ -797,11 +829,11 @@ const Home = () => {
           <div className="text-center mb-16">
             <h2 className="text-5xl font-bold text-gray-900 mb-6">
               <span className="bg-gradient-to-r from-yellow-600 to-yellow-500 bg-clip-text text-transparent">
-                Why Choose Us?
+                {t('sections.why_choose_us') || 'Why Choose Us?'}
               </span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              We provide you with an exceptional shopping experience with the best services and guarantees
+              {t('sections.why_choose_description') || 'We provide you with an exceptional shopping experience with the best services and guarantees'}
             </p>
           </div>
 
@@ -812,10 +844,10 @@ const Home = () => {
                 <Shield className="w-10 h-10 text-white" />
               </div>
               <h3 className="text-2xl font-bold mb-4 text-gray-900">
-                Quality Guarantee
+                {t('services.quality_guarantee.title') || 'Quality Guarantee'}
               </h3>
               <p className="text-gray-600 leading-relaxed">
-                All products are certified and quality guaranteed with authenticity certificates for gold and jewelry
+                {t('services.quality_guarantee.description') || 'All products are certified and quality guaranteed with authenticity certificates for gold and jewelry'}
               </p>
             </div>
 
@@ -825,10 +857,10 @@ const Home = () => {
                 <Award className="w-10 h-10 text-white" />
               </div>
               <h3 className="text-2xl font-bold mb-4 text-gray-900">
-                Trusted Stores
+                {t('services.trusted_stores.title') || 'Trusted Stores'}
               </h3>
               <p className="text-gray-600 leading-relaxed">
-                All stores are inspected and certified by jewelry experts to ensure the best shopping experience
+                {t('services.trusted_stores.description') || 'All stores are inspected and certified by jewelry experts to ensure the best shopping experience'}
               </p>
             </div>
 
@@ -838,10 +870,10 @@ const Home = () => {
                 <Star className="w-10 h-10 text-white" />
               </div>
               <h3 className="text-2xl font-bold mb-4 text-gray-900">
-                Best Prices
+                {t('services.best_prices.title') || 'Best Prices'}
               </h3>
               <p className="text-gray-600 leading-relaxed">
-                Best prices in the market with exclusive offers and discounts for our valued customers
+                {t('services.best_prices.description') || 'Best prices in the market with exclusive offers and discounts for our valued customers'}
               </p>
             </div>
           </div>
@@ -853,10 +885,10 @@ const Home = () => {
 
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
           <h2 className="text-5xl font-bold text-white mb-6">
-            Ready to Discover Your Perfect Jewelry?
+            {t('cta.title') || 'Ready to Discover Your Perfect Jewelry?'}
           </h2>
           <p className="text-xl text-yellow-100 mb-8 max-w-2xl mx-auto">
-            Join thousands of satisfied customers who found their dream jewelry through Dibla
+            {t('cta.description') || 'Join thousands of satisfied customers who found their dream jewelry through Dibla'}
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -865,7 +897,7 @@ const Home = () => {
               onClick={() => navigate('/shops')}
               className="bg-white text-yellow-600 hover:bg-yellow-50 px-8 py-3 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
             >
-              Explore Stores Now
+              {t('buttons.explore_stores') || 'Explore Stores Now'}
             </Button>
             <Button
               size="lg"
@@ -873,13 +905,13 @@ const Home = () => {
               onClick={() => navigate('/register')}
               className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-yellow-600 px-8 py-3 text-lg font-semibold rounded-full transition-all duration-300 transform hover:scale-105"
             >
-              Join Us Now
+              {t('buttons.join_us') || 'Join Us Now'}
             </Button>
           </div>
 
           <div className="mt-8 text-yellow-100">
             <p className="text-lg">
-              More than <span className="font-bold text-white">{stats.totalReviews || '1000'}</span> satisfied customers trust us
+              {t('cta.customers_trust', { count: stats.totalReviews || '1000' }) || `More than ${stats.totalReviews || '1000'} satisfied customers trust us`}
             </p>
           </div>
         </div>

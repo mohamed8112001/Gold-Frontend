@@ -16,6 +16,7 @@ import {
   Clock,
   Phone
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { ROUTES } from '../../utils/constants.js';
 import { shopService } from '../../services/shopService.js';
 // eslint-disable-next-line no-unused-vars
@@ -24,6 +25,7 @@ import { motion } from "framer-motion";
 
 const ShopList = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Safe AuthContext usage with fallback

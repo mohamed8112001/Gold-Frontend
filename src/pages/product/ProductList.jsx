@@ -15,6 +15,7 @@ import {
     SlidersHorizontal,
     X
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { productService } from '../../services/productService.js';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES, PRODUCT_CATEGORIES } from '../../utils/constants.js';
@@ -23,6 +24,7 @@ const baseUrl = import.meta.env.VITE_API_BASE_URL;
 const ProductList = () => {
     const navigate = useNavigate();
     const { user } = useAuth();
+    const { t } = useTranslation();
     const [searchParams, setSearchParams] = useSearchParams();
     const [products, setProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);

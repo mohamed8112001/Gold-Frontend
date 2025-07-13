@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button.jsx';
 import { Card, CardContent } from '@/components/ui/card.jsx';
 import { Badge } from '@/components/ui/badge.jsx';
 import { Heart, Star, ShoppingBag, Eye, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { productService } from '../../services/productService.js';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES, PRODUCT_CATEGORIES } from '../../utils/constants.js';
@@ -12,6 +13,7 @@ import { toast } from 'react-hot-toast';
 const FavoriteProducts = () => {
     const navigate = useNavigate();
     const { user } = useAuth();
+    const { t } = useTranslation();
     const [favoriteProducts, setFavoriteProducts] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [viewMode, setViewMode] = useState('grid');
