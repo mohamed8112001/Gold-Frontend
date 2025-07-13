@@ -6,7 +6,6 @@
   "contact": "اتصل بنا",
   "stores": "المتاجر",
   "dashboard": "لوحة التحكم",
-  "favorites": "المفضلة",
   "admin": "الإدارة",
   "logout": "تسجيل الخروج",
   "login": "تسجيل الدخول",
@@ -20,7 +19,10 @@
   "buttons": {
     "browse_all_stores": "تصفح جميع المتاجر",
     "explore_stores": "استكشف المتاجر الآن",
-    "join_us": "انضم إلينا الآن"
+    "join_us": "انضم إلينا الآن",
+    "view_details": "عرض التفاصيل",
+    "visit_shop": "زيارة المحل",
+    "remove": "حذف"
   },
   "sections": {
     "featured_stores": "متاجر مميزة",
@@ -79,5 +81,46 @@
       "title": "أناقة اللؤلؤ",
       "subtitle": "جمال خالد من اللؤلؤ الطبيعي"
     }
-  }
+  },
+  "favorites": {
+    "title": "منتجاتك المفضلة",
+    "my_favorites": "مفضلتي",
+    "your_favorite": "مفضلتك",
+    "products": "المنتجات",
+    "description": "اكتشف وأدر جميع قطع المجوهرات المفضلة لديك في مكان واحد",
+    "count_message": "لديك {{count}} منتج مفضل محفوظ",
+    "empty_message": "احفظ منتجاتك المفضلة لتراها هنا",
+    "favorites": "مفضلة",
+    "no_favorites": "لا توجد مفضلة بعد",
+    "save_instruction": "احفظ منتجاتك المفضلة بالنقر على أيقونة القلب في أي منتج"
+  },
+  "messages": {
+    "removed_from_favorites": "تم الحذف من المفضلة",
+    "failed_to_remove": "فشل في حذف المفضلة"
+  },"footer": {
+  "company": "الشركة",
+  "about_us": "من نحن",
+  "contact_us": "اتصل بنا",
+  "careers": "الوظائف",
+  "news": "الأخبار",
+  "support": "الدعم",
+  "help_center": "مركز المساعدة",
+  "faq": "الأسئلة الشائعة",
+  "privacy_policy": "سياسة الخصوصية",
+  "terms_conditions": "الشروط والأحكام",
+  "legal": "قانوني",
+  "returns_policy": "سياسة الإرجاع",
+  "shipping_policy": "سياسة الشحن",
+  "quality_guarantee": "ضمان الجودة",
+  "customer_complaints": "شكاوى العملاء",
+  "contact": {
+    "phone": "رقم الهاتف",
+    "email": "البريد الإلكتروني",
+    "address": "العنوان"
+  },
+  "made_with_love": "صنع بـ",
+  "in_egypt": "في مصر",
+  "all_rights_reserved": "جميع الحقوق محفوظة",
+  "follow_us": "تابعنا"
+}
 }

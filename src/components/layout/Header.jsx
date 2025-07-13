@@ -153,7 +153,7 @@ const Header = () => {
               <Button
                 variant="outline"
                 onClick={toggleLanguage}
-                className="border-2 border-blue-400 bg-blue-50 text-blue-700 hover:bg-blue-100 hover:border-blue-600 hover:text-blue-800 px-6 py-2.5 rounded-full font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 flex items-center gap-3 relative"
+                className="border-2 border-yellow-400 bg-blue-50 text-yellow-700 hover:bg-blue-100 hover:border-yellow-600 hover:text-yellow-800 px-6 py-2.5 rounded-full font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 flex items-center gap-3 relative"
               >
                 <Globe className="w-5 h-5" />
                 <span className="text-base font-extrabold">

@@ -14,7 +14,6 @@ import { ROUTES } from '../../utils/constants.js';
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
-  // Function to scroll to top when clicking footer links
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -24,30 +23,30 @@ const Footer = () => {
 
   const footerSections = {
     company: {
-      title: 'الشركة',
+      title: 'Company',
       links: [
-        { name: 'من نحن', href: '/about' },
-        { name: 'اتصل بنا', href: '/contact' },
-        { name: 'الوظائف', href: '/careers' },
-        { name: 'الأخبار', href: '/news' },
+        { name: 'About Us', href: '/about' },
+        { name: 'Contact Us', href: '/contact' },
+        { name: 'Careers', href: '/careers' },
+        { name: 'News', href: '/news' },
       ],
     },
     support: {
-      title: 'الدعم',
+      title: 'Support',
       links: [
-        { name: 'مركز المساعدة', href: '/help' },
-        { name: 'الأسئلة الشائعة', href: '/faq' },
-        { name: 'سياسة الخصوصية', href: '/privacy' },
-        { name: 'الشروط والأحكام', href: '/terms' },
+        { name: 'Help Center', href: '/help' },
+        { name: 'FAQ', href: '/faq' },
+        { name: 'Privacy Policy', href: '/privacy' },
+        { name: 'Terms & Conditions', href: '/terms' },
       ],
     },
     legal: {
-      title: 'قانوني',
+      title: 'Legal',
       links: [
-        { name: 'سياسة الإرجاع', href: '/returns' },
-        { name: 'سياسة الشحن', href: '/shipping' },
-        { name: 'ضمان الجودة', href: '/quality' },
-        { name: 'شكاوى العملاء', href: '/complaints' },
+        { name: 'Return Policy', href: '/returns' },
+        { name: 'Shipping Policy', href: '/shipping' },
+        { name: 'Quality Guarantee', href: '/quality' },
+        { name: 'Customer Complaints', href: '/complaints' },
       ],
     },
   };
@@ -75,8 +74,7 @@ const Footer = () => {
             </div>
 
             <p className="text-gray-300 mb-4 leading-relaxed text-sm">
-              منصة Dibla تربط العملاء بأفضل متاجر الذهب والمجوهرات في مصر.
-              اكتشف مجموعة واسعة من المجوهرات الفاخرة واحجز موعدك بسهولة.
+              Dibla is a platform that connects customers with the best gold and jewelry stores in Egypt. Explore a wide range of luxurious jewelry and easily book your appointment.
             </p>
 
             {/* Contact Info */}
@@ -97,7 +95,7 @@ const Footer = () => {
                 <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center group-hover:bg-gray-700 transition-all duration-300 border border-gray-700">
                   <MapPin className="w-3 h-3 text-gray-300 group-hover:text-white transition-colors duration-300" />
                 </div>
-                <span className="text-sm font-medium">القاهرة، مصر</span>
+                <span className="text-sm font-medium">Cairo, Egypt</span>
               </div>
             </div>
           </div>
@@ -136,18 +134,18 @@ const Footer = () => {
           <div className="flex flex-col md:flex-row justify-between items-center space-y-3 md:space-y-0">
             {/* Copyright */}
             <div className="flex items-center space-x-3 rtl:space-x-reverse text-gray-300 text-sm">
-              <span className="font-medium">© {currentYear} Dibla. جميع الحقوق محفوظة.</span>
+              <span className="font-medium">© {currentYear} Dibla. All rights reserved.</span>
               <span className="hidden sm:inline text-gray-400">•</span>
               <div className="hidden sm:flex items-center space-x-2 rtl:space-x-reverse">
-                <span>صنع بـ</span>
+                <span>Made with</span>
                 <Heart className="w-4 h-4 text-red-400 animate-pulse" />
-                <span>في مصر</span>
+                <span>in Egypt</span>
               </div>
             </div>
 
             {/* Social Links */}
             <div className="flex items-center space-x-4 rtl:space-x-reverse">
-              <span className="text-gray-300 text-sm font-medium">تابعنا:</span>
+              <span className="text-gray-300 text-sm font-medium">Follow us:</span>
               <div className="flex items-center space-x-3 rtl:space-x-reverse">
                 {socialLinks.map((social) => {
                   const Icon = social.icon;
