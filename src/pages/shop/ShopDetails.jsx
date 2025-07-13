@@ -16,13 +16,13 @@ import {
     Heart,
     Eye,
     Share2,
-    MessageCircle,
     Grid,
     List,
     Award,
     Users,
     ShoppingBag,
-    Verified
+    Verified,
+    X
 } from 'lucide-react';
 import { shopService } from '../../services/shopService.js';
 import { productService } from '../../services/productService.js';
@@ -30,6 +30,19 @@ import { rateService } from '../../services/rateService.js';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES } from '../../utils/constants.js';
 import MapDisplay from '../../components/ui/MapDisplay.jsx';
+import GalleryUpload from '../../components/shop/GalleryUpload.jsx';
+
+// WhatsApp Icon Component
+const WhatsAppIcon = ({ className = "w-6 h-6" }) => (
+    <svg
+        className={className}
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        xmlns="http://www.w3.org/2000/svg"
+    >
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.893 3.488" />
+    </svg>
+);
 
 const ShopDetails = () => {
     const { id } = useParams();
@@ -118,20 +131,33 @@ const ShopDetails = () => {
                 console.log('🏪 Shop loaded successfully, proceeding to display...');
 
                 console.log(`images: ${shopData['images']}`);
-                
+
                 // Default gold shop image
                 const defaultShopImage = shopData['images'][0];
+
+                // Load gallery from localStorage
+                let localGallery = [];
+                try {
+                    const galleryResponse = await shopService.getShopGallery(id);
+                    if (galleryResponse.success && galleryResponse.data.length > 0) {
+                        localGallery = galleryResponse.data;
+                        console.log(`📁 Loaded ${localGallery.length} images from localStorage for shop ${id}`);
+                    }
+                } catch (galleryError) {
+                    console.log('📁 No local gallery found or error loading:', galleryError.message);
+                }
 
                 // Ensure shop has all required fields
                 const processedShopData = {
                     ...shopData,
                     rating: shopData.averageRating || shopData.rating || 0,
                     specialties: Array.isArray(shopData.specialties) ? shopData.specialties : [],
-                    gallery: Array.isArray(shopData.gallery) ? shopData.gallery : [],
+                    gallery: localGallery.length > 0 ? localGallery : (Array.isArray(shopData.gallery) ? shopData.gallery : []),
                     image: shopData.logoUrl || shopData.image || shopData.imageUrl || defaultShopImage
                 };
 
-                console.log('🏪 Processed shop data:', processedShopData);
+                console.log('🏪 Processed shop data with gallery:', processedShopData);
+                console.log(`📁 Final gallery has ${processedShopData.gallery.length} images`);
                 setShop(processedShopData);
             } catch (shopError) {
                 console.error('🏪 Error loading shop details:', shopError);
@@ -232,6 +258,26 @@ const ShopDetails = () => {
         }
     };
 
+    const handleDeleteGalleryImage = async (imageName, index) => {
+        if (!confirm('هل تريد حذف هذه الصورة من المعرض؟')) return;
+
+        try {
+            console.log('🗑️ Deleting gallery image:', imageName);
+            await shopService.deleteGalleryImage(shop._id || shop.id, imageName);
+
+            // Update local state
+            setShop(prev => ({
+                ...prev,
+                gallery: prev.gallery.filter((_, i) => i !== index)
+            }));
+
+            alert('تم حذف الصورة بنجاح!');
+        } catch (error) {
+            console.error('Error deleting gallery image:', error);
+            alert(error.message || 'حدث خطأ في حذف الصورة');
+        }
+    };
+
 
     const ProductCard = ({ product }) => {
         const productId = product.id || product._id;
@@ -262,9 +308,9 @@ const ShopDetails = () => {
                         src={`${import.meta.env.VITE_API_BASE_URL}/product-image/${product.logoUrl}`}
                         alt={product.name || 'Product'}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        // onError={(e) => {
-                        //     e.target.src = defaultProductImage;
-                        // }}
+                    // onError={(e) => {
+                    //     e.target.src = defaultProductImage;
+                    // }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
@@ -389,8 +435,8 @@ const ShopDetails = () => {
         description: shop.description || 'No description available',
         address: shop.address || 'Address not specified',
         phone: shop.phone || 'Not specified',
+        whatsapp: shop.whatsapp || null,
         rating: shop.rating || 0,
-        specialties: Array.isArray(shop.specialties) ? shop.specialties : [],
         workingHours: shop.workingHours || 'Not specified',
         gallery: Array.isArray(shop.gallery) ? shop.gallery : [],
         image: shop.image || defaultShopImage,
@@ -402,7 +448,7 @@ const ShopDetails = () => {
 
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 pt-20">
             <div className="w-full px-4 sm:px-6 lg:px-8 py-6">
                 {/* Enhanced Breadcrumb */}
                 <div className="flex items-center gap-2 text-sm text-gray-600 mb-8">
@@ -506,7 +552,7 @@ const ShopDetails = () => {
                     {/* Enhanced Shop Info Section */}
                     <div className="p-8">
                         {/* Contact Information Cards */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
                             <Card className="border-0 bg-gradient-to-r from-blue-50 to-blue-100 hover:shadow-lg transition-shadow rounded-2xl">
                                 <CardContent className="p-6 flex items-center gap-4">
                                     <div className="p-3 bg-blue-500 rounded-full">
@@ -519,17 +565,44 @@ const ShopDetails = () => {
                                 </CardContent>
                             </Card>
 
-                            <Card className="border-0 bg-gradient-to-r from-green-50 to-green-100 hover:shadow-lg transition-shadow rounded-2xl">
+                            <Card className="border-0 bg-gradient-to-r from-indigo-50 to-indigo-100 hover:shadow-lg transition-shadow rounded-2xl">
                                 <CardContent className="p-6 flex items-center gap-4">
-                                    <div className="p-3 bg-green-500 rounded-full">
+                                    <div className="p-3 bg-indigo-500 rounded-full">
                                         <Phone className="w-6 h-6 text-white" />
                                     </div>
                                     <div>
-                                        <p className="text-sm text-green-600 font-medium mb-1">Phone</p>
-                                        <p className="text-gray-800 font-semibold text-base">{safeShop.phone}</p>
+                                        <p className="text-sm text-indigo-600 font-medium mb-1">Phone</p>
+                                        <p className="text-gray-800 font-semibold text-base">
+                                            <a href={`tel:${safeShop.phone}`} className="hover:text-indigo-600 transition-colors">
+                                                {safeShop.phone}
+                                            </a>
+                                        </p>
                                     </div>
                                 </CardContent>
                             </Card>
+
+                            {safeShop.whatsapp && (
+                                <Card className="border-0 bg-gradient-to-r from-green-50 to-green-100 hover:shadow-lg transition-shadow rounded-2xl">
+                                    <CardContent className="p-6 flex items-center gap-4">
+                                        <div className="p-3 bg-green-500 rounded-full">
+                                            <WhatsAppIcon className="w-6 h-6 text-white" />
+                                        </div>
+                                        <div>
+                                            <p className="text-sm text-green-600 font-medium mb-1">WhatsApp</p>
+                                            <p className="text-gray-800 font-semibold text-base">
+                                                <a
+                                                    href={`https://wa.me/${safeShop.whatsapp.replace(/[^0-9]/g, '')}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="hover:text-green-600 transition-colors"
+                                                >
+                                                    {safeShop.whatsapp}
+                                                </a>
+                                            </p>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            )}
 
                             <Card className="border-0 bg-gradient-to-r from-purple-50 to-purple-100 hover:shadow-lg transition-shadow rounded-2xl">
                                 <CardContent className="p-6 flex items-center gap-4">
@@ -550,27 +623,7 @@ const ShopDetails = () => {
                             <p className="text-gray-700 leading-relaxed text-xl bg-gray-50 p-6 rounded-2xl">
                                 {safeShop.description}
                             </p>
-                        </div>
 
-                        {/* Specialties */}
-                        <div className="mb-10">
-                            <h3 className="text-2xl font-bold text-gray-900 mb-6">Specialties</h3>
-                            <div className="flex flex-wrap gap-4">
-                                {safeShop.specialties && safeShop.specialties.length > 0 ? (
-                                    safeShop.specialties.map((specialty, index) => (
-                                        <Badge
-                                            key={index}
-                                            className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-white px-6 py-3 text-base font-semibold hover:from-yellow-500 hover:to-yellow-600 transition-all rounded-full"
-                                        >
-                                            {specialty}
-                                        </Badge>
-                                    ))
-                                ) : (
-                                    <Badge variant="secondary" className="bg-gray-100 text-gray-600 px-6 py-3 text-base rounded-full">
-                                        No specialties specified
-                                    </Badge>
-                                )}
-                            </div>
                         </div>
 
                         {/* Action Section */}
@@ -584,14 +637,7 @@ const ShopDetails = () => {
                                     <Calendar className="w-6 h-6 mr-3" />
                                     Book Appointment
                                 </Button>
-                                <Button
-                                    size="lg"
-                                    variant="outline"
-                                    className="border-2 border-gray-300 hover:border-gray-400 px-10 py-4 rounded-full font-bold text-lg hover:bg-white transition-all"
-                                >
-                                    <MessageCircle className="w-6 h-6 mr-3" />
-                                    Contact Us
-                                </Button>
+
                             </div>
 
                             {/* Stats */}
@@ -827,32 +873,72 @@ const ShopDetails = () => {
                         </TabsContent>
 
                         <TabsContent value="gallery" className="p-8">
-                            <div className="mb-8">
-                                <h2 className="text-3xl font-bold text-gray-900 mb-2">معرض صور المتجر</h2>
-                                <p className="text-gray-600">استكشف صور المتجر والأعمال المميزة</p>
+                            <div className="flex items-center justify-between mb-8">
+                                <div>
+                                    <h2 className="text-3xl font-bold text-gray-900 mb-2">معرض صور المتجر</h2>
+                                    <p className="text-gray-600">استكشف صور المتجر والأعمال المميزة</p>
+                                </div>
+                                {(user?.role === 'admin' || user?.id === safeShop.ownerId || user?._id === safeShop.ownerId) && (
+                                    <GalleryUpload
+                                        shopId={safeShop._id || safeShop.id}
+                                        currentUser={user}
+                                        onUploadSuccess={(newImages) => {
+                                            console.log('🖼️ Gallery upload success, updating shop state with:', newImages);
+                                            setShop(prev => ({
+                                                ...prev,
+                                                gallery: [...(prev.gallery || []), ...newImages]
+                                            }));
+                                            // Reload shop data to get updated gallery
+                                            loadShopDetails();
+                                        }}
+                                    />
+                                )}
                             </div>
 
                             {safeShop.gallery && safeShop.gallery.length > 0 ? (
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                    {safeShop.gallery.map((image, index) => (
-                                        <div key={index} className="group relative aspect-square rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500">
-                                            <img
-                                                src={'sdfj'}
-                                                alt={`${safeShop.name} - صورة ${index + 1}`}
-                                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-pointer"
-                                              
-                                                onClick={() => {
-                                                    // يمكن إضافة modal لعرض الصورة بحجم كبير
-                                                    window.open(image, '_blank');
-                                                }}
-                                            />
-                                            <div>{JSON.stringify(image)}</div>
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                            <div className="absolute bottom-4 left-4 right-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                                <p className="text-sm font-medium">صورة {index + 1}</p>
+                                    {safeShop.gallery.map((image, index) => {
+                                        // Handle both localStorage images (objects) and regular images (strings)
+                                        const isLocalImage = typeof image === 'object' && image.data;
+                                        const imageUrl = isLocalImage ? image.data : `${import.meta.env.VITE_API_BASE_URL}/shop-gallery/${image}`;
+                                        const imageName = isLocalImage ? image.name : `صورة ${index + 1}`;
+                                        const imageId = isLocalImage ? image.id : image;
+
+                                        return (
+                                            <div key={imageId} className="group relative aspect-square rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500">
+                                                <img
+                                                    src={imageUrl}
+                                                    alt={`${safeShop.name} - ${imageName}`}
+                                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-pointer"
+                                                    onError={(e) => {
+                                                        e.target.src = 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop&crop=center&auto=format&q=60';
+                                                    }}
+                                                    onClick={() => {
+                                                        // فتح الصورة في نافذة جديدة
+                                                        window.open(imageUrl, '_blank');
+                                                    }}
+                                                />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                                <div className="absolute bottom-4 left-4 right-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                    <p className="text-sm font-medium">{imageName}</p>
+                                                    {isLocalImage && (
+                                                        <p className="text-xs text-gray-300">محفوظة محلياً</p>
+                                                    )}
+                                                </div>
+                                                {(user?.role === 'admin' || user?.id === safeShop.ownerId || user?._id === safeShop.ownerId) && (
+                                                    <button
+                                                        className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleDeleteGalleryImage(imageId, index);
+                                                        }}
+                                                    >
+                                                        <X className="w-4 h-4" />
+                                                    </button>
+                                                )}
                                             </div>
-                                        </div>
-                                    ))}
+                                        );
+                                    })}
                                 </div>
                             ) : (
                                 <div className="text-center py-16 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl">
@@ -863,14 +949,21 @@ const ShopDetails = () => {
                                     <p className="text-gray-600 text-lg mb-6">
                                         لم يتم إضافة صور لمعرض المتجر بعد
                                     </p>
-                                    {user?.role === 'admin' || user?.id === safeShop.ownerId ? (
-                                        <Button
-                                            className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-8 py-3 rounded-full font-semibold"
-                                            onClick={() => navigate(ROUTES.EDIT_SHOP)}
-                                        >
-                                            إضافة صور للمعرض
-                                        </Button>
-                                    ) : null}
+                                    {(user?.role === 'admin' || user?.id === safeShop.ownerId || user?._id === safeShop.ownerId) && (
+                                        <GalleryUpload
+                                            shopId={safeShop._id || safeShop.id}
+                                            currentUser={user}
+                                            onUploadSuccess={(newImages) => {
+                                                console.log('🖼️ Gallery upload success (empty state), updating shop state with:', newImages);
+                                                setShop(prev => ({
+                                                    ...prev,
+                                                    gallery: [...(prev.gallery || []), ...newImages]
+                                                }));
+                                                // Reload shop data to get updated gallery
+                                                loadShopDetails();
+                                            }}
+                                        />
+                                    )}
                                 </div>
                             )}
                         </TabsContent>

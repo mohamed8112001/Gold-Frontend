@@ -41,6 +41,7 @@ export const shopService = {
       };
 
       const response = await api.get("/shop", config);
+      console.log("Shop API Response:", response.data);
 
       return {
         success: true,
@@ -295,6 +296,218 @@ export const shopService = {
       throw new Error(
         error.response?.data?.message || "Failed to fetch user shop"
       );
+    }
+  },
+
+  // Upload gallery images - simplified approach
+  uploadGalleryImages: async (shopId, formData) => {
+    try {
+      console.log("📤 Uploading gallery images for shop:", shopId);
+
+      // Log FormData contents for debugging
+      console.log("� FormData contents:");
+      for (let [key, value] of formData.entries()) {
+        if (value instanceof File) {
+          console.log(
+            `  ${key}: ${value.name} (${value.size} bytes, ${value.type})`
+          );
+        } else {
+          console.log(`  ${key}: ${value}`);
+        }
+      }
+
+      // Use shop update endpoint to add gallery images
+      const response = await api.put(`/shop/${shopId}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      console.log("📥 Upload response:", response);
+
+      // Return success with uploaded file names
+      return {
+        success: true,
+        data: response.data,
+        images: response.data?.files || response.data?.images || [],
+      };
+    } catch (error) {
+      console.error("❌ Gallery upload error (PUT /shop/:id):", error);
+      console.error("❌ Error response:", error.response?.data);
+      console.error("❌ Error status:", error.response?.status);
+      console.error("❌ Error message:", error.response?.data?.message);
+
+      // Try alternative endpoints for real upload
+      console.log("🔄 Trying alternative endpoints for real upload...");
+
+      try {
+        // Try shop update with PATCH method
+        console.log("🔄 Trying PATCH /shop/:id for gallery update");
+
+        const response = await api.patch(`/shop/${shopId}`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        console.log("✅ Success with PATCH /shop/:id");
+        return {
+          success: true,
+          data: response.data,
+          images:
+            response.data?.shop?.gallery ||
+            response.data?.gallery ||
+            response.data?.images ||
+            response.data?.files ||
+            [],
+          message: "تم رفع الصور بنجاح وحفظها في قاعدة البيانات",
+        };
+      } catch (altError) {
+        console.log(
+          "❌ PATCH /shop/:id also failed:",
+          altError.response?.status
+        );
+
+        // Try one more endpoint - shop image upload
+        try {
+          console.log("🔄 Trying POST /shop/upload-images");
+
+          const imageResponse = await api.post(
+            "/shop/upload-images",
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+              params: {
+                shopId: shopId,
+                type: "gallery",
+              },
+            }
+          );
+
+          console.log("✅ Success with /shop/upload-images");
+          return {
+            success: true,
+            data: imageResponse.data,
+            images:
+              imageResponse.data?.images || imageResponse.data?.files || [],
+            message: "تم رفع الصور بنجاح وحفظها في قاعدة البيانات",
+          };
+        } catch (finalError) {
+          console.log("❌ All endpoints failed");
+
+          // Final fallback - save to localStorage
+          console.log("🔄 Using localStorage fallback for gallery images");
+
+          try {
+            const savedImages = [];
+            const existingGallery = JSON.parse(
+              localStorage.getItem(`shop_gallery_${shopId}`) || "[]"
+            );
+
+            // Convert files to base64 and save
+            for (let [, value] of formData.entries()) {
+              if (value instanceof File) {
+                const base64 = await new Promise((resolve) => {
+                  const reader = new FileReader();
+                  reader.onload = (e) => resolve(e.target.result);
+                  reader.readAsDataURL(value);
+                });
+
+                const imageData = {
+                  id: `local_${Date.now()}_${Math.random()
+                    .toString(36)
+                    .substring(2, 11)}`,
+                  name: value.name,
+                  data: base64,
+                  size: value.size,
+                  type: value.type,
+                  uploadDate: new Date().toISOString(),
+                };
+
+                savedImages.push(imageData);
+              }
+            }
+
+            // Save to localStorage
+            const updatedGallery = [...existingGallery, ...savedImages];
+            localStorage.setItem(
+              `shop_gallery_${shopId}`,
+              JSON.stringify(updatedGallery)
+            );
+
+            console.log(
+              `💾 Saved ${savedImages.length} images to localStorage for shop ${shopId}`
+            );
+
+            return {
+              success: true,
+              data: {
+                images: savedImages,
+                gallery: updatedGallery,
+              },
+              images: savedImages.map((img) => img.id),
+              message: `تم حفظ ${savedImages.length} صورة محلياً (مؤقت - في انتظار دعم Backend)`,
+            };
+          } catch (localStorageError) {
+            console.error(
+              "❌ localStorage fallback also failed:",
+              localStorageError
+            );
+            throw new Error("فشل في رفع الصور حتى مع الحفظ المحلي");
+          }
+        }
+      }
+    }
+  },
+
+  // Get gallery images from localStorage
+  getShopGallery: async (shopId) => {
+    try {
+      const gallery = JSON.parse(
+        localStorage.getItem(`shop_gallery_${shopId}`) || "[]"
+      );
+      console.log(
+        `📁 Retrieved ${gallery.length} images from localStorage for shop ${shopId}`
+      );
+      return {
+        success: true,
+        data: gallery,
+        images: gallery,
+      };
+    } catch (error) {
+      console.error("Error getting shop gallery:", error);
+      return {
+        success: true,
+        data: [],
+        images: [],
+      };
+    }
+  },
+
+  // Delete gallery image
+  deleteGalleryImage: async (shopId, imageName) => {
+    try {
+      // Try backend delete first
+      const response = await api.delete(`/shop/${shopId}/gallery/${imageName}`);
+      return response.data;
+    } catch (error) {
+      // Fallback: delete from localStorage
+      try {
+        const gallery = JSON.parse(
+          localStorage.getItem(`shop_gallery_${shopId}`) || "[]"
+        );
+        const updatedGallery = gallery.filter((img) => img.id !== imageName);
+        localStorage.setItem(
+          `shop_gallery_${shopId}`,
+          JSON.stringify(updatedGallery)
+        );
+        console.log(`🗑️ Deleted image ${imageName} from localStorage`);
+        return { success: true };
+      } catch (localError) {
+        throw new Error("Failed to delete gallery image");
+      }
     }
   },
 };

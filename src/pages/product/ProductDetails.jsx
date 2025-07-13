@@ -74,7 +74,7 @@ const ProductDetails = () => {
             console.log('🔍 Product data loaded:', productData);
             console.log('🔍 Product price:', productData.price, typeof productData.price);
             console.log('🔍 Product rating:', productData.rating, typeof productData.rating);
-            
+
 
             setProduct(productData);
 
@@ -117,7 +117,7 @@ const ProductDetails = () => {
             return;
         }
         console.log('add to Fav');
-        
+
         try {
             if (isFavorited) {
                 await productService.removeFromFavorites(id);
@@ -242,7 +242,7 @@ const ProductDetails = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 pt-20">
             <div className="w-full px-4 sm:px-6 lg:px-8 py-8">
                 {/* Enhanced Breadcrumb */}
                 <div className="flex items-center gap-2 text-sm text-gray-600 mb-8 max-w-7xl mx-auto">

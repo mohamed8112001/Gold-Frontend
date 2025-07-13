@@ -1,0 +1,134 @@
+{
+  "welcome": "Welcome to our website",
+  "change_language": "Change Language",
+  "home": "Home",
+  "about": "About",
+  "contact": "Contact",
+  "stores": "Stores",
+  "dashboard": "Dashboard",
+  "favorites": "Favorites",
+  "admin": "Admin",
+  "logout": "Logout",
+  "login": "Login",
+  "signup": "Sign Up",
+  "switch_to_arabic": "Switch to Arabic",
+  "language": "English",
+  "search": {
+    "placeholder": "Search for jewelry, gold, stores...",
+    "button": "Search"
+  },
+  "buttons": {
+    "browse_all_stores": "Browse All Stores",
+    "explore_stores": "Explore Stores Now",
+    "join_us": "Join Us Now",
+    "view_details": "View Details",
+    "visit_shop": "Visit Shop",
+    "add_to_favorites": "Add to Favorites",
+    "remove_from_favorites": "Remove from Favorites",
+    "clear_search": "Clear Search",
+    "filters": "Filters",
+    "grid_view": "Grid View",
+    "list_view": "List View"
+  },
+  "sections": {
+    "featured_stores": "Featured Stores",
+    "discover_best": "Discover the Best",
+    "jewelry_stores": "Jewelry Stores",
+    "stores_description": "A curated collection of the finest jewelry stores offering the highest quality gold and precious metals",
+    "why_choose_us": "Why Choose Us?",
+    "why_choose_description": "We provide you with an exceptional shopping experience with the best services and guarantees"
+  },
+  "stats": {
+    "stores": "Stores",
+    "products": "Products",
+    "rating": "Rating"
+  },
+  "services": {
+    "quality_guarantee": {
+      "title": "Quality Guarantee",
+      "description": "All products are certified and quality guaranteed with authenticity certificates for gold and jewelry"
+    },
+    "trusted_stores": {
+      "title": "Trusted Stores",
+      "description": "All stores are inspected and certified by jewelry experts to ensure the best shopping experience"
+    },
+    "best_prices": {
+      "title": "Best Prices",
+      "description": "Best prices in the market with exclusive offers and discounts for our valued customers"
+    }
+  },
+  "cta": {
+    "title": "Ready to Discover Your Perfect Jewelry?",
+    "description": "Join thousands of satisfied customers who found their dream jewelry through Dibla",
+    "customers_trust": "More than {{count}} satisfied customers trust us"
+  },
+  "pages": {
+    "products": {
+      "title": "Products",
+      "no_products": "No products found",
+      "loading": "Loading products...",
+      "categories": "Categories",
+      "sort_by": "Sort by",
+      "price_range": "Price Range",
+      "all_categories": "All Categories"
+    },
+    "shops": {
+      "title": "Shops",
+      "no_shops": "No shops found",
+      "loading": "Loading shops...",
+      "all_shops": "All Shops",
+      "featured_shops": "Featured Shops"
+    },
+    "favorites": {
+      "title": "My Favorites",
+      "no_favorites": "No favorite products yet",
+      "empty_message": "Start adding products to your favorites to see them here"
+    },
+    "auth": {
+      "login_title": "Welcome Back",
+      "login_subtitle": "Sign in to your account",
+      "register_title": "Create Account",
+      "register_subtitle": "Join our community",
+      "email": "Email",
+      "password": "Password",
+      "confirm_password": "Confirm Password",
+      "first_name": "First Name",
+      "last_name": "Last Name",
+      "phone": "Phone Number",
+      "remember_me": "Remember me",
+      "forgot_password": "Forgot password?",
+      "no_account": "Don't have an account?",
+      "have_account": "Already have an account?",
+      "sign_in": "Sign In",
+      "sign_up": "Sign Up",
+      "or": "OR",
+      "continue_with_google": "Continue with Google"
+    }
+  },
+  "hero": {
+    "luxury_jewelry": {
+      "title": "Luxury Jewelry",
+      "subtitle": "Discover the finest gold and jewelry pieces"
+    },
+    "wedding_rings": {
+      "title": "Wedding Rings",
+      "subtitle": "Unforgettable moments with the most beautiful rings"
+    },
+    "precious_stones": {
+      "title": "Precious Stones",
+      "subtitle": "Jewelry adorned with natural gemstones"
+    },
+    "gold_21k": {
+      "title": "21K Gold",
+      "subtitle": "High quality with authenticity guarantee"
+    },
+    "diamond_collection": {
+      "title": "Diamond Collection",
+      "subtitle": "Sparkling diamonds for special moments"
+    },
+    "pearl_elegance": {
+      "title": "Pearl Elegance",
+      "subtitle": "Timeless beauty of natural pearls"
+    }
+  }
+}

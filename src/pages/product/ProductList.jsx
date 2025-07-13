@@ -15,6 +15,7 @@ import {
     SlidersHorizontal,
     X
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { productService } from '../../services/productService.js';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES, PRODUCT_CATEGORIES } from '../../utils/constants.js';
@@ -23,6 +24,7 @@ const baseUrl = import.meta.env.VITE_API_BASE_URL;
 const ProductList = () => {
     const navigate = useNavigate();
     const { user } = useAuth();
+    const { t } = useTranslation();
     const [searchParams, setSearchParams] = useSearchParams();
     const [products, setProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);
@@ -307,12 +309,20 @@ const ProductList = () => {
     const applyFilters = () => {
         let filtered = [...products];
 
-        // Search filter
-        if (searchQuery) {
-            filtered = filtered.filter(product =>
-                product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                product.description?.toLowerCase().includes(searchQuery.toLowerCase())
-            );
+        // Enhanced search filter
+        if (searchQuery && searchQuery.trim()) {
+            const searchTerm = searchQuery.toLowerCase().trim();
+            filtered = filtered.filter(product => {
+                const name = (product.name || '').toLowerCase();
+                const description = (product.description || '').toLowerCase();
+                const category = (product.category || '').toLowerCase();
+                const shopName = (product.shopName || '').toLowerCase();
+
+                return name.includes(searchTerm) ||
+                    description.includes(searchTerm) ||
+                    category.includes(searchTerm) ||
+                    shopName.includes(searchTerm);
+            });
         }
 
         // Category filter
@@ -348,14 +358,20 @@ const ProductList = () => {
 
     const handleSearch = (e) => {
         e.preventDefault();
+        console.log('🔍 Search triggered with query:', searchQuery);
+
+        // Update URL parameters
         setSearchParams(prev => {
-            if (searchQuery) {
-                prev.set('search', searchQuery);
+            if (searchQuery && searchQuery.trim()) {
+                prev.set('search', searchQuery.trim());
             } else {
                 prev.delete('search');
             }
             return prev;
         });
+
+        // Force re-apply filters immediately
+        applyFilters();
     };
 
     const handleFilterChange = (key, value) => {
@@ -422,7 +438,7 @@ const ProductList = () => {
 
         return (
             <Card
-                className={`group hover:shadow-xl transition-all duration-300 cursor-pointer border-0 shadow-md hover:shadow-2xl transform hover:-translate-y-1 ${isListView ? 'flex h-48' : 'flex flex-col h-full'}`}
+                className={`group hover:shadow-2xl transition-all duration-700 cursor-pointer border-0 shadow-xl hover:shadow-3xl transform hover:-translate-y-4 hover:scale-105 ${isListView ? 'flex h-64' : 'flex flex-col h-full'} bg-white rounded-3xl overflow-hidden backdrop-blur-sm`}
                 onClick={async () => {
                     try {
                         // Track product view locally
@@ -447,31 +463,56 @@ const ProductList = () => {
                     }
                 }}
             >
-                <div className={`relative overflow-hidden ${isListView ? 'w-48 flex-shrink-0' : 'w-full'}`}>
-                    <img
-                        src={`${import.meta.env.VITE_API_BASE_URL}/product-image/${safeProduct.image}`}
-                        alt={safeProduct.name}
-                        className={`w-full object-cover group-hover:scale-110 transition-transform duration-500 ${isListView ? 'h-full' : 'h-48'}`}
-                        onError={(e) => {
-                            e.target.src = 'https://via.placeholder.com/300x300/f3f4f6/9ca3af?text=منتج';
-                        }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className={`relative overflow-hidden rounded-t-3xl ${isListView ? 'w-64 flex-shrink-0 rounded-l-3xl rounded-tr-none' : 'w-full'}`}>
+                    <div className={`relative ${isListView ? 'h-full' : 'h-48'} overflow-hidden`}>
+                        <img
+                            src={`${import.meta.env.VITE_API_BASE_URL}/product-image/${safeProduct.image}`}
+                            alt={safeProduct.name}
+                            className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-1000 ease-out"
+                            onError={(e) => {
+                                console.log('❌ Product image failed to load:', e.target.src);
+                                e.target.style.display = 'none';
+                                const fallback = e.target.parentElement.querySelector('.fallback-image');
+                                if (fallback) {
+                                    fallback.style.display = 'flex';
+                                }
+                            }}
+                        />
 
+                        {/* Premium fallback image */}
+                        <div className="fallback-image absolute inset-0 bg-gradient-to-br from-yellow-100 via-amber-50 to-yellow-200 hidden items-center justify-center group-hover:from-yellow-200 group-hover:via-amber-100 group-hover:to-yellow-300 transition-all duration-700">
+                            <div className="text-center transform group-hover:scale-110 transition-transform duration-700">
+                                <div className="relative mb-4">
+                                    <div className="text-6xl mb-2 filter drop-shadow-2xl">💎</div>
+                                    <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/30 to-orange-400/30 rounded-full blur-xl"></div>
+                                </div>
+                                <div className="text-sm text-gray-800 font-bold px-3 py-1 bg-white/90 rounded-xl backdrop-blur-md shadow-lg border border-yellow-300">
+                                    {safeProduct.name}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Enhanced gradient overlays */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 via-transparent to-orange-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+
+                    {/* Premium favorite button */}
                     <Button
                         size="sm"
                         variant="ghost"
-                        className="absolute top-3 right-3 bg-white/90 hover:bg-white shadow-lg backdrop-blur-sm"
+                        className="absolute top-3 right-3 bg-white/95 hover:bg-white shadow-lg backdrop-blur-md rounded-full w-8 h-8 p-0 opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 border border-white/70 z-20"
                         onClick={(e) => {
                             e.stopPropagation();
                             handleAddToFavorites(productId);
                         }}
                     >
-                        <Heart className={`w-4 h-4 ${safeProduct.isFavorited ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
+                        <Heart className={`w-4 h-4 ${safeProduct.isFavorited ? 'fill-red-500 text-red-500' : 'text-gray-600 hover:text-red-500'} transition-colors duration-200`} />
                     </Button>
 
+                    {/* Premium category badge */}
                     {safeProduct.category && (
-                        <Badge className="absolute top-3 left-3 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white shadow-lg">
+                        <Badge className="absolute top-3 left-3 bg-gradient-to-r from-yellow-500 via-yellow-600 to-orange-500 text-white shadow-lg px-3 py-1 text-xs font-bold border border-yellow-400/50 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-1 group-hover:translate-y-0 z-20">
                             {PRODUCT_CATEGORIES[safeProduct.category.toUpperCase()] || safeProduct.category}
                         </Badge>
                     )}
@@ -479,32 +520,21 @@ const ProductList = () => {
 
                 </div>
 
-                <div className={`p-5 flex flex-col h-full ${isListView ? 'justify-between' : ''}`}>
+                <div className={`p-5 flex flex-col h-full ${isListView ? 'justify-between' : ''} relative z-10`}>
                     <div className="flex-1">
-                        <h3 className="font-bold text-lg mb-2 group-hover:text-yellow-600 transition-colors line-clamp-2 leading-tight">
+                        <h3 className="font-bold text-lg mb-2 group-hover:text-yellow-600 transition-colors line-clamp-2 leading-tight group-hover:scale-105 transform origin-left duration-300">
                             {safeProduct.name}
                         </h3>
-                        <p className="text-gray-600 text-sm mb-3 line-clamp-2 leading-relaxed">
-                            {safeProduct.description}
-                        </p>
 
-                        <div className="flex items-center gap-2 mb-3">
-                            <div className="flex items-center bg-yellow-50 px-2 py-1 rounded-full">
-                                <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                                <span className="text-xs font-semibold ml-1 text-yellow-700">
-                                    {safeProduct.rating.toFixed(1)}
-                                </span>
-                                <span className="text-xs text-gray-500 ml-1">
-                                    ({safeProduct.reviewCount})
-                                </span>
-                            </div>
-                        </div>
-
+                        {/* Enhanced shop information */}
                         {safeProduct.shopName && safeProduct.shopName !== 'Unknown Shop' && (
-                            <div className="flex items-center gap-2 mb-4">
-                                <ShoppingBag className="w-3 h-3 text-gray-400" />
-                                <p className="text-xs text-gray-600 font-medium truncate">
-                                    by <span className="text-yellow-600 hover:text-yellow-700 cursor-pointer font-semibold" onClick={(e) => {
+                            <div className="flex items-center gap-2 mb-2 bg-blue-50 p-2 rounded-lg border border-blue-200/50">
+                                <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
+                                    <ShoppingBag className="w-3 h-3 text-white" />
+                                </div>
+                                <div className="flex-1">
+                                    <p className="text-xs text-gray-600 font-medium">Available at</p>
+                                    <p className="text-sm font-bold text-blue-700 hover:text-blue-800 cursor-pointer transition-colors duration-200 truncate" onClick={(e) => {
                                         e.stopPropagation();
                                         if (safeProduct.shopId) {
                                             console.log('🏪 Navigating to shop:', safeProduct.shopId);
@@ -512,43 +542,60 @@ const ProductList = () => {
                                         } else {
                                             console.error('🏪 No shop ID available:', safeProduct);
                                         }
-                                    }}>{safeProduct.shopName}</span>
-                                </p>
+                                    }}>
+                                        {safeProduct.shopName}
+                                    </p>
+                                </div>
                             </div>
                         )}
                     </div>
 
-                    {/* Actions - Fixed at bottom */}
-                    <div className="mt-auto pt-3 border-t border-gray-100">
-
-                        <div className="flex gap-2">
+                    {/* Enhanced Actions Section */}
+                    <div className="mt-auto pt-2">
+                        <div className="flex flex-col gap-2">
+                            {/* Main View Product Button */}
                             <Button
-                                size="sm"
-                                variant="outline"
-                                className="flex-1 border-yellow-200 text-yellow-700 hover:bg-yellow-50 hover:border-yellow-300 transition-all duration-300 text-xs"
+                                size="md"
+                                className="w-full bg-gradient-to-r from-yellow-500 via-yellow-600 to-orange-500 hover:from-yellow-600 hover:via-orange-500 hover:to-orange-600 text-white px-4 py-2.5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 font-semibold text-sm border border-yellow-400/50"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     navigate(ROUTES.PRODUCT_DETAILS(productId));
                                 }}
                             >
-                                <Eye className="w-3 h-3 mr-1" />
-                                View
+                                <Eye className="w-4 h-4 mr-2" />
+                                View Details
                             </Button>
-                            {safeProduct.shopId && safeProduct.shopName && safeProduct.shopName !== 'Unknown Shop' && (
+
+                            {/* Secondary Actions */}
+                            <div className="flex gap-2">
+                                {safeProduct.shopId && safeProduct.shopName && safeProduct.shopName !== 'Unknown Shop' && (
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        className="flex-1 border border-blue-300 hover:border-blue-500 hover:bg-blue-50 text-blue-700 hover:text-blue-800 py-2 rounded-lg font-medium transition-all duration-300 text-xs"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            console.log('🏪 Shop button clicked, navigating to:', safeProduct.shopId);
+                                            navigate(ROUTES.SHOP_DETAILS(safeProduct.shopId));
+                                        }}
+                                    >
+                                        <ShoppingBag className="w-3 h-3 mr-1" />
+                                        Shop
+                                    </Button>
+                                )}
                                 <Button
+                                    variant="outline"
                                     size="sm"
-                                    className="flex-1 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white shadow-md hover:shadow-lg transition-all duration-300 text-xs"
+                                    className="flex-1 border border-red-300 hover:border-red-500 hover:bg-red-50 text-red-700 hover:text-red-800 py-2 rounded-lg font-medium transition-all duration-300 text-xs"
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        console.log('🏪 Shop button clicked, navigating to:', safeProduct.shopId);
-                                        console.log('🏪 Shop data:', { id: safeProduct.shopId, name: safeProduct.shopName });
-                                        navigate(ROUTES.SHOP_DETAILS(safeProduct.shopId));
+                                        handleAddToFavorites(productId);
                                     }}
                                 >
-                                    <ShoppingBag className="w-3 h-3 mr-1" />
-                                    Shop
+                                    <Heart className={`w-3 h-3 mr-1 ${safeProduct.isFavorited ? 'fill-current' : ''}`} />
+                                    {safeProduct.isFavorited ? 'Saved' : 'Save'}
                                 </Button>
-                            )}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -557,7 +604,7 @@ const ProductList = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 pt-20">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {/* Header */}
                 <div className="mb-12">
@@ -578,29 +625,68 @@ const ProductList = () => {
                         })()}
                     </div>
 
-                    {/* Search and Controls */}
-                    <div className="flex flex-col lg:flex-row gap-6 items-start lg:items-center justify-between bg-white rounded-2xl p-6 shadow-lg">
-                        <form onSubmit={handleSearch} className="flex-1 max-w-2xl">
-                            <div className="relative group">
-                                <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full blur opacity-25 group-hover:opacity-40 transition-opacity duration-300"></div>
-                                <div className="relative bg-white rounded-full border-2 border-gray-200 focus-within:border-yellow-400 transition-colors duration-300">
-                                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                                    <Input
-                                        type="text"
-                                        placeholder="Search for products, jewelry, gold..."
-                                        value={searchQuery}
-                                        onChange={(e) => setSearchQuery(e.target.value)}
-                                        className="pl-12 pr-6 py-4 text-lg rounded-full border-0 focus:ring-0 bg-transparent placeholder-gray-500"
-                                    />
-                                    <Button
-                                        type="submit"
-                                        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-6 py-2 rounded-full"
-                                    >
-                                        Search
-                                    </Button>
+                    {/* Enhanced Search and Controls */}
+                    <div className="flex flex-col lg:flex-row gap-8 items-start lg:items-center justify-between bg-white rounded-3xl p-8 shadow-xl border border-gray-100">
+                        <div className="flex-1 max-w-4xl">
+                            <div className="flex gap-4 items-center">
+                                {/* Enhanced input container */}
+                                <div className="flex-1 relative group">
+                                    {/* Enhanced glow effect */}
+                                    <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-orange-400 to-yellow-600 rounded-full blur-lg opacity-20 group-hover:opacity-40 group-focus-within:opacity-50 transition-all duration-500"></div>
+
+                                    {/* Main input container */}
+                                    <div className="relative bg-white rounded-full border-2 border-gray-300 focus-within:border-yellow-500 hover:border-yellow-400 transition-all duration-300 shadow-lg hover:shadow-xl focus-within:shadow-2xl">
+                                        {/* Enhanced search icon with loading state */}
+                                        <div className="absolute left-5 top-1/2 transform -translate-y-1/2">
+                                            {isLoading && searchQuery ? (
+                                                <div className="w-6 h-6 border-2 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
+                                            ) : (
+                                                <Search className="text-gray-500 w-6 h-6 group-focus-within:text-yellow-600 transition-colors duration-300" />
+                                            )}
+                                        </div>
+
+                                        {/* Enhanced input field */}
+                                        <Input
+                                            type="text"
+                                            placeholder="Search for products, jewelry, gold items..."
+                                            value={searchQuery}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                setSearchQuery(value);
+                                                console.log('🔍 Search input changed:', value);
+
+                                                // Update URL immediately for better UX
+                                                setSearchParams(prev => {
+                                                    if (value && value.trim()) {
+                                                        prev.set('search', value.trim());
+                                                    } else {
+                                                        prev.delete('search');
+                                                    }
+                                                    return prev;
+                                                });
+                                            }}
+                                            className="pl-14 pr-6 py-5 text-lg rounded-full border-0 focus:ring-0 bg-transparent placeholder-gray-500 focus:placeholder-gray-400 font-medium transition-all duration-300"
+                                            onKeyPress={(e) => {
+                                                if (e.key === 'Enter') {
+                                                    e.preventDefault();
+                                                    handleSearch(e);
+                                                }
+                                            }}
+                                        />
+                                    </div>
                                 </div>
+
+                                {/* Separate search button */}
+                                <Button
+                                    type="button"
+                                    onClick={handleSearch}
+                                    className="bg-gradient-to-r from-yellow-500 via-yellow-600 to-orange-500 hover:from-yellow-600 hover:via-orange-500 hover:to-orange-600 text-white px-8 py-5 rounded-full font-bold shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-105 border border-yellow-400/50"
+                                >
+                                    <Search className="w-5 h-5 mr-2" />
+                                    <span className="text-base">Search</span>
+                                </Button>
                             </div>
-                        </form>
+                        </div>
 
                         <div className="flex items-center gap-4">
                             <div className="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-full">
@@ -609,16 +695,35 @@ const ProductList = () => {
                                 </span>
                             </div>
 
+                            {/* Enhanced Clear search button */}
+                            {searchQuery && (
+                                <Button
+                                    variant="outline"
+                                    size="md"
+                                    onClick={() => {
+                                        setSearchQuery('');
+                                        setSearchParams(prev => {
+                                            prev.delete('search');
+                                            return prev;
+                                        });
+                                    }}
+                                    className="flex items-center gap-2 border-2 border-red-300 text-red-600 hover:bg-red-50 hover:border-red-500 hover:text-red-700 px-4 py-2.5 rounded-full font-semibold shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                                >
+                                    <X className="w-4 h-4" />
+                                    <span>Clear Search</span>
+                                </Button>
+                            )}
+
                             <Button
                                 variant="outline"
-                                size="sm"
+                                size="md"
                                 onClick={() => setShowFilters(!showFilters)}
-                                className="flex items-center gap-2 border-yellow-200 text-yellow-700 hover:bg-yellow-50 hover:border-yellow-300"
+                                className="flex items-center gap-2 border-2 border-yellow-300 text-yellow-700 hover:bg-yellow-50 hover:border-yellow-500 hover:text-yellow-800 px-4 py-2.5 rounded-full font-semibold shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
                             >
                                 <SlidersHorizontal className="w-4 h-4" />
-                                Filters
+                                <span>Filters</span>
                                 {Object.keys(filters).some(key => filters[key]) && (
-                                    <span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
+                                    <span className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></span>
                                 )}
                             </Button>
 
@@ -802,7 +907,7 @@ const ProductList = () => {
                         {isLoading ? (
                             <div className={`grid gap-6 ${viewMode === 'grid'
                                 ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-                                : 'grid-cols-1'
+                                : 'grid-cols-1 max-w-5xl mx-auto'
                                 }`}>
                                 {[...Array(8)].map((_, index) => (
                                     <div key={index} className="animate-pulse bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col h-full">
@@ -850,7 +955,7 @@ const ProductList = () => {
                         ) : (
                             <div className={`grid gap-6 ${viewMode === 'grid'
                                 ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-                                : 'grid-cols-1 max-w-4xl mx-auto'
+                                : 'grid-cols-1 max-w-5xl mx-auto'
                                 }`}>
                                 {filteredProducts.map((product) => (
                                     <ProductCard

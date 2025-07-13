@@ -20,6 +20,7 @@ import {
   RefreshCw,
   X
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { ROUTES } from '../../utils/constants.js';
 import { shopService } from '../../services/shopService.js';
 // eslint-disable-next-line no-unused-vars
@@ -144,6 +145,7 @@ const FilterPanel = ({
 
 const ShopList = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Safe AuthContext usage with fallback
@@ -288,7 +290,17 @@ const ShopList = () => {
         return specialties.some(specialty => 
           specialty.toLowerCase().includes(query)
         );
+
+        if (matches) {
+          console.log('🔍 Shop matches search:', shop.name);
+        }
+
+        return matches;
       });
+    } else {
+      console.log('🔍 No search query, showing all', shops.length, 'shops');
+      // When no search query, show all shops
+      filtered = [...shops];
     }
 
     // Client-side sorting
@@ -377,11 +389,10 @@ const ShopList = () => {
 
   // Shop Card Component
   const ShopCard = ({ shop, isListView = false }) => {
-    const shopName = shop.name || 'متجر غير محدد';
-    const shopAddress = shop.address || shop.area || shop.city || 'العنوان غير محدد';
-    const shopPhone = shop.phone || shop.whatsapp || 'غير محدد';
-    const shopDescription = shop.description || 'لا يوجد وصف';
-    const shopRating = shop.rating || shop.averageRating || 0;
+    const shopName = shop.name || 'Unnamed Shop';
+    const shopAddress = shop.address || shop.area || shop.city || 'Address not specified';
+    const shopPhone = shop.phone || shop.whatsapp || 'Not specified';
+    const shopDescription = shop.description || 'No description available';
     const shopSpecialties = shop.specialties || [];
     const shopWorkingHours = shop.workingHours || '9:00 ص - 9:00 م';
     const shopImage = shop.image || shop.logoUrl || null;
@@ -389,7 +400,7 @@ const ShopList = () => {
 
     return (
       <Card
-        className={`group hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 cursor-pointer border-0 bg-white rounded-3xl shadow-lg h-full flex flex-col ${isListView ? 'lg:flex-row lg:h-auto' : ''}`}
+        className={`group relative overflow-hidden hover:shadow-2xl hover:-translate-y-4 transition-all duration-700 cursor-pointer border-0 bg-white rounded-3xl shadow-xl h-full flex flex-col ${isListView ? 'lg:flex-row lg:h-auto' : ''} backdrop-blur-sm hover:shadow-yellow-200/25`}
         onClick={() => {
           const shopId = shop._id || shop.id;
           console.log('Navigating to shop:', shopId, shop.name);
@@ -418,14 +429,14 @@ const ShopList = () => {
           
           <div className="absolute top-2 right-2">
             <Button
-              size="sm"
+              size="lg"
               variant="ghost"
-              className="bg-white/80 hover:bg-white"
+              className="bg-white/95 hover:bg-white backdrop-blur-md rounded-full w-14 h-14 p-0 shadow-2xl opacity-0 group-hover:opacity-100 transition-all duration-500 hover:scale-125 border-2 border-white/70"
               onClick={(e) => {
                 e.stopPropagation();
               }}
             >
-              <Heart className="w-4 h-4" />
+              <Heart className="w-6 h-6 text-red-500 hover:text-red-600 transition-colors duration-200" />
             </Button>
           </div>
 
@@ -440,7 +451,7 @@ const ShopList = () => {
                   <span className="text-xs text-gray-500">
                     ({shopReviewCount})
                   </span>
-                )}
+                )} */}
               </div>
             </div>
           )}
@@ -510,7 +521,7 @@ const ShopList = () => {
             </Button>
           </div>
         </CardContent>
-      </Card>
+      </Card >
     );
   };
 
