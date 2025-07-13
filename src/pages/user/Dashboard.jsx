@@ -128,10 +128,7 @@ const Dashboard = () => {
           }
         }
 
-        // Load favorites (placeholder for now)
-        // const favoritesData = await dashboardService.getFavorites();
-        // setFavorites(favoritesData.data || []);
-
+ 
       } catch (err) {
         console.error('Error loading dashboard data:', err);
         setError(err.message || 'حدث خطأ في تحميل البيانات');
@@ -167,10 +164,10 @@ const Dashboard = () => {
       // Refresh favorites
       const favoritesData = await dashboardService.getFavorites();
       setFavorites(favoritesData.data || []);
-      console.log('تم إزالة العنصر من المفضلة');
+      console.log('Item removed from favorites');
     } catch (err) {
       console.error('Error removing from favorites:', err);
-      setError(err.message || 'حدث خطأ في إزالة العنصر من المفضلة');
+      setError(err.message || 'Error occurred while removing item from favorites');
     }
   };
 
@@ -271,7 +268,7 @@ const Dashboard = () => {
               size="sm"
               variant="outline"
               onClick={() => handleRemoveFromFavorites(item.id)}
-              title="إزالة من المفضلة"
+              title="Remove from favorites"
             >
               <Trash2 className="w-3 h-3" />
             </Button>
@@ -337,32 +334,32 @@ const Dashboard = () => {
     <div className="space-y-6">
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard
+        {/* <StatCard
           icon={Heart}
-          title="المفضلة"
+          title="Favorites"
           value={stats.favorites}
-          description="عنصر محفوظ"
-        />
+          description="saved items"
+        /> */}
         <StatCard
           icon={Calendar}
-          title="المواعيد"
+          title="Bookings"
           value={stats.bookings}
-          description={`${stats.activeBookings || 0} موعد نشط`}
+          description={`${stats.activeBookings || 0} active bookings`}
           color="blue"
         />
         <StatCard
           icon={Star}
-          title="التقييمات"
+          title="Reviews"
           value={stats.reviews}
-          description="تقييم مكتوب"
+          description="reviews written"
           color="green"
         />
         {isShopOwner && (
           <StatCard
             icon={Store}
-            title="المتاجر"
+            title="Shops"
             value={stats.shops}
-            description="متجر مسجل"
+            description="registered shops"
             color="purple"
           />
         )}
@@ -371,8 +368,8 @@ const Dashboard = () => {
       {/* Recent Activity */}
       <Card>
         <CardHeader>
-          <CardTitle>النشاط الأخير</CardTitle>
-          <CardDescription>آخر الأنشطة والتحديثات</CardDescription>
+          <CardTitle> Recent activity</CardTitle>
+          <CardDescription>Latest activities and updates</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
@@ -383,8 +380,8 @@ const Dashboard = () => {
             ) : (
               <div className="text-center py-8 text-gray-500">
                 <Calendar className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-                <p>لا توجد أنشطة حديثة</p>
-                <p className="text-sm">ابدأ بتصفح المتاجر وحجز المواعيد</p>
+                <p>No recent activities</p>
+                <p className="text-sm">Start browsing shops and booking appointments</p>
               </div>
             )}
           </div>
@@ -394,7 +391,7 @@ const Dashboard = () => {
       {/* Quick Actions */}
       <Card>
         <CardHeader>
-          <CardTitle>إجراءات سريعة</CardTitle>
+          <CardTitle> Quick actions</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -404,7 +401,7 @@ const Dashboard = () => {
               onClick={() => navigate(ROUTES.SHOPS)}
             >
               <ShoppingBag className="w-6 h-6 mb-2" />
-              <span className="text-sm">تصفح المتاجر</span>
+              <span className="text-sm"> Browse stores</span>
             </Button>
             <Button
               variant="outline"
@@ -412,7 +409,7 @@ const Dashboard = () => {
               onClick={() => setActiveTab('bookings')}
             >
               <Calendar className="w-6 h-6 mb-2" />
-              <span className="text-sm">حجز موعد</span>
+              <span className="text-sm">Book an appointment </span>
             </Button>
             <Button
               variant="outline"
@@ -420,7 +417,7 @@ const Dashboard = () => {
               onClick={() => setActiveTab('favorites')}
             >
               <Heart className="w-6 h-6 mb-2" />
-              <span className="text-sm">المفضلة</span>
+              <span className="text-sm">Favorites</span>
             </Button>
             <Button
               variant="outline"
@@ -428,7 +425,7 @@ const Dashboard = () => {
               onClick={() => navigate(ROUTES.PROFILE)}
             >
               <User className="w-6 h-6 mb-2" />
-              <span className="text-sm">الملف الشخصي</span>
+              <span className="text-sm">Profile</span>
             </Button>
           </div>
         </CardContent>
@@ -440,12 +437,12 @@ const Dashboard = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">المفضلة</h2>
-          <p className="text-gray-600">العناصر المحفوظة لديك</p>
+          <h2 className="text-2xl font-bold text-gray-900">Favorites</h2>
+          <p className="text-gray-600">Your saved items</p>
         </div>
         <Button onClick={() => navigate(ROUTES.PRODUCTS)}>
           <Plus className="w-4 h-4 mr-2" />
-          تصفح المنتجات
+          Browse Products
         </Button>
       </div>
 
@@ -457,11 +454,11 @@ const Dashboard = () => {
         ) : (
           <div className="col-span-full text-center py-12 text-gray-500">
             <Heart className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-            <h3 className="text-lg font-medium mb-2">لا توجد عناصر في المفضلة</h3>
-            <p className="mb-4">ابدأ بإضافة المنتجات التي تعجبك إلى المفضلة</p>
+            <h3 className="text-lg font-medium mb-2">No items in favorites</h3>
+            <p className="mb-4">Start adding products you like to your favorites</p>
             <Button onClick={() => navigate(ROUTES.SHOPS)}>
               <ShoppingBag className="w-4 h-4 mr-2" />
-              تصفح المنتجات
+              Browse Products
             </Button>
           </div>
         )}
@@ -473,12 +470,12 @@ const Dashboard = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">المواعيد</h2>
-          <p className="text-gray-600">مواعيدك المحجوزة</p>
+          <h2 className="text-2xl font-bold text-gray-900">Bookings</h2>
+          <p className="text-gray-600">Your booked appointments</p>
         </div>
         <Button onClick={() => navigate(ROUTES.SHOPS)}>
           <Plus className="w-4 h-4 mr-2" />
-          حجز موعد جديد
+          Book New Appointment
         </Button>
       </div>
 
@@ -648,19 +645,19 @@ const Dashboard = () => {
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold text-gray-900">
-              {isShopOwner ? 'إدارة المواعيد المتاحة' : 'مواعيدي المحجوزة'}
+              {isShopOwner ? 'Manage Available Times' : 'My Booked Appointments'}
             </h2>
             <p className="text-gray-600">
-              {isShopOwner ? 'إدارة المواعيد المتاحة للحجز' : 'مواعيدك المحجوزة في المتاجر'}
+              {isShopOwner ? 'Manage available times for booking' : 'Your booked appointments in shops'}
             </p>
           </div>
         </div>
 
-        {/* إضافة موعد جديد - للمالكين فقط */}
+        {/* Add new appointment - for owners only */}
         {isShopOwner && (
           <Card>
             <CardHeader>
-              <CardTitle>إضافة موعد متاح</CardTitle>
+              <CardTitle>Add Available Time</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -716,11 +713,11 @@ const Dashboard = () => {
           </Card>
         )}
 
-        {/* قائمة المواعيد */}
+        {/* Appointments list */}
         <Card>
           <CardHeader>
             <CardTitle>
-              {isShopOwner ? `المواعيد المتاحة (${availableTimes.length})` : `مواعيدي المحجوزة (${availableTimes.length})`}
+              {isShopOwner ? `Available Times (${availableTimes.length})` : `My Booked Appointments (${availableTimes.length})`}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -809,12 +806,12 @@ const Dashboard = () => {
   };
 
   const tabs = [
-    { id: 'overview', label: 'نظرة عامة', icon: BarChart3 },
-    { id: 'favorites', label: 'المفضلة', icon: Heart },
-    { id: 'bookings', label: 'المواعيد', icon: Calendar },
-    { id: 'available-times', label: isShopOwner ? 'إدارة المواعيد' : 'مواعيدي', icon: Clock },
+    { id: 'overview', label: 'Overview', icon: BarChart3 },
+    // { id: 'favorites', label: 'Favorites', icon: Heart },
+    { id: 'bookings', label: 'Bookings', icon: Calendar },
+    { id: 'available-times', label: isShopOwner ? 'Manage Times' : 'My Bookings', icon: Clock },
     ...(isShopOwner ? [
-      { id: 'shop', label: 'إدارة المتجر', icon: Store }
+      { id: 'shop', label: 'Manage Shop', icon: Store }
     ] : [])
   ];
 
@@ -824,7 +821,7 @@ const Dashboard = () => {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center pt-20">
         <div className="text-center">
           <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-yellow-600" />
-          <p className="text-gray-600">جاري تحميل البيانات...</p>
+          <p className="text-gray-600">Loading data...</p>
         </div>
       </div>
     );
@@ -838,7 +835,7 @@ const Dashboard = () => {
           <div className="text-red-600 mb-4">❌</div>
           <p className="text-red-600 mb-4">{error}</p>
           <Button onClick={() => window.location.reload()}>
-            إعادة المحاولة
+            Try Again
           </Button>
         </div>
       </div>
@@ -874,10 +871,10 @@ const Dashboard = () => {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">
-            مرحباً، {user?.firstName || 'المستخدم'}
+            Welcome, {user?.firstName || 'User'}
           </h1>
           <p className="text-gray-600 mt-1">
-            إدارة حسابك ومتابعة أنشطتك
+            Manage your account and track your activities
           </p>
         </div>
 
@@ -908,7 +905,7 @@ const Dashboard = () => {
         {/* Tab Content */}
         <div>
           {activeTab === 'overview' && <OverviewTab />}
-          {activeTab === 'favorites' && <FavoritesTab />}
+          {/* {activeTab === 'favorites' && <FavoritesTab />} */}
           {activeTab === 'bookings' && <BookingsTab />}
           {activeTab === 'shop' && isShopOwner && <ShopOwnerTab />}
           {activeTab === 'available-times' && <AvailableTimesTab />}

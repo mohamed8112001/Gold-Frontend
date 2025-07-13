@@ -176,6 +176,60 @@ const ShopList = () => {
       filtered = [...shops];
     }
 
+    // Apply location filter
+    if (filters.location && filters.location.trim() !== '') {
+      console.log('🔍 Applying location filter for:', filters.location);
+      filtered = filtered.filter(shop => {
+        const address = shop.address || shop.area || shop.city || '';
+        return address.toLowerCase().includes(filters.location.toLowerCase());
+      });
+    }
+
+    // Apply rating filter
+    if (filters.rating && filters.rating !== '') {
+      console.log('🔍 Applying rating filter for:', filters.rating);
+      const minRating = parseFloat(filters.rating);
+      filtered = filtered.filter(shop => {
+        const rating = parseFloat(shop.rating || shop.averageRating || 0);
+        return rating >= minRating;
+      });
+    }
+
+    // Apply specialty filter
+    if (filters.specialties && filters.specialties.trim() !== '') {
+      console.log('🔍 Applying specialty filter for:', filters.specialties);
+      filtered = filtered.filter(shop => {
+        const specialties = shop.specialties || [];
+        const searchSpecialty = filters.specialties.toLowerCase();
+        return Array.isArray(specialties) && specialties.some(specialty =>
+          specialty.toLowerCase().includes(searchSpecialty)
+        );
+      });
+    }
+
+    // Apply sorting
+    if (filters.sortBy) {
+      console.log('🔍 Applying sort by:', filters.sortBy);
+      filtered.sort((a, b) => {
+        switch (filters.sortBy) {
+          case 'rating':
+            const ratingA = parseFloat(a.rating || a.averageRating || 0);
+            const ratingB = parseFloat(b.rating || b.averageRating || 0);
+            return ratingB - ratingA; // Highest rating first
+          case 'reviews':
+            const reviewsA = parseInt(a.reviewCount || a.reviews?.length || 0);
+            const reviewsB = parseInt(b.reviewCount || b.reviews?.length || 0);
+            return reviewsB - reviewsA; // Most reviews first
+          case 'name':
+            const nameA = (a.name || '').toLowerCase();
+            const nameB = (b.name || '').toLowerCase();
+            return nameA.localeCompare(nameB); // Alphabetical order
+          default:
+            return 0;
+        }
+      });
+    }
+
     console.log('🔍 Final filtered shops:', filtered.length);
     console.log('🔍 Sample filtered shop:', filtered[0]?.name);
     setFilteredShops(filtered);

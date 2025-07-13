@@ -28,7 +28,8 @@
     "clear_search": "Clear Search",
     "filters": "Filters",
     "grid_view": "Grid View",
-    "list_view": "List View"
+    "list_view": "List View",
+    "remove": "Remove"
   },
   "sections": {
     "featured_stores": "Featured Stores",
@@ -130,5 +131,21 @@
       "title": "Pearl Elegance",
       "subtitle": "Timeless beauty of natural pearls"
     }
+  },
+  "favorites": {
+    "title": "Your Favorite Products",
+    "my_favorites": "My Favorites",
+    "your_favorite": "Your Favorite",
+    "products": "Products",
+    "description": "Discover and manage all your favorite jewelry pieces in one place",
+    "count_message": "You have {{count}} saved favorites",
+    "empty_message": "Save your favorite products to see them here",
+    "favorites": "favorites",
+    "no_favorites": "No favorites yet",
+    "save_instruction": "Save your favorite products by clicking the heart icon on any product"
+  },
+  "messages": {
+    "removed_from_favorites": "Removed from favorites",
+    "failed_to_remove": "Failed to remove favorite"
   }
 }

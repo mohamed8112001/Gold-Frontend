@@ -174,69 +174,7 @@ const ManageShop = () => {
         }
     };
 
-    // Mock data
-    const mockShop = {
-        id: 1,
-        name: 'مجوهرات الإسكندرية',
-        description: 'متجر مجوهرات فاخر متخصص في الذهب والمجوهرات الثمينة',
-        address: 'شارع فؤاد، الإسكندرية',
-        phone: '+20 3 123 4567',
-        email: 'info@alexandria-jewelry.com',
-        rating: 4.7,
-        reviewCount: 156,
-        verified: true
-    };
-
-    const mockProducts = [
-        {
-            id: 1,
-            name: 'خاتم ذهبي كلاسيكي',
-            price: 2500,
-            category: 'rings',
-            image: '/api/placeholder/300/300',
-            status: 'active',
-            views: 245,
-            favorites: 12
-        },
-        {
-            id: 2,
-            name: 'سلسلة ذهبية فاخرة',
-            price: 4200,
-            category: 'chains',
-            image: '/api/placeholder/300/300',
-            status: 'active',
-            views: 189,
-            favorites: 8
-        },
-        {
-            id: 3,
-            name: 'أسورة ذهبية مرصعة',
-            price: 3800,
-            category: 'bracelets',
-            image: '/api/placeholder/300/300',
-            status: 'draft',
-            views: 67,
-            favorites: 3
-        }
-    ];
-
-    const mockBookings = [
-        {
-            id: 1,
-            customerName: 'أحمد محمد',
-            date: '2024-01-25',
-            time: '14:00',
-            status: 'confirmed'
-        },
-        {
-            id: 2,
-            customerName: 'فاطمة علي',
-            date: '2024-01-22',
-            time: '16:30',
-            status: 'pending'
-        }
-    ];
-
+   
     if (isLoading) {
         return (
             <div className="min-h-screen bg-gray-50 flex items-center justify-center pt-20">
