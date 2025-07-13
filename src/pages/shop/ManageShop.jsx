@@ -19,7 +19,8 @@ import {
     Heart,
     Shield,
     Tag,
-    ShoppingCart
+    ShoppingCart,
+    MapPin
 } from 'lucide-react';
 import { shopService } from '../../services/shopService.js';
 import { productService } from '../../services/productService.js';
