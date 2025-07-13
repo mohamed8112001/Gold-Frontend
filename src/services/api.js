@@ -1,18 +1,30 @@
 import axios from 'axios';
 import { API_BASE_URL, STORAGE_KEYS, ROUTES } from '../utils/constants.js';
 
-// Create axios instance
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
-  withCredentials: true, // Important for cookies
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
+let isRefreshing = false;
+let failedQueue = [];
 
-// Request interceptor to add auth token
+const processQueue = (error, token = null) => {
+  failedQueue.forEach(prom => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+  
+  failedQueue = [];
+};
+
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem(STORAGE_KEYS.TOKEN);
@@ -26,7 +38,6 @@ api.interceptors.request.use(
   }
 );
 
-// Response interceptor to handle errors
 api.interceptors.response.use(
   (response) => {
     return response;
@@ -34,28 +45,46 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // Handle 401 errors (unauthorized)
     if (error.response?.status === 401 && !originalRequest._retry) {
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        }).then(token => {
+          originalRequest.headers.Authorization = `Bearer ${token}`;
+          return api(originalRequest);
+        }).catch(err => {
+          return Promise.reject(err);
+        });
+      }
+
       originalRequest._retry = true;
+      isRefreshing = true;
 
       try {
-        // Try to refresh token using cookies
-        const response = await axios.get(`${API_BASE_URL}/auth/refresh`, {
+        const response = await axios.post(`${API_BASE_URL}/auth/refresh`, {}, {
           withCredentials: true
         });
 
         const { accessToken } = response.data;
         localStorage.setItem(STORAGE_KEYS.TOKEN, accessToken);
 
-        // Retry original request with new token
+        processQueue(null, accessToken);
+        isRefreshing = false;
+
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
         return api(originalRequest);
       } catch (refreshError) {
-        // Refresh failed, redirect to login
+        processQueue(refreshError, null);
+        isRefreshing = false;
+
         localStorage.removeItem(STORAGE_KEYS.TOKEN);
-        localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
         localStorage.removeItem(STORAGE_KEYS.USER);
-        window.location.href = ROUTES.LOGIN;
+        
+        if (window.location.pathname !== ROUTES.LOGIN) {
+          window.location.href = ROUTES.LOGIN;
+        }
+        
+        return Promise.reject(refreshError);
       }
     }
 
@@ -63,7 +92,6 @@ api.interceptors.response.use(
   }
 );
 
-// API helper functions
 export const apiRequest = {
   get: (url, config = {}) => api.get(url, config),
   post: (url, data = {}, config = {}) => api.post(url, data, config),
@@ -72,10 +100,8 @@ export const apiRequest = {
   delete: (url, config = {}) => api.delete(url, config),
 };
 
-// Error handler
 export const handleApiError = (error) => {
   if (error.response) {
-    // Server responded with error status
     const { status, data } = error.response;
     
     switch (status) {
@@ -95,11 +121,26 @@ export const handleApiError = (error) => {
         return data.message || 'حدث خطأ غير متوقع';
     }
   } else if (error.request) {
-    // Network error
     return 'خطأ في الاتصال بالشبكة';
   } else {
-    // Other error
     return error.message || 'حدث خطأ غير متوقع';
+  }
+};
+
+export const refreshToken = async () => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/auth/refresh`, {}, {
+      withCredentials: true
+    });
+    
+    const { accessToken } = response.data;
+    localStorage.setItem(STORAGE_KEYS.TOKEN, accessToken);
+    
+    return accessToken;
+  } catch (error) {
+    localStorage.removeItem(STORAGE_KEYS.TOKEN);
+    localStorage.removeItem(STORAGE_KEYS.USER);
+    throw error;
   }
 };
 

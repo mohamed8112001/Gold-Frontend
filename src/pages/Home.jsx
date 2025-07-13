@@ -191,8 +191,11 @@ const Home = () => {
       {/* Image Section */}
       <div className="relative overflow-hidden rounded-t-3xl">
         <img
-          src={shop.image || 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'}
+          src={`${import.meta.env.VITE_API_BASE_URL}/shop-image/${shop.logoUrl}`}
           alt={shop.name}
+          onError={(e)=> {
+            e.target.src= 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'
+          }}
           className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-700"
         />
 
