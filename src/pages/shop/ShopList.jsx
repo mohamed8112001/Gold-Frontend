@@ -303,6 +303,7 @@ const ShopList = () => {
       filtered = [...shops];
     }
 
+
     // Client-side sorting
     switch (filters.sortBy) {
       case 'rating':

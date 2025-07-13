@@ -104,10 +104,10 @@ const FavoriteProducts = () => {
             await productService.removeFromFavorites(favoriteId);
 
             setFavoriteProducts(prev => prev.filter(p => p.favoriteId !== favoriteId));
-            toast.success('Removed from favorites');
+            toast.success(t('messages.removed_from_favorites') || 'Removed from favorites');
         } catch (error) {
             console.error('Error removing favorite:', error);
-            toast.error('Failed to remove favorite');
+            toast.error(t('messages.failed_to_remove') || 'Failed to remove favorite');
         }
     };
 
@@ -223,37 +223,10 @@ const FavoriteProducts = () => {
 
                     <CardContent className="p-8 flex flex-col h-full relative z-10">
                         <div className="flex-1">
-                            <h3 className="font-bold text-2xl mb-4 group-hover:text-yellow-600 transition-colors line-clamp-2 leading-tight group-hover:scale-105 transform origin-left duration-300">
+                            <h3 className="font-bold text-2xl mb-4 group-hover:text-yellow-600 transition-colors line-clamp-2 leading-tight group-hover:scale-105 transform origin-left duration-300 ">
                                 {safeProduct.name}
                             </h3>
-                            <p className="text-gray-600 text-base mb-5 line-clamp-3 leading-relaxed bg-gray-50 p-3 rounded-xl">
-                                {safeProduct.description}
-                            </p>
 
-                            {/* Enhanced rating display */}
-                            <div className="flex items-center gap-3 mb-5">
-                                <div className="flex items-center bg-gradient-to-r from-yellow-100 to-yellow-200 px-4 py-2 rounded-full shadow-md border border-yellow-300/50">
-                                    <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                                    <span className="text-sm font-bold ml-2 text-yellow-700">
-                                        {typeof safeProduct.rating === 'number' ? safeProduct.rating.toFixed(1) : '4.5'}
-                                    </span>
-                                    <span className="text-sm text-gray-600 ml-1 font-medium">
-                                        ({typeof safeProduct.reviewCount === 'number' ? safeProduct.reviewCount : 0} reviews)
-                                    </span>
-                                </div>
-                            </div>
-
-                            {/* Price display if available */}
-                            {safeProduct.price && safeProduct.price > 0 && (
-                                <div className="mb-5">
-                                    <div className="bg-green-50 p-3 rounded-xl border border-green-200/50">
-                                        <p className="text-sm text-green-600 font-medium">Price</p>
-                                        <p className="text-xl font-bold text-green-700">
-                                            ${typeof safeProduct.price === 'number' ? safeProduct.price.toFixed(2) : safeProduct.price}
-                                        </p>
-                                    </div>
-                                </div>
-                            )}
 
                             {/* Enhanced shop information */}
                             {safeProduct.shopName && safeProduct.shopName !== 'Unknown Shop' && (
@@ -289,7 +262,7 @@ const FavoriteProducts = () => {
                                     }}
                                 >
                                     <Eye className="w-5 h-5 mr-3" />
-                                    View Product Details
+                                    {t('buttons.view_details') || 'View Product Details'}
                                 </Button>
 
                                 {/* Secondary Actions */}
@@ -305,7 +278,7 @@ const FavoriteProducts = () => {
                                             }}
                                         >
                                             <ShoppingBag className="w-4 h-4 mr-2" />
-                                            Visit Shop
+                                            {t('buttons.visit_shop') || 'Visit Shop'}
                                         </Button>
                                     )}
                                     <Button
@@ -315,7 +288,7 @@ const FavoriteProducts = () => {
                                         onClick={(e) => handleRemoveFavorite(safeProduct.favoriteId, e)}
                                     >
                                         <X className="w-4 h-4 mr-2" />
-                                        Remove
+                                        {t('buttons.remove') || 'Remove'}
                                     </Button>
                                 </div>
                             </div>
@@ -341,12 +314,12 @@ const FavoriteProducts = () => {
                     <div className="text-center mb-8">
                         <div className="text-6xl mb-4">❤️</div>
                         <h1 className="text-5xl font-bold text-gray-900 mb-4">
-                            Your Favorite Products
+                            {t('favorites.title') || 'Your Favorite Products'}
                         </h1>
                         <p className="text-xl text-gray-600 max-w-2xl mx-auto">
                             {Array.isArray(favoriteProducts) && favoriteProducts.length > 0
-                                ? `You have ${favoriteProducts.length} saved favorites`
-                                : "Save your favorite products to see them here"}
+                                ? t('favorites.count_message', { count: favoriteProducts.length }) || `You have ${favoriteProducts.length} saved favorites`
+                                : t('favorites.empty_message') || "Save your favorite products to see them here"}
                         </p>
                     </div>
 
@@ -357,7 +330,7 @@ const FavoriteProducts = () => {
                                 <div className="flex items-center gap-2 bg-yellow-50 px-4 py-2 rounded-full">
                                     <Heart className="w-4 h-4 text-red-500 fill-red-500" />
                                     <span className="text-sm font-medium text-yellow-800">
-                                        {Array.isArray(favoriteProducts) ? favoriteProducts.length : 0} favorites
+                                        {Array.isArray(favoriteProducts) ? favoriteProducts.length : 0} {t('favorites.favorites') || 'favorites'}
                                     </span>
                                 </div>
                             </div>
@@ -415,10 +388,10 @@ const FavoriteProducts = () => {
                             <div className="text-center py-20 bg-white rounded-2xl shadow-lg">
                                 <div className="text-8xl mb-6">❤️</div>
                                 <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                                    No favorites yet
+                                    {t('favorites.no_favorites') || 'No favorites yet'}
                                 </h3>
                                 <p className="text-gray-600 text-lg mb-8 max-w-md mx-auto">
-                                    Save your favorite products by clicking the heart icon on any product
+                                    {t('favorites.save_instruction') || 'Save your favorite products by clicking the heart icon on any product'}
                                 </p>
                                 <Button
                                     onClick={() => navigate(ROUTES.PRODUCTS)}

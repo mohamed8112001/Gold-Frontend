@@ -403,19 +403,7 @@ const Home = () => {
       className="min-h-screen bg-gray-50"
       dir="ltr"
     >
-      {/* Language Toggle Button - Fixed Position */}
-      <div className="fixed top-24 right-6 z-50">
-        <Button
-          variant="outline"
-          onClick={toggleLanguage}
-          className="border-2 border-blue-400 bg-blue-50/90 backdrop-blur-md text-blue-700 hover:bg-blue-100 hover:border-blue-600 hover:text-blue-800 px-6 py-3 rounded-full font-bold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-110 flex items-center gap-3"
-        >
-          <Globe className="w-5 h-5" />
-          <span className="text-base font-extrabold">
-            {i18n.language === 'ar' ? 'English' : 'عربي'}
-          </span>
-        </Button>
-      </div>
+
 
       {/* Enhanced Hero Slider */}
       <section className="relative h-screen overflow-hidden">
@@ -919,7 +907,7 @@ const Home = () => {
 
 
       {/* Admin Access Section */}
-      <section className="py-8 bg-gray-100">
+      {/* <section className="py-8 bg-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h3 className="text-lg font-medium text-gray-900 mb-4">
@@ -955,7 +943,7 @@ const Home = () => {
             </p>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Floating Chat Component */}
       <FloatingChat />
