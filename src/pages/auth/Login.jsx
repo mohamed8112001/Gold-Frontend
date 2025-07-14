@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button.jsx';
 import { Input } from '@/components/ui/input.jsx';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.jsx';
-import { Mail, Lock, Eye, EyeOff, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES } from '../../utils/constants.js';
 import { GoogleLogin } from '@react-oauth/google';
@@ -92,27 +92,21 @@ const Login = () => {
     googleLogin();
   };
 
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % sliderImages.length);
-  };
 
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + sliderImages.length) % sliderImages.length);
-  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-white to-amber-100 flex items-center justify-center p-4 relative overflow-hidden pt-20">
+    <div className="h-screen w-full relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #fef7ed 0%, #ffffff 50%, #fef3e2 100%)' }}>
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-amber-200/30 to-amber-300/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-amber-300/20 to-amber-200/30 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full blur-3xl animate-pulse" style={{ background: 'linear-gradient(135deg, rgba(163, 127, 65, 0.15) 0%, rgba(163, 127, 65, 0.1) 100%)' }}></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full blur-3xl animate-pulse delay-1000" style={{ background: 'linear-gradient(135deg, rgba(163, 127, 65, 0.1) 0%, rgba(163, 127, 65, 0.15) 100%)' }}></div>
       </div>
 
-      <div className="w-full max-w-7xl relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 items-stretch min-h-[700px] shadow-2xl rounded-3xl overflow-hidden bg-white/80 backdrop-blur-sm">
+      <div className="w-full h-full relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 items-stretch h-full bg-white/80 backdrop-blur-sm">
 
           {/* Left Side - Enhanced Branding with Slider */}
-          <div className="relative bg-gradient-to-br from-amber-200 via-amber-300 to-amber-400 flex flex-col items-center justify-center p-12 overflow-hidden">
+          <div className="relative flex flex-col items-center justify-center p-12 overflow-hidden" style={{ background: 'linear-gradient(135deg, #A37F41 0%, #B8904F 50%, #C9A05D 100%)' }}>
             {/* Decorative elements */}
             <div className="absolute top-10 left-10 w-20 h-20 bg-white/20 rounded-full blur-xl"></div>
             <div className="absolute bottom-10 right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
@@ -120,7 +114,7 @@ const Login = () => {
             {/* Image Slider Container */}
             <div className="relative w-80 h-80 mb-12">
               {/* Main circular container */}
-              <div className="w-full h-full bg-gradient-to-br from-amber-50 to-amber-100 rounded-full flex items-center justify-center shadow-2xl relative overflow-hidden border-8 border-white/50">
+              <div className="w-full h-full rounded-full flex items-center justify-center shadow-2xl relative overflow-hidden border-8 border-white/50" style={{ background: 'linear-gradient(135deg, #FEF7ED 0%, #FDF4E8 100%)' }}>
                 {/* Slider images */}
                 <div className="relative w-64 h-64 rounded-full overflow-hidden shadow-lg">
                   {sliderImages.map((image, index) => (
@@ -135,37 +129,25 @@ const Login = () => {
                     />
                   ))}
 
-                  {/* Slider controls */}
-                  <button
-                    onClick={prevSlide}
-                    className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-amber-600 rounded-full p-2 shadow-lg transition-all duration-200 hover:scale-110"
-                  >
-                    <ChevronLeft className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={nextSlide}
-                    className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-amber-600 rounded-full p-2 shadow-lg transition-all duration-200 hover:scale-110"
-                  >
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
+
                 </div>
 
                 {/* Floating decorative rings */}
-                <div className="absolute top-4 right-4 w-8 h-8 border-4 border-amber-400/60 rounded-full animate-bounce delay-300"></div>
-                <div className="absolute bottom-6 left-6 w-6 h-6 border-3 border-amber-500/40 rounded-full animate-bounce delay-700"></div>
+                <div className="absolute top-4 right-4 w-8 h-8 border-4 rounded-full animate-bounce delay-300" style={{ borderColor: 'rgba(163, 127, 65, 0.6)' }}></div>
+                <div className="absolute bottom-6 left-6 w-6 h-6 border-3 rounded-full animate-bounce delay-700" style={{ borderColor: 'rgba(163, 127, 65, 0.4)' }}></div>
               </div>
             </div>
 
             {/* Enhanced Dibla text with animation */}
-            <h1 className="text-7xl font-bold text-gray-800 mb-8 relative" style={{ fontFamily: 'serif' }}>
-              <span className="relative z-10 bg-gradient-to-r from-gray-800 to-gray-700 bg-clip-text text-transparent">
+            <h1 className="text-7xl font-bold mb-8 relative" style={{ fontFamily: 'serif', color: '#2D1810' }}>
+              <span className="relative z-10">
                 Dibla
               </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-amber-300 to-amber-400 blur-lg opacity-30 animate-pulse"></div>
+              <div className="absolute inset-0 blur-lg opacity-30 animate-pulse" style={{ background: 'linear-gradient(90deg, #D4AF37 0%, #F4E4BC 100%)' }}></div>
             </h1>
 
             {/* Enhanced subtitle */}
-            <p className="text-xl text-gray-700 text-center mb-12 max-w-sm leading-relaxed font-medium">
+            <p className="text-xl text-center mb-12 max-w-sm leading-relaxed font-medium" style={{ color: '#2D1810' }}>
               Choose the nearest shop in just a click.
             </p>
 
@@ -176,9 +158,12 @@ const Login = () => {
                   key={index}
                   onClick={() => setCurrentSlide(index)}
                   className={`transition-all duration-300 rounded-full ${index === currentSlide
-                    ? 'w-10 h-4 bg-gray-800'
-                    : 'w-4 h-4 bg-gray-400 hover:bg-gray-600'
+                    ? 'w-10 h-4'
+                    : 'w-4 h-4 hover:opacity-80'
                     }`}
+                  style={{
+                    backgroundColor: index === currentSlide ? '#2D1810' : 'rgba(45, 24, 16, 0.4)'
+                  }}
                 />
               ))}
             </div>
@@ -188,14 +173,15 @@ const Login = () => {
           <div className="w-full bg-gradient-to-br from-white to-gray-50 p-8 lg:p-12 flex flex-col justify-center relative">
             {/* Navigation Tabs with enhanced styling */}
             <div className="flex justify-end mb-8">
-              <div className="flex bg-gray-100 rounded-xl p-1 shadow-lg">
+              <div className="flex rounded-xl p-1 shadow-lg" style={{ backgroundColor: '#F5F1EB' }}>
                 <Link
                   to={ROUTES.USER_TYPE_SELECTION}
-                  className="px-8 py-3 text-gray-600 hover:text-gray-900 rounded-lg font-medium transition-all duration-200 hover:bg-white/50"
+                  className="px-8 py-3 rounded-lg font-medium transition-all duration-200 hover:bg-white/50"
+                  style={{ color: '#6B5B47' }}
                 >
                   Sign Up
                 </Link>
-                <div className="px-8 py-3 bg-white text-gray-800 rounded-lg font-medium shadow-md border border-gray-200 transform scale-105">
+                <div className="px-8 py-3 bg-white rounded-lg font-medium shadow-md border transform scale-105" style={{ color: '#A37F41', borderColor: '#E5D5C3' }}>
                   Sign In
                 </div>
               </div>
@@ -204,10 +190,10 @@ const Login = () => {
             <div className="max-w-md mx-auto w-full">
               {/* Enhanced Header */}
               <div className="text-center mb-10">
-                <h2 className="text-5xl font-bold text-gray-900 mb-3 bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                <h2 className="text-5xl font-bold mb-3" style={{ color: '#A37F41' }}>
                   Welcome
                 </h2>
-                <p className="text-gray-600 text-lg">
+                <p className="text-lg" style={{ color: '#6B5B47' }}>
                   Please Enter Your Credentials To Access Your Account
                 </p>
               </div>
@@ -215,18 +201,24 @@ const Login = () => {
               <form onSubmit={handleSubmit} className="space-y-8">
                 {/* Enhanced Email Field */}
                 <div className="group">
-                  <label className="block text-sm font-semibold text-gray-700 mb-3">
+                  <label className="block text-sm font-semibold mb-3" style={{ color: '#6B5B47' }}>
                     Enter Your Email
                   </label>
                   <div className="relative">
-                    <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 group-focus-within:text-amber-500 transition-colors" />
+                    <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors" style={{ color: '#A37F41' }} />
                     <Input
                       name="email"
                       type="email"
                       placeholder="E-Mail *"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className={`pl-14 py-4 border-2 border-gray-200 rounded-xl text-gray-700 placeholder-gray-400 focus:border-amber-400 focus:ring-4 focus:ring-amber-100 transition-all duration-200 hover:border-gray-300 ${errors.email ? 'border-red-500' : ''}`}
+                      className={`pl-14 py-4 border-2 rounded-xl transition-all duration-200 ${errors.email ? 'border-red-500' : ''}`}
+                      style={{
+                        borderColor: errors.email ? '#ef4444' : '#E5D5C3',
+                        color: '#6B5B47'
+                      }}
+                      onFocus={(e) => e.target.style.borderColor = '#A37F41'}
+                      onBlur={(e) => e.target.style.borderColor = '#E5D5C3'}
                     />
                   </div>
                   {errors.email && (
@@ -236,23 +228,30 @@ const Login = () => {
 
                 {/* Enhanced Password Field */}
                 <div className="group">
-                  <label className="block text-sm font-semibold text-gray-700 mb-3">
+                  <label className="block text-sm font-semibold mb-3" style={{ color: '#6B5B47' }}>
                     Enter Your Password
                   </label>
                   <div className="relative">
-                    <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 group-focus-within:text-amber-500 transition-colors" />
+                    <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors" style={{ color: '#A37F41' }} />
                     <Input
                       name="password"
                       type={showPassword ? 'text' : 'password'}
                       placeholder="Password *"
                       value={formData.password}
                       onChange={handleInputChange}
-                      className={`pl-14 pr-14 py-4 border-2 border-gray-200 rounded-xl text-gray-700 placeholder-gray-400 focus:border-amber-400 focus:ring-4 focus:ring-amber-100 transition-all duration-200 hover:border-gray-300 ${errors.password ? 'border-red-500' : ''}`}
+                      className={`pl-14 pr-14 py-4 border-2 rounded-xl transition-all duration-200 ${errors.password ? 'border-red-500' : ''}`}
+                      style={{
+                        borderColor: errors.password ? '#ef4444' : '#E5D5C3',
+                        color: '#6B5B47'
+                      }}
+                      onFocus={(e) => e.target.style.borderColor = '#A37F41'}
+                      onBlur={(e) => e.target.style.borderColor = '#E5D5C3'}
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                      className="absolute right-4 top-1/2 transform -translate-y-1/2 transition-colors"
+                      style={{ color: '#A37F41' }}
                     >
                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
@@ -270,16 +269,21 @@ const Login = () => {
                       name="rememberMe"
                       checked={formData.rememberMe}
                       onChange={handleInputChange}
-                      className="w-5 h-5 text-amber-600 border-gray-300 rounded-lg focus:ring-amber-500 focus:ring-2"
+                      className="w-5 h-5 rounded-lg focus:ring-2"
+                      style={{
+                        accentColor: '#A37F41',
+                        borderColor: '#E5D5C3'
+                      }}
                     />
-                    <label className="text-sm text-gray-600 font-medium">
+                    <label className="text-sm font-medium" style={{ color: '#6B5B47' }}>
                       Remember me
                     </label>
                   </div>
 
                   <Link
                     to={ROUTES.FORGOT_PASSWORD}
-                    className="text-sm text-gray-600 hover:text-amber-600 font-medium transition-colors duration-200"
+                    className="text-sm font-medium transition-colors duration-200 hover:opacity-80"
+                    style={{ color: '#A37F41' }}
                   >
                     Forget Password?
                   </Link>
@@ -296,7 +300,17 @@ const Login = () => {
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-white py-5 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full text-white py-5 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{
+                    background: 'linear-gradient(135deg, #A37F41 0%, #B8904F 50%, #C9A05D 100%)',
+                    border: 'none'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.background = 'linear-gradient(135deg, #8B6A35 0%, #A37F41 50%, #B8904F 100%)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.background = 'linear-gradient(135deg, #A37F41 0%, #B8904F 50%, #C9A05D 100%)';
+                  }}
                 >
                   {isLoading ? (
                     <div className="flex items-center justify-center space-x-2">
@@ -311,10 +325,10 @@ const Login = () => {
                 {/* Enhanced Divider */}
                 <div className="relative my-8">
                   <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t-2 border-gray-200"></div>
+                    <div className="w-full border-t-2" style={{ borderColor: '#E5D5C3' }}></div>
                   </div>
                   <div className="relative flex justify-center text-sm">
-                    <span className="px-6 bg-gradient-to-r from-gray-50 to-white text-gray-500 font-medium">Or Sign In With</span>
+                    <span className="px-6 bg-gradient-to-r from-gray-50 to-white font-medium" style={{ color: '#6B5B47' }}>Or Sign In With</span>
                   </div>
                 </div>
 

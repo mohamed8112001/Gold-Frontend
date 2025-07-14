@@ -147,6 +147,8 @@ const Home = () => {
       try {
         const productsResponse = await fetch('/api/products'); // Adjust API endpoint
         if (productsResponse.ok) {
+          console.log('Products API available, fetching data...');
+          console.log('Products API response:', productsResponse);
           products = await productsResponse.json();
         }
       } catch {

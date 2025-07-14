@@ -24,6 +24,9 @@ import Settings from './pages/user/Settings.jsx';
 import BookAppointment from './pages/booking/BookAppointment.jsx';
 import MyBookings from './pages/booking/MyBookings.jsx';
 import ManageBookings from './pages/seller/ManageBookings.jsx';
+import ManageTimes from './pages/seller/ManageTimes.jsx';
+import BookingsOnly from './pages/seller/BookingsOnly.jsx';
+import TimeManagement from './pages/seller/TimeManagement.jsx';
 import AdminDashboard from './pages/admin/AdminDashboard.jsx';
 // Static Pages
 import AboutUs from './pages/static/AboutUs.jsx';
@@ -92,6 +95,9 @@ function App() {
               <Route path="/booking/:shopId" element={<BookAppointment />} />
               <Route path="/my-bookings" element={<MyBookings />} />
               <Route path="/bookings/manage" element={<ManageBookings />} />
+              <Route path="/manage-times" element={<ManageTimes />} />
+              <Route path="/bookings-only" element={<BookingsOnly />} />
+              <Route path="/time-management" element={<TimeManagement />} />
 
               {/* Admin Routes */}
               <Route path="/admin" element={<AdminDashboard />} />

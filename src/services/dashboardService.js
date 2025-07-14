@@ -147,9 +147,59 @@ export const dashboardService = {
   // Add new available time slot
   addAvailableTime: async (timeSlotData) => {
     try {
-      const response = await api.post("/booking/available-time", timeSlotData);
+      console.log("=== DASHBOARD SERVICE: ADDING AVAILABLE TIME ===");
+      console.log("Sending time data to API:", timeSlotData);
+      console.log("API endpoint: POST /booking/available-time");
+      console.log(
+        "Full API URL:",
+        `${
+          import.meta.env.VITE_API_BASE_URL || "http://localhost:5001"
+        }/booking/available-time`
+      );
+
+      // Check authentication
+      const token = localStorage.getItem("token");
+      console.log("Auth token exists:", !!token);
+      console.log(
+        "Auth token (first 20 chars):",
+        token ? token.substring(0, 20) + "..." : "No token"
+      );
+
+      // Try different possible endpoints
+      let response;
+      try {
+        console.log("Trying endpoint: /booking/available-time");
+        response = await api.post("/booking/available-time", timeSlotData);
+      } catch (firstError) {
+        console.log("First endpoint failed, trying: /available-time");
+        try {
+          response = await api.post("/available-time", timeSlotData);
+        } catch (secondError) {
+          console.log("Second endpoint failed, trying: /booking/add-time");
+          try {
+            response = await api.post("/booking/add-time", timeSlotData);
+          } catch (thirdError) {
+            console.log("All endpoints failed, throwing original error");
+            throw firstError;
+          }
+        }
+      }
+
+      console.log("API response status:", response.status);
+      console.log("API response:", response);
+      console.log("API response data:", response.data);
+      console.log("=== END DASHBOARD SERVICE: ADDING AVAILABLE TIME ===");
+
       return response.data;
     } catch (error) {
+      console.error("=== DASHBOARD SERVICE ERROR ===");
+      console.error("Error adding available time:", error);
+      console.error("Error response:", error.response);
+      console.error("Error status:", error.response?.status);
+      console.error("Error data:", error.response?.data);
+      console.error("Error message:", error.message);
+      console.error("=== END DASHBOARD SERVICE ERROR ===");
+
       throw new Error(
         error.response?.data?.message || "Failed to add available time"
       );

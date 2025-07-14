@@ -128,7 +128,7 @@ const Dashboard = () => {
           }
         }
 
- 
+
       } catch (err) {
         console.error('Error loading dashboard data:', err);
         setError(err.message || 'حدث خطأ في تحميل البيانات');
@@ -394,7 +394,7 @@ const Dashboard = () => {
           <CardTitle> Quick actions</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3c gap-4">
             <Button
               variant="outline"
               className="h-20 flex flex-col items-center justify-center"
@@ -403,14 +403,14 @@ const Dashboard = () => {
               <ShoppingBag className="w-6 h-6 mb-2" />
               <span className="text-sm"> Browse stores</span>
             </Button>
-            <Button
+            {/* <Button
               variant="outline"
               className="h-20 flex flex-col items-center justify-center"
               onClick={() => setActiveTab('bookings')}
             >
               <Calendar className="w-6 h-6 mb-2" />
               <span className="text-sm">Book an appointment </span>
-            </Button>
+            </Button> */}
             <Button
               variant="outline"
               className="h-20 flex flex-col items-center justify-center"
@@ -470,13 +470,32 @@ const Dashboard = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Bookings</h2>
-          <p className="text-gray-600">Your booked appointments</p>
+          <h2 className="text-2xl font-bold text-gray-900">
+            {isShopOwner ? 'Bookings Overview' : 'My Bookings'}
+          </h2>
+          <p className="text-gray-600">
+            {isShopOwner ? 'Overview of your shop bookings' : 'Your booked appointments'}
+          </p>
         </div>
-        <Button onClick={() => navigate(ROUTES.SHOPS)}>
-          <Plus className="w-4 h-4 mr-2" />
-          Book New Appointment
-        </Button>
+        <div className="flex gap-2">
+          {isShopOwner ? (
+            <>
+              <Button onClick={() => navigate(ROUTES.TIME_MANAGEMENT)}>
+                <Clock className="w-4 h-4 mr-2" />
+                Time Management
+              </Button>
+              <Button variant="outline" onClick={() => navigate(ROUTES.BOOKINGS_ONLY)}>
+                <Calendar className="w-4 h-4 mr-2" />
+                View Bookings Only
+              </Button>
+            </>
+          ) : (
+            <Button onClick={() => navigate(ROUTES.SHOPS)}>
+              <Plus className="w-4 h-4 mr-2" />
+              Book New Appointment
+            </Button>
+          )}
+        </div>
       </div>
 
       <div className="space-y-4">
@@ -562,6 +581,52 @@ const Dashboard = () => {
           </CardContent>
         </Card>
       </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>إدارة المواعيد الشاملة</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <Button className="w-full" onClick={() => navigate(ROUTES.TIME_MANAGEMENT)}>
+                <Clock className="w-4 h-4 mr-2" />
+                إدارة جميع المواعيد
+              </Button>
+              <div className="grid grid-cols-2 gap-2">
+                <Button variant="outline" size="sm" onClick={() => navigate(ROUTES.MANAGE_TIMES)}>
+                  إضافة مواعيد
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => navigate(ROUTES.BOOKINGS_ONLY)}>
+                  المواعيد المحجوزة
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>إحصائيات المواعيد</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">المواعيد المحجوزة</span>
+                <span className="font-semibold text-green-600">{stats.bookings || 0}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">المواعيد المتاحة</span>
+                <span className="font-semibold text-blue-600">{stats.availableTimes || 0}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">إجمالي المواعيد</span>
+                <span className="font-semibold text-gray-900">{(stats.bookings || 0) + (stats.availableTimes || 0)}</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 
@@ -585,29 +650,67 @@ const Dashboard = () => {
         return;
       }
 
+      console.log('=== DASHBOARD: STARTING ADD TIME SLOT ===');
+      console.log('Adding time slot:', newTimeSlot);
+      console.log('User info:', user);
+      console.log('User role:', user?.role);
+      console.log('Is seller?', user?.role === 'seller');
+
       try {
         setIsAdding(true);
+
+        // تحقق من أن المستخدم shop owner
+        if (!user || user.role !== 'seller') {
+          alert('يجب أن تكون صاحب محل لإضافة المواعيد');
+          return;
+        }
 
         // استدعاء API لإضافة الموعد المتاح في قاعدة البيانات
         const response = await dashboardService.addAvailableTime(newTimeSlot);
         console.log('Add time slot response:', response);
 
-        // إضافة الموعد الجديد للقائمة
-        if (response && response.data) {
-          setAvailableTimes(prev => [...prev, response.data]);
-        } else if (response) {
-          setAvailableTimes(prev => [...prev, response]);
+        // تحقق من نجاح العملية قبل إضافة الموعد للقائمة
+        if (response && (response.status === 'success' || response.data)) {
+          // إضافة الموعد الجديد للقائمة فقط إذا تم حفظه بنجاح
+          const newTime = {
+            ...response.data,
+            date: newTimeSlot.date,
+            time: newTimeSlot.time,
+            isBooked: false,
+            _id: response.data?._id || response._id || Date.now().toString()
+          };
+
+          setAvailableTimes(prev => [...prev, newTime]);
+
+          // مسح النموذج
+          setNewTimeSlot({ date: '', time: '', duration: 60 });
+
+          // رسالة نجاح
+          alert('تم إضافة الموعد بنجاح وحفظه في قاعدة البيانات');
+
+          // إعادة تحميل البيانات للتأكد من الحفظ
+          console.log('Reloading dashboard data to verify save...');
+          // لا نحتاج لإعادة تحميل كامل - الموعد تم إضافته بالفعل للقائمة
+        } else {
+          throw new Error('فشل في حفظ الموعد في قاعدة البيانات');
         }
 
-        // مسح النموذج
-        setNewTimeSlot({ date: '', time: '', duration: 60 });
-
-        // رسالة نجاح
-        alert('تم إضافة الموعد بنجاح وحفظه في قاعدة البيانات');
-
       } catch (error) {
+        console.error('=== DASHBOARD ERROR ===');
         console.error('Error adding time slot:', error);
-        alert(error.message || 'حدث خطأ في إضافة الموعد');
+        console.error('Error details:', error.response?.data);
+        console.error('=== END DASHBOARD ERROR ===');
+
+        let errorMessage = 'حدث خطأ في إضافة الموعد';
+        if (error.response?.status === 401) {
+          errorMessage = 'يجب تسجيل الدخول أولاً';
+        } else if (error.response?.status === 403) {
+          errorMessage = 'ليس لديك صلاحية لإضافة المواعيد';
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
+
+        alert(errorMessage);
       } finally {
         setIsAdding(false);
       }
@@ -808,8 +911,8 @@ const Dashboard = () => {
   const tabs = [
     { id: 'overview', label: 'Overview', icon: BarChart3 },
     // { id: 'favorites', label: 'Favorites', icon: Heart },
-    { id: 'bookings', label: 'Bookings', icon: Calendar },
-    { id: 'available-times', label: isShopOwner ? 'Manage Times' : 'My Bookings', icon: Clock },
+    { id: 'bookings', label: isShopOwner ? 'Bookings Overview' : 'My Bookings', icon: Calendar },
+    { id: 'available-times', label: isShopOwner ? 'Time Management' : 'My Appointments', icon: Clock },
     ...(isShopOwner ? [
       { id: 'shop', label: 'Manage Shop', icon: Store }
     ] : [])

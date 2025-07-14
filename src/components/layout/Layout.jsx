@@ -35,7 +35,7 @@ const Layout = ({ children = true, className = '' }) => {
     <div className="min-h-screen flex flex-col bg-gray-50">
       {!shouldHideHeader && <Header />}
 
-      <main className={`flex-1 ${!shouldHideHeader ? 'pt-0' : ''} ${className}`}>
+      <main className={`flex-1 ${!shouldHideHeader ? 'pt-20' : ''} ${className}`}>
         {children}
       </main>
 
