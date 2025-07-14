@@ -14,13 +14,16 @@ import {
     Clock,
     Share2,
     Eye,
-    Calendar
+    Calendar,
+    MessageSquare
 } from 'lucide-react';
 import { productService } from '../../services/productService.js';
 import { shopService } from '../../services/shopService.js';
 import { rateService } from '../../services/rateService.js';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES, PRODUCT_CATEGORIES } from '../../utils/constants.js';
+import ShopChatInterface from '@/components/ui/shop_chat_interface.jsx';
+import { t } from 'i18next';
 
 const ProductDetails = () => {
     const { id } = useParams();
@@ -38,6 +41,22 @@ const ProductDetails = () => {
     useEffect(() => {
         loadProductDetails();
     }, [id]);
+
+    const [isChatOpen, setIsChatOpen] = useState(false);
+
+    const handleOpenChat = () => {
+        if (!user) {
+            alert('Please login first to chat with the shop');
+            navigate(ROUTES.LOGIN);
+            return;
+        }
+        setIsChatOpen(true);
+    };
+    
+    const handleCloseChat = () => {
+        setIsChatOpen(false);
+    };
+
 
 
     const changeImage = (index) => {
@@ -85,9 +104,13 @@ const ProductDetails = () => {
                 setMainImage(productData.images[0]);
             }
 
+            console.log(`shopId: ${JSON.stringify(productData.shop._id)}`);
+            
             // Load shop details
-            if (productData.shopId) {
-                const shopResponse = await shopService.getShop(productData.shopId);
+            if (productData.shop._id) {
+                const shopResponse = await shopService.getShop(productData.shop._id);
+                console.log(`shopdata: ${shopResponse}`);
+                
                 setShop(shopResponse.data || shopResponse);
             }
 
@@ -392,7 +415,7 @@ const ProductDetails = () => {
                                             console.log('🏪 Visit Shop button clicked from ProductDetails');
                                             console.log('🏪 Product shop ID:', product.shopId);
                                             console.log('🏪 Product shop data:', product.shop);
-
+                                        
                                             const shopId = product.shopId || product.shop?._id || product.shop?.id;
                                             if (shopId) {
                                                 console.log('🏪 Navigating to shop:', shopId);
@@ -408,9 +431,18 @@ const ProductDetails = () => {
                                         Visit Shop
                                     </Button>
                                     <Button
+                                        size="lg"
+                                        variant="outline"
+                                        onClick={handleOpenChat}
+                                        className="flex-1 border-2 border-blue-400 text-blue-700 hover:bg-blue-50 hover:border-blue-600 hover:text-blue-800 py-4 rounded-full font-bold text-lg shadow-xl hover:shadow-2xl transition-all"
+                                    >
+                                        <MessageSquare className="w-6 h-6 mr-3" />
+                                        {t('shop_details.chat_with_store')}
+                                    </Button>
+                                    <Button
                                         variant="outline"
                                         size="lg"
-                                        className="border-2 border-gray-300 hover:border-gray-400 py-4 px-6 rounded-full"
+                                        className="flex-1 border-2 border-gray-300 hover:border-gray-400 py-4 rounded-full"
                                     >
                                         <Share2 className="w-5 h-5" />
                                     </Button>
@@ -604,6 +636,14 @@ const ProductDetails = () => {
                     </div>
                 </div>
             </div>
+            
+            <ShopChatInterface
+                isOpen={isChatOpen}
+                onClose={handleCloseChat}
+                shop={shop}
+                user={user}
+                product={product}
+            />
         </div>
     );
 };

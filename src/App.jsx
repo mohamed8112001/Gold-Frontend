@@ -44,6 +44,7 @@ import NotFound from './pages/NotFound.jsx';
 import TestPage from './pages/TestPage.jsx';
 import './App.css';
 import FavoriteProducts from './pages/product/FavoriteProducts.jsx';
+import ShopChat from './components/ui/ShopChat.jsx';
 
 function App() {
   return (
@@ -70,6 +71,7 @@ function App() {
               {/* Shop Routes */}
               <Route path="/shops" element={<ShopList />} />
               <Route path="/shops/:id" element={<ShopDetails />} />
+              <Route path='/shops/:id/chat' element={<ShopChat/>}/>
               <Route path="/shop/create" element={<CreateShop />} />
               <Route path="/shop/edit" element={<EditShop />} />
               <Route path="/shop/edit/:id" element={<EditShop />} />

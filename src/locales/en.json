@@ -147,5 +147,27 @@
   "messages": {
     "removed_from_favorites": "Removed from favorites",
     "failed_to_remove": "Failed to remove favorite"
+  },
+  "shop_details": {
+    "about_shop": "About the Shop",
+    "address": "Address",
+    "phone": "Phone",
+    "whatsapp": "WhatsApp",
+    "working_hours": "Working Hours",
+    "book_appointment": "Book Appointment",
+    "products": "Products",
+    "customers": "Customers",
+    "reviews": "Reviews",
+    "no_products": "No products in this shop yet",
+    "add_product": "Add New Product",
+    "contact_owner": "Contact the shop owner to add products",
+    "no_reviews": "No reviews yet",
+    "write_review": "Write a Review",
+    "location": "Location",
+    "gallery": "Gallery",
+    "explore_gallery": "Explore the shop's gallery",
+    "no_gallery": "No images in the gallery yet",
+    "add_images": "Add images to the shop gallery",
+    "chat_with_store": "Chat with Store"
   }
 }

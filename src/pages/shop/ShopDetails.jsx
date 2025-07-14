@@ -22,15 +22,20 @@ import {
     Users,
     ShoppingBag,
     Verified,
-    X
+    X,
+    Bot,
+    MessageSquare
 } from 'lucide-react';
 import { shopService } from '../../services/shopService.js';
 import { productService } from '../../services/productService.js';
 import { rateService } from '../../services/rateService.js';
 import { useAuth } from '../../context/AuthContext.jsx';
-import { ROUTES } from '../../utils/constants.js';
+import { ROUTES, STORAGE_KEYS } from '../../utils/constants.js';
 import MapDisplay from '../../components/ui/MapDisplay.jsx';
 import GalleryUpload from '../../components/shop/GalleryUpload.jsx';
+import { useTranslation } from 'react-i18next';
+import chatService from '../../services/chatService.js';
+
 
 // WhatsApp Icon Component
 const WhatsAppIcon = ({ className = "w-6 h-6" }) => (
@@ -54,11 +59,24 @@ const ShopDetails = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('products');
     const [viewMode, setViewMode] = useState('grid');
+    const { t } = useTranslation();
 
-    // Ensure arrays are always arrays to prevent map errors
     const safeProducts = Array.isArray(products) ? products : [];
     const safeReviews = Array.isArray(reviews) ? reviews : [];
 
+    useEffect(() => {
+        if (user) {
+            const token = localStorage.getItem(STORAGE_KEYS.TOKEN) || user.token;
+            if (token && !chatService.getConnectionStatus()) {
+                chatService.connect(token).catch(console.error);
+            }
+        }
+        
+        return () => {
+            // Don't disconnect on unmount as other components might use it
+            // chatService.disconnect();
+        };
+    }, [user]);
     useEffect(() => {
         if (id) {
             loadShopDetails();
@@ -459,11 +477,11 @@ const ShopDetails = () => {
                         className="flex items-center gap-2 hover:bg-white hover:shadow-sm transition-all duration-200 rounded-full px-4 py-2"
                     >
                         <ArrowLeft className="w-4 h-4" />
-                        Back
+                        {t('buttons.back', 'Back')}
                     </Button>
                     <Separator orientation="vertical" className="h-4" />
                     <span onClick={() => navigate(ROUTES.SHOPS)} className="cursor-pointer hover:text-yellow-600 transition-colors">
-                        Shops
+                        {t('stores', 'Shops')}
                     </span>
                     <span className="text-gray-400">/</span>
                     <span className="text-gray-900 font-medium">{safeShop.name}</span>
@@ -542,7 +560,10 @@ const ShopDetails = () => {
                                                     'غير محدد'
                                                 }
                                             </span>
+
                                         </div>
+
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -559,7 +580,7 @@ const ShopDetails = () => {
                                         <MapPin className="w-6 h-6 text-white" />
                                     </div>
                                     <div>
-                                        <p className="text-sm text-blue-600 font-medium mb-1">Address</p>
+                                        <p className="text-sm text-blue-600 font-medium mb-1">{t('shop_details.address')}</p>
                                         <p className="text-gray-800 font-semibold text-base">{safeShop.address}</p>
                                     </div>
                                 </CardContent>
@@ -571,7 +592,7 @@ const ShopDetails = () => {
                                         <Phone className="w-6 h-6 text-white" />
                                     </div>
                                     <div>
-                                        <p className="text-sm text-indigo-600 font-medium mb-1">Phone</p>
+                                        <p className="text-sm text-indigo-600 font-medium mb-1">{t('shop_details.phone')}</p>
                                         <p className="text-gray-800 font-semibold text-base">
                                             <a href={`tel:${safeShop.phone}`} className="hover:text-indigo-600 transition-colors">
                                                 {safeShop.phone}
@@ -588,7 +609,7 @@ const ShopDetails = () => {
                                             <WhatsAppIcon className="w-6 h-6 text-white" />
                                         </div>
                                         <div>
-                                            <p className="text-sm text-green-600 font-medium mb-1">WhatsApp</p>
+                                            <p className="text-sm text-green-600 font-medium mb-1">{t('shop_details.whatsapp')}</p>
                                             <p className="text-gray-800 font-semibold text-base">
                                                 <a
                                                     href={`https://wa.me/${safeShop.whatsapp.replace(/[^0-9]/g, '')}`}
@@ -610,7 +631,7 @@ const ShopDetails = () => {
                                         <Clock className="w-6 h-6 text-white" />
                                     </div>
                                     <div>
-                                        <p className="text-sm text-purple-600 font-medium mb-1">Working Hours</p>
+                                        <p className="text-sm text-purple-600 font-medium mb-1">{t('shop_details.working_hours')}</p>
                                         <p className="text-gray-800 font-semibold text-base">{safeShop.workingHours}</p>
                                     </div>
                                 </CardContent>
@@ -619,7 +640,7 @@ const ShopDetails = () => {
 
                         {/* Description */}
                         <div className="mb-10">
-                            <h3 className="text-2xl font-bold text-gray-900 mb-6">About the Shop</h3>
+                            <h3 className="text-2xl font-bold text-gray-900 mb-6">{t('shop_details.about_shop')}</h3>
                             <p className="text-gray-700 leading-relaxed text-xl bg-gray-50 p-6 rounded-2xl">
                                 {safeShop.description}
                             </p>
@@ -635,9 +656,19 @@ const ShopDetails = () => {
                                     className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-10 py-4 rounded-full font-bold text-lg shadow-xl hover:shadow-2xl transition-all"
                                 >
                                     <Calendar className="w-6 h-6 mr-3" />
-                                    Book Appointment
+                                    {t('shop_details.book_appointment')}
                                 </Button>
-
+                                {user?.role === 'user' && (
+                                    <Button
+                                        size="lg"
+                                        variant="outline"
+                                        onClick={() => navigate(`/shops/${safeShop._id || safeShop.id}/chat`)}
+                                        className="border-2 border-blue-400 text-blue-700 hover:bg-blue-50 hover:border-blue-600 hover:text-blue-800 px-10 py-4 rounded-full font-bold text-lg shadow-xl hover:shadow-2xl transition-all"
+                                    >
+                                        <Bot className="w-6 h-6 mr-3" />
+                                        {t('shop_details.chat_with_store')}
+                                    </Button>
+                                )}
                             </div>
 
                             {/* Stats */}
@@ -647,7 +678,7 @@ const ShopDetails = () => {
                                         <ShoppingBag className="w-8 h-8 text-white" />
                                     </div>
                                     <div className="text-3xl font-bold text-gray-900">{safeProducts.length}</div>
-                                    <div className="text-base text-gray-600 font-medium">Products</div>
+                                    <div className="text-base text-gray-600 font-medium">{t('shop_details.products')}</div>
                                 </div>
                                 <div className="text-center">
                                     <div className="flex items-center justify-center w-16 h-16 bg-blue-500 rounded-full mb-3 shadow-lg">
@@ -656,14 +687,14 @@ const ShopDetails = () => {
                                     <div className="text-3xl font-bold text-gray-900">
                                         {safeShop.customersCount || safeShop.customerCount || 0}
                                     </div>
-                                    <div className="text-base text-gray-600 font-medium">Customers</div>
+                                    <div className="text-base text-gray-600 font-medium">{t('shop_details.customers')}</div>
                                 </div>
                                 <div className="text-center">
                                     <div className="flex items-center justify-center w-16 h-16 bg-green-500 rounded-full mb-3 shadow-lg">
                                         <Star className="w-8 h-8 text-white" />
                                     </div>
                                     <div className="text-3xl font-bold text-gray-900">{safeReviews.length}</div>
-                                    <div className="text-base text-gray-600 font-medium">Reviews</div>
+                                    <div className="text-base text-gray-600 font-medium">{t('shop_details.reviews')}</div>
                                 </div>
                             </div>
                         </div>
@@ -679,28 +710,28 @@ const ShopDetails = () => {
                                 className="data-[state=active]:bg-white data-[state=active]:shadow-lg rounded-2xl py-5 px-8 font-bold text-lg transition-all"
                             >
                                 <ShoppingBag className="w-6 h-6 mr-3" />
-                                Products ({safeProducts.length})
+                                {t('shop_details.products')} ({safeProducts.length})
                             </TabsTrigger>
                             <TabsTrigger
                                 value="reviews"
                                 className="data-[state=active]:bg-white data-[state=active]:shadow-lg rounded-2xl py-5 px-8 font-bold text-lg transition-all"
                             >
                                 <Star className="w-6 h-6 mr-3" />
-                                Reviews ({safeReviews.length})
+                                {t('shop_details.reviews')} ({safeReviews.length})
                             </TabsTrigger>
                             <TabsTrigger
                                 value="location"
                                 className="data-[state=active]:bg-white data-[state=active]:shadow-lg rounded-2xl py-5 px-8 font-bold text-lg transition-all"
                             >
                                 <MapPin className="w-6 h-6 mr-3" />
-                                Location
+                                {t('shop_details.location')}
                             </TabsTrigger>
                             <TabsTrigger
                                 value="gallery"
                                 className="data-[state=active]:bg-white data-[state=active]:shadow-lg rounded-2xl py-5 px-8 font-bold text-lg transition-all"
                             >
                                 <Eye className="w-6 h-6 mr-3" />
-                                Gallery {safeShop.gallery?.length ? `(${safeShop.gallery.length})` : ''}
+                                {t('shop_details.gallery')} {safeShop.gallery?.length ? `(${safeShop.gallery.length})` : ''}
                             </TabsTrigger>
                         </TabsList>
 
@@ -969,8 +1000,13 @@ const ShopDetails = () => {
                         </TabsContent>
                     </Tabs>
                 </div>
+                {/* Chat Modal */}
+                {/* Remove the ShopChat modal rendering. */}
             </div>
+
         </div>
+
+        
     );
 };
 

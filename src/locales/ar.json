@@ -97,7 +97,30 @@
   "messages": {
     "removed_from_favorites": "تم الحذف من المفضلة",
     "failed_to_remove": "فشل في حذف المفضلة"
-  },"footer": {
+  },
+  "shop_details": {
+    "about_shop": "عن المتجر",
+    "address": "العنوان",
+    "phone": "الهاتف",
+    "whatsapp": "واتساب",
+    "working_hours": "ساعات العمل",
+    "book_appointment": "حجز موعد",
+    "products": "المنتجات",
+    "customers": "العملاء",
+    "reviews": "التقييمات",
+    "no_products": "لا توجد منتجات في هذا المتجر بعد",
+    "add_product": "إضافة منتج جديد",
+    "contact_owner": "تواصل مع صاحب المتجر لإضافة منتجات",
+    "no_reviews": "لا توجد تقييمات بعد",
+    "write_review": "اكتب تقييماً",
+    "location": "الموقع",
+    "gallery": "المعرض",
+    "explore_gallery": "استكشف معرض المتجر",
+    "no_gallery": "لا توجد صور في المعرض بعد",
+    "add_images": "أضف صوراً لمعرض المتجر",
+    "chat_with_store": "الدردشة مع المتجر"
+  },
+  "footer": {
   "company": "الشركة",
   "about_us": "من نحن",
   "contact_us": "اتصل بنا",
