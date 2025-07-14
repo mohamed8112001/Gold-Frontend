@@ -123,6 +123,9 @@ export const ROUTES = {
   BOOK_APPOINTMENT: (shopId) => `/book-appointment/${shopId}`,
   MY_BOOKINGS: "/my-bookings",
   MANAGE_BOOKINGS: "/bookings/manage",
+  MANAGE_TIMES: "/manage-times",
+  BOOKINGS_ONLY: "/bookings-only",
+  TIME_MANAGEMENT: "/time-management",
 
   // User routes
   PROFILE: "/profile",

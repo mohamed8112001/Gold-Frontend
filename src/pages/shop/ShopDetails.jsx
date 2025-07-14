@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button.jsx';
 import { Card, CardContent } from '@/components/ui/card.jsx';
 import { Badge } from '@/components/ui/badge.jsx';
+import { useAuth } from '../../context/AuthContext.jsx';
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.jsx';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar.jsx';
 import { Separator } from '@/components/ui/separator.jsx';
@@ -26,6 +28,7 @@ import {
     Bot,
     MessageSquare
 } from 'lucide-react';
+
 import { shopService } from '../../services/shopService.js';
 import { productService } from '../../services/productService.js';
 import { rateService } from '../../services/rateService.js';
@@ -50,6 +53,8 @@ const WhatsAppIcon = ({ className = "w-6 h-6" }) => (
 );
 
 const ShopDetails = () => {
+    const { isShopOwner } = useAuth();
+
     const { id } = useParams();
     const navigate = useNavigate();
     const { user } = useAuth();
@@ -325,12 +330,16 @@ const ShopDetails = () => {
                     <img
                         src={`${import.meta.env.VITE_API_BASE_URL}/product-image/${product.logoUrl}`}
                         alt={product.name || 'Product'}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    // onError={(e) => {
-                    //     e.target.src = defaultProductImage;
-                    // }}
+                        className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                        style={{
+                            filter: 'brightness(1.05) contrast(1.1) saturate(1.15)',
+                            imageRendering: 'crisp-edges'
+                        }}
+                        onError={(e) => {
+                            e.target.src = defaultProductImage;
+                        }}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
                     {/* Favorite Button */}
                     <Button
@@ -466,7 +475,7 @@ const ShopDetails = () => {
 
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 pt-20">
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 pt-20">
             <div className="w-full px-4 sm:px-6 lg:px-8 py-6">
                 {/* Enhanced Breadcrumb */}
                 <div className="flex items-center gap-2 text-sm text-gray-600 mb-8">
@@ -489,17 +498,24 @@ const ShopDetails = () => {
 
                 {/* Enhanced Shop Header */}
                 <div className="bg-white rounded-2xl shadow-xl mb-8 overflow-hidden mx-4 lg:mx-8">
-                    {/* Hero Section */}
-                    <div className="relative h-72 md:h-96">
+                    {/* Enhanced Hero Section */}
+                    <div className="relative h-80 md:h-[500px] overflow-hidden">
                         <img
                             src={`${import.meta.env.VITE_API_BASE_URL}/shop-image/${safeShop.logoUrl}`}
                             alt={safeShop.name}
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-cover object-center transform hover:scale-105 transition-transform duration-700"
+                            style={{
+                                filter: 'brightness(1.1) contrast(1.1) saturate(1.2)',
+                                imageRendering: 'crisp-edges'
+                            }}
                             onError={(e) => {
                                 e.target.src = defaultShopImage;
                             }}
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+
+                        {/* Decorative overlay pattern */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 via-transparent to-yellow-600/5"></div>
 
                         {/* Action Buttons */}
                         <div className="absolute top-6 right-6 flex gap-2">
@@ -589,12 +605,15 @@ const ShopDetails = () => {
                             <Card className="border-0 bg-gradient-to-r from-indigo-50 to-indigo-100 hover:shadow-lg transition-shadow rounded-2xl">
                                 <CardContent className="p-6 flex items-center gap-4">
                                     <div className="p-3 bg-indigo-500 rounded-full">
-                                        <Phone className="w-6 h-6 text-white" />
+                                        <FaPhone className="w-6 h-6 text-white" />
                                     </div>
                                     <div>
                                         <p className="text-sm text-indigo-600 font-medium mb-1">{t('shop_details.phone')}</p>
                                         <p className="text-gray-800 font-semibold text-base">
-                                            <a href={`tel:${safeShop.phone}`} className="hover:text-indigo-600 transition-colors">
+                                            <a
+                                                href={`tel:${safeShop.phone}`}
+                                                className="hover:text-indigo-600 transition-colors"
+                                            >
                                                 {safeShop.phone}
                                             </a>
                                         </p>
@@ -602,6 +621,28 @@ const ShopDetails = () => {
                                 </CardContent>
                             </Card>
 
+
+
+                            <Card className="border-0 bg-gradient-to-r from-green-50 to-green-100 hover:shadow-lg transition-shadow rounded-2xl">
+                                <CardContent className="p-6 flex items-center gap-4">
+                                    <div className="p-3 bg-green-500 rounded-full">
+                                        <FaWhatsapp className="w-6 h-6 text-white" />
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-green-600 font-medium mb-1">WhatsApp</p>
+                                        <p className="text-gray-800 font-semibold text-base">
+                                            <a
+                                                href={`https://wa.me/${safeShop.phone}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="hover:text-green-600 transition-colors"
+                                            >
+                                                {safeShop.phone}
+                                            </a>
+                                        </p>
+                                    </div>
+                                </CardContent>
+                            </Card>
                             {safeShop.whatsapp && (
                                 <Card className="border-0 bg-gradient-to-r from-green-50 to-green-100 hover:shadow-lg transition-shadow rounded-2xl">
                                     <CardContent className="p-6 flex items-center gap-4">
@@ -624,6 +665,8 @@ const ShopDetails = () => {
                                     </CardContent>
                                 </Card>
                             )}
+
+
 
                             <Card className="border-0 bg-gradient-to-r from-purple-50 to-purple-100 hover:shadow-lg transition-shadow rounded-2xl">
                                 <CardContent className="p-6 flex items-center gap-4">
@@ -904,10 +947,10 @@ const ShopDetails = () => {
                         </TabsContent>
 
                         <TabsContent value="gallery" className="p-8">
-                            <div className="flex items-center justify-between mb-8">
+                            <div className="flex items-center justify-between mb-12">
                                 <div>
-                                    <h2 className="text-3xl font-bold text-gray-900 mb-2">معرض صور المتجر</h2>
-                                    <p className="text-gray-600">استكشف صور المتجر والأعمال المميزة</p>
+                                    <h2 className="text-4xl font-bold text-gray-900 mb-3">معرض صور المتجر</h2>
+                                    <p className="text-gray-600 text-lg">استكشف صور المتجر والأعمال المميزة بجودة عالية</p>
                                 </div>
                                 {(user?.role === 'admin' || user?.id === safeShop.ownerId || user?._id === safeShop.ownerId) && (
                                     <GalleryUpload
@@ -927,7 +970,7 @@ const ShopDetails = () => {
                             </div>
 
                             {safeShop.gallery && safeShop.gallery.length > 0 ? (
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                                     {safeShop.gallery.map((image, index) => {
                                         // Handle both localStorage images (objects) and regular images (strings)
                                         const isLocalImage = typeof image === 'object' && image.data;
@@ -936,37 +979,60 @@ const ShopDetails = () => {
                                         const imageId = isLocalImage ? image.id : image;
 
                                         return (
-                                            <div key={imageId} className="group relative aspect-square rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500">
-                                                <img
-                                                    src={imageUrl}
-                                                    alt={`${safeShop.name} - ${imageName}`}
-                                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-pointer"
-                                                    onError={(e) => {
-                                                        e.target.src = 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop&crop=center&auto=format&q=60';
-                                                    }}
-                                                    onClick={() => {
-                                                        // فتح الصورة في نافذة جديدة
-                                                        window.open(imageUrl, '_blank');
-                                                    }}
-                                                />
-                                                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                                <div className="absolute bottom-4 left-4 right-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                                    <p className="text-sm font-medium">{imageName}</p>
-                                                    {isLocalImage && (
-                                                        <p className="text-xs text-gray-300">محفوظة محلياً</p>
+                                            <div key={imageId} className="group relative">
+                                                {/* Enhanced image container */}
+                                                <div className="relative aspect-square rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+                                                    <img
+                                                        src={imageUrl}
+                                                        alt={`${safeShop.name} - ${imageName}`}
+                                                        className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700 cursor-pointer"
+                                                        style={{
+                                                            filter: 'brightness(1.05) contrast(1.1) saturate(1.15)',
+                                                            imageRendering: 'crisp-edges'
+                                                        }}
+                                                        onError={(e) => {
+                                                            e.target.src = 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop&crop=center&auto=format&q=60';
+                                                        }}
+                                                        onClick={() => {
+                                                            // فتح الصورة في نافذة جديدة
+                                                            window.open(imageUrl, '_blank');
+                                                        }}
+                                                    />
+
+                                                    {/* Enhanced overlay with gradient */}
+                                                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300">
+                                                        {/* Image info */}
+                                                        <div className="absolute bottom-4 left-4 right-4 text-white">
+                                                            <p className="font-bold text-lg mb-1">{imageName}</p>
+                                                            <p className="text-sm text-white/80">اضغط للعرض بالحجم الكامل</p>
+                                                            {isLocalImage && (
+                                                                <p className="text-xs text-yellow-300 mt-1">محفوظة محلياً</p>
+                                                            )}
+                                                        </div>
+
+                                                        {/* View icon */}
+                                                        <div className="absolute top-4 left-4 bg-white/20 backdrop-blur-sm rounded-full p-2">
+                                                            <Eye className="w-5 h-5 text-white" />
+                                                        </div>
+                                                    </div>
+                                                    {(user?.role === 'admin' || user?.id === safeShop.ownerId || user?._id === safeShop.ownerId) && (
+                                                        <button
+                                                            className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleDeleteGalleryImage(imageId, index);
+                                                            }}
+                                                        >
+                                                            <X className="w-4 h-4" />
+                                                        </button>
                                                     )}
                                                 </div>
-                                                {(user?.role === 'admin' || user?.id === safeShop.ownerId || user?._id === safeShop.ownerId) && (
-                                                    <button
-                                                        className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleDeleteGalleryImage(imageId, index);
-                                                        }}
-                                                    >
-                                                        <X className="w-4 h-4" />
-                                                    </button>
-                                                )}
+
+                                                {/* Image title below */}
+                                                <div className="mt-4 text-center">
+                                                    <h3 className="font-semibold text-gray-900 text-lg">{imageName}</h3>
+                                                    <p className="text-gray-500 text-sm mt-1">معرض {safeShop.name}</p>
+                                                </div>
                                             </div>
                                         );
                                     })}
