@@ -610,26 +610,6 @@ const ShopDetails = () => {
 
 
 
-                            <Card className="border-0 bg-gradient-to-r from-green-50 to-green-100 hover:shadow-lg transition-shadow rounded-2xl">
-                                <CardContent className="p-6 flex items-center gap-4">
-                                    <div className="p-3 bg-green-500 rounded-full">
-                                        <FaWhatsapp className="w-6 h-6 text-white" />
-                                    </div>
-                                    <div>
-                                        <p className="text-sm text-green-600 font-medium mb-1">WhatsApp</p>
-                                        <p className="text-gray-800 font-semibold text-base">
-                                            <a
-                                                href={`https://wa.me/${safeShop.phone}`}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="hover:text-green-600 transition-colors"
-                                            >
-                                                {safeShop.phone}
-                                            </a>
-                                        </p>
-                                    </div>
-                                </CardContent>
-                            </Card>
                             {safeShop.whatsapp && (
                                 <Card className="border-0 bg-gradient-to-r from-green-50 to-green-100 hover:shadow-lg transition-shadow rounded-2xl">
                                     <CardContent className="p-6 flex items-center gap-4">
