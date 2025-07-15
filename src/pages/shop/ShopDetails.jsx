@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button.jsx';
 import { Card, CardContent } from '@/components/ui/card.jsx';
 import { Badge } from '@/components/ui/badge.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
-
+import {FaPhone, FaWhatsapp} from 'react-icons/fa';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.jsx';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar.jsx';
 import { Separator } from '@/components/ui/separator.jsx';
@@ -32,7 +32,6 @@ import {
 import { shopService } from '../../services/shopService.js';
 import { productService } from '../../services/productService.js';
 import { rateService } from '../../services/rateService.js';
-import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES, STORAGE_KEYS } from '../../utils/constants.js';
 import MapDisplay from '../../components/ui/MapDisplay.jsx';
 import GalleryUpload from '../../components/shop/GalleryUpload.jsx';
@@ -69,19 +68,7 @@ const ShopDetails = () => {
     const safeProducts = Array.isArray(products) ? products : [];
     const safeReviews = Array.isArray(reviews) ? reviews : [];
 
-    useEffect(() => {
-        if (user) {
-            const token = localStorage.getItem(STORAGE_KEYS.TOKEN) || user.token;
-            if (token && !chatService.getConnectionStatus()) {
-                chatService.connect(token).catch(console.error);
-            }
-        }
-        
-        return () => {
-            // Don't disconnect on unmount as other components might use it
-            // chatService.disconnect();
-        };
-    }, [user]);
+
     useEffect(() => {
         if (id) {
             loadShopDetails();
