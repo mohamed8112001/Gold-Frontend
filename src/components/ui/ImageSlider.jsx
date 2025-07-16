@@ -31,12 +31,12 @@ const ImageSlider = ({ images = [], autoSlide = true, slideInterval = 4000 }) =>
     return null;
   }
 
-  // Define slide colors and icons
+  // Define slide colors and icons - Golden Brown & Beige Theme
   const slideData = [
-    { color: '#f59e0b', icon: '💍' }, // yellow
-    { color: '#ec4899', icon: '💎' }, // pink
-    { color: '#8b5cf6', icon: '✨' }, // purple
-    { color: '#10b981', icon: '🎁' }  // green
+    { color: '#A37F41', icon: '💍' }, // Golden brown
+    { color: '#C5A56D', icon: '💎' }, // Light golden
+    { color: '#8A6C37', icon: '✨' }, // Dark golden
+    { color: '#D3BB92', icon: '🎁' }  // Beige
   ];
 
   return (
@@ -126,11 +126,10 @@ const ImageSlider = ({ images = [], autoSlide = true, slideInterval = 4000 }) =>
             <button
               key={index}
               onClick={() => goToSlide(index)}
-              className={`w-4 h-4 rounded-full transition-all duration-300 backdrop-blur-sm ${
-                index === currentSlide
+              className={`w-4 h-4 rounded-full transition-all duration-300 backdrop-blur-sm ${index === currentSlide
                   ? 'bg-yellow-500 scale-125 shadow-lg'
                   : 'bg-white/70 hover:bg-white/90 hover:scale-110'
-              }`}
+                }`}
               aria-label={`Go to slide ${index + 1}`}
             />
           ))}

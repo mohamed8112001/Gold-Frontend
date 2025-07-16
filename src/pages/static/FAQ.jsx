@@ -111,7 +111,7 @@ const FAQ = () => {
   const filteredFaqs = faqs.filter(faq => {
     const matchesCategory = selectedCategory === 'all' || faq.category === selectedCategory;
     const matchesSearch = faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         faq.answer.toLowerCase().includes(searchQuery.toLowerCase());
+      faq.answer.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
@@ -120,10 +120,10 @@ const FAQ = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50/30">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-[#FFF8E6]/30">
       {/* Hero Section */}
       <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-amber-400/10 via-yellow-400/5 to-amber-500/10"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-[#C37C00]/10 via-[#E6A500]/5 to-[#A66A00]/10"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -134,7 +134,7 @@ const FAQ = () => {
             <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
               الأسئلة الشائعة
             </h1>
-            <div className="w-24 h-1 bg-gradient-to-r from-amber-400 to-yellow-500 mx-auto mb-8"></div>
+            <div className="w-24 h-1 bg-gradient-to-r from-[#C37C00] to-[#E6A500] mx-auto mb-8"></div>
             <p className="text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed mb-12">
               إجابات شاملة على أكثر الأسئلة شيوعاً حول استخدام منصة دبلة
             </p>
@@ -155,7 +155,7 @@ const FAQ = () => {
       </section>
 
       {/* Categories */}
-      <section className="py-16 bg-gradient-to-br from-slate-100 to-amber-50/50">
+      <section className="py-16 bg-gradient-to-br from-slate-100 to-[#FFF8E6]/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -180,11 +180,10 @@ const FAQ = () => {
                 <Button
                   variant={selectedCategory === category.id ? "default" : "outline"}
                   onClick={() => setSelectedCategory(category.id)}
-                  className={`w-full h-auto p-4 flex flex-col items-center space-y-2 ${
-                    selectedCategory === category.id
-                      ? 'bg-gradient-to-r from-amber-400 to-yellow-500 text-white border-0'
-                      : 'text-gray-600 hover:text-amber-600 bg-white/80 backdrop-blur-sm'
-                  }`}
+                  className={`w-full h-auto p-4 flex flex-col items-center space-y-2 ${selectedCategory === category.id
+                    ? 'bg-gradient-to-r from-[#C37C00] to-[#E6A500] text-white border-0'
+                    : 'text-gray-600 hover:text-[#C37C00] bg-white/80 backdrop-blur-sm'
+                    }`}
                 >
                   <category.icon className="w-6 h-6" />
                   <span className="text-sm font-medium text-center leading-tight">{category.name}</span>
@@ -278,7 +277,7 @@ const FAQ = () => {
       </section>
 
       {/* Contact Support */}
-      <section className="py-16 bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-600">
+      <section className="py-16 bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}

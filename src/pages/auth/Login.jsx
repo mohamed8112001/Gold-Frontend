@@ -95,7 +95,7 @@ const Login = () => {
 
 
   return (
-    <div className="h-screen w-full relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #fef7ed 0%, #ffffff 50%, #fef3e2 100%)' }}>
+    <div className="h-screen w-full relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #F8F4ED 0%, #FFFFFF 50%, #F0E8DB 100%)' }}>
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full blur-3xl animate-pulse" style={{ background: 'linear-gradient(135deg, rgba(163, 127, 65, 0.15) 0%, rgba(163, 127, 65, 0.1) 100%)' }}></div>
@@ -170,7 +170,7 @@ const Login = () => {
           </div>
 
           {/* Right Side - Enhanced Form */}
-          <div className="w-full bg-gradient-to-br from-white to-gray-50 p-8 lg:p-12 flex flex-col justify-center relative">
+          <div className="w-full bg-gradient-to-br from-white to-[#FFF8E6] p-8 lg:p-12 flex flex-col justify-center relative">
             {/* Navigation Tabs with enhanced styling */}
             <div className="flex justify-end mb-8">
               <div className="flex rounded-xl p-1 shadow-lg" style={{ backgroundColor: '#F5F1EB' }}>
@@ -201,7 +201,7 @@ const Login = () => {
               <form onSubmit={handleSubmit} className="space-y-8">
                 {/* Enhanced Email Field */}
                 <div className="group">
-                  <label className="block text-sm font-semibold mb-3" style={{ color: '#6B5B47' }}>
+                  <label className="block text-sm font-semibold mb-3" style={{ color: '#241C0F' }}>
                     Enter Your Email
                   </label>
                   <div className="relative">
@@ -214,11 +214,11 @@ const Login = () => {
                       onChange={handleInputChange}
                       className={`pl-14 py-4 border-2 rounded-xl transition-all duration-200 ${errors.email ? 'border-red-500' : ''}`}
                       style={{
-                        borderColor: errors.email ? '#ef4444' : '#E5D5C3',
-                        color: '#6B5B47'
+                        borderColor: errors.email ? '#B54A35' : '#E2D2B6',
+                        color: '#241C0F'
                       }}
                       onFocus={(e) => e.target.style.borderColor = '#A37F41'}
-                      onBlur={(e) => e.target.style.borderColor = '#E5D5C3'}
+                      onBlur={(e) => e.target.style.borderColor = '#E2D2B6'}
                     />
                   </div>
                   {errors.email && (
@@ -228,7 +228,7 @@ const Login = () => {
 
                 {/* Enhanced Password Field */}
                 <div className="group">
-                  <label className="block text-sm font-semibold mb-3" style={{ color: '#6B5B47' }}>
+                  <label className="block text-sm font-semibold mb-3" style={{ color: '#241C0F' }}>
                     Enter Your Password
                   </label>
                   <div className="relative">
@@ -241,8 +241,8 @@ const Login = () => {
                       onChange={handleInputChange}
                       className={`pl-14 pr-14 py-4 border-2 rounded-xl transition-all duration-200 ${errors.password ? 'border-red-500' : ''}`}
                       style={{
-                        borderColor: errors.password ? '#ef4444' : '#E5D5C3',
-                        color: '#6B5B47'
+                        borderColor: errors.password ? '#B54A35' : '#E2D2B6',
+                        color: '#241C0F'
                       }}
                       onFocus={(e) => e.target.style.borderColor = '#A37F41'}
                       onBlur={(e) => e.target.style.borderColor = '#E5D5C3'}
@@ -272,10 +272,10 @@ const Login = () => {
                       className="w-5 h-5 rounded-lg focus:ring-2"
                       style={{
                         accentColor: '#A37F41',
-                        borderColor: '#E5D5C3'
+                        borderColor: '#E2D2B6'
                       }}
                     />
-                    <label className="text-sm font-medium" style={{ color: '#6B5B47' }}>
+                    <label className="text-sm font-medium" style={{ color: '#241C0F' }}>
                       Remember me
                     </label>
                   </div>
@@ -302,14 +302,14 @@ const Login = () => {
                   disabled={isLoading}
                   className="w-full text-white py-5 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{
-                    background: 'linear-gradient(135deg, #A37F41 0%, #B8904F 50%, #C9A05D 100%)',
+                    background: 'linear-gradient(135deg, #A37F41 0%, #8A6C37 50%, #6D552C 100%)',
                     border: 'none'
                   }}
                   onMouseEnter={(e) => {
-                    e.target.style.background = 'linear-gradient(135deg, #8B6A35 0%, #A37F41 50%, #B8904F 100%)';
+                    e.target.style.background = 'linear-gradient(135deg, #8A6C37 0%, #6D552C 50%, #49391D 100%)';
                   }}
                   onMouseLeave={(e) => {
-                    e.target.style.background = 'linear-gradient(135deg, #A37F41 0%, #B8904F 50%, #C9A05D 100%)';
+                    e.target.style.background = 'linear-gradient(135deg, #A37F41 0%, #8A6C37 50%, #6D552C 100%)';
                   }}
                 >
                   {isLoading ? (
@@ -328,7 +328,7 @@ const Login = () => {
                     <div className="w-full border-t-2" style={{ borderColor: '#E5D5C3' }}></div>
                   </div>
                   <div className="relative flex justify-center text-sm">
-                    <span className="px-6 bg-gradient-to-r from-gray-50 to-white font-medium" style={{ color: '#6B5B47' }}>Or Sign In With</span>
+                    <span className="px-6 bg-gradient-to-r from-[#FFF8E6] to-white font-medium" style={{ color: '#8A5700' }}>Or Sign In With</span>
                   </div>
                 </div>
 

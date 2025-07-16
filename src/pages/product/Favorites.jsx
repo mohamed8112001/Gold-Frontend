@@ -112,7 +112,7 @@ const Favorites = () => {
     ];
 
     const FavoriteCard = ({ product, isListView = false }) => (
-        <Card className={`group hover:shadow-lg transition-all duration-300 ${isListView ? 'flex' : ''}`}>
+        <Card className={`group hover:shadow-lg hover:shadow-[#A37F41]/20 transition-all duration-300 border-[#E2D2B6]/30 hover:border-[#A37F41]/50 bg-gradient-to-br from-white to-[#F8F4ED]/30 ${isListView ? 'flex' : ''}`}>
             <div className={`relative ${isListView ? 'w-48 flex-shrink-0' : ''}`}>
                 <img
                     src={product.image}
@@ -123,16 +123,16 @@ const Favorites = () => {
                 <Button
                     size="sm"
                     variant="ghost"
-                    className="absolute top-2 right-2 bg-white/80 hover:bg-white text-red-500"
+                    className="absolute top-2 right-2 bg-white/80 hover:bg-[#F8F4ED] text-[#8A6C37] hover:text-[#6D552C] border border-[#E2D2B6]/50"
                     onClick={(e) => {
                         e.stopPropagation();
                         handleRemoveFromFavorites(product.id);
                     }}
                 >
-                    <Heart className="w-4 h-4 fill-red-500" />
+                    <Heart className="w-4 h-4 fill-[#8A6C37]" />
                 </Button>
                 {product.category && (
-                    <Badge className="absolute top-2 left-2 bg-yellow-500 text-white">
+                    <Badge className="absolute top-2 left-2 bg-[#A37F41] text-white">
                         {PRODUCT_CATEGORIES[product.category.toUpperCase()] || product.category}
                     </Badge>
                 )}
@@ -140,7 +140,7 @@ const Favorites = () => {
 
             <div className={`p-4 flex-1 ${isListView ? 'flex flex-col justify-between' : ''}`}>
                 <div>
-                    <h3 className="font-semibold text-lg mb-2 group-hover:text-yellow-600 transition-colors">
+                    <h3 className="font-semibold text-lg mb-2 group-hover:text-[#A37F41] transition-colors">
                         {product.name}
                     </h3>
                     <p className="text-gray-600 text-sm mb-3 line-clamp-2">
@@ -149,7 +149,7 @@ const Favorites = () => {
 
                     <div className="flex items-center gap-2 mb-3">
                         <div className="flex items-center">
-                            <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                            <Star className="w-4 h-4 fill-[#A37F41] text-[#A37F41]" />
                             <span className="text-sm font-medium ml-1">{product.rating}</span>
                             <span className="text-sm text-gray-500 ml-1">({product.reviewCount})</span>
                         </div>
@@ -165,13 +165,14 @@ const Favorites = () => {
                 </div>
 
                 <div className={`flex items-center justify-between ${isListView ? 'mt-4' : ''}`}>
-                    <div className="text-xl font-bold text-yellow-600">
+                    <div className="text-xl font-bold text-[#A37F41]">
                         {product.price.toLocaleString()} ج.م
                     </div>
                     <div className="flex gap-2">
                         <Button
                             size="sm"
                             variant="outline"
+                            className="border-[#E2D2B6] text-[#8A6C37] hover:bg-[#F8F4ED] hover:border-[#A37F41]"
                             onClick={(e) => {
                                 e.stopPropagation();
                                 navigate(ROUTES.PRODUCT_DETAILS(product.id));
@@ -182,6 +183,7 @@ const Favorites = () => {
                         </Button>
                         <Button
                             size="sm"
+                            className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white shadow-lg hover:shadow-[#C37C00]/30"
                             onClick={(e) => {
                                 e.stopPropagation();
                                 navigate(ROUTES.SHOP_DETAILS(product.shopId));
@@ -200,7 +202,7 @@ const Favorites = () => {
         return (
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
                 <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600 mx-auto mb-4"></div>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#A37F41] mx-auto mb-4"></div>
                     <p className="text-gray-600">جاري تحميل المفضلة...</p>
                 </div>
             </div>
@@ -208,7 +210,7 @@ const Favorites = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-gradient-to-br from-[#F8F4ED] to-[#F0E8DB]">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {/* Header */}
                 <div className="mb-8">
@@ -218,7 +220,7 @@ const Favorites = () => {
                             <Button
                                 variant="outline"
                                 onClick={handleClearAllFavorites}
-                                className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                                className="text-[#8A6C37] hover:text-[#6D552C] hover:bg-[#F8F4ED] border-[#E2D2B6]"
                             >
                                 <Trash2 className="w-4 h-4 mr-2" />
                                 حذف الكل
@@ -232,7 +234,7 @@ const Favorites = () => {
                                 {favorites.length} منتج في المفضلة
                             </p>
 
-                            <div className="flex border rounded-lg">
+                            <div className="flex border border-[#E2D2B6] rounded-lg bg-white">
                                 <Button
                                     variant={viewMode === 'grid' ? 'default' : 'ghost'}
                                     size="sm"
@@ -268,7 +270,7 @@ const Favorites = () => {
                             <Button
                                 size="lg"
                                 onClick={() => navigate(ROUTES.PRODUCTS)}
-                                className="px-8"
+                                className="px-8 bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white shadow-lg hover:shadow-[#C37C00]/30"
                             >
                                 تصفح المنتجات
                             </Button>
@@ -277,7 +279,7 @@ const Favorites = () => {
                                 variant="outline"
                                 size="lg"
                                 onClick={() => navigate(ROUTES.SHOPS)}
-                                className="px-8"
+                                className="px-8 border-[#E2D2B6] text-[#8A6C37] hover:bg-[#F8F4ED] hover:border-[#A37F41]"
                             >
                                 تصفح المتاجر
                             </Button>
@@ -285,8 +287,8 @@ const Favorites = () => {
                     </div>
                 ) : (
                     <div className={`grid gap-6 ${viewMode === 'grid'
-                            ? 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3'
-                            : 'grid-cols-1'
+                        ? 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3'
+                        : 'grid-cols-1'
                         }`}>
                         {favorites.map((product) => (
                             <FavoriteCard
@@ -301,7 +303,7 @@ const Favorites = () => {
                 {/* Quick Actions */}
                 {favorites.length > 0 && (
                     <div className="mt-12 text-center">
-                        <Card className="max-w-md mx-auto">
+                        <Card className="max-w-md mx-auto bg-gradient-to-br from-white to-[#F8F4ED]/50 border-[#E2D2B6]/50">
                             <CardHeader>
                                 <CardTitle>إجراءات سريعة</CardTitle>
                                 <CardDescription>
@@ -311,14 +313,14 @@ const Favorites = () => {
                             <CardContent className="space-y-4">
                                 <Button
                                     variant="outline"
-                                    className="w-full"
+                                    className="w-full border-[#E2D2B6] text-[#8A6C37] hover:bg-[#F8F4ED] hover:border-[#A37F41]"
                                     onClick={() => navigate(ROUTES.PRODUCTS)}
                                 >
                                     تصفح المزيد من المنتجات
                                 </Button>
                                 <Button
                                     variant="outline"
-                                    className="w-full"
+                                    className="w-full border-[#E2D2B6] text-[#8A6C37] hover:bg-[#F8F4ED] hover:border-[#A37F41]"
                                     onClick={() => navigate(ROUTES.SHOPS)}
                                 >
                                     اكتشف متاجر جديدة

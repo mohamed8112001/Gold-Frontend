@@ -55,10 +55,10 @@
 
 @keyframes glow {
   0%, 100% {
-    box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
+    box-shadow: 0 0 20px rgba(163, 127, 65, 0.3);
   }
   50% {
-    box-shadow: 0 0 40px rgba(251, 191, 36, 0.6);
+    box-shadow: 0 0 40px rgba(163, 127, 65, 0.6);
   }
 }
 
@@ -183,7 +183,7 @@
 }
 
 .animate-shimmer {
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  background: linear-gradient(90deg, transparent, rgba(248, 244, 237, 0.4), transparent);
   background-size: 200% 100%;
   animation: shimmer 2s infinite;
 }
@@ -224,7 +224,7 @@
 }
 
 .hover-glow:hover {
-  box-shadow: 0 0 30px rgba(251, 191, 36, 0.5);
+  box-shadow: 0 0 30px rgba(163, 127, 65, 0.5);
 }
 
 .hover-scale:hover {
@@ -250,7 +250,7 @@
 
 /* Loading Animations */
 .loading-shimmer {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background: linear-gradient(90deg, #F8F4ED 25%, #F0E8DB 50%, #F8F4ED 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
@@ -314,7 +314,7 @@
 /* Enhanced Hover Effects for Cards */
 .card-enhanced:hover {
   transform: translateY(-12px) scale(1.03);
-  box-shadow: 0 30px 60px rgba(251, 191, 36, 0.2);
+  box-shadow: 0 30px 60px rgba(163, 127, 65, 0.2);
 }
 
 .card-enhanced:hover .card-image {

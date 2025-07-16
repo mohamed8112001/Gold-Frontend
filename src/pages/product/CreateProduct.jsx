@@ -195,8 +195,8 @@ const CreateProduct = () => {
                     if (descriptionField) {
                         descriptionField.focus();
                         descriptionField.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        descriptionField.style.borderColor = '#f59e0b';
-                        descriptionField.style.boxShadow = '0 0 0 3px rgba(245, 158, 11, 0.1)';
+                        descriptionField.style.borderColor = '#A37F41';
+                        descriptionField.style.boxShadow = '0 0 0 3px rgba(163, 127, 65, 0.1)';
                         setTimeout(() => {
                             descriptionField.style.borderColor = '';
                             descriptionField.style.boxShadow = '';
@@ -381,11 +381,10 @@ const CreateProduct = () => {
                                         value={formData.description}
                                         onChange={handleInputChange}
                                         placeholder="اكتب وصفاً مفصلاً للمنتج، أو اتركه فارغاً ليتم توليده تلقائياً بالذكاء الاصطناعي"
-                                        className={`w-full p-3 border rounded-md resize-none h-32 ${
-                                            formData.description.trim() === ''
+                                        className={`w-full p-3 border rounded-md resize-none h-32 ${formData.description.trim() === ''
                                                 ? 'border-blue-300 bg-blue-50'
                                                 : 'border-gray-300'
-                                        }`}
+                                            }`}
                                     />
                                     {formData.description.trim() === '' && (
                                         <div className="absolute top-2 left-2 flex items-center text-blue-600 text-xs">

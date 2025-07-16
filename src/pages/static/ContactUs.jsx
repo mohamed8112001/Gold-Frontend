@@ -3,10 +3,10 @@ import { motion } from 'framer-motion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.jsx';
 import { Button } from '@/components/ui/button.jsx';
 import { Input } from '@/components/ui/input.jsx';
-import { 
-  Phone, 
-  Mail, 
-  MapPin, 
+import {
+  Phone,
+  Mail,
+  MapPin,
   Clock,
   MessageCircle,
   Send,
@@ -76,7 +76,7 @@ const ContactUs = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     // Simulate form submission
     setTimeout(() => {
       setIsSubmitting(false);
@@ -92,10 +92,10 @@ const ContactUs = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50/30">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-[#FFF8E6]/30">
       {/* Hero Section */}
       <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-amber-400/10 via-yellow-400/5 to-amber-500/10"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-[#C37C00]/10 via-[#E6A500]/5 to-[#A66A00]/10"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -106,7 +106,7 @@ const ContactUs = () => {
             <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
               اتصل بنا
             </h1>
-            <div className="w-24 h-1 bg-gradient-to-r from-amber-400 to-yellow-500 mx-auto mb-8"></div>
+            <div className="w-24 h-1 bg-gradient-to-r from-[#C37C00] to-[#E6A500] mx-auto mb-8"></div>
             <p className="text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
               نحن هنا لمساعدتك! تواصل معنا في أي وقت وسنكون سعداء للرد على استفساراتك
             </p>
@@ -128,7 +128,7 @@ const ContactUs = () => {
               >
                 <Card className="h-full text-center hover:shadow-lg transition-all duration-300 border-0 bg-white/80 backdrop-blur-sm hover:scale-105">
                   <CardHeader>
-                    <div className="w-16 h-16 bg-gradient-to-r from-amber-400 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <div className="w-16 h-16 bg-gradient-to-r from-[#C37C00] to-[#E6A500] rounded-full flex items-center justify-center mx-auto mb-4">
                       <info.icon className="w-8 h-8 text-white" />
                     </div>
                     <CardTitle className="text-xl font-bold text-gray-900">
@@ -155,7 +155,7 @@ const ContactUs = () => {
       </section>
 
       {/* Contact Form & Map Section */}
-      <section className="py-16 bg-gradient-to-br from-slate-100 to-amber-50/50">
+      <section className="py-16 bg-gradient-to-br from-slate-100 to-[#FFF8E6]/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Contact Form */}
@@ -217,7 +217,7 @@ const ContactUs = () => {
                           />
                         </div>
                       </div>
-                      
+
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                           البريد الإلكتروني *
@@ -232,7 +232,7 @@ const ContactUs = () => {
                           placeholder="بريدك الإلكتروني"
                         />
                       </div>
-                      
+
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                           الموضوع *
@@ -247,7 +247,7 @@ const ContactUs = () => {
                           placeholder="موضوع رسالتك"
                         />
                       </div>
-                      
+
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                           الرسالة *
@@ -262,11 +262,11 @@ const ContactUs = () => {
                           placeholder="اكتب رسالتك هنا..."
                         />
                       </div>
-                      
+
                       <Button
                         type="submit"
                         disabled={isSubmitting}
-                        className="w-full bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-500 hover:to-yellow-600 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
+                        className="w-full bg-gradient-to-r from-[#C37C00] to-[#E6A500] hover:from-[#A66A00] hover:to-[#C37C00] text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
                       >
                         {isSubmitting ? (
                           <>

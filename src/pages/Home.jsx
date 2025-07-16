@@ -11,8 +11,7 @@ import {
   Eye,
   Heart,
   Shield,
-  Award,
-  Globe
+  Award
 } from 'lucide-react';
 import { ROUTES } from '../utils/constants.js';
 import { shopService } from '../services/shopService.js';
@@ -23,7 +22,7 @@ import { useTranslation } from 'react-i18next';
 
 const Home = () => {
   const navigate = useNavigate();
-  const { i18n, t } = useTranslation();
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [featuredShops, setFeaturedShops] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -35,22 +34,7 @@ const Home = () => {
     totalReviews: 0
   });
 
-  // Language toggle function
-  const toggleLanguage = () => {
-    console.log('🌐 Current language:', i18n.language);
-    const newLang = i18n.language === 'ar' ? 'en' : 'ar';
-    console.log('🌐 Switching to:', newLang);
 
-    i18n.changeLanguage(newLang).then(() => {
-      console.log('🌐 Language changed successfully to:', newLang);
-      // Update document direction
-      document.documentElement.dir = newLang === 'ar' ? 'rtl' : 'ltr';
-      document.documentElement.lang = newLang;
-      console.log('🌐 Document direction set to:', document.documentElement.dir);
-    }).catch((error) => {
-      console.error('🌐 Error changing language:', error);
-    });
-  };
 
   const heroSlides = [
     {
@@ -72,28 +56,28 @@ const Home = () => {
       title: t('hero.precious_stones.title') || 'Precious Stones',
       subtitle: t('hero.precious_stones.subtitle') || 'Jewelry adorned with natural gemstones',
       image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
-      gradient: 'from-violet-400 to-indigo-700'
+      gradient: 'from-[#D3BB92] to-[#8A6C37]'
     },
     {
       id: 4,
       title: t('hero.gold_21k.title') || '21K Gold',
       subtitle: t('hero.gold_21k.subtitle') || 'High quality with authenticity guarantee',
       image: 'https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
-      gradient: 'from-yellow-400 to-orange-500'
+      gradient: 'from-[#A37F41] to-[#C5A56D]'
     },
     {
       id: 5,
       title: t('hero.diamond_collection.title') || 'Diamond Collection',
       subtitle: t('hero.diamond_collection.subtitle') || 'Sparkling diamonds for special moments',
       image: 'https://images.unsplash.com/photo-1544376664-80b17f09d399?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
-      gradient: 'from-gray-200 to-blue-300'
+      gradient: 'from-[#F8F4ED] to-[#D3BB92]'
     },
     {
       id: 6,
       title: t('hero.pearl_elegance.title') || 'Pearl Elegance',
       subtitle: t('hero.pearl_elegance.subtitle') || 'Timeless beauty of natural pearls',
       image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
-      gradient: 'from-slate-200 to-gray-500'
+      gradient: 'from-[#F0E8DB] to-[#92723A]'
     }
   ];
 
@@ -224,7 +208,7 @@ const Home = () => {
         }}
       >
         {/* Background Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-yellow-50/50 via-transparent to-yellow-100/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-[#FFF8E6]/50 via-transparent to-[#FFF0CC]/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
         {/* Enhanced Image Section */}
         <div className="relative overflow-hidden rounded-t-3xl">
@@ -253,21 +237,21 @@ const Home = () => {
 
           {/* Premium fallback image */}
           <div
-            className={`fallback-image absolute inset-0 bg-gradient-to-br from-yellow-100 via-amber-50 to-yellow-200 flex items-center justify-center group-hover:from-yellow-200 group-hover:via-amber-100 group-hover:to-yellow-300 transition-all duration-700 ${shop.logoUrl && shop.logoUrl !== 'undefined' && shop.logoUrl !== '' && shop.logoUrl !== null ? 'hidden' : 'flex'}`}
+            className={`fallback-image absolute inset-0 bg-gradient-to-br from-[#FFF0CC] via-[#FFF8E6] to-[#FFE6B3] flex items-center justify-center group-hover:from-[#FFE6B3] group-hover:via-[#FFF0CC] group-hover:to-[#FFDB99] transition-all duration-700 ${shop.logoUrl && shop.logoUrl !== 'undefined' && shop.logoUrl !== '' && shop.logoUrl !== null ? 'hidden' : 'flex'}`}
           >
             <div className="text-center transform group-hover:scale-110 transition-transform duration-700">
               <div className="relative mb-4">
                 <div className="text-7xl mb-2 filter drop-shadow-2xl">💍</div>
-                <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/30 to-orange-400/30 rounded-full blur-xl"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-[#C37C00]/30 to-[#E6A500]/30 rounded-full blur-xl"></div>
               </div>
-              <div className="text-lg text-gray-800 font-bold px-4 py-2 bg-white/90 rounded-xl backdrop-blur-md shadow-lg border border-yellow-300">
+              <div className="text-lg text-gray-800 font-bold px-4 py-2 bg-white/90 rounded-xl backdrop-blur-md shadow-lg border border-[#E2D2B6]">
                 {shop.name}
               </div>
-              <div className="mt-2 text-sm text-gray-600 font-semibold bg-yellow-100 px-3 py-1 rounded-full">Jewelry Store</div>
+              <div className="mt-2 text-sm text-gray-600 font-semibold bg-[#F0E8DB] px-3 py-1 rounded-full">Jewelry Store</div>
             </div>
             {/* Decorative elements */}
-            <div className="absolute top-4 left-4 w-3 h-3 bg-yellow-400 rounded-full opacity-60 animate-ping"></div>
-            <div className="absolute bottom-4 right-4 w-2 h-2 bg-orange-400 rounded-full opacity-40 animate-pulse"></div>
+            <div className="absolute top-4 left-4 w-3 h-3 bg-[#C37C00] rounded-full opacity-60 animate-ping"></div>
+            <div className="absolute bottom-4 right-4 w-2 h-2 bg-[#C5A56D] rounded-full opacity-40 animate-pulse"></div>
           </div>
 
           {/* Enhanced Gradient Overlay on Image */}
@@ -302,14 +286,14 @@ const Home = () => {
         {/* Enhanced Content Section */}
         <CardContent className="p-8 relative z-10">
           {/* Store Name */}
-          <h3 className="font-bold text-2xl text-gray-900 mb-4 line-clamp-1 group-hover:text-yellow-600 transition-colors duration-300">
+          <h3 className="font-bold text-2xl text-gray-900 mb-4 line-clamp-1 group-hover:text-[#C37C00] transition-colors duration-300">
             {shop.name || 'Jewelry Store'}
           </h3>
 
           {/* Location */}
           <div className="flex items-center text-gray-600 mb-5">
-            <div className="w-6 h-6 bg-gradient-to-r from-blue-100 to-blue-200 rounded-full flex items-center justify-center mr-3">
-              <MapPin className="w-4 h-4 text-blue-600" />
+            <div className="w-6 h-6 bg-gradient-to-r from-[#F0E8DB] to-[#E2D2B6] rounded-full flex items-center justify-center mr-3">
+              <MapPin className="w-4 h-4 text-[#8A6C37]" />
             </div>
             <span className="text-base font-semibold line-clamp-1 text-gray-700">{shop.address || shop.area || shop.city || 'Location not specified'}</span>
           </div>
@@ -346,7 +330,7 @@ const Home = () => {
               {/* Main Visit Button */}
               <Button
                 size="lg"
-                className="w-full bg-gradient-to-r from-yellow-500 via-yellow-600 to-orange-500 hover:from-yellow-600 hover:via-orange-500 hover:to-orange-600 text-white px-6 py-4 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 font-bold text-lg border border-yellow-400/50"
+                className="w-full bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] hover:from-[#A66A00] hover:via-[#C37C00] hover:to-[#8A5700] text-white px-6 py-4 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 font-bold text-lg border border-[#D3BB92]/50"
                 onClick={(e) => {
                   e.stopPropagation();
                   const shopId = shop._id || shop.id;
@@ -366,7 +350,7 @@ const Home = () => {
                 <Button
                   variant="outline"
                   size="md"
-                  className="flex-1 border-2 border-gray-300 hover:border-blue-500 hover:bg-blue-50 text-gray-700 hover:text-blue-700 py-3 rounded-xl font-semibold transition-all duration-300"
+                  className="flex-1 border-2 border-[#E2D2B6] hover:border-[#8A6C37] hover:bg-[#F8F4ED] text-gray-700 hover:text-[#8A6C37] py-3 rounded-xl font-semibold transition-all duration-300"
                   onClick={(e) => {
                     e.stopPropagation();
                   }}
@@ -377,7 +361,7 @@ const Home = () => {
                 <Button
                   variant="outline"
                   size="md"
-                  className="flex-1 border-2 border-gray-300 hover:border-green-500 hover:bg-green-50 text-gray-700 hover:text-green-700 py-3 rounded-xl font-semibold transition-all duration-300"
+                  className="flex-1 border-2 border-[#E2D2B6] hover:border-[#6D552C] hover:bg-[#F0E8DB] text-gray-700 hover:text-[#6D552C] py-3 rounded-xl font-semibold transition-all duration-300"
                   onClick={(e) => {
                     e.stopPropagation();
                   }}
@@ -391,7 +375,7 @@ const Home = () => {
         </CardContent>
 
         {/* Hover Effect Border */}
-        <div className="absolute inset-0 rounded-3xl border-2 border-transparent group-hover:border-yellow-200 transition-all duration-500"></div>
+        <div className="absolute inset-0 rounded-3xl border-2 border-transparent group-hover:border-[#E2D2B6] transition-all duration-500"></div>
       </Card>
     );
   };
@@ -402,7 +386,7 @@ const Home = () => {
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -100 }}
       transition={{ duration: 0.5 }}
-      className="min-h-screen bg-gray-50"
+      className="min-h-screen bg-gradient-to-br from-[#F8F4ED] to-[#F0E8DB]"
       dir="ltr"
     >
 
@@ -412,9 +396,9 @@ const Home = () => {
         <div className="absolute inset-0 bg-black/30 z-10"></div>
 
         {/* Floating Decorative Elements */}
-        <div className="absolute top-20 left-20 w-4 h-4 bg-yellow-400/60 rounded-full animate-pulse z-20"></div>
+        <div className="absolute top-20 left-20 w-4 h-4 bg-[#C37C00]/60 rounded-full animate-pulse z-20"></div>
         <div className="absolute top-40 right-32 w-6 h-6 bg-white/40 rounded-full animate-bounce z-20"></div>
-        <div className="absolute bottom-32 left-32 w-3 h-3 bg-yellow-300/50 rounded-full animate-ping z-20"></div>
+        <div className="absolute bottom-32 left-32 w-3 h-3 bg-[#C5A56D]/50 rounded-full animate-ping z-20"></div>
 
         {/* Slider Container */}
         <div className="relative w-full h-full">
@@ -439,7 +423,7 @@ const Home = () => {
 
               {/* Content Overlay */}
               <div className="relative z-20 h-full flex items-center justify-center">
-                <div className="text-center text-white max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="text-center text-white w-full px-4 sm:px-6 lg:px-8">
                   {/* Premium Badge with Animation */}
                   <div className={`inline-flex items-center px-8 py-4 rounded-full bg-white/15 backdrop-blur-md border border-white/30 shadow-2xl mb-8 transition-all duration-700 ${index === currentSlide ? 'animate-fade-in scale-100' : 'scale-95 opacity-0'
                     }`}>
@@ -455,13 +439,13 @@ const Home = () => {
                   </h1>
 
                   {/* Subtitle with Animation */}
-                  <h2 className={`text-2xl md:text-4xl lg:text-5xl text-white/90 font-light mb-6 max-w-4xl mx-auto drop-shadow-lg transition-all duration-1000 delay-400 ${index === currentSlide ? 'animate-fade-in translate-y-0' : 'translate-y-10 opacity-0'
+                  <h2 className={`text-2xl md:text-4xl lg:text-5xl text-white/90 font-light mb-6 w-full drop-shadow-lg transition-all duration-1000 delay-400 ${index === currentSlide ? 'animate-fade-in translate-y-0' : 'translate-y-10 opacity-0'
                     }`}>
                     {slide.subtitle}
                   </h2>
 
                   {/* Description with Animation */}
-                  <p className={`text-lg md:text-xl lg:text-2xl text-white/80 mb-12 max-w-3xl mx-auto leading-relaxed drop-shadow-md transition-all duration-1000 delay-600 ${index === currentSlide ? 'animate-fade-in translate-y-0' : 'translate-y-10 opacity-0'
+                  <p className={`text-lg md:text-xl lg:text-2xl text-white/80 mb-12 w-full leading-relaxed drop-shadow-md transition-all duration-1000 delay-600 ${index === currentSlide ? 'animate-fade-in translate-y-0' : 'translate-y-10 opacity-0'
                     }`}>
                     {slide.description}
                   </p>
@@ -529,7 +513,7 @@ const Home = () => {
 
           {/* Enhanced Slide Counter */}
           <div className="absolute bottom-8 right-8 bg-black/40 backdrop-blur-md text-white px-6 py-3 rounded-full text-lg font-semibold z-30 border border-white/20 shadow-xl">
-            <span className="text-yellow-400">{currentSlide + 1}</span>
+            <span className="text-[#C5A56D]">{currentSlide + 1}</span>
             <span className="text-white/60 mx-2">/</span>
             <span className="text-white/80">{heroSlides.length}</span>
           </div>
@@ -537,7 +521,7 @@ const Home = () => {
           {/* Progress Bar */}
           <div className="absolute bottom-0 left-0 w-full h-1 bg-white/20 z-30">
             <div
-              className="h-full bg-gradient-to-r from-yellow-400 to-yellow-600 transition-all duration-300"
+              className="h-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] transition-all duration-300"
               style={{ width: `${((currentSlide + 1) / heroSlides.length) * 100}%` }}
             ></div>
           </div>
@@ -545,20 +529,20 @@ const Home = () => {
       </section>
 
       {/* Clean Search Section */}
-      <section className="py-24 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-24 bg-gradient-to-br from-white to-[#F8F4ED]">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
               Find Your Dreams
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-600 w-full text-center">
               Discover the most beautiful jewelry and gold pieces from the best stores in Egypt
             </p>
           </div>
 
           {/* Simple Search Bar */}
-          <div className="max-w-4xl mx-auto mb-16">
-            <div className="relative bg-gray-50 rounded-2xl p-2 shadow-lg border border-gray-200 hover:border-yellow-300 transition-all duration-300">
+          <div className="w-full mb-16">
+            <div className="relative bg-gray-50 rounded-2xl p-2 shadow-lg border border-gray-200 hover:border-[#A37F41] transition-all duration-300">
               <div className="flex items-center gap-4">
                 <div className="flex-1 relative">
                   <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -568,12 +552,12 @@ const Home = () => {
                     value={searchQuery}
                     onFocus={handleSearch}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-12 pr-4 py-4 text-lg rounded-xl border-0 focus:ring-2 focus:ring-yellow-300 bg-transparent text-gray-900 placeholder-gray-500"
+                    className="w-full pl-12 pr-4 py-4 text-lg rounded-xl border-0 focus:ring-2 focus:ring-[#C37C00]/30 bg-transparent text-gray-900 placeholder-gray-500"
                   />
                 </div>
                 <Button
                   type="submit"
-                  className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-8 py-4 text-lg rounded-xl transition-all duration-300 transform hover:scale-105"
+                  className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-8 py-4 text-lg rounded-xl transition-all duration-300 transform hover:scale-105"
                 >
                   {t('search.button') || "Search"}
                 </Button>
@@ -582,7 +566,7 @@ const Home = () => {
           </div>
 
           {/* Simple Categories */}
-          <div className="max-w-4xl mx-auto">
+          <div className="w-full">
             <div className="text-center mb-12">
               <h3 className="text-3xl font-bold text-gray-800 mb-4">
                 Popular Categories
@@ -594,10 +578,10 @@ const Home = () => {
               <Button
                 variant="outline"
                 onClick={() => navigate('/shops?category=gold')}
-                className="group bg-white border-2 border-gray-200 hover:border-yellow-400 text-gray-700 hover:text-yellow-600 transition-all duration-300 p-6 h-auto rounded-2xl shadow-md hover:shadow-lg"
+                className="group bg-white border-2 border-gray-200 hover:border-[#C37C00] text-gray-700 hover:text-[#C37C00] transition-all duration-300 p-6 h-auto rounded-2xl shadow-md hover:shadow-lg"
               >
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-16 h-16 bg-gradient-to-br from-[#F8F4ED] to-[#E2D2B6] rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
                     <span className="text-2xl">💍</span>
                   </div>
                   <div className="font-semibold">Gold Rings</div>
@@ -607,10 +591,10 @@ const Home = () => {
               <Button
                 variant="outline"
                 onClick={() => navigate('/shops?category=necklaces')}
-                className="group bg-white border-2 border-gray-200 hover:border-blue-400 text-gray-700 hover:text-blue-600 transition-all duration-300 p-6 h-auto rounded-2xl shadow-md hover:shadow-lg"
+                className="group bg-white border-2 border-gray-200 hover:border-[#8A6C37] text-gray-700 hover:text-[#8A6C37] transition-all duration-300 p-6 h-auto rounded-2xl shadow-md hover:shadow-lg"
               >
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-16 h-16 bg-gradient-to-br from-[#F0E8DB] to-[#D3BB92] rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
                     <span className="text-2xl">📿</span>
                   </div>
                   <div className="font-semibold">Necklaces</div>
@@ -620,10 +604,10 @@ const Home = () => {
               <Button
                 variant="outline"
                 onClick={() => navigate('/shops?category=bracelets')}
-                className="group bg-white border-2 border-gray-200 hover:border-purple-400 text-gray-700 hover:text-purple-600 transition-all duration-300 p-6 h-auto rounded-2xl shadow-md hover:shadow-lg"
+                className="group bg-white border-2 border-gray-200 hover:border-[#C5A56D] text-gray-700 hover:text-[#C5A56D] transition-all duration-300 p-6 h-auto rounded-2xl shadow-md hover:shadow-lg"
               >
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-purple-100 to-purple-200 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-16 h-16 bg-gradient-to-br from-[#E2D2B6] to-[#D3BB92] rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
                     <span className="text-2xl">💎</span>
                   </div>
                   <div className="font-semibold">Bracelets</div>
@@ -633,10 +617,10 @@ const Home = () => {
               <Button
                 variant="outline"
                 onClick={() => navigate('/shops?category=earrings')}
-                className="group bg-white border-2 border-gray-200 hover:border-pink-400 text-gray-700 hover:text-pink-600 transition-all duration-300 p-6 h-auto rounded-2xl shadow-md hover:shadow-lg"
+                className="group bg-white border-2 border-gray-200 hover:border-[#92723A] text-gray-700 hover:text-[#92723A] transition-all duration-300 p-6 h-auto rounded-2xl shadow-md hover:shadow-lg"
               >
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-pink-100 to-pink-200 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-16 h-16 bg-gradient-to-br from-[#F0E8DB] to-[#E2D2B6] rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
                     <span className="text-2xl">✨</span>
                   </div>
                   <div className="font-semibold">Earrings</div>
@@ -649,14 +633,14 @@ const Home = () => {
           <div className="flex flex-col sm:flex-row justify-center gap-4 mt-12">
             <Button
               onClick={() => navigate('/shops')}
-              className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-8 py-3 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-8 py-3 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
             >
               {t('buttons.browse_all_stores') || "Browse All Stores"}
             </Button>
             <Button
               onClick={() => navigate('/products')}
               variant="outline"
-              className="border-2 border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 text-lg rounded-full transition-all duration-300 transform hover:scale-105"
+              className="border-2 border-[#E2D2B6] text-[#8A6C37] hover:bg-[#F8F4ED] px-8 py-3 text-lg rounded-full transition-all duration-300 transform hover:scale-105"
             >
               View All Products
             </Button>
@@ -665,17 +649,17 @@ const Home = () => {
       </section>
 
       {/* Clean Featured Shops Section */}
-      <section className="py-24 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-24 bg-gradient-to-br from-[#F8F4ED] to-[#F0E8DB]">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             {/* Simple Badge */}
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-yellow-100 text-yellow-800 text-sm font-medium mb-6">
+            <div className="inline-flex items-center px-4 py-2 rounded-full bg-[#F0E8DB] text-[#8A6C37] text-sm font-medium mb-6">
               {t('sections.featured_stores') || 'Featured Stores'}
             </div>
 
             {/* Clean Title */}
             <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-              <span className="bg-gradient-to-r from-yellow-600 to-yellow-500 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-[#C37C00] to-[#E6A500] bg-clip-text text-transparent">
                 {t('sections.discover_best') || 'Discover the Best'}
               </span>
               <br />
@@ -685,14 +669,14 @@ const Home = () => {
             </h2>
 
             {/* Simple Subtitle */}
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed mb-12">
+            <p className="text-xl text-gray-600 w-full text-center leading-relaxed mb-12">
               {t('sections.stores_description') || 'A curated collection of the finest jewelry stores offering the highest quality gold and precious metals'}
             </p>
 
             {/* Clean Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto mb-16">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full mb-16">
               <div className="bg-white rounded-2xl p-6 shadow-md text-center">
-                <div className="text-3xl font-bold text-yellow-600 mb-2">
+                <div className="text-3xl font-bold text-[#C37C00] mb-2">
                   {isLoading ? (
                     <div className="animate-pulse bg-gray-200 h-8 w-12 rounded mx-auto"></div>
                   ) : (
@@ -702,7 +686,7 @@ const Home = () => {
                 <div className="text-gray-600 font-medium">{t('stats.stores') || 'Stores'}</div>
               </div>
               <div className="bg-white rounded-2xl p-6 shadow-md text-center">
-                <div className="text-3xl font-bold text-yellow-600 mb-2">
+                <div className="text-3xl font-bold text-[#C37C00] mb-2">
                   {isLoading ? (
                     <div className="animate-pulse bg-gray-200 h-8 w-16 rounded mx-auto"></div>
                   ) : (
@@ -712,7 +696,7 @@ const Home = () => {
                 <div className="text-gray-600 font-medium">{t('stats.products') || 'Products'}</div>
               </div>
               <div className="bg-white rounded-2xl p-6 shadow-md text-center">
-                <div className="text-3xl font-bold text-yellow-600 mb-2">
+                <div className="text-3xl font-bold text-[#C37C00] mb-2">
                   {isLoading ? (
                     <div className="animate-pulse bg-gray-200 h-8 w-12 rounded mx-auto"></div>
                   ) : (
@@ -788,11 +772,11 @@ const Home = () => {
           <div className="text-center mt-20">
             <div className="relative inline-block">
               {/* Background Glow Effect */}
-              <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full blur-lg opacity-30 animate-pulse"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-[#C37C00] to-[#A66A00] rounded-full blur-lg opacity-30 animate-pulse"></div>
 
               <Button
                 onClick={() => navigate('/shops')}
-                className="relative bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-700 hover:from-yellow-600 hover:via-yellow-700 hover:to-yellow-800 text-white px-12 py-4 text-xl font-bold rounded-full shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:scale-110 hover:-translate-y-1 border-2 border-yellow-400/50"
+                className="relative bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] hover:from-[#A66A00] hover:via-[#C37C00] hover:to-[#8A5700] text-white px-12 py-4 text-xl font-bold rounded-full shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:scale-110 hover:-translate-y-1 border-2 border-[#D3BB92]/50"
               >
                 <span className="flex items-center gap-3">
                   <span>Explore All Stores</span>
@@ -805,7 +789,7 @@ const Home = () => {
 
             {/* Subtitle */}
             <p className="text-gray-600 mt-4 text-lg">
-              Discover over <span className="font-bold text-yellow-600">{stats.totalShops || '50'}+</span> verified jewelry stores
+              Discover over <span className="font-bold text-[#C37C00]">{stats.totalShops || '50'}+</span> verified jewelry stores
             </p>
           </div>
 
@@ -814,23 +798,23 @@ const Home = () => {
       </section>
 
       {/* Clean Services Section */}
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-24 bg-gradient-to-br from-white to-[#F8F4ED]">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-5xl font-bold text-gray-900 mb-6">
-              <span className="bg-gradient-to-r from-yellow-600 to-yellow-500 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] bg-clip-text text-transparent">
                 {t('sections.why_choose_us') || 'Why Choose Us?'}
               </span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-600 w-full text-center">
               {t('sections.why_choose_description') || 'We provide you with an exceptional shopping experience with the best services and guarantees'}
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Service 1 */}
-            <div className="text-center p-6 bg-gray-50 rounded-2xl hover:bg-white hover:shadow-lg transition-all duration-300">
-              <div className="w-20 h-20 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+            <div className="text-center p-6 bg-[#F8F4ED] rounded-2xl hover:bg-white hover:shadow-lg transition-all duration-300">
+              <div className="w-20 h-20 bg-gradient-to-br from-[#A37F41] to-[#8A6C37] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
                 <Shield className="w-10 h-10 text-white" />
               </div>
               <h3 className="text-2xl font-bold mb-4 text-gray-900">
@@ -842,8 +826,8 @@ const Home = () => {
             </div>
 
             {/* Service 2 */}
-            <div className="text-center p-6 bg-gray-50 rounded-2xl hover:bg-white hover:shadow-lg transition-all duration-300">
-              <div className="w-20 h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+            <div className="text-center p-6 bg-[#F8F4ED] rounded-2xl hover:bg-white hover:shadow-lg transition-all duration-300">
+              <div className="w-20 h-20 bg-gradient-to-br from-[#C5A56D] to-[#A37F41] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
                 <Award className="w-10 h-10 text-white" />
               </div>
               <h3 className="text-2xl font-bold mb-4 text-gray-900">
@@ -855,8 +839,8 @@ const Home = () => {
             </div>
 
             {/* Service 3 */}
-            <div className="text-center p-6 bg-gray-50 rounded-2xl hover:bg-white hover:shadow-lg transition-all duration-300">
-              <div className="w-20 h-20 bg-gradient-to-br from-green-400 to-green-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+            <div className="text-center p-6 bg-[#F8F4ED] rounded-2xl hover:bg-white hover:shadow-lg transition-all duration-300">
+              <div className="w-20 h-20 bg-gradient-to-br from-[#6D552C] to-[#49391D] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
                 <Star className="w-10 h-10 text-white" />
               </div>
               <h3 className="text-2xl font-bold mb-4 text-gray-900">
@@ -871,13 +855,13 @@ const Home = () => {
       </section>
 
       {/* Clean CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-yellow-500 to-yellow-600">
+      <section className="py-20 bg-gradient-to-r from-[#C37C00] to-[#A66A00]">
 
-        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+        <div className="w-full text-center px-4 sm:px-6 lg:px-8">
           <h2 className="text-5xl font-bold text-white mb-6">
             {t('cta.title') || 'Ready to Discover Your Perfect Jewelry?'}
           </h2>
-          <p className="text-xl text-yellow-100 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-[#F0E8DB] mb-8 w-full">
             {t('cta.description') || 'Join thousands of satisfied customers who found their dream jewelry through Dibla'}
           </p>
 
@@ -885,7 +869,7 @@ const Home = () => {
             <Button
               size="lg"
               onClick={() => navigate('/shops')}
-              className="bg-white text-yellow-600 hover:bg-yellow-50 px-8 py-3 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              className="bg-white text-[#C37C00] hover:bg-[#FFF8E6] px-8 py-3 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
             >
               {t('buttons.explore_stores') || 'Explore Stores Now'}
             </Button>
@@ -893,13 +877,13 @@ const Home = () => {
               size="lg"
               variant="outline"
               onClick={() => navigate('/register')}
-              className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-yellow-600 px-8 py-3 text-lg font-semibold rounded-full transition-all duration-300 transform hover:scale-105"
+              className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-[#C37C00] px-8 py-3 text-lg font-semibold rounded-full transition-all duration-300 transform hover:scale-105"
             >
               {t('buttons.join_us') || 'Join Us Now'}
             </Button>
           </div>
 
-          <div className="mt-8 text-yellow-100">
+          <div className="mt-8 text-[#F0E8DB]">
             <p className="text-lg">
               {t('cta.customers_trust', { count: stats.totalReviews || '1000' }) || `More than ${stats.totalReviews || '1000'} satisfied customers trust us`}
             </p>
@@ -910,7 +894,7 @@ const Home = () => {
 
       {/* Admin Access Section */}
       {/* <section className="py-8 bg-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h3 className="text-lg font-medium text-gray-900 mb-4">
               Admin Access
@@ -918,7 +902,7 @@ const Home = () => {
             <div className="flex justify-center gap-4 flex-wrap">
               <Button
                 onClick={() => navigate('/demo-login')}
-                className="bg-yellow-600 hover:bg-yellow-700 text-white font-medium"
+                className="bg-[#C37C00] hover:bg-[#A66A00] text-white font-medium"
               >
 
                 Demo Login (Quick Access)
@@ -950,7 +934,7 @@ const Home = () => {
       {/* Floating Chat Component */}
       <FloatingChat />
 
-    </motion.div>
+    </motion.div >
   );
 };
 

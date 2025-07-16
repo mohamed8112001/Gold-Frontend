@@ -19,8 +19,8 @@ const FloatingChatButton = ({ isOpen, onClick }) => {
           className={`
             relative w-18 h-18 rounded-full shadow-2xl transition-all duration-300 transform hover:scale-110 active:scale-95 backdrop-blur-sm
             ${isOpen
-              ? 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 shadow-red-200/50'
-              : 'bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 hover:from-yellow-500 hover:via-yellow-600 hover:to-yellow-700 shadow-yellow-200/50'
+              ? 'bg-gradient-to-r from-[#B54A35] to-[#8A3A2A] hover:from-[#8A3A2A] hover:to-[#6D2C20] shadow-[#B54A35]/20'
+              : 'bg-gradient-to-r from-[#A37F41] via-[#C5A56D] to-[#8A6C37] hover:from-[#8A6C37] hover:via-[#A37F41] hover:to-[#6D552C] shadow-[#A37F41]/20'
             }
             text-white border-2 border-white/20 flex items-center justify-center
             before:absolute before:inset-0 before:rounded-full before:bg-white before:opacity-0 before:transition-opacity before:duration-300 hover:before:opacity-15

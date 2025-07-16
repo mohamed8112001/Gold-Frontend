@@ -1,8 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card.jsx';
-import { 
-  Shield, 
+import {
+  Shield,
   Eye,
   Database,
   UserCheck,
@@ -72,10 +72,10 @@ const PrivacyPolicy = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50/30">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-[#FFF8E6]/30">
       {/* Hero Section */}
       <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-amber-400/10 via-yellow-400/5 to-amber-500/10"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-[#C37C00]/10 via-[#E6A500]/5 to-[#A66A00]/10"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -109,7 +109,7 @@ const PrivacyPolicy = () => {
                 <div>
                   <h3 className="text-lg font-semibold text-blue-900 mb-2">التزامنا بخصوصيتك</h3>
                   <p className="text-blue-800 leading-relaxed">
-                    في منصة دبلة، نحن ملتزمون بحماية خصوصيتك وأمان بياناتك الشخصية. 
+                    في منصة دبلة، نحن ملتزمون بحماية خصوصيتك وأمان بياناتك الشخصية.
                     هذه السياسة توضح كيفية جمع واستخدام وحماية معلوماتك عند استخدام خدماتنا.
                   </p>
                 </div>
@@ -267,7 +267,7 @@ const PrivacyPolicy = () => {
             <p className="text-lg text-gray-600 mb-8">
               إذا كان لديك أي أسئلة حول سياسة الخصوصية، لا تتردد في التواصل معنا
             </p>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
               <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-lg">
                 <CardHeader>
@@ -307,7 +307,7 @@ const PrivacyPolicy = () => {
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-6 mt-8 max-w-4xl mx-auto">
               <h4 className="text-lg font-semibold text-amber-900 mb-3">تحديثات السياسة</h4>
               <p className="text-amber-800 leading-relaxed">
-                قد نقوم بتحديث سياسة الخصوصية من وقت لآخر. سنخطرك بأي تغييرات مهمة عبر البريد الإلكتروني 
+                قد نقوم بتحديث سياسة الخصوصية من وقت لآخر. سنخطرك بأي تغييرات مهمة عبر البريد الإلكتروني
                 أو من خلال إشعار على المنصة. ننصحك بمراجعة هذه الصفحة بانتظام للاطلاع على آخر التحديثات.
               </p>
               <p className="text-amber-800 text-sm mt-4">

@@ -1,8 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card.jsx';
-import { 
-  FileText, 
+import {
+  FileText,
   Scale,
   Users,
   Shield,
@@ -28,7 +28,7 @@ const TermsConditions = () => {
         'دعم العملاء'
       ],
       icon: Users,
-      color: 'from-blue-400 to-blue-600'
+      color: 'from-[#8A6C37] to-[#6D552C]'
     },
     {
       title: 'لأصحاب المحلات',
@@ -41,7 +41,7 @@ const TermsConditions = () => {
         'دعم تقني متخصص'
       ],
       icon: Shield,
-      color: 'from-amber-400 to-yellow-600'
+      color: 'from-[#C5A56D] to-[#A37F41]'
     }
   ];
 
@@ -88,10 +88,10 @@ const TermsConditions = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50/30">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-[#FFF8E6]/30">
       {/* Hero Section */}
       <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-amber-400/10 via-yellow-400/5 to-amber-500/10"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-[#C37C00]/10 via-[#E6A500]/5 to-[#A66A00]/10"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -102,7 +102,7 @@ const TermsConditions = () => {
             <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
               الشروط والأحكام
             </h1>
-            <div className="w-24 h-1 bg-gradient-to-r from-amber-400 to-yellow-500 mx-auto mb-8"></div>
+            <div className="w-24 h-1 bg-gradient-to-r from-[#C37C00] to-[#E6A500] mx-auto mb-8"></div>
             <p className="text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
               القواعد والشروط التي تحكم استخدام منصة دبلة
             </p>
@@ -125,7 +125,7 @@ const TermsConditions = () => {
                 <div>
                   <h3 className="text-lg font-semibold text-blue-900 mb-2">مرحباً بك في منصة دبلة</h3>
                   <p className="text-blue-800 leading-relaxed">
-                    هذه الشروط والأحكام تحكم استخدامك لمنصة دبلة وجميع الخدمات المرتبطة بها. 
+                    هذه الشروط والأحكام تحكم استخدامك لمنصة دبلة وجميع الخدمات المرتبطة بها.
                     يرجى قراءتها بعناية قبل استخدام خدماتنا.
                   </p>
                 </div>
@@ -135,13 +135,13 @@ const TermsConditions = () => {
             <div className="prose prose-gray max-w-none">
               <h3 className="text-xl font-semibold text-gray-900 mb-4">ما هي منصة دبلة؟</h3>
               <p className="text-gray-600 mb-4">
-                دبلة هي منصة إلكترونية تهدف إلى ربط مشتري الذهب والمجوهرات بأصحاب المحلات المعتمدين في مصر. 
+                دبلة هي منصة إلكترونية تهدف إلى ربط مشتري الذهب والمجوهرات بأصحاب المحلات المعتمدين في مصر.
                 نوفر خدمات البحث، المقارنة، حجز المواعيد، والتقييمات لتسهيل عملية الشراء.
               </p>
 
               <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
                 <p className="text-amber-800 text-sm">
-                  <strong>آخر تحديث:</strong> يناير 2024 | 
+                  <strong>آخر تحديث:</strong> يناير 2024 |
                   <strong> سريان المفعول:</strong> هذه الشروط سارية المفعول اعتباراً من تاريخ آخر تحديث
                 </p>
               </div>
@@ -151,7 +151,7 @@ const TermsConditions = () => {
       </section>
 
       {/* Services */}
-      <section className="py-16 bg-gradient-to-br from-slate-100 to-amber-50/50">
+      <section className="py-16 bg-gradient-to-br from-slate-100 to-[#FFF8E6]/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -262,7 +262,7 @@ const TermsConditions = () => {
       </section>
 
       {/* Conduct Rules */}
-      <section className="py-16 bg-gradient-to-br from-slate-100 to-amber-50/50">
+      <section className="py-16 bg-gradient-to-br from-slate-100 to-[#FFF8E6]/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -342,7 +342,7 @@ const TermsConditions = () => {
             <p className="text-lg text-gray-600 mb-8">
               إذا كان لديك أي أسئلة حول الشروط والأحكام، لا تتردد في التواصل معنا
             </p>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
               <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-lg">
                 <CardHeader>
@@ -382,7 +382,7 @@ const TermsConditions = () => {
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-6 mt-8 max-w-4xl mx-auto">
               <h4 className="text-lg font-semibold text-amber-900 mb-3">تحديثات الشروط</h4>
               <p className="text-amber-800 leading-relaxed">
-                نحتفظ بالحق في تحديث هذه الشروط والأحكام من وقت لآخر. سنخطرك بأي تغييرات مهمة عبر البريد الإلكتروني 
+                نحتفظ بالحق في تحديث هذه الشروط والأحكام من وقت لآخر. سنخطرك بأي تغييرات مهمة عبر البريد الإلكتروني
                 أو من خلال إشعار على المنصة. استمرارك في استخدام المنصة بعد التحديثات يعني موافقتك على الشروط الجديدة.
               </p>
               <p className="text-amber-800 text-sm mt-4">

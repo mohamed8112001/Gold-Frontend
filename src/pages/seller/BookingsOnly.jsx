@@ -44,7 +44,7 @@ const BookingsOnly = () => {
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('ar-EG', {
+    return new Date(dateString).toLocaleDateString('en-US', {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
@@ -53,7 +53,7 @@ const BookingsOnly = () => {
   };
 
   const formatTime = (timeString) => {
-    return new Date(`2000-01-01T${timeString}`).toLocaleTimeString('ar-EG', {
+    return new Date(`2000-01-01T${timeString}`).toLocaleTimeString('en-US', {
       hour: '2-digit',
       minute: '2-digit',
       hour12: true
@@ -62,22 +62,22 @@ const BookingsOnly = () => {
 
   const getAppointmentTypeLabel = (type) => {
     const types = {
-      consultation: 'استشارة',
-      viewing: 'معاينة',
-      purchase: 'شراء',
-      repair: 'إصلاح'
+      consultation: 'Consultation',
+      viewing: 'Viewing',
+      purchase: 'Purchase',
+      repair: 'Repair'
     };
-    return types[type] || 'استشارة';
+    return types[type] || 'Consultation';
   };
 
   const getAppointmentTypeColor = (type) => {
     const colors = {
-      consultation: 'bg-blue-100 text-blue-800 border-blue-200',
-      viewing: 'bg-green-100 text-green-800 border-green-200',
-      purchase: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-      repair: 'bg-red-100 text-red-800 border-red-200'
+      consultation: 'bg-[#F0E8DB] text-[#8A6C37] border-[#D3BB92]',
+      viewing: 'bg-[#E2D2B6] text-[#6D552C] border-[#C5A56D]',
+      purchase: 'bg-[#D3BB92] text-[#A37F41] border-[#C5A56D]',
+      repair: 'bg-[#F8F4ED] text-[#49391D] border-[#E2D2B6]'
     };
-    return colors[type] || 'bg-blue-100 text-blue-800 border-blue-200';
+    return colors[type] || 'bg-[#F0E8DB] text-[#8A6C37] border-[#D3BB92]';
   };
 
   // Filter bookings based on search and filters
@@ -114,12 +114,12 @@ const BookingsOnly = () => {
         <div className="mb-8">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">المواعيد المحجوزة</h1>
-              <p className="text-gray-600 mt-2">عرض وإدارة جميع المواعيد المحجوزة من العملاء</p>
+              <h1 className="text-3xl font-bold text-gray-900">Booked Appointments</h1>
+              <p className="text-gray-600 mt-2">View and manage all booked appointments from customers</p>
             </div>
             <div className="flex items-center gap-2">
               <Badge className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white px-4 py-2 text-lg">
-                {bookings.length} موعد محجوز
+                {bookings.length} Booked Appointments
               </Badge>
             </div>
           </div>
@@ -130,20 +130,20 @@ const BookingsOnly = () => {
           <CardHeader className="bg-gradient-to-r from-yellow-50 to-yellow-100">
             <CardTitle className="text-yellow-800 flex items-center gap-2">
               <Filter className="w-5 h-5" />
-              البحث والتصفية
+              Search & Filter
             </CardTitle>
           </CardHeader>
           <CardContent className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  البحث بالاسم أو البريد الإلكتروني
+                  Search by Name or Email
                 </label>
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                   <input
                     type="text"
-                    placeholder="ابحث عن عميل..."
+                    placeholder="Search for customer..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
@@ -152,29 +152,29 @@ const BookingsOnly = () => {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  تصفية بالتاريخ
+                  Filter by Date
                 </label>
                 <input
                   type="date"
                   value={filterDate}
                   onChange={(e) => setFilterDate(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-csk-400 focus:border-csk-400"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#C37C00] focus:border-[#C37C00]"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  نوع الموعد
+                  Appointment Type
                 </label>
                 <select
                   value={filterType}
                   onChange={(e) => setFilterType(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-csk-400 focus:border-csk-400"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#C37C00] focus:border-[#C37C00]"
                 >
-                  <option value="all">جميع الأنواع</option>
-                  <option value="consultation">استشارة</option>
-                  <option value="viewing">معاينة</option>
-                  <option value="purchase">شراء</option>
-                  <option value="repair">إصلاح</option>
+                  <option value="all">All Types</option>
+                  <option value="consultation">Consultation</option>
+                  <option value="viewing">Viewing</option>
+                  <option value="purchase">Purchase</option>
+                  <option value="repair">Repair</option>
                 </select>
               </div>
             </div>
@@ -190,10 +190,10 @@ const BookingsOnly = () => {
                   }}
                   className="text-gray-600 border-gray-300"
                 >
-                  مسح الفلاتر
+                  Clear Filters
                 </Button>
                 <span className="text-sm text-gray-600">
-                  عرض {filteredBookings.length} من {bookings.length} موعد
+                  Showing {filteredBookings.length} of {bookings.length} appointments
                 </span>
               </div>
             )}
@@ -206,7 +206,7 @@ const BookingsOnly = () => {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">إجمالي المواعيد</p>
+                  <p className="text-sm font-medium text-gray-600">Total Appointments</p>
                   <p className="text-3xl font-bold text-green-600">{bookings.length}</p>
                 </div>
                 <div className="p-3 bg-green-100 rounded-full">
@@ -220,7 +220,7 @@ const BookingsOnly = () => {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">استشارات</p>
+                  <p className="text-sm font-medium text-gray-600">Consultations</p>
                   <p className="text-3xl font-bold text-blue-600">
                     {bookings.filter(b => b.appointmentType === 'consultation').length}
                   </p>
@@ -236,7 +236,7 @@ const BookingsOnly = () => {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">مشتريات</p>
+                  <p className="text-sm font-medium text-gray-600">Purchases</p>
                   <p className="text-3xl font-bold text-yellow-600">
                     {bookings.filter(b => b.appointmentType === 'purchase').length}
                   </p>
@@ -252,7 +252,7 @@ const BookingsOnly = () => {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">معاينات</p>
+                  <p className="text-sm font-medium text-gray-600">Viewings</p>
                   <p className="text-3xl font-bold text-purple-600">
                     {bookings.filter(b => b.appointmentType === 'viewing').length}
                   </p>
@@ -268,8 +268,8 @@ const BookingsOnly = () => {
         {/* Bookings List */}
         {loading ? (
           <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-csk-500 mx-auto"></div>
-            <p className="mt-4 text-gray-600">جاري التحميل...</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#C37C00] mx-auto"></div>
+            <p className="mt-4 text-gray-600">Loading...</p>
           </div>
         ) : filteredBookings.length === 0 ? (
           <Card>
@@ -277,12 +277,12 @@ const BookingsOnly = () => {
               <div className="text-center">
                 <XCircle size={64} className="mx-auto text-gray-400 mb-4" />
                 <h3 className="text-xl font-medium text-gray-900 mb-2">
-                  {bookings.length === 0 ? 'لا توجد مواعيد محجوزة' : 'لا توجد نتائج'}
+                  {bookings.length === 0 ? 'No Booked Appointments' : 'No Results Found'}
                 </h3>
                 <p className="text-gray-600">
                   {bookings.length === 0
-                    ? 'ستظهر هنا المواعيد التي يحجزها العملاء'
-                    : 'جرب تغيير معايير البحث أو الفلتر'
+                    ? 'Customer booked appointments will appear here'
+                    : 'Try changing your search criteria or filters'
                   }
                 </p>
               </div>
@@ -291,11 +291,11 @@ const BookingsOnly = () => {
         ) : (
           <div className="space-y-8">
             {sortedDates.map(date => (
-              <Card key={date} className="border-csk-200">
-                <CardHeader className="bg-gradient-csk-light">
-                  <CardTitle className="text-csk-800 flex items-center gap-2">
+              <Card key={date} className="border-[#E2D2B6]">
+                <CardHeader className="bg-gradient-to-r from-[#FFF8E6] to-[#F0E8DB]">
+                  <CardTitle className="text-[#8A6C37] flex items-center gap-2">
                     <Calendar className="w-5 h-5" />
-                    {formatDate(date)} ({groupedBookings[date].length} موعد)
+                    {formatDate(date)} ({groupedBookings[date].length} appointments)
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-6">
@@ -307,7 +307,7 @@ const BookingsOnly = () => {
                           <div className="flex justify-between items-start">
                             <div className="flex-1">
                               <div className="flex items-center gap-4 mb-3">
-                                <div className="flex items-center gap-2 text-csk-600">
+                                <div className="flex items-center gap-2 text-[#C37C00]">
                                   <Clock className="w-4 h-4" />
                                   <span className="font-medium">{formatTime(booking.time)}</span>
                                 </div>
@@ -320,7 +320,7 @@ const BookingsOnly = () => {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
                                   <div className="flex items-center gap-2 text-gray-700">
                                     <User className="w-4 h-4 text-gray-500" />
-                                    <span>{booking.user.name || 'غير محدد'}</span>
+                                    <span>{booking.user.name || 'Not specified'}</span>
                                   </div>
                                   <div className="flex items-center gap-2 text-gray-700">
                                     <Mail className="w-4 h-4 text-gray-500" />
@@ -340,7 +340,7 @@ const BookingsOnly = () => {
                                   <div className="flex items-start gap-2">
                                     <MessageSquare className="w-4 h-4 text-gray-500 mt-0.5" />
                                     <div>
-                                      <p className="text-sm font-medium text-gray-700 mb-1">ملاحظات العميل:</p>
+                                      <p className="text-sm font-medium text-gray-700 mb-1">Customer Notes:</p>
                                       <p className="text-sm text-gray-600">{booking.notes}</p>
                                     </div>
                                   </div>
