@@ -463,9 +463,9 @@ const ShopDetails = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-[#F8F4ED] via-white to-[#F0E8DB] pt-20">
-            <div className="w-full px-4 sm:px-6 lg:px-8 py-6">
+            <div className="w-full px-0 py-6">
                 {/* Enhanced Breadcrumb */}
-                <div className="flex items-center gap-2 text-sm text-gray-600 mb-8">
+                <div className="flex items-center gap-2 text-sm text-gray-600 mb-8 px-4 sm:px-6 lg:px-8">
                     <Button
                         variant="ghost"
                         size="sm"
@@ -484,7 +484,7 @@ const ShopDetails = () => {
                 </div>
 
                 {/* Enhanced Shop Header */}
-                <div className="bg-white rounded-2xl shadow-xl mb-8 overflow-hidden mx-4 lg:mx-8">
+                <div className="bg-white shadow-xl mb-8 overflow-hidden">
                     {/* Enhanced Hero Section */}
                     <div className="relative h-80 md:h-[500px] overflow-hidden">
                         <img
@@ -732,7 +732,7 @@ const ShopDetails = () => {
                 </div>
 
                 {/* Enhanced Shop Content Tabs */}
-                <div className="bg-white rounded-2xl shadow-xl overflow-hidden mx-4 lg:mx-8">
+                <div className="bg-white shadow-xl overflow-hidden">
                     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                         <TabsList className="grid w-full grid-cols-4 bg-gradient-to-r from-[#F8F4ED] to-[#F0E8DB] p-3 rounded-none h-auto border-b border-[#E2D2B6]/30">
                             <TabsTrigger
@@ -765,7 +765,7 @@ const ShopDetails = () => {
                             </TabsTrigger>
                         </TabsList>
 
-                        <TabsContent value="products" className="p-6 lg:p-8">
+                        <TabsContent value="products" className="px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
                             <div className="flex items-center justify-between mb-10">
                                 <div>
                                     <h2 className="text-4xl font-bold text-gray-900 mb-3">Shop Products</h2>
@@ -837,7 +837,7 @@ const ShopDetails = () => {
                             )}
                         </TabsContent>
 
-                        <TabsContent value="reviews" className="p-8">
+                        <TabsContent value="reviews" className="px-4 sm:px-6 lg:px-8 py-8">
                             <div className="mb-8">
                                 <h2 className="text-3xl font-bold text-gray-900 mb-2">تقييمات العملاء</h2>
                                 <p className="text-gray-600">اقرأ آراء عملائنا وتجاربهم معنا</p>
@@ -916,7 +916,7 @@ const ShopDetails = () => {
                             )}
                         </TabsContent>
 
-                        <TabsContent value="location" className="p-8">
+                        <TabsContent value="location" className="px-4 sm:px-6 lg:px-8 py-8">
                             <div className="mb-8">
                                 <h2 className="text-3xl font-bold text-gray-900 mb-2">موقع المتجر</h2>
                                 <p className="text-gray-600">اعثر على المتجر واحصل على الاتجاهات</p>
@@ -933,7 +933,7 @@ const ShopDetails = () => {
                             />
                         </TabsContent>
 
-                        <TabsContent value="gallery" className="p-8">
+                        <TabsContent value="gallery" className="px-4 sm:px-6 lg:px-8 py-8">
                             <div className="flex items-center justify-between mb-12">
                                 <div>
                                     <h2 className="text-4xl font-bold text-gray-900 mb-3">معرض صور المتجر</h2>

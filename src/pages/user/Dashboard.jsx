@@ -565,7 +565,7 @@ const Dashboard = () => {
               <Button className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white" onClick={() => navigate(ROUTES.CREATE_PRODUCT)}>
                 <Plus className="w-4 h-4 mr-2" />
                 Add a new product              </Button>
-              <Button variant="outline" className="w-full border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6]">
+              <Button variant="outline" className="w-full border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6]" onClick={() => navigate(ROUTES.MANAGE_SHOP)}>
                 <Package className="w-4 h-4 mr-2" />
                 Product management              </Button>
             </div>
