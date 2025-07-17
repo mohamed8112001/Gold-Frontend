@@ -20,6 +20,7 @@ import FloatingChat from '../components/ui/FloatingChat.jsx';
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import { useTranslation } from 'react-i18next';
+import ConversationsFloatinButton from '@/components/ui/ConversationsFloatinButton.jsx';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -907,49 +908,10 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Floating Chat Component
+      <FloatingChat /> */}
 
-      {/* Admin Access Section */}
-      {/* <section className="py-8 bg-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">
-              Admin Access
-            </h3>
-            <div className="flex justify-center gap-4 flex-wrap">
-              <Button
-                onClick={() => navigate('/demo-login')}
-                className="bg-yellow-600 hover:bg-yellow-700 text-white font-medium"
-              >
-
-                Demo Login (Quick Access)
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => navigate('/admin/create')}
-                className="border-red-600 text-red-600 hover:bg-red-600 hover:text-white"
-              >
-
-                Create Admin Account
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => navigate('/admin/promote')}
-                className="border-red-600 text-red-600 hover:bg-red-600 hover:text-white"
-              >
-
-                Promote to Admin
-              </Button>
-            </div>
-            <p className="text-xs text-gray-500 mt-2">
-              Admin Key: DIBLA_ADMIN_2024
-            </p>
-          </div>
-        </div>
-      </section> */}
-
-      {/* Floating Chat Component */}
-      <FloatingChat />
-
+      <ConversationsFloatinButton />
     </motion.div>
   );
 };

@@ -1,16 +1,17 @@
-import React from 'react';
-import { Bot, X } from 'lucide-react';
+import { MessagesSquare } from 'lucide-react';
 import { Button } from './button.jsx';
 
-const FloatingChatButton = ({ isOpen, onClick, unreadCount }) => {
+
+
+
+function ConversationsFloatinButton({ isOpen, onClick, unreadCount }) {
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed bottom-6 right-12 z-50">
       <div className="relative">
-        {/* Pulsing ring animation when closed */}
         {!isOpen && (
           <>
-            <div className="absolute inset-0 bg-yellow-400 rounded-full animate-ping opacity-30"></div>
-            <div className="absolute inset-0 bg-yellow-500 rounded-full animate-pulse opacity-20"></div>
+            <div className="absolute inset-0 bg-yellow-400 rounded-full opacity-30"></div>
+            <div className="absolute inset-0 bg-yellow-500 rounded-full opacity-20"></div>
           </>
         )}
 
@@ -32,7 +33,7 @@ const FloatingChatButton = ({ isOpen, onClick, unreadCount }) => {
               <X className="w-8 h-8 drop-shadow-lg" />
             ) : (
               <div className="flex items-center justify-center">
-                <Bot className="w-8 h-8 drop-shadow-lg" />
+                <MessagesSquare className="w-8 h-8 drop-shadow-lg" />
               </div>
             )}
           </div>
@@ -62,6 +63,6 @@ const FloatingChatButton = ({ isOpen, onClick, unreadCount }) => {
       </div>
     </div>
   );
-};
+}
 
-export default FloatingChatButton;
+export default ConversationsFloatinButton
