@@ -359,8 +359,8 @@ const AdminDashboard = () => {
             <button
               onClick={() => setActiveTab('overview')}
               className={`w-full flex items-center px-4 py-3 rounded-xl text-left transition-all duration-200 ${activeTab === 'overview'
-                ? 'bg-gradient-to-r from-yellow-500 to-amber-600 text-white shadow-lg'
-                : 'text-gray-700 hover:bg-yellow-50'
+                ? 'bg-gradient-to-r from-[#A37F41] to-[#8A6C37] text-white shadow-lg'
+                : 'text-gray-700 hover:bg-[#F8F4ED]'
                 }`}
             >
               <TrendingUp className="w-5 h-5 mr-3" />
@@ -370,15 +370,15 @@ const AdminDashboard = () => {
             <button
               onClick={() => setActiveTab('pending')}
               className={`w-full flex items-center px-4 py-3 rounded-xl text-left transition-all duration-200 ${activeTab === 'pending'
-                ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg'
-                : 'text-gray-700 hover:bg-yellow-50'
+                ? 'bg-gradient-to-r from-[#C5A56D] to-[#A37F41] text-white shadow-lg'
+                : 'text-gray-700 hover:bg-[#F8F4ED]'
                 }`}
             >
               <Clock className="w-5 h-5 mr-3" />
               <div className="flex items-center justify-between w-full">
                 <span className="font-medium">Pending Requests</span>
                 {stats.pendingShops > 0 && (
-                  <span className={`px-2 py-1 rounded-full text-xs font-bold ${activeTab === 'pending' ? 'bg-white/20' : 'bg-amber-100 text-amber-800'
+                  <span className={`px-2 py-1 rounded-full text-xs font-bold ${activeTab === 'pending' ? 'bg-white/20' : 'bg-[#F0E8DB] text-[#A37F41]'
                     }`}>
                     {stats.pendingShops}
                   </span>
@@ -601,7 +601,7 @@ const AdminDashboard = () => {
 
                   {/* Enhanced Quick Actions */}
                   <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
-                    <CardHeader className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-6">
+                    <CardHeader className="bg-gradient-to-r from-[#A37F41] to-[#8A6C37] text-white p-6">
                       <CardTitle className="flex items-center text-xl font-semibold">
                         <TrendingUp className="w-5 h-5 mr-3" />
                         Quick Actions
@@ -609,7 +609,7 @@ const AdminDashboard = () => {
                     </CardHeader>
                     <CardContent className="p-6 space-y-4">
                       <Button
-                        className="w-full justify-start bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-lg hover:shadow-xl transition-all duration-200 py-3 rounded-xl"
+                        className="w-full justify-start bg-gradient-to-r from-[#C5A56D] to-[#A37F41] hover:from-[#A37F41] hover:to-[#8A6C37] text-white shadow-lg hover:shadow-xl transition-all duration-200 py-3 rounded-xl"
                         onClick={() => setActiveTab('pending')}
                         disabled={stats.pendingShops === 0}
                       >
@@ -617,14 +617,14 @@ const AdminDashboard = () => {
                         Review Pending Requests ({stats.pendingShops})
                       </Button>
                       <Button
-                        className="w-full justify-start bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white shadow-lg hover:shadow-xl transition-all duration-200 py-3 rounded-xl"
+                        className="w-full justify-start bg-gradient-to-r from-[#8A6C37] to-[#6D552C] hover:from-[#6D552C] hover:to-[#49391D] text-white shadow-lg hover:shadow-xl transition-all duration-200 py-3 rounded-xl"
                         onClick={() => setActiveTab('shops')}
                       >
                         <Store className="w-5 h-5 mr-3" />
                         Manage All Stores ({stats.totalShops})
                       </Button>
                       <Button
-                        className="w-full justify-start bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-lg hover:shadow-xl transition-all duration-200 py-3 rounded-xl"
+                        className="w-full justify-start bg-gradient-to-r from-[#D3BB92] to-[#C5A56D] hover:from-[#C5A56D] hover:to-[#A37F41] text-white shadow-lg hover:shadow-xl transition-all duration-200 py-3 rounded-xl"
                         onClick={loadAdminData}
                       >
                         <RefreshCw className="w-5 h-5 mr-3" />
@@ -648,10 +648,10 @@ const AdminDashboard = () => {
               <div className="space-y-8">
                 <div className="bg-white rounded-2xl shadow-lg border border-white/20 p-6">
                   <div className="flex items-center justify-between">
-                    <h2 className="text-2xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
+                    <h2 className="text-2xl font-bold bg-gradient-to-r from-[#A37F41] to-[#8A6C37] bg-clip-text text-transparent">
                       Pending Requests
                     </h2>
-                    <Badge className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-4 py-2 text-sm font-medium">
+                    <Badge className="bg-gradient-to-r from-[#C5A56D] to-[#A37F41] text-white px-4 py-2 text-sm font-medium">
                       {stats.pendingShops} Requests Waiting
                     </Badge>
                   </div>

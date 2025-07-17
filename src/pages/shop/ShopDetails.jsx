@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button.jsx';
 import { Card, CardContent } from '@/components/ui/card.jsx';
 import { Badge } from '@/components/ui/badge.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
-import {FaPhone, FaWhatsapp} from 'react-icons/fa';
+import { FaPhone, FaWhatsapp } from 'react-icons/fa';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.jsx';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar.jsx';
 import { Separator } from '@/components/ui/separator.jsx';
@@ -343,7 +343,7 @@ const ShopDetails = () => {
 
                     {/* Status Badge */}
                     <Badge
-                        className="absolute top-3 left-3 bg-green-500 hover:bg-green-600 text-white opacity-0 group-hover:opacity-100 transition-all duration-300"
+                        className="absolute top-3 left-3 bg-[#6D552C] hover:bg-[#8A6C37] text-white opacity-0 group-hover:opacity-100 transition-all duration-300"
                     >
                         Available
                     </Badge>
@@ -352,7 +352,7 @@ const ShopDetails = () => {
                 <CardContent className="p-5 flex-1 flex flex-col">
                     <div className="space-y-3 flex-1">
                         <div className="space-y-2">
-                            <h3 className="font-bold text-lg text-gray-900 group-hover:text-yellow-600 transition-colors duration-300 line-clamp-2 leading-tight min-h-[56px]">
+                            <h3 className="font-bold text-lg text-gray-900 group-hover:text-[#A37F41] transition-colors duration-300 line-clamp-2 leading-tight min-h-[56px]">
                                 {product.name || product.title || 'Untitled Product'}
                             </h3>
 
@@ -364,13 +364,13 @@ const ShopDetails = () => {
                         </div>
 
                         <div className="flex items-center justify-center py-2">
-                            <div className="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-full">
+                            <div className="flex items-center gap-2 bg-[#F8F4ED] px-4 py-2 rounded-full border border-[#E2D2B6]/50">
                                 <div className="flex">
                                     {[...Array(5)].map((_, i) => (
                                         <Star
                                             key={i}
                                             className={`w-4 h-4 ${i < Math.floor(product.rating || 0)
-                                                ? 'fill-yellow-400 text-yellow-400'
+                                                ? 'fill-[#A37F41] text-[#A37F41]'
                                                 : 'text-gray-300'
                                                 }`}
                                         />
@@ -389,7 +389,7 @@ const ShopDetails = () => {
                     <div className="mt-auto pt-3 border-t border-gray-100">
                         <Button
                             size="sm"
-                            className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white rounded-full py-2.5 text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                            className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-full py-2.5 text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
                             onClick={(e) => {
                                 e.stopPropagation();
                                 if (productId) {
@@ -408,9 +408,9 @@ const ShopDetails = () => {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+            <div className="min-h-screen bg-gradient-to-br from-[#F8F4ED] to-[#F0E8DB] flex items-center justify-center">
                 <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600 mx-auto mb-4"></div>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#A37F41] mx-auto mb-4"></div>
                     <p className="text-gray-600">Loading shop details...</p>
                 </div>
             </div>
@@ -419,7 +419,7 @@ const ShopDetails = () => {
 
     if (!shop) {
         return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+            <div className="min-h-screen bg-gradient-to-br from-[#F8F4ED] to-[#F0E8DB] flex items-center justify-center">
                 <div className="text-center">
                     <div className="text-6xl mb-4">🏪</div>
                     <h2 className="text-2xl font-bold text-gray-900 mb-2">Shop Not Available</h2>
@@ -462,10 +462,10 @@ const ShopDetails = () => {
 
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 pt-20">
-            <div className="w-full px-4 sm:px-6 lg:px-8 py-6">
+        <div className="min-h-screen bg-gradient-to-br from-[#F8F4ED] via-white to-[#F0E8DB] pt-20">
+            <div className="w-full px-0 py-6">
                 {/* Enhanced Breadcrumb */}
-                <div className="flex items-center gap-2 text-sm text-gray-600 mb-8">
+                <div className="flex items-center gap-2 text-sm text-gray-600 mb-8 px-4 sm:px-6 lg:px-8">
                     <Button
                         variant="ghost"
                         size="sm"
@@ -476,7 +476,7 @@ const ShopDetails = () => {
                         {t('buttons.back', 'Back')}
                     </Button>
                     <Separator orientation="vertical" className="h-4" />
-                    <span onClick={() => navigate(ROUTES.SHOPS)} className="cursor-pointer hover:text-yellow-600 transition-colors">
+                    <span onClick={() => navigate(ROUTES.SHOPS)} className="cursor-pointer hover:text-[#A37F41] transition-colors">
                         {t('stores', 'Shops')}
                     </span>
                     <span className="text-gray-400">/</span>
@@ -484,7 +484,7 @@ const ShopDetails = () => {
                 </div>
 
                 {/* Enhanced Shop Header */}
-                <div className="bg-white rounded-2xl shadow-xl mb-8 overflow-hidden mx-4 lg:mx-8">
+                <div className="bg-white shadow-xl mb-8 overflow-hidden">
                     {/* Enhanced Hero Section */}
                     <div className="relative h-80 md:h-[500px] overflow-hidden">
                         <img
@@ -529,7 +529,7 @@ const ShopDetails = () => {
                                     <div className="flex items-center gap-3 mb-3">
                                         <h1 className="text-4xl md:text-5xl font-bold">{safeShop.name}</h1>
                                         {safeShop.verified && (
-                                            <Badge className="bg-green-500 hover:bg-green-600 flex items-center gap-1">
+                                            <Badge className="bg-[#6D552C] hover:bg-[#8A6C37] flex items-center gap-1">
                                                 <Verified className="w-3 h-3" />
                                                 متجر موثق
                                             </Badge>
@@ -542,7 +542,7 @@ const ShopDetails = () => {
                                                     <Star
                                                         key={i}
                                                         className={`w-5 h-5 ${i < Math.floor(safeShop.rating)
-                                                            ? 'fill-yellow-400 text-yellow-400'
+                                                            ? 'fill-[#C5A56D] text-[#C5A56D]'
                                                             : 'text-white/40'
                                                             }`}
                                                     />
@@ -566,7 +566,7 @@ const ShopDetails = () => {
 
                                         </div>
 
-                                        
+
                                     </div>
                                 </div>
                             </div>
@@ -577,13 +577,13 @@ const ShopDetails = () => {
                     <div className="p-8">
                         {/* Contact Information Cards */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-                            <Card className="border-0 bg-gradient-to-r from-blue-50 to-blue-100 hover:shadow-lg transition-shadow rounded-2xl">
+                            <Card className="border-0 bg-gradient-to-r from-[#F0E8DB] to-[#E2D2B6] hover:shadow-lg transition-shadow rounded-2xl">
                                 <CardContent className="p-6 flex items-center gap-4">
-                                    <div className="p-3 bg-blue-500 rounded-full">
+                                    <div className="p-3 bg-[#C37C00] rounded-full">
                                         <MapPin className="w-6 h-6 text-white" />
                                     </div>
                                     <div>
-                                        <p className="text-sm text-blue-600 font-medium mb-1">{t('shop_details.address')}</p>
+                                        <p className="text-sm text-[#C37C00] font-medium mb-1">{t('shop_details.address')}</p>
                                         <p className="text-gray-800 font-semibold text-base">{safeShop.address}</p>
                                     </div>
                                 </CardContent>
@@ -610,19 +610,19 @@ const ShopDetails = () => {
 
 
 
-                            <Card className="border-0 bg-gradient-to-r from-green-50 to-green-100 hover:shadow-lg transition-shadow rounded-2xl">
+                            <Card className="border-0 bg-gradient-to-r from-[#F8F4ED] to-[#F0E8DB] hover:shadow-lg transition-shadow rounded-2xl">
                                 <CardContent className="p-6 flex items-center gap-4">
-                                    <div className="p-3 bg-green-500 rounded-full">
+                                    <div className="p-3 bg-[#C37C00] rounded-full">
                                         <FaWhatsapp className="w-6 h-6 text-white" />
                                     </div>
                                     <div>
-                                        <p className="text-sm text-green-600 font-medium mb-1">WhatsApp</p>
+                                        <p className="text-sm text-[#8A6C37] font-medium mb-1">WhatsApp</p>
                                         <p className="text-gray-800 font-semibold text-base">
                                             <a
                                                 href={`https://wa.me/${safeShop.phone}`}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="hover:text-green-600 transition-colors"
+                                                className="hover:text-[#A37F41] transition-colors"
                                             >
                                                 {safeShop.phone}
                                             </a>
@@ -630,20 +630,20 @@ const ShopDetails = () => {
                                     </div>
                                 </CardContent>
                             </Card>
-                            {safeShop.whatsapp && (
-                                <Card className="border-0 bg-gradient-to-r from-green-50 to-green-100 hover:shadow-lg transition-shadow rounded-2xl">
+                            {/* {safeShop.whatsapp && (
+                                <Card className="border-0 bg-gradient-to-r from-[#F8F4ED] to-[#F0E8DB] hover:shadow-lg transition-shadow rounded-2xl">
                                     <CardContent className="p-6 flex items-center gap-4">
-                                        <div className="p-3 bg-green-500 rounded-full">
+                                        <div className="p-3 bg-[#A37F41] rounded-full">
                                             <WhatsAppIcon className="w-6 h-6 text-white" />
                                         </div>
                                         <div>
-                                            <p className="text-sm text-green-600 font-medium mb-1">{t('shop_details.whatsapp')}</p>
+                                            <p className="text-sm text-[#8A6C37] font-medcdium mb-1">{t('shop_details.whatsapp')}</p>
                                             <p className="text-gray-800 font-semibold text-base">
                                                 <a
                                                     href={`https://wa.me/${safeShop.whatsapp.replace(/[^0-9]/g, '')}`}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="hover:text-green-600 transition-colors"
+                                                    className="hover:text-[#A37F41] transition-colors"
                                                 >
                                                     {safeShop.whatsapp}
                                                 </a>
@@ -651,7 +651,7 @@ const ShopDetails = () => {
                                         </div>
                                     </CardContent>
                                 </Card>
-                            )}
+                            )} */}
 
 
 
@@ -671,7 +671,7 @@ const ShopDetails = () => {
                         {/* Description */}
                         <div className="mb-10">
                             <h3 className="text-2xl font-bold text-gray-900 mb-6">{t('shop_details.about_shop')}</h3>
-                            <p className="text-gray-700 leading-relaxed text-xl bg-gray-50 p-6 rounded-2xl">
+                            <p className="text-gray-700 leading-relaxed text-xl bg-gradient-to-br from-[#F8F4ED] to-[#F0E8DB] p-6 rounded-2xl border border-[#E2D2B6]/30">
                                 {safeShop.description}
                             </p>
 
@@ -683,7 +683,7 @@ const ShopDetails = () => {
                                 <Button
                                     size="lg"
                                     onClick={handleBookAppointment}
-                                    className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-10 py-4 rounded-full font-bold text-lg shadow-xl hover:shadow-2xl transition-all"
+                                    className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-10 py-4 rounded-full font-bold text-lg shadow-xl hover:shadow-2xl transition-all"
                                 >
                                     <Calendar className="w-6 h-6 mr-3" />
                                     {t('shop_details.book_appointment')}
@@ -693,7 +693,7 @@ const ShopDetails = () => {
                                         size="lg"
                                         variant="outline"
                                         onClick={() => navigate(`/shops/${safeShop._id || safeShop.id}/chat`)}
-                                        className="border-2 border-blue-400 text-blue-700 hover:bg-blue-50 hover:border-blue-600 hover:text-blue-800 px-10 py-4 rounded-full font-bold text-lg shadow-xl hover:shadow-2xl transition-all"
+                                        className="border-2 border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] hover:border-[#A66A00] hover:text-[#A66A00] px-10 py-4 rounded-full font-bold text-lg shadow-xl hover:shadow-2xl transition-all"
                                     >
                                         <Bot className="w-6 h-6 mr-3" />
                                         {t('shop_details.chat_with_store')}
@@ -704,14 +704,14 @@ const ShopDetails = () => {
                             {/* Stats */}
                             <div className="flex gap-10">
                                 <div className="text-center">
-                                    <div className="flex items-center justify-center w-16 h-16 bg-yellow-500 rounded-full mb-3 shadow-lg">
+                                    <div className="flex items-center justify-center w-16 h-16 bg-[#C37C00] rounded-full mb-3 shadow-lg">
                                         <ShoppingBag className="w-8 h-8 text-white" />
                                     </div>
                                     <div className="text-3xl font-bold text-gray-900">{safeProducts.length}</div>
                                     <div className="text-base text-gray-600 font-medium">{t('shop_details.products')}</div>
                                 </div>
                                 <div className="text-center">
-                                    <div className="flex items-center justify-center w-16 h-16 bg-blue-500 rounded-full mb-3 shadow-lg">
+                                    <div className="flex items-center justify-center w-16 h-16 bg-[#A66A00] rounded-full mb-3 shadow-lg">
                                         <Users className="w-8 h-8 text-white" />
                                     </div>
                                     <div className="text-3xl font-bold text-gray-900">
@@ -720,7 +720,7 @@ const ShopDetails = () => {
                                     <div className="text-base text-gray-600 font-medium">{t('shop_details.customers')}</div>
                                 </div>
                                 <div className="text-center">
-                                    <div className="flex items-center justify-center w-16 h-16 bg-green-500 rounded-full mb-3 shadow-lg">
+                                    <div className="flex items-center justify-center w-16 h-16 bg-[#8A5700] rounded-full mb-3 shadow-lg">
                                         <Star className="w-8 h-8 text-white" />
                                     </div>
                                     <div className="text-3xl font-bold text-gray-900">{safeReviews.length}</div>
@@ -732,9 +732,9 @@ const ShopDetails = () => {
                 </div>
 
                 {/* Enhanced Shop Content Tabs */}
-                <div className="bg-white rounded-2xl shadow-xl overflow-hidden mx-4 lg:mx-8">
+                <div className="bg-white shadow-xl overflow-hidden">
                     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                        <TabsList className="grid w-full grid-cols-4 bg-gray-50 p-3 rounded-none h-auto">
+                        <TabsList className="grid w-full grid-cols-4 bg-gradient-to-r from-[#F8F4ED] to-[#F0E8DB] p-3 rounded-none h-auto border-b border-[#E2D2B6]/30">
                             <TabsTrigger
                                 value="products"
                                 className="data-[state=active]:bg-white data-[state=active]:shadow-lg rounded-2xl py-5 px-8 font-bold text-lg transition-all"
@@ -765,19 +765,19 @@ const ShopDetails = () => {
                             </TabsTrigger>
                         </TabsList>
 
-                        <TabsContent value="products" className="p-6 lg:p-8">
+                        <TabsContent value="products" className="px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
                             <div className="flex items-center justify-between mb-10">
                                 <div>
                                     <h2 className="text-4xl font-bold text-gray-900 mb-3">Shop Products</h2>
                                     <p className="text-gray-600 text-lg">Discover our exclusive collection</p>
                                 </div>
                                 <div className="flex items-center gap-4">
-                                    <div className="flex bg-gray-100 rounded-full p-2">
+                                    <div className="flex bg-[#F0E8DB] rounded-full p-2 border border-[#E2D2B6]/50">
                                         <Button
                                             variant={viewMode === 'grid' ? 'default' : 'ghost'}
                                             size="lg"
                                             onClick={() => setViewMode('grid')}
-                                            className={`rounded-full px-6 py-3 font-semibold ${viewMode === 'grid' ? 'bg-white shadow-lg' : 'hover:bg-gray-200'}`}
+                                            className={`rounded-full px-6 py-3 font-semibold ${viewMode === 'grid' ? 'bg-white shadow-lg text-[#8A6C37]' : 'hover:bg-[#E2D2B6] text-gray-600'}`}
                                         >
                                             <Grid className="w-5 h-5 mr-2" />
                                             Grid
@@ -786,7 +786,7 @@ const ShopDetails = () => {
                                             variant={viewMode === 'list' ? 'default' : 'ghost'}
                                             size="lg"
                                             onClick={() => setViewMode('list')}
-                                            className={`rounded-full px-6 py-3 font-semibold ${viewMode === 'list' ? 'bg-white shadow-lg' : 'hover:bg-gray-200'}`}
+                                            className={`rounded-full px-6 py-3 font-semibold ${viewMode === 'list' ? 'bg-white shadow-lg text-[#8A6C37]' : 'hover:bg-[#E2D2B6] text-gray-600'}`}
                                         >
                                             <List className="w-5 h-5 mr-2" />
                                             List
@@ -813,7 +813,7 @@ const ShopDetails = () => {
                                     </div>
                                 </div>
                             ) : (
-                                <div className="text-center py-12 bg-gray-50 rounded-lg">
+                                <div className="text-center py-12 bg-gradient-to-br from-[#F8F4ED] to-[#F0E8DB] rounded-lg border border-[#E2D2B6]/30">
                                     <div className="text-6xl mb-4">📦</div>
                                     <h3 className="text-xl font-medium text-gray-900 mb-2">
                                         لا توجد منتجات في هذا المتجر
@@ -837,7 +837,7 @@ const ShopDetails = () => {
                             )}
                         </TabsContent>
 
-                        <TabsContent value="reviews" className="p-8">
+                        <TabsContent value="reviews" className="px-4 sm:px-6 lg:px-8 py-8">
                             <div className="mb-8">
                                 <h2 className="text-3xl font-bold text-gray-900 mb-2">تقييمات العملاء</h2>
                                 <p className="text-gray-600">اقرأ آراء عملائنا وتجاربهم معنا</p>
@@ -851,7 +851,7 @@ const ShopDetails = () => {
                                                 <div className="flex items-start gap-4">
                                                     <Avatar className="w-12 h-12 border-2 border-gray-200">
                                                         <AvatarImage src={review.userAvatar} />
-                                                        <AvatarFallback className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-white font-bold">
+                                                        <AvatarFallback className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] text-white font-bold">
                                                             {review.userName?.charAt(0) || 'ع'}
                                                         </AvatarFallback>
                                                     </Avatar>
@@ -861,13 +861,13 @@ const ShopDetails = () => {
                                                             <div className="flex items-center gap-3">
                                                                 <span className="font-bold text-lg text-gray-900">{review.userName}</span>
                                                                 {review.verified && (
-                                                                    <Badge className="bg-green-100 text-green-700 border-green-200">
+                                                                    <Badge className="bg-[#F0E8DB] text-[#6D552C] border-[#E2D2B6]">
                                                                         <Verified className="w-3 h-3 mr-1" />
                                                                         عميل موثق
                                                                     </Badge>
                                                                 )}
                                                             </div>
-                                                            <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                                                            <span className="text-sm text-gray-500 bg-[#F0E8DB] px-3 py-1 rounded-full border border-[#E2D2B6]/50">
                                                                 {review.date}
                                                             </span>
                                                         </div>
@@ -878,7 +878,7 @@ const ShopDetails = () => {
                                                                     <Star
                                                                         key={i}
                                                                         className={`w-5 h-5 ${i < review.rating
-                                                                            ? 'fill-yellow-400 text-yellow-400'
+                                                                            ? 'fill-[#A37F41] text-[#A37F41]'
                                                                             : 'text-gray-300'
                                                                             }`}
                                                                     />
@@ -908,7 +908,7 @@ const ShopDetails = () => {
                                         كن أول من يقيم هذا المتجر ويشارك تجربته
                                     </p>
                                     <Button
-                                        className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-8 py-3 rounded-full font-semibold"
+                                        className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-8 py-3 rounded-full font-semibold"
                                     >
                                         اكتب تقييماً
                                     </Button>
@@ -916,7 +916,7 @@ const ShopDetails = () => {
                             )}
                         </TabsContent>
 
-                        <TabsContent value="location" className="p-8">
+                        <TabsContent value="location" className="px-4 sm:px-6 lg:px-8 py-8">
                             <div className="mb-8">
                                 <h2 className="text-3xl font-bold text-gray-900 mb-2">موقع المتجر</h2>
                                 <p className="text-gray-600">اعثر على المتجر واحصل على الاتجاهات</p>
@@ -933,7 +933,7 @@ const ShopDetails = () => {
                             />
                         </TabsContent>
 
-                        <TabsContent value="gallery" className="p-8">
+                        <TabsContent value="gallery" className="px-4 sm:px-6 lg:px-8 py-8">
                             <div className="flex items-center justify-between mb-12">
                                 <div>
                                     <h2 className="text-4xl font-bold text-gray-900 mb-3">معرض صور المتجر</h2>
@@ -993,7 +993,7 @@ const ShopDetails = () => {
                                                             <p className="font-bold text-lg mb-1">{imageName}</p>
                                                             <p className="text-sm text-white/80">اضغط للعرض بالحجم الكامل</p>
                                                             {isLocalImage && (
-                                                                <p className="text-xs text-yellow-300 mt-1">محفوظة محلياً</p>
+                                                                <p className="text-xs text-[#C5A56D] mt-1">محفوظة محلياً</p>
                                                             )}
                                                         </div>
 
@@ -1059,7 +1059,7 @@ const ShopDetails = () => {
 
         </div>
 
-        
+
     );
 };
 

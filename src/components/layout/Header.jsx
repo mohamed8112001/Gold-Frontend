@@ -75,71 +75,81 @@ const Header = () => {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-xl shadow-lg border-b border-yellow-200/30 z-50 transition-all duration-300 ${isVisible ? 'translate-y-0' : '-translate-y-full'
+        className={`fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-xl shadow-lg border-b border-[#FFE6B3]/30 z-50 transition-all duration-300 ${isVisible ? 'translate-y-0' : '-translate-y-full'
           }`}
         dir="ltr"
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-yellow-50/20 via-white/40 to-yellow-50/20"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-[#FFF8E6]/20 via-white/40 to-[#FFF8E6]/20"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             {/* Enhanced Logo */}
             <Link to="/" className="flex items-center group relative">
               <div className="flex items-center space-x-4">
                 <div className="relative">
-                  <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-600 rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-300 transform group-hover:scale-105 group-hover:rotate-3"></div>
-                  <div className="absolute inset-0 rounded-2xl border-2 border-white/30"></div>
-                  <div className="absolute inset-2 bg-white/20 rounded-xl"></div>
+                  <img
+                    src="/logo.webp"
+                    alt="Dibla Logo"
+                    className="w-12 h-12 rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-300 transform group-hover:scale-105 group-hover:rotate-3 object-cover"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'block';
+                    }}
+                  />
+                  <div className="w-12 h-12 bg-gradient-to-br from-[#A37F41] via-[#C5A56D] to-[#8A6C37] rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-300 transform group-hover:scale-105 group-hover:rotate-3 hidden">
+                    <div className="absolute inset-0 rounded-2xl border-2 border-white/30"></div>
+                    <div className="absolute inset-2 bg-white/20 rounded-xl"></div>
+                  </div>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-3xl font-black bg-gradient-to-r from-yellow-600 via-yellow-500 to-amber-600 bg-clip-text text-transparent tracking-wide group-hover:tracking-wider transition-all duration-300">
+                  <span className="text-3xl font-black bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] bg-clip-text text-transparent tracking-wide group-hover:tracking-wider transition-all duration-300">
                     Dibla
                   </span>
-                  <span className="text-xs text-gray-600 font-semibold tracking-widest uppercase group-hover:text-yellow-600 transition-all duration-300">
+                  <span className="text-xs text-[#8A5700] font-semibold tracking-widest uppercase group-hover:text-[#C37C00] transition-all duration-300">
                     Premium Gold
                   </span>
                 </div>
               </div>
-              <div className="absolute -inset-2 bg-gradient-to-r from-yellow-400/0 via-yellow-400/5 to-yellow-400/0 rounded-2xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+              <div className="absolute -inset-2 bg-gradient-to-r from-[#C37C00]/0 via-[#C37C00]/5 to-[#C37C00]/0 rounded-2xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
             </Link>
 
             {/* Clean Desktop Navigation */}
             <nav className="hidden lg:flex items-center space-x-8" dir="ltr">
               <Link
                 to="/home"
-                className="relative text-gray-700 hover:text-yellow-600 font-medium text-lg transition-all duration-300 group px-3 py-2"
+                className="relative text-[#8A5700] hover:text-[#C37C00] font-medium text-lg transition-all duration-300 group px-3 py-2"
               >
                 <span className="relative z-10">{t('home')}</span>
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-yellow-400 to-yellow-600 group-hover:w-full transition-all duration-300"></span>
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-[#C37C00] to-[#A66A00] group-hover:w-full transition-all duration-300"></span>
               </Link>
               <Link
                 to="/shops"
-                className="relative text-gray-700 hover:text-yellow-600 font-medium text-lg transition-all duration-300 group px-3 py-2"
+                className="relative text-[#8A5700] hover:text-[#C37C00] font-medium text-lg transition-all duration-300 group px-3 py-2"
               >
                 <span className="relative z-10">{t('stores')}</span>
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-yellow-400 to-yellow-600 group-hover:w-full transition-all duration-300"></span>
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-[#C37C00] to-[#A66A00] group-hover:w-full transition-all duration-300"></span>
               </Link>
               {(isAuthenticated && user && (isShopOwner)) && (
                 <Link isRegularUser
                   to="/dashboard"
-                  className="relative text-gray-700 hover:text-yellow-600 font-medium text-lg transition-all duration-300 group px-3 py-2"
+                  className="relative text-[#8A5700] hover:text-[#C37C00] font-medium text-lg transition-all duration-300 group px-3 py-2"
                 >
                   <span className="relative z-10">Dashboard</span>
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-yellow-400 to-yellow-600 group-hover:w-full transition-all duration-300"></span>
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-[#C37C00] to-[#A66A00] group-hover:w-full transition-all duration-300"></span>
                 </Link>
               )}
               {(isAuthenticated && user && (isRegularUser)) && (
                 <Link
                   to="/favorites"
-                  className="relative text-gray-700 hover:text-yellow-600 font-medium text-lg transition-all duration-300 group px-3 py-2"
+                  className="relative text-[#8A5700] hover:text-[#C37C00] font-medium text-lg transition-all duration-300 group px-3 py-2"
                 >
                   <span className="relative z-10">Favorites</span>
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-yellow-400 to-yellow-600 group-hover:w-full transition-all duration-300"></span>
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-[#C37C00] to-[#A66A00] group-hover:w-full transition-all duration-300"></span>
                 </Link>
               )}
               {isAdmin && (
                 <Link
                   to="/admin"
-                  className="relative text-gray-700 hover:text-red-600 font-medium text-lg transition-all duration-300 group px-3 py-2"
+                  className="relative text-[#8A5700] hover:text-red-600 font-medium text-lg transition-all duration-300 group px-3 py-2"
                 >
                   <span className="relative z-10">Admin</span>
                   <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-red-400 to-red-600 group-hover:w-full transition-all duration-300"></span>
@@ -153,32 +163,32 @@ const Header = () => {
               <Button
                 variant="outline"
                 onClick={toggleLanguage}
-                className="border-2 border-yellow-400 bg-blue-50 text-yellow-700 hover:bg-blue-100 hover:border-yellow-600 hover:text-yellow-800 px-6 py-2.5 rounded-full font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 flex items-center gap-3 relative"
+                className="border-2 border-[#C37C00] bg-[#FFF8E6] text-[#A66A00] hover:bg-[#FFF0CC] hover:border-[#A66A00] hover:text-[#8A5700] px-6 py-2.5 rounded-full font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 flex items-center gap-3 relative"
               >
                 <Globe className="w-5 h-5" />
                 <span className="text-base font-extrabold">
                   {i18n.language === 'ar' ? 'English' : 'عربي'}
                 </span>
                 {/* Current language indicator */}
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-[#C37C00] rounded-full border-2 border-white"></div>
               </Button>
 
               {isAuthenticated ? (
                 <div className="flex items-center space-x-4">
-                  <div className="flex items-center gap-3 bg-white px-4 py-2 rounded-full border border-gray-200 shadow-md hover:shadow-lg transition-all duration-300">
-                    <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center">
+                  <div className="flex items-center gap-3 bg-white px-4 py-2 rounded-full border border-[#FFE6B3] shadow-md hover:shadow-lg transition-all duration-300">
+                    <div className="w-10 h-10 bg-gradient-to-br from-[#C37C00] to-[#A66A00] rounded-full flex items-center justify-center">
                       <span className="text-white font-bold text-sm">
                         {user?.firstName?.charAt(0) || user?.email?.charAt(0) || 'U'}
                       </span>
                     </div>
-                    <span className="text-gray-700 font-medium">
+                    <span className="text-[#8A5700] font-medium">
                       {user?.firstName || user?.email?.split('@')[0] || 'User'}
                     </span>
                   </div>
                   <Button
                     variant="outline"
                     onClick={handleLogout}
-                    className="border-gray-300 text-gray-700 hover:bg-gray-50 transition-all duration-300 px-4 py-2 rounded-full"
+                    className="border-[#FFE6B3] text-[#A66A00] hover:bg-[#FFF8E6] transition-all duration-300 px-4 py-2 rounded-full"
                   >
                     Logout
                   </Button>
@@ -188,13 +198,13 @@ const Header = () => {
                   <Button
                     variant="outline"
                     onClick={() => navigate('/login')}
-                    className="border-yellow-300 text-yellow-700 hover:bg-yellow-50 transition-all duration-300 px-6 py-2 rounded-full font-medium"
+                    className="border-[#FFE6B3] text-[#C37C00] hover:bg-[#FFF8E6] transition-all duration-300 px-6 py-2 rounded-full font-medium"
                   >
                     Login
                   </Button>
                   <Button
                     onClick={() => navigate('/register')}
-                    className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white transition-all duration-300 transform hover:scale-105 px-6 py-2 rounded-full font-medium"
+                    className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white transition-all duration-300 transform hover:scale-105 px-6 py-2 rounded-full font-medium"
                   >
                     Sign Up
                   </Button>
@@ -216,18 +226,18 @@ const Header = () => {
 
           {/* Mobile Navigation */}
           {isMobileMenuOpen && (
-            <div className="md:hidden py-4 border-t">
+            <div className="md:hidden py-4 border-t border-[#FFE6B3]">
               <div className="flex flex-col space-y-4">
                 <Link
                   to="/home"
-                  className="text-gray-700 hover:text-yellow-600"
+                  className="text-[#8A5700] hover:text-[#C37C00]"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Home
                 </Link>
                 <Link
                   to="/shops"
-                  className="text-gray-700 hover:text-yellow-600"
+                  className="text-[#8A5700] hover:text-[#C37C00]"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Stores
@@ -241,7 +251,7 @@ const Header = () => {
                     toggleLanguage();
                     setIsMobileMenuOpen(false);
                   }}
-                  className="w-full justify-start border-2 border-blue-400 bg-blue-50 text-blue-700 hover:bg-blue-100 hover:border-blue-600 hover:text-blue-800 font-bold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-3 py-3"
+                  className="w-full justify-start border-2 border-[#C37C00] bg-[#FFF8E6] text-[#A66A00] hover:bg-[#FFF0CC] hover:border-[#A66A00] hover:text-[#8A5700] font-bold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-3 py-3"
                 >
                   <Globe className="w-6 h-6" />
                   <span className="text-lg">
@@ -250,20 +260,20 @@ const Header = () => {
                 </Button>
                 {(isAuthenticated && user) ? (
                   <>
-                    <div className="flex items-center gap-2 py-2 border-b border-gray-200 mb-2">
-                      <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
-                        <span className="text-yellow-600 font-medium text-sm">
+                    <div className="flex items-center gap-2 py-2 border-b border-[#FFE6B3] mb-2">
+                      <div className="w-8 h-8 bg-[#FFF0CC] rounded-full flex items-center justify-center">
+                        <span className="text-[#C37C00] font-medium text-sm">
                           {user?.firstName?.charAt(0) || user?.email?.charAt(0) || 'U'}
                         </span>
                       </div>
-                      <span className="text-gray-700 font-medium">
+                      <span className="text-[#8A5700] font-medium">
                         Hello, {user?.firstName || user?.email?.split('@')[0] || 'User'}
                       </span>
                     </div>
                     {(isAdmin || isShopOwner) && (
                       <Link
                         to="/dashboard"
-                        className="text-gray-700 hover:text-yellow-600 font-medium"
+                        className="text-[#8A5700] hover:text-[#C37C00] font-medium"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         Dashboard
@@ -272,7 +282,7 @@ const Header = () => {
                     {isAdmin && (
                       <Link
                         to="/admin"
-                        className="text-gray-700 hover:text-red-600 font-medium"
+                        className="text-[#8A5700] hover:text-red-600 font-medium"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         Admin Panel
@@ -284,7 +294,7 @@ const Header = () => {
                         handleLogout();
                         setIsMobileMenuOpen(false);
                       }}
-                      className="w-full justify-start"
+                      className="w-full justify-start border-[#FFE6B3] text-[#A66A00] hover:bg-[#FFF8E6]"
                     >
                       Logout
                     </Button>
@@ -297,7 +307,7 @@ const Header = () => {
                         navigate('/login');
                         setIsMobileMenuOpen(false);
                       }}
-                      className="w-full"
+                      className="w-full border-[#FFE6B3] text-[#A66A00] hover:bg-[#FFF8E6]"
                     >
                       Login
                     </Button>
@@ -306,7 +316,7 @@ const Header = () => {
                         navigate('/register');
                         setIsMobileMenuOpen(false);
                       }}
-                      className="w-full bg-yellow-600 hover:bg-yellow-700"
+                      className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white"
                     >
                       Sign Up
                     </Button>

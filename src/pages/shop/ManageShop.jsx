@@ -175,7 +175,7 @@ const ManageShop = () => {
         }
     };
 
-   
+
     if (isLoading) {
         return (
             <div className="min-h-screen bg-gray-50 flex items-center justify-center pt-20">
@@ -194,19 +194,20 @@ const ManageShop = () => {
                 <div className="mb-8">
                     <div className="flex items-center justify-between mb-4">
                         <div>
-                            <h1 className="text-3xl font-bold text-gray-900">إدارة المتجر</h1>
+                            '                            <h1 className="text-3xl font-bold text-gray-900">Manage Shop</h1>'
                             {shop && (
                                 <div className="flex items-center gap-2 mt-2">
                                     <span className="text-lg font-medium text-gray-700">{shop.name}</span>
                                     {shop.status === 'pending' || shop.approved === false || shop.isActive === false ? (
                                         <span className="px-3 py-1 bg-yellow-100 text-yellow-800 text-sm rounded-full flex items-center gap-1">
                                             <Clock className="w-3 h-3" />
-                                            في انتظار الموافقة
+                                            Waiting for approval
+
                                         </span>
                                     ) : (
                                         <span className="px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full flex items-center gap-1">
                                             <CheckCircle className="w-3 h-3" />
-                                            مُوافق عليه
+                                            approved
                                         </span>
                                     )}
                                 </div>
@@ -218,28 +219,26 @@ const ManageShop = () => {
                                 onClick={() => navigate(ROUTES.SHOP_DETAILS(shop?.id || shop?._id))}
                             >
                                 <Eye className="w-4 h-4 mr-2" />
-                                عرض المتجر
+                                View store
                             </Button>
                             <Button
                                 variant="outline"
                                 onClick={() => navigate(ROUTES.EDIT_SHOP)}
                             >
                                 <Edit className="w-4 h-4 mr-2" />
-                                تحديث المتجر
+                                Store update
                             </Button>
                             <Button onClick={() => navigate(ROUTES.PRODUCTS_CREATE)}>
                                 <Plus className="w-4 h-4 mr-2" />
-                                إضافة منتج
+                                Add a product
                             </Button>
                         </div>
                     </div>
                     <p className="text-gray-600">
-                        إدارة متجرك ومنتجاتك ومواعيدك
-                        {shop && (shop.status === 'pending' || shop.approved === false || shop.isActive === false) && (
+                        Manage your store, products, and appointments                        {shop && (shop.status === 'pending' || shop.approved === false || shop.isActive === false) && (
                             <span className="block text-yellow-600 text-sm mt-1 flex items-center gap-1">
                                 <AlertTriangle className="w-4 h-4" />
-                                متجرك في انتظار موافقة الإدارة ولن يظهر للعملاء حتى الموافقة عليه
-                            </span>
+                                Your store is awaiting management approval and will not be visible to customers until approved.                            </span>
                         )}
                     </p>
                 </div>
@@ -251,7 +250,7 @@ const ManageShop = () => {
                             <div className="flex items-center">
                                 <Package className="w-8 h-8 text-blue-600" />
                                 <div className="ml-4">
-                                    <p className="text-sm font-medium text-gray-600">المنتجات</p>
+                                    <p className="text-sm font-medium text-gray-600">Products</p>
                                     <p className="text-2xl font-bold text-gray-900">{stats.totalProducts}</p>
                                 </div>
                             </div>
@@ -263,7 +262,7 @@ const ManageShop = () => {
                             <div className="flex items-center">
                                 <Calendar className="w-8 h-8 text-green-600" />
                                 <div className="ml-4">
-                                    <p className="text-sm font-medium text-gray-600">المواعيد</p>
+                                    <p className="text-sm font-medium text-gray-600">Appointments</p>
                                     <p className="text-2xl font-bold text-gray-900">{stats.totalBookings}</p>
                                 </div>
                             </div>
@@ -275,7 +274,7 @@ const ManageShop = () => {
                             <div className="flex items-center">
                                 <Users className="w-8 h-8 text-purple-600" />
                                 <div className="ml-4">
-                                    <p className="text-sm font-medium text-gray-600">العملاء</p>
+                                    <p className="text-sm font-medium text-gray-600">Customers</p>
                                     <p className="text-2xl font-bold text-gray-900">{stats.totalCustomers}</p>
                                 </div>
                             </div>
@@ -287,7 +286,7 @@ const ManageShop = () => {
                             <div className="flex items-center">
                                 <Star className="w-8 h-8 text-yellow-600" />
                                 <div className="ml-4">
-                                    <p className="text-sm font-medium text-gray-600">التقييم</p>
+                                    <p className="text-sm font-medium text-gray-600">Evaluation</p>
                                     <p className="text-2xl font-bold text-gray-900">{stats.averageRating}</p>
                                 </div>
                             </div>
@@ -298,9 +297,9 @@ const ManageShop = () => {
                 {/* Tabs */}
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
                     <TabsList className="grid w-full grid-cols-3">
-                        <TabsTrigger value="overview">نظرة عامة</TabsTrigger>
-                        <TabsTrigger value="products">المنتجات ({products.length})</TabsTrigger>
-                        <TabsTrigger value="bookings">المواعيد ({bookings.length})</TabsTrigger>
+                        <TabsTrigger value="overview"> Overview</TabsTrigger>
+                        <TabsTrigger value="products">Products ({products.length})</TabsTrigger>
+                        <TabsTrigger value="bookings">Appointments ({bookings.length})</TabsTrigger>
                     </TabsList>
 
                     <TabsContent value="overview" className="space-y-6">
@@ -309,38 +308,38 @@ const ManageShop = () => {
                             <Card>
                                 <CardHeader>
                                     <div className="flex items-center justify-between">
-                                        <CardTitle>معلومات المتجر</CardTitle>
+                                        <CardTitle>Store information</CardTitle>
                                         <Button size="sm" variant="outline">
                                             <Edit className="w-4 h-4 mr-1" />
-                                            تعديل
+                                            Edit
                                         </Button>
                                     </div>
                                 </CardHeader>
                                 <CardContent className="space-y-4">
                                     <div>
-                                        <p className="text-sm font-medium text-gray-600">اسم المتجر</p>
+                                        <p className="text-sm font-medium text-gray-600">Store name</p>
                                         <p className="text-gray-900">{shop?.name}</p>
                                     </div>
                                     <div>
-                                        <p className="text-sm font-medium text-gray-600">الوصف</p>
+                                        <p className="text-sm font-medium text-gray-600">Description</p>
                                         <p className="text-gray-900">{shop?.description}</p>
                                     </div>
                                     <div>
-                                        <p className="text-sm font-medium text-gray-600">العنوان</p>
+                                        <p className="text-sm font-medium text-gray-600">Address</p>
                                         <p className="text-gray-900">{shop?.address}</p>
                                     </div>
                                     <div>
-                                        <p className="text-sm font-medium text-gray-600">الهاتف</p>
+                                        <p className="text-sm font-medium text-gray-600">Phone</p>
                                         <p className="text-gray-900">{shop?.phone}</p>
                                     </div>
                                     <div>
-                                        <p className="text-sm font-medium text-gray-600">الموقع</p>
+                                        <p className="text-sm font-medium text-gray-600">Location</p>
                                         <div className="flex items-center gap-2">
                                             <MapPin className={`w-4 h-4 ${shop?.location && shop?.location.coordinates ? 'text-green-500' : 'text-gray-400'}`} />
                                             <p className="text-gray-900">
                                                 {shop?.location && shop?.location.coordinates
-                                                    ? 'تم تحديد الموقع على الخريطة'
-                                                    : 'لم يتم تحديد الموقع'}
+                                                    ? 'Location determined on map'
+                                                    : 'Location not determined'}
                                             </p>
                                         </div>
                                     </div>

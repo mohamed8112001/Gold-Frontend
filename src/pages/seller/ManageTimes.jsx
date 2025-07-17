@@ -78,7 +78,7 @@ const ManageTimes = () => {
   const handleAddTimeSlot = async (e) => {
     e.preventDefault();
     if (!newTimeSlot.date || !newTimeSlot.time) {
-      alert('يرجى ملء جميع الحقول');
+      alert('Please fill in all fields');
       return;
     }
 
@@ -93,16 +93,16 @@ const ManageTimes = () => {
     try {
       setLoading(true);
 
-      // تحقق من أن المستخدم shop owner
+      // Check if user is shop owner
       if (!user || user.role !== 'seller') {
-        alert('يجب أن تكون صاحب محل لإضافة المواعيد');
+        alert('You must be a shop owner to add appointments');
         return;
       }
 
       const response = await bookingService.addAvailableTime(newTimeSlot);
       console.log('Add time slot response:', response);
 
-      // تحقق من نجاح العملية
+      // Check if operation was successful
       if (response && (response.success || response.data)) {
         // Add the new time slot to the current list only if saved successfully
         const newTime = {
@@ -116,22 +116,22 @@ const ManageTimes = () => {
         setAvailableTimes(prev => [...prev, newTime]);
         setNewTimeSlot({ date: '', time: '' });
         setShowAddForm(false);
-        alert('تم إضافة الموعد بنجاح وحفظه في قاعدة البيانات');
+        alert('Appointment added successfully and saved to database');
 
-        // إعادة تحميل البيانات للتأكد من الحفظ
+        // Reload data to confirm saving
         await loadAvailableTimes();
       } else {
-        throw new Error('فشل في حفظ الموعد في قاعدة البيانات');
+        throw new Error('Failed to save appointment to database');
       }
     } catch (error) {
       console.error('Error adding time slot:', error);
       console.error('Error details:', error.response?.data);
 
-      let errorMessage = 'حدث خطأ في إضافة الموعد';
+      let errorMessage = 'Error adding appointment';
       if (error.response?.status === 401) {
-        errorMessage = 'يجب تسجيل الدخول أولاً';
+        errorMessage = 'You must login first';
       } else if (error.response?.status === 403) {
-        errorMessage = 'ليس لديك صلاحية لإضافة المواعيد';
+        errorMessage = 'You do not have permission to add appointments';
       } else if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
       }
@@ -143,7 +143,7 @@ const ManageTimes = () => {
   };
 
   const handleDeleteTimeSlot = async (timeId) => {
-    if (!confirm('هل أنت متأكد من حذف هذا الموعد؟')) {
+    if (!confirm('Are you sure you want to delete this appointment?')) {
       return;
     }
 
@@ -153,17 +153,17 @@ const ManageTimes = () => {
 
       // Remove the time slot from the current list immediately
       setAvailableTimes(prev => prev.filter(time => time._id !== timeId));
-      alert('تم حذف الموعد بنجاح');
+      alert('Appointment deleted successfully');
     } catch (error) {
       console.error('Error deleting time slot:', error);
-      alert('حدث خطأ في حذف الموعد');
+      alert('Error deleting appointment');
     } finally {
       setLoading(false);
     }
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('ar-EG', {
+    return new Date(dateString).toLocaleDateString('en-US', {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
@@ -172,7 +172,7 @@ const ManageTimes = () => {
   };
 
   const formatTime = (timeString) => {
-    return new Date(`2000-01-01T${timeString}`).toLocaleTimeString('ar-EG', {
+    return new Date(`2000-01-01T${timeString}`).toLocaleTimeString('en-US', {
       hour: '2-digit',
       minute: '2-digit',
       hour12: true
@@ -196,49 +196,49 @@ const ManageTimes = () => {
         <div className="mb-8">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">إدارة المواعيد</h1>
-              <p className="text-gray-600 mt-2">إدارة المواعيد المتاحة والمحجوزة</p>
+              <h1 className="text-3xl font-bold text-gray-900">Appointment Management</h1>
+              <p className="text-gray-600 mt-2">Manage available and booked appointments</p>
             </div>
             <Button
               onClick={() => setShowAddForm(!showAddForm)}
-              className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-6 py-3 rounded-lg flex items-center gap-2 transition-all duration-300 transform hover:scale-105"
+              className="bg-gradient-to-r from-[#A37F41] to-[#8A6C37] hover:from-[#8A6C37] hover:to-[#6D552C] text-white px-6 py-3 rounded-lg flex items-center gap-2 transition-all duration-300 transform hover:scale-105"
             >
               <Plus size={20} />
-              إضافة موعد متاح
+              Add Available Time
             </Button>
           </div>
         </div>
 
         {/* Add Time Slot Form */}
         {showAddForm && (
-          <Card className="mb-8 border-yellow-200">
-            <CardHeader className="bg-gradient-to-r from-yellow-50 to-yellow-100">
-              <CardTitle className="text-yellow-800">إضافة موعد جديد</CardTitle>
+          <Card className="mb-8 border-[#E2D2B6]">
+            <CardHeader className="bg-gradient-to-r from-[#F8F4ED] to-[#F0E8DB]">
+              <CardTitle className="text-[#A37F41]">Add New Appointment</CardTitle>
             </CardHeader>
             <CardContent className="p-6">
               <form onSubmit={handleAddTimeSlot} className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    التاريخ
+                    Date
                   </label>
                   <input
                     type="date"
                     value={newTimeSlot.date}
                     onChange={(e) => setNewTimeSlot({ ...newTimeSlot, date: e.target.value })}
                     min={getTomorrowDate()}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#A37F41] focus:border-[#A37F41]"
                     required
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    الوقت
+                    Time
                   </label>
                   <input
                     type="time"
                     value={newTimeSlot.time}
                     onChange={(e) => setNewTimeSlot({ ...newTimeSlot, time: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#A37F41] focus:border-[#A37F41]"
                     required
                   />
                 </div>
@@ -246,9 +246,9 @@ const ManageTimes = () => {
                   <Button
                     type="submit"
                     disabled={loading}
-                    className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-6 py-2 rounded-md transition-all duration-300"
+                    className="bg-gradient-to-r from-[#A37F41] to-[#8A6C37] hover:from-[#8A6C37] hover:to-[#6D552C] text-white px-6 py-2 rounded-md transition-all duration-300"
                   >
-                    {loading ? 'جاري الإضافة...' : 'إضافة'}
+                    {loading ? 'Adding...' : 'Add'}
                   </Button>
                   <Button
                     type="button"
@@ -256,7 +256,7 @@ const ManageTimes = () => {
                     onClick={() => setShowAddForm(false)}
                     className="border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-2 rounded-md"
                   >
-                    إلغاء
+                    Cancel
                   </Button>
                 </div>
               </form>
@@ -266,43 +266,43 @@ const ManageTimes = () => {
 
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="border-yellow-200">
+          <Card className="border-[#E2D2B6]">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">إجمالي المواعيد</p>
-                  <p className="text-3xl font-bold text-yellow-600">{availableTimes.length}</p>
+                  <p className="text-sm font-medium text-gray-600">Total Appointments</p>
+                  <p className="text-3xl font-bold text-[#A37F41]">{availableTimes.length}</p>
                 </div>
-                <div className="p-3 bg-yellow-100 rounded-full">
-                  <Calendar className="w-6 h-6 text-yellow-600" />
+                <div className="p-3 bg-[#F0E8DB] rounded-full">
+                  <Calendar className="w-6 h-6 text-[#A37F41]" />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border-green-200">
+          <Card className="border-[#D3BB92]">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">المواعيد المحجوزة</p>
-                  <p className="text-3xl font-bold text-green-600">{bookedTimes.length}</p>
+                  <p className="text-sm font-medium text-gray-600">Booked Appointments</p>
+                  <p className="text-3xl font-bold text-[#6D552C]">{bookedTimes.length}</p>
                 </div>
-                <div className="p-3 bg-green-100 rounded-full">
-                  <CheckCircle className="w-6 h-6 text-green-600" />
+                <div className="p-3 bg-[#E2D2B6] rounded-full">
+                  <CheckCircle className="w-6 h-6 text-[#6D552C]" />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border-blue-200">
+          <Card className="border-[#C5A56D]">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">المواعيد المتاحة</p>
-                  <p className="text-3xl font-bold text-blue-600">{availableTimesOnly.length}</p>
+                  <p className="text-sm font-medium text-gray-600">Available Appointments</p>
+                  <p className="text-3xl font-bold text-[#8A6C37]">{availableTimesOnly.length}</p>
                 </div>
-                <div className="p-3 bg-blue-100 rounded-full">
-                  <Clock className="w-6 h-6 text-blue-600" />
+                <div className="p-3 bg-[#F8F4ED] rounded-full">
+                  <Clock className="w-6 h-6 text-[#8A6C37]" />
                 </div>
               </div>
             </CardContent>
@@ -311,49 +311,49 @@ const ManageTimes = () => {
 
         {loading ? (
           <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-csk-500 mx-auto"></div>
-            <p className="mt-4 text-gray-600">جاري التحميل...</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#A37F41] mx-auto"></div>
+            <p className="mt-4 text-gray-600">Loading...</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Available Times */}
-            <Card className="border-blue-200">
-              <CardHeader className="bg-blue-50">
-                <CardTitle className="text-blue-800 flex items-center gap-2">
+            <Card className="border-[#C5A56D]">
+              <CardHeader className="bg-[#F8F4ED]">
+                <CardTitle className="text-[#8A6C37] flex items-center gap-2">
                   <Clock className="w-5 h-5" />
-                  المواعيد المتاحة ({availableTimesOnly.length})
+                  Available Appointments ({availableTimesOnly.length})
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-6">
                 {availableTimesOnly.length === 0 ? (
                   <div className="text-center py-8">
                     <AlertCircle size={48} className="mx-auto text-gray-400 mb-4" />
-                    <p className="text-gray-600">لا توجد مواعيد متاحة</p>
-                    <p className="text-sm text-gray-500 mt-2">أضف مواعيد جديدة ليتمكن العملاء من حجزها</p>
+                    <p className="text-gray-600">No available appointments</p>
+                    <p className="text-sm text-gray-500 mt-2">Add new appointments for customers to book</p>
                   </div>
                 ) : (
                   <div className="space-y-4 max-h-96 overflow-y-auto">
                     {availableTimesOnly.map((time) => (
-                      <div key={time._id} className="border border-blue-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                      <div key={time._id} className="border border-[#C5A56D] rounded-lg p-4 hover:shadow-md transition-shadow">
                         <div className="flex justify-between items-start">
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-2">
-                              <Calendar className="w-4 h-4 text-blue-600" />
+                              <Calendar className="w-4 h-4 text-[#8A6C37]" />
                               <span className="font-medium text-gray-900">{formatDate(time.date)}</span>
                             </div>
                             <div className="flex items-center gap-2 mb-2">
-                              <Clock className="w-4 h-4 text-blue-600" />
+                              <Clock className="w-4 h-4 text-[#8A6C37]" />
                               <span className="text-gray-700">{formatTime(time.time)}</span>
                             </div>
-                            <Badge variant="outline" className="border-blue-200 text-blue-700 bg-blue-50">
-                              متاح للحجز
+                            <Badge variant="outline" className="border-[#C5A56D] text-[#8A6C37] bg-[#F8F4ED]">
+                              Available for booking
                             </Badge>
                           </div>
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => handleDeleteTimeSlot(time._id)}
-                            className="text-red-600 border-red-200 hover:bg-red-50"
+                            className="text-[#B54A35] border-[#D3BB92] hover:bg-[#F8F4ED]"
                           >
                             <Trash2 className="w-4 h-4" />
                           </Button>
@@ -366,46 +366,46 @@ const ManageTimes = () => {
             </Card>
 
             {/* Booked Times */}
-            <Card className="border-green-200">
-              <CardHeader className="bg-green-50">
-                <CardTitle className="text-green-800 flex items-center gap-2">
+            <Card className="border-[#D3BB92]">
+              <CardHeader className="bg-[#F0E8DB]">
+                <CardTitle className="text-[#6D552C] flex items-center gap-2">
                   <CheckCircle className="w-5 h-5" />
-                  المواعيد المحجوزة ({bookedTimes.length})
+                  Booked Appointments ({bookedTimes.length})
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-6">
                 {bookedTimes.length === 0 ? (
                   <div className="text-center py-8">
                     <XCircle size={48} className="mx-auto text-gray-400 mb-4" />
-                    <p className="text-gray-600">لا توجد مواعيد محجوزة</p>
-                    <p className="text-sm text-gray-500 mt-2">ستظهر هنا المواعيد التي يحجزها العملاء</p>
+                    <p className="text-gray-600">No booked appointments</p>
+                    <p className="text-sm text-gray-500 mt-2">Customer bookings will appear here</p>
                   </div>
                 ) : (
                   <div className="space-y-4 max-h-96 overflow-y-auto">
                     {bookedTimes.map((time) => (
-                      <div key={time._id} className="border border-green-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                      <div key={time._id} className="border border-[#D3BB92] rounded-lg p-4 hover:shadow-md transition-shadow">
                         <div className="flex justify-between items-start">
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-2">
-                              <Calendar className="w-4 h-4 text-green-600" />
+                              <Calendar className="w-4 h-4 text-[#6D552C]" />
                               <span className="font-medium text-gray-900">{formatDate(time.date)}</span>
                             </div>
                             <div className="flex items-center gap-2 mb-2">
-                              <Clock className="w-4 h-4 text-green-600" />
+                              <Clock className="w-4 h-4 text-[#6D552C]" />
                               <span className="text-gray-700">{formatTime(time.time)}</span>
                             </div>
                             {time.user && (
                               <div className="flex items-center gap-2 mb-2">
-                                <User className="w-4 h-4 text-green-600" />
+                                <User className="w-4 h-4 text-[#6D552C]" />
                                 <span className="text-gray-700">{time.user.name || time.user.email}</span>
                               </div>
                             )}
-                            <Badge className="bg-green-100 text-green-800 border-green-200">
-                              محجوز
+                            <Badge className="bg-[#E2D2B6] text-[#6D552C] border-[#D3BB92]">
+                              Booked
                             </Badge>
                             {time.notes && (
                               <p className="text-sm text-gray-600 mt-2 bg-gray-50 p-2 rounded">
-                                <strong>ملاحظات:</strong> {time.notes}
+                                <strong>Notes:</strong> {time.notes}
                               </p>
                             )}
                           </div>

@@ -267,9 +267,11 @@ export const shopService = {
   // Get all shops including pending (admin only)
   getAllShopsAdmin: async (params = {}) => {
     try {
-      const response = await api.get("/shop/admin/all", { params });
+      // Use the regular shop endpoint since the admin can see all shops
+      const response = await api.get("/shop", { params });
       return response.data;
     } catch (error) {
+      console.error("Error fetching admin shops:", error);
       throw new Error(
         error.response?.data?.message || "Failed to fetch admin shops"
       );

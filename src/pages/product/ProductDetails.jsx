@@ -22,7 +22,7 @@ const ProductDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const { user } = useAuth();
-    
+
     const [product, setProduct] = useState(null);
     const [shop, setShop] = useState(null);
     const [reviews, setReviews] = useState([]);
@@ -108,7 +108,7 @@ const ProductDetails = () => {
                 try {
                     const shopResponse = await shopService.getShop(productData.shop._id);
                     const shopData = shopResponse.data || shopResponse;
-                    
+
                     console.log('🏪 Shop data loaded:', shopData);
 
                     // Process shop data
@@ -122,7 +122,7 @@ const ProductDetails = () => {
                             shopData.isApproved ? 'Verified Seller' : 'New Seller',
                             shopData.subscriptionPlan || 'Basic Plan'
                         ].filter(Boolean),
-                        image: shopData.logoUrl ? 
+                        image: shopData.logoUrl ?
                             `${import.meta.env.VITE_API_BASE_URL}/shop-image/${shopData.logoUrl}` :
                             'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=300&fit=crop&crop=center&auto=format&q=60'
                     };
@@ -139,13 +139,13 @@ const ProductDetails = () => {
                 console.log('⭐ Loading reviews for product:', id);
                 const reviewsResponse = await rateService.getAllRates({ productId: id });
                 const reviewsData = reviewsResponse.data || reviewsResponse || [];
-                
+
                 // Process reviews data
                 const processedReviews = reviewsData.map(review => ({
                     ...review,
                     id: review._id || review.id,
                     userName: review.user?.name || review.userName || 'Anonymous',
-                    userAvatar: review.user?.avatar || 
+                    userAvatar: review.user?.avatar ||
                         `https://ui-avatars.com/api/?name=${encodeURIComponent(review.user?.name || 'User')}&background=random`,
                     date: new Date(review.createdAt || Date.now()).toLocaleDateString('en-US', {
                         year: 'numeric',
@@ -239,9 +239,9 @@ const ProductDetails = () => {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 flex items-center justify-center">
+            <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] via-white to-[#FFF8E6] flex items-center justify-center">
                 <div className="text-center">
-                    <div className="animate-spin rounded-full h-16 w-16 border-4 border-yellow-500 border-t-transparent mx-auto mb-6"></div>
+                    <div className="animate-spin rounded-full h-16 w-16 border-4 border-[#C37C00] border-t-transparent mx-auto mb-6"></div>
                     <p className="text-gray-600 text-lg">Loading product details...</p>
                 </div>
             </div>
@@ -250,7 +250,7 @@ const ProductDetails = () => {
 
     if (error || !product) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+            <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] to-[#FFF0CC] flex items-center justify-center">
                 <div className="text-center">
                     <div className="text-6xl mb-4">❌</div>
                     <h2 className="text-3xl font-bold text-gray-900 mb-2">Product Not Found</h2>
@@ -269,7 +269,7 @@ const ProductDetails = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+        <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] via-white to-[#FFF8E6]">
             {/* Enhanced Header with Breadcrumb */}
             <div className="bg-white shadow-sm border-b sticky top-0 z-40">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -284,7 +284,7 @@ const ProductDetails = () => {
                             Back
                         </Button>
                         <ChevronRight className="w-4 h-4 text-gray-400" />
-                        <span 
+                        <span
                             className="hover:text-yellow-600 cursor-pointer transition-colors"
                             onClick={() => navigate(ROUTES.PRODUCTS)}
                         >
@@ -292,7 +292,7 @@ const ProductDetails = () => {
                         </span>
                         <ChevronRight className="w-4 h-4 text-gray-400" />
                         <span className="text-gray-900 font-medium truncate">{product.name}</span>
-                        
+
                         <div className="ml-auto flex items-center gap-2">
                             <Button variant="ghost" size="sm" className="text-gray-500 hover:text-gray-700">
                                 <Share2 className="w-4 h-4" />
@@ -314,7 +314,7 @@ const ProductDetails = () => {
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
                     {/* Product Images */}
-                    <ProductImageGallery 
+                    <ProductImageGallery
                         product={product}
                         mainImage={mainImage}
                         setMainImage={setMainImage}
@@ -323,7 +323,7 @@ const ProductDetails = () => {
                     />
 
                     {/* Product Info */}
-                    <ProductInfoCard 
+                    <ProductInfoCard
                         product={product}
                         shop={shop}
                         user={user}
@@ -339,7 +339,7 @@ const ProductDetails = () => {
                 {/* Product Details and Shop Info */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div className="lg:col-span-2">
-                        <ProductDetailsTabs 
+                        <ProductDetailsTabs
                             product={product}
                             reviews={reviews}
                         />
@@ -347,15 +347,15 @@ const ProductDetails = () => {
 
                     {/* Shop Info Sidebar */}
                     <div>
-                        <ShopInfoSidebar 
-                            shop={shop} 
+                        <ShopInfoSidebar
+                            shop={shop}
                             onVisitShop={handleVisitShop}
                             onOpenChat={handleOpenChat}
                         />
                     </div>
                 </div>
             </div>
-            
+
             {/* Chat Interface */}
             <ShopChatInterface
                 isOpen={isChatOpen}

@@ -174,20 +174,20 @@ const Dashboard = () => {
   // Map color names to Tailwind classes to avoid dynamic class issues
   const colorMap = {
     yellow: {
-      bg: 'bg-yellow-100',
-      text: 'text-yellow-600'
+      bg: 'bg-[#FFF0CC]',
+      text: 'text-[#C37C00]'
     },
     blue: {
-      bg: 'bg-blue-100',
-      text: 'text-blue-600'
+      bg: 'bg-[#FFE6B3]',
+      text: 'text-[#A66A00]'
     },
     green: {
-      bg: 'bg-green-100',
-      text: 'text-green-600'
+      bg: 'bg-[#FFDB99]',
+      text: 'text-[#8A5700]'
     },
     purple: {
-      bg: 'bg-purple-100',
-      text: 'text-purple-600'
+      bg: 'bg-[#FFF8E6]',
+      text: 'text-[#B8850A]'
     }
   };
 
@@ -198,10 +198,10 @@ const Dashboard = () => {
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">{title}</p>
-              <p className="text-3xl font-bold text-gray-900">{value}</p>
+              <p className="text-sm font-medium text-[#A66A00]">{title}</p>
+              <p className="text-3xl font-bold text-[#8A5700]">{value}</p>
               {description && (
-                <p className="text-xs text-gray-500 mt-1">{description}</p>
+                <p className="text-xs text-[#B8850A] mt-1">{description}</p>
               )}
             </div>
             <div className={`w-12 h-12 ${colorClasses.bg} rounded-lg flex items-center justify-center`}>
@@ -225,21 +225,21 @@ const Dashboard = () => {
 
     const getStatusColor = () => {
       switch (activity.status) {
-        case 'confirmed': return 'text-green-600 bg-green-100';
-        case 'pending': return 'text-yellow-600 bg-yellow-100';
-        case 'completed': return 'text-blue-600 bg-blue-100';
-        default: return 'text-gray-600 bg-gray-100';
+        case 'confirmed': return 'text-[#8A5700] bg-[#FFDB99]';
+        case 'pending': return 'text-[#C37C00] bg-[#FFF0CC]';
+        case 'completed': return 'text-[#A66A00] bg-[#FFE6B3]';
+        default: return 'text-[#B8850A] bg-[#FFF8E6]';
       }
     };
 
     return (
-      <div className="flex items-center space-x-3 rtl:space-x-reverse p-3 hover:bg-gray-50 rounded-lg">
-        <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
+      <div className="flex items-center space-x-3 rtl:space-x-reverse p-3 hover:bg-[#FFF8E6] rounded-lg">
+        <div className="w-8 h-8 bg-[#FFF0CC] rounded-full flex items-center justify-center">
           {getIcon()}
         </div>
         <div className="flex-1">
-          <p className="text-sm font-medium text-gray-900">{activity.title}</p>
-          <p className="text-xs text-gray-500">{activity.date}</p>
+          <p className="text-sm font-medium text-[#8A5700]">{activity.title}</p>
+          <p className="text-xs text-[#A66A00]">{activity.date}</p>
         </div>
         <span className={`text-xs px-2 py-1 rounded-full ${getStatusColor()}`}>
           {activity.status}
@@ -252,13 +252,13 @@ const Dashboard = () => {
     <Card className="hover:shadow-md transition-shadow">
       <CardContent className="p-4">
         <div className="flex space-x-3 rtl:space-x-reverse">
-          <div className="w-16 h-16 bg-yellow-100 rounded-lg flex items-center justify-center">
+          <div className="w-16 h-16 bg-[#F0E8DB] rounded-lg flex items-center justify-center">
             <div className="text-2xl">💍</div>
           </div>
           <div className="flex-1">
-            <h4 className="font-medium text-gray-900">{item.name}</h4>
-            <p className="text-sm text-gray-600">{item.shop}</p>
-            <p className="text-sm font-bold text-yellow-600">{item.price}</p>
+            <h4 className="font-medium text-[#6D552C]">{item.name}</h4>
+            <p className="text-sm text-[#8A6C37]">{item.shop}</p>
+            <p className="text-sm font-bold text-[#A37F41]">{item.price}</p>
           </div>
           <div className="flex flex-col space-y-1">
             <Button size="sm" variant="outline">
@@ -283,23 +283,23 @@ const Dashboard = () => {
       <CardContent className="p-4">
         <div className="flex items-center justify-between">
           <div>
-            <h4 className="font-medium text-gray-900">{booking.shop?.name || booking.shopName || 'متجر غير محدد'}</h4>
-            <div className="flex items-center space-x-2 rtl:space-x-reverse text-sm text-gray-600 mt-1">
+            <h4 className="font-medium text-[#6D552C]">{booking.shop?.name || booking.shopName || 'متجر غير محدد'}</h4>
+            <div className="flex items-center space-x-2 rtl:space-x-reverse text-sm text-[#8A6C37] mt-1">
               <Calendar className="w-4 h-4" />
               <span>{booking.date || booking.appointmentDate || 'تاريخ غير محدد'}</span>
               <Clock className="w-4 h-4" />
               <span>{booking.time || booking.appointmentTime || 'وقت غير محدد'}</span>
             </div>
-            <p className="text-xs text-gray-500 mt-1">{booking.type || booking.serviceType || 'خدمة عامة'}</p>
+            <p className="text-xs text-[#92723A] mt-1">{booking.type || booking.serviceType || 'خدمة عامة'}</p>
           </div>
           <div className="flex flex-col items-end space-y-2">
             <span className={`text-xs px-2 py-1 rounded-full ${(booking.status === 'confirmed' || booking.status === 'approved')
-              ? 'text-green-600 bg-green-100'
+              ? 'text-[#6D552C] bg-[#D3BB92]'
               : booking.status === 'pending'
-                ? 'text-yellow-600 bg-yellow-100'
+                ? 'text-[#A37F41] bg-[#F0E8DB]'
                 : booking.status === 'cancelled'
                   ? 'text-red-600 bg-red-100'
-                  : 'text-gray-600 bg-gray-100'
+                  : 'text-[#92723A] bg-[#F8F4ED]'
               }`}>
               {booking.status === 'confirmed' ? 'مؤكد' :
                 booking.status === 'approved' ? 'موافق عليه' :
@@ -333,7 +333,7 @@ const Dashboard = () => {
   const OverviewTab = () => (
     <div className="space-y-6">
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
         {/* <StatCard
           icon={Heart}
           title="Favorites"
@@ -378,8 +378,8 @@ const Dashboard = () => {
                 <ActivityItem key={activity.id} activity={activity} />
               ))
             ) : (
-              <div className="text-center py-8 text-gray-500">
-                <Calendar className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+              <div className="text-center py-8 text-[#92723A]">
+                <Calendar className="w-12 h-12 mx-auto mb-4 text-[#D3BB92]" />
                 <p>No recent activities</p>
                 <p className="text-sm">Start browsing shops and booking appointments</p>
               </div>
@@ -394,10 +394,10 @@ const Dashboard = () => {
           <CardTitle> Quick actions</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-3c gap-4">
+          <div className="grid grid-cols-3 md:grid-cols-3c gap-4">
             <Button
               variant="outline"
-              className="h-20 flex flex-col items-center justify-center"
+              className="h-20 flex flex-col items-center justify-center border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6]"
               onClick={() => navigate(ROUTES.SHOPS)}
             >
               <ShoppingBag className="w-6 h-6 mb-2" />
@@ -413,7 +413,7 @@ const Dashboard = () => {
             </Button> */}
             <Button
               variant="outline"
-              className="h-20 flex flex-col items-center justify-center"
+              className="h-20 flex flex-col items-center justify-center border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6]"
               onClick={() => setActiveTab('favorites')}
             >
               <Heart className="w-6 h-6 mb-2" />
@@ -421,7 +421,7 @@ const Dashboard = () => {
             </Button>
             <Button
               variant="outline"
-              className="h-20 flex flex-col items-center justify-center"
+              className="h-20 flex flex-col items-center justify-center border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6]"
               onClick={() => navigate(ROUTES.PROFILE)}
             >
               <User className="w-6 h-6 mb-2" />
@@ -437,8 +437,8 @@ const Dashboard = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Favorites</h2>
-          <p className="text-gray-600">Your saved items</p>
+          <h2 className="text-2xl font-bold text-[#6D552C]">Favorites</h2>
+          <p className="text-[#8A6C37]">Your saved items</p>
         </div>
         <Button onClick={() => navigate(ROUTES.PRODUCTS)}>
           <Plus className="w-4 h-4 mr-2" />
@@ -452,8 +452,8 @@ const Dashboard = () => {
             <FavoriteItem key={item.id} item={item} />
           ))
         ) : (
-          <div className="col-span-full text-center py-12 text-gray-500">
-            <Heart className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+          <div className="col-span-full text-center py-12 text-[#92723A]">
+            <Heart className="w-16 h-16 mx-auto mb-4 text-[#D3BB92]" />
             <h3 className="text-lg font-medium mb-2">No items in favorites</h3>
             <p className="mb-4">Start adding products you like to your favorites</p>
             <Button onClick={() => navigate(ROUTES.SHOPS)}>
@@ -470,10 +470,10 @@ const Dashboard = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">
+          <h2 className="text-2xl font-bold text-[#6D552C]">
             {isShopOwner ? 'Bookings Overview' : 'My Bookings'}
           </h2>
-          <p className="text-gray-600">
+          <p className="text-[#8A6C37]">
             {isShopOwner ? 'Overview of your shop bookings' : 'Your booked appointments'}
           </p>
         </div>
@@ -504,14 +504,11 @@ const Dashboard = () => {
             <BookingItem key={booking._id || booking.id} booking={booking} />
           ))
         ) : (
-          <div className="text-center py-12 text-gray-500">
-            <Calendar className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-            <h3 className="text-lg font-medium mb-2">لا توجد مواعيد محجوزة</h3>
-            <p className="mb-4">ابدأ بحجز موعد في أحد المتاجر</p>
-            <Button onClick={() => navigate(ROUTES.SHOPS)}>
+          <div className="text-center py-12 text-[#92723A]">
+            <Calendar className="w-16 h-16 mx-auto mb-4 text-[#D3BB92]" />
+            <h3 className="text-lg font-medium mb-2">No appointments booked</h3>            <p className="mb-4">Start by booking an appointment at a store</p>            <Button onClick={() => navigate(ROUTES.SHOPS)}>
               <ShoppingBag className="w-4 h-4 mr-2" />
-              تصفح المتاجر
-            </Button>
+              Browse stores            </Button>
           </div>
         )}
       </div>
@@ -523,23 +520,23 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <StatCard
           icon={Store}
-          title="المتاجر"
+          title="Shop"
           value={stats.shops}
-          description="متجر نشط"
+          description="Active Shop"
           color="purple"
         />
         <StatCard
           icon={Package}
-          title="المنتجات"
+          title="Products"
           value={stats.products}
-          description="منتج معروض"
+          description="Displayed product"
           color="blue"
         />
         <StatCard
           icon={Users}
-          title="العملاء"
+          title="Users"
           value={stats.customers}
-          description="عميل مسجل"
+          description=" Registered customer"
           color="green"
         />
       </div>
@@ -547,36 +544,30 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
-            <CardTitle>إدارة المتاجر</CardTitle>
-          </CardHeader>
+            <CardTitle>Store Management</CardTitle>          </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <Button className="w-full" onClick={() => navigate(ROUTES.CREATE_SHOP)}>
+              <Button className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white" onClick={() => navigate(ROUTES.CREATE_SHOP)}>
                 <Plus className="w-4 h-4 mr-2" />
-                إضافة متجر جديد
-              </Button>
-              <Button variant="outline" className="w-full" onClick={() => navigate(ROUTES.MANAGE_SHOP)}>
+                Add a new store              </Button>
+              <Button variant="outline" className="w-full border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6]" onClick={() => navigate(ROUTES.MANAGE_SHOP)}>
                 <Edit className="w-4 h-4 mr-2" />
-                إدارة المتاجر الحالية
-              </Button>
+                Managing existing stores              </Button>
             </div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>إدارة المنتجات</CardTitle>
-          </CardHeader>
+            <CardTitle>Product Management</CardTitle>          </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <Button className="w-full" onClick={() => navigate(ROUTES.CREATE_PRODUCT)}>
+              <Button className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white" onClick={() => navigate(ROUTES.CREATE_PRODUCT)}>
                 <Plus className="w-4 h-4 mr-2" />
-                إضافة منتج جديد
-              </Button>
-              <Button variant="outline" className="w-full">
+                Add a new product              </Button>
+              <Button variant="outline" className="w-full border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6]" onClick={() => navigate(ROUTES.MANAGE_SHOP)}>
                 <Package className="w-4 h-4 mr-2" />
-                إدارة المنتجات
-              </Button>
+                Product management              </Button>
             </div>
           </CardContent>
         </Card>
@@ -585,43 +576,40 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
-            <CardTitle>إدارة المواعيد الشاملة</CardTitle>
-          </CardHeader>
+            <CardTitle>Comprehensive Appointment Management</CardTitle>          </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <Button className="w-full" onClick={() => navigate(ROUTES.TIME_MANAGEMENT)}>
+              <Button className="w-100 bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white" onClick={() => navigate(ROUTES.TIME_MANAGEMENT)}>
                 <Clock className="w-4 h-4 mr-2" />
-                إدارة جميع المواعيد
-              </Button>
-              <div className="grid grid-cols-2 gap-2">
-                <Button variant="outline" size="sm" onClick={() => navigate(ROUTES.MANAGE_TIMES)}>
-                  إضافة مواعيد
+                Manage all appointments              </Button>
+              {/* <div className="grid grid-cols-2 gap-2">
+                <Button variant="outline" size="sm" className="border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6]" onClick={() => navigate(ROUTES.MANAGE_TIMES)}>
+                  Add appointment times
                 </Button>
-                <Button variant="outline" size="sm" onClick={() => navigate(ROUTES.BOOKINGS_ONLY)}>
-                  المواعيد المحجوزة
-                </Button>
-              </div>
+                <Button variant="outline" size="sm" className="border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6]" onClick={() => navigate(ROUTES.BOOKINGS_ONLY)}>
+                  Booked appointments                </Button>
+              </div> */}
             </div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>إحصائيات المواعيد</CardTitle>
-          </CardHeader>
+            <CardTitle>Appointment Statistics</CardTitle>          </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">المواعيد المحجوزة</span>
-                <span className="font-semibold text-green-600">{stats.bookings || 0}</span>
+                <span className="text-sm text-[#A66A00]">Booked appointments </span>
+                <span className="font-semibold text-[#8A5700]">{stats.bookings || 0}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">المواعيد المتاحة</span>
-                <span className="font-semibold text-blue-600">{stats.availableTimes || 0}</span>
+                <span className="text-sm text-[#A66A00]">Available appointments </span>
+                <span className="font-semibold text-[#A66A00]">{stats.availableTimes || 0}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">إجمالي المواعيد</span>
-                <span className="font-semibold text-gray-900">{(stats.bookings || 0) + (stats.availableTimes || 0)}</span>
+                <span className="text-sm text-[#A66A00]">Total appointments
+                </span>
+                <span className="font-semibold text-[#8A5700]">{(stats.bookings || 0) + (stats.availableTimes || 0)}</span>
               </div>
             </div>
           </CardContent>
@@ -747,10 +735,10 @@ const Dashboard = () => {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">
+            <h2 className="text-2xl font-bold text-[#6D552C]">
               {isShopOwner ? 'Manage Available Times' : 'My Booked Appointments'}
             </h2>
-            <p className="text-gray-600">
+            <p className="text-[#8A6C37]">
               {isShopOwner ? 'Manage available times for booking' : 'Your booked appointments in shops'}
             </p>
           </div>
@@ -773,7 +761,7 @@ const Dashboard = () => {
                     min={getTomorrowDate()}
                     value={newTimeSlot.date}
                     onChange={(e) => setNewTimeSlot(prev => ({ ...prev, date: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#C37C00]"
                   />
                 </div>
                 <div>
@@ -784,7 +772,7 @@ const Dashboard = () => {
                     type="time"
                     value={newTimeSlot.time}
                     onChange={(e) => setNewTimeSlot(prev => ({ ...prev, time: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#C37C00]"
                   />
                 </div>
                 <div>
@@ -794,7 +782,7 @@ const Dashboard = () => {
                   <select
                     value={newTimeSlot.duration}
                     onChange={(e) => setNewTimeSlot(prev => ({ ...prev, duration: parseInt(e.target.value) }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#C37C00]"
                   >
                     <option value={30}>30 دقيقة</option>
                     <option value={60}>60 دقيقة</option>
@@ -806,7 +794,7 @@ const Dashboard = () => {
                   <Button
                     onClick={handleAddTimeSlot}
                     disabled={isAdding}
-                    className="w-full"
+                    className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white"
                   >
                     {isAdding ? 'جاري الإضافة...' : 'إضافة موعد'}
                   </Button>
@@ -839,24 +827,24 @@ const Dashboard = () => {
                       <div className="flex items-center space-x-4 rtl:space-x-reverse">
                         {!isShopOwner && (
                           <div className="flex items-center space-x-2 rtl:space-x-reverse">
-                            <Store className="w-4 h-4 text-gray-500" />
+                            <Store className="w-4 h-4 text-[#8A6C37]" />
                             <span className="font-medium">{timeSlot.shop?.name || 'متجر غير محدد'}</span>
                           </div>
                         )}
                         <div className="flex items-center space-x-2 rtl:space-x-reverse">
-                          <Calendar className="w-4 h-4 text-gray-500" />
+                          <Calendar className="w-4 h-4 text-[#8A6C37]" />
                           <span className="font-medium">{timeSlot.date}</span>
                         </div>
                         <div className="flex items-center space-x-2 rtl:space-x-reverse">
-                          <Clock className="w-4 h-4 text-gray-500" />
+                          <Clock className="w-4 h-4 text-[#8A6C37]" />
                           <span>{timeSlot.time}</span>
                         </div>
-                        <div className="text-sm text-gray-500">
+                        <div className="text-sm text-[#92723A]">
                           ({timeSlot.duration} دقيقة)
                         </div>
                         <span className={`text-xs px-2 py-1 rounded-full ${isShopOwner
-                          ? (timeSlot.isBooked ? 'text-red-600 bg-red-100' : 'text-green-600 bg-green-100')
-                          : 'text-blue-600 bg-blue-100'
+                          ? (timeSlot.isBooked ? 'text-red-600 bg-red-100' : 'text-[#6D552C] bg-[#D3BB92]')
+                          : 'text-[#8A6C37] bg-[#E2D2B6]'
                           }`}>
                           {isShopOwner
                             ? (timeSlot.isBooked ? 'محجوز' : 'متاح')
@@ -891,8 +879,8 @@ const Dashboard = () => {
                 })}
               </div>
             ) : (
-              <div className="text-center py-8 text-gray-500">
-                <Clock className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+              <div className="text-center py-8 text-[#92723A]">
+                <Clock className="w-12 h-12 mx-auto mb-4 text-[#D3BB92]" />
                 <p>{isShopOwner ? 'لا توجد مواعيد متاحة' : 'لا توجد مواعيد محجوزة'}</p>
                 <p className="text-sm">
                   {isShopOwner
@@ -921,10 +909,10 @@ const Dashboard = () => {
   // Loading state
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center pt-20">
+      <div className="min-h-screen bg-gradient-to-br from-[#F8F4ED] to-[#F0E8DB] flex items-center justify-center pt-20">
         <div className="text-center">
-          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-yellow-600" />
-          <p className="text-gray-600">Loading data...</p>
+          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-[#C37C00]" />
+          <p className="text-[#A66A00]">Loading data...</p>
         </div>
       </div>
     );
@@ -933,11 +921,14 @@ const Dashboard = () => {
   // Error state
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center pt-20">
+      <div className="min-h-screen bg-gradient-to-br from-[#F8F4ED] to-[#F0E8DB] flex items-center justify-center pt-20">
         <div className="text-center">
           <div className="text-red-600 mb-4">❌</div>
           <p className="text-red-600 mb-4">{error}</p>
-          <Button onClick={() => window.location.reload()}>
+          <Button
+            onClick={() => window.location.reload()}
+            className="bg-[#A37F41] hover:bg-[#8A6C37] text-white"
+          >
             Try Again
           </Button>
         </div>
@@ -948,18 +939,18 @@ const Dashboard = () => {
   // Show access denied message for regular users
   if (isRegularUser) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-yellow-50 flex items-center justify-center" dir="ltr">
+      <div className="min-h-screen bg-gradient-to-br from-[#F8F4ED] via-[#F0E8DB] to-[#E2D2B6] flex items-center justify-center" dir="ltr">
         <div className="max-w-md mx-auto text-center">
           <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <span className="text-4xl">🚫</span>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">Access Denied</h1>
-          <p className="text-lg text-gray-600 mb-8">
+          <h1 className="text-3xl font-bold text-[#8A5700] mb-4">Access Denied</h1>
+          <p className="text-lg text-[#A66A00] mb-8">
             Dashboard access is restricted to shop owners and administrators only.
           </p>
           <Button
             onClick={() => navigate('/')}
-            className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-8 py-3 rounded-full font-semibold"
+            className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-8 py-3 rounded-full font-semibold"
           >
             Go to Home
           </Button>
@@ -969,14 +960,14 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] to-[#FFF0CC] pt-20">
+      <div className="w-full px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-[#8A5700]">
             Welcome, {user?.firstName || 'User'}
           </h1>
-          <p className="text-gray-600 mt-1">
+          <p className="text-[#A66A00] mt-1">
             Manage your account and track your activities
           </p>
         </div>
@@ -992,8 +983,8 @@ const Dashboard = () => {
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
                     className={`flex items-center space-x-2 rtl:space-x-reverse py-2 px-1 border-b-2 font-medium text-sm ${activeTab === tab.id
-                      ? 'border-yellow-500 text-yellow-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      ? 'border-[#C37C00] text-[#C37C00]'
+                      : 'border-transparent text-[#A66A00] hover:text-[#8A5700] hover:border-[#FFDB99]'
                       }`}
                   >
                     <Icon className="w-4 h-4" />

@@ -480,13 +480,13 @@ const ProductList = () => {
                         />
 
                         {/* Premium fallback image */}
-                        <div className="fallback-image absolute inset-0 bg-gradient-to-br from-yellow-100 via-amber-50 to-yellow-200 hidden items-center justify-center group-hover:from-yellow-200 group-hover:via-amber-100 group-hover:to-yellow-300 transition-all duration-700">
+                        <div className="fallback-image absolute inset-0 bg-gradient-to-br from-[#FFF0CC] via-[#FFF8E6] to-[#FFE6B3] hidden items-center justify-center group-hover:from-[#FFE6B3] group-hover:via-[#FFF0CC] group-hover:to-[#FFDB99] transition-all duration-700">
                             <div className="text-center transform group-hover:scale-110 transition-transform duration-700">
                                 <div className="relative mb-4">
                                     <div className="text-6xl mb-2 filter drop-shadow-2xl">💎</div>
                                     <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/30 to-orange-400/30 rounded-full blur-xl"></div>
                                 </div>
-                                <div className="text-sm text-gray-800 font-bold px-3 py-1 bg-white/90 rounded-xl backdrop-blur-md shadow-lg border border-yellow-300">
+                                <div className="text-sm text-gray-800 font-bold px-3 py-1 bg-white/90 rounded-xl backdrop-blur-md shadow-lg border border-[#C37C00]">
                                     {safeProduct.name}
                                 </div>
                             </div>
@@ -495,7 +495,7 @@ const ProductList = () => {
 
                     {/* Enhanced gradient overlays */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-                    <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 via-transparent to-orange-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#C37C00]/10 via-transparent to-[#A66A00]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
 
                     {/* Premium favorite button */}
                     <Button
@@ -512,7 +512,7 @@ const ProductList = () => {
 
                     {/* Premium category badge */}
                     {safeProduct.category && (
-                        <Badge className="absolute top-3 left-3 bg-gradient-to-r from-yellow-500 via-yellow-600 to-orange-500 text-white shadow-lg px-3 py-1 text-xs font-bold border border-yellow-400/50 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-1 group-hover:translate-y-0 z-20">
+                        <Badge className="absolute top-3 left-3 bg-gradient-to-r from-[#C37C00] via-[#A66A00] to-[#8A5700] text-white shadow-lg px-3 py-1 text-xs font-bold border border-[#C37C00]/50 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-1 group-hover:translate-y-0 z-20">
                             {PRODUCT_CATEGORIES[safeProduct.category.toUpperCase()] || safeProduct.category}
                         </Badge>
                     )}
@@ -529,12 +529,12 @@ const ProductList = () => {
                         {/* Enhanced shop information */}
                         {safeProduct.shopName && safeProduct.shopName !== 'Unknown Shop' && (
                             <div className="flex items-center gap-2 mb-2 bg-blue-50 p-2 rounded-lg border border-blue-200/50">
-                                <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
+                                <div className="w-6 h-6 bg-gradient-to-r from-[#C37C00] to-[#A66A00] rounded-full flex items-center justify-center">
                                     <ShoppingBag className="w-3 h-3 text-white" />
                                 </div>
                                 <div className="flex-1">
                                     <p className="text-xs text-gray-600 font-medium">Available at</p>
-                                    <p className="text-sm font-bold text-blue-700 hover:text-blue-800 cursor-pointer transition-colors duration-200 truncate" onClick={(e) => {
+                                    <p className="text-sm font-bold text-[#C37C00] hover:text-[#A66A00] cursor-pointer transition-colors duration-200 truncate" onClick={(e) => {
                                         e.stopPropagation();
                                         if (safeProduct.shopId) {
                                             console.log('🏪 Navigating to shop:', safeProduct.shopId);
@@ -556,7 +556,7 @@ const ProductList = () => {
                             {/* Main View Product Button */}
                             <Button
                                 size="md"
-                                className="w-full bg-gradient-to-r from-yellow-500 via-yellow-600 to-orange-500 hover:from-yellow-600 hover:via-orange-500 hover:to-orange-600 text-white px-4 py-2.5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 font-semibold text-sm border border-yellow-400/50"
+                                className="w-full bg-gradient-to-r from-[#C37C00] via-[#A66A00] to-[#8A5700] hover:from-[#A66A00] hover:via-[#8A5700] hover:to-[#6D4500] text-white px-4 py-2.5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 font-semibold text-sm border border-[#C37C00]/50"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     navigate(ROUTES.PRODUCT_DETAILS(productId));
@@ -604,8 +604,8 @@ const ProductList = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 pt-20">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] to-[#FFF0CC] pt-20">
+            <div className="w-full px-4 sm:px-6 lg:px-8 py-8">
                 {/* Header */}
                 <div className="mb-12">
                     <div className="text-center mb-8">
@@ -632,10 +632,10 @@ const ProductList = () => {
                                 {/* Enhanced input container */}
                                 <div className="flex-1 relative group">
                                     {/* Enhanced glow effect */}
-                                    <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-orange-400 to-yellow-600 rounded-full blur-lg opacity-20 group-hover:opacity-40 group-focus-within:opacity-50 transition-all duration-500"></div>
+                                    <div className="absolute inset-0 bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] rounded-full blur-lg opacity-20 group-hover:opacity-40 group-focus-within:opacity-50 transition-all duration-500"></div>
 
                                     {/* Main input container */}
-                                    <div className="relative bg-white rounded-full border-2 border-gray-300 focus-within:border-yellow-500 hover:border-yellow-400 transition-all duration-300 shadow-lg hover:shadow-xl focus-within:shadow-2xl">
+                                    <div className="relative bg-white rounded-full border-2 border-gray-300 focus-within:border-[#C37C00] hover:border-[#E6A500] transition-all duration-300 shadow-lg hover:shadow-xl focus-within:shadow-2xl">
                                         {/* Enhanced search icon with loading state */}
                                         <div className="absolute left-5 top-1/2 transform -translate-y-1/2">
                                             {isLoading && searchQuery ? (
@@ -680,7 +680,7 @@ const ProductList = () => {
                                 <Button
                                     type="button"
                                     onClick={handleSearch}
-                                    className="bg-gradient-to-r from-yellow-500 via-yellow-600 to-orange-500 hover:from-yellow-600 hover:via-orange-500 hover:to-orange-600 text-white px-8 py-5 rounded-full font-bold shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-105 border border-yellow-400/50"
+                                    className="bg-gradient-to-r from-[#C37C00] via-[#A66A00] to-[#8A5700] hover:from-[#A66A00] hover:via-[#8A5700] hover:to-[#6D4500] text-white px-8 py-5 rounded-full font-bold shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-105 border border-[#C37C00]/50"
                                 >
                                     <Search className="w-5 h-5 mr-2" />
                                     <span className="text-base">Search</span>
@@ -944,7 +944,7 @@ const ProductList = () => {
                                             </p>
                                             <Button
                                                 onClick={suggestion?.actionFn || clearFilters}
-                                                className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-8 py-3"
+                                                className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-8 py-3"
                                             >
                                                 {suggestion?.action || "Clear All Filters"}
                                             </Button>
@@ -970,7 +970,7 @@ const ProductList = () => {
                         {/* Related Products Section */}
                         {relatedProducts.length > 0 && userBehavior.viewedProducts.length > 0 && (
                             <div className="mt-16">
-                                <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-2xl p-8 shadow-lg mb-8">
+                                <div className="bg-gradient-to-r from-[#FFF8E6] to-[#FFF0CC] rounded-2xl p-8 shadow-lg mb-8">
                                     <h3 className="text-2xl font-bold text-gray-900 mb-4">
                                         Recommended Based on Your Views
                                     </h3>
@@ -1026,7 +1026,7 @@ const ProductList = () => {
                                                             }}
                                                         />
                                                         <div className="absolute top-3 right-3">
-                                                            <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full font-medium">
+                                                            <span className="bg-[#FFF0CC] text-[#C37C00] text-xs px-2 py-1 rounded-full font-medium">
                                                                 Recommended
                                                             </span>
                                                         </div>

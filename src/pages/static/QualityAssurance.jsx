@@ -25,25 +25,25 @@ const QualityAssurance = () => {
       icon: FileCheck,
       title: 'شهادات الجودة',
       description: 'جميع منتجاتنا معتمدة ومطابقة للمعايير الدولية للذهب والمجوهرات',
-      color: 'text-yellow-600'
+      color: 'text-[#A37F41]'
     },
     {
       icon: Microscope,
       title: 'فحص دقيق',
       description: 'كل قطعة تخضع لفحص دقيق للتأكد من جودة المعدن ونقاء الذهب',
-      color: 'text-blue-600'
+      color: 'text-[#8A6C37]'
     },
     {
       icon: Eye,
       title: 'مراقبة الجودة',
       description: 'نظام مراقبة جودة صارم في جميع مراحل الإنتاج والتصنيع',
-      color: 'text-green-600'
+      color: 'text-[#6D552C]'
     },
     {
       icon: Award,
       title: 'ضمان الأصالة',
       description: 'نضمن أصالة جميع المنتجات مع شهادات الضمان المعتمدة',
-      color: 'text-purple-600'
+      color: 'text-[#C5A56D]'
     }
   ];
 
@@ -276,17 +276,17 @@ const QualityAssurance = () => {
             </div>
 
             {/* Certifications */}
-            <div className="bg-gradient-to-r from-yellow-50 to-amber-50 border border-yellow-200 rounded-xl p-8">
+            <div className="bg-gradient-to-r from-[#F8F4ED] to-[#F0E8DB] border border-[#E2D2B6] rounded-xl p-8">
               <div className="text-center mb-8">
-                <FileCheck className="w-16 h-16 text-yellow-600 mx-auto mb-4" />
+                <FileCheck className="w-16 h-16 text-[#A37F41] mx-auto mb-4" />
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">
                   الشهادات والاعتمادات
                 </h2>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <Star className="w-8 h-8 text-yellow-600" />
+                  <div className="w-16 h-16 bg-[#F0E8DB] rounded-full flex items-center justify-center mx-auto mb-3">
+                    <Star className="w-8 h-8 text-[#A37F41]" />
                   </div>
                   <h3 className="font-semibold text-gray-900 mb-2">ISO 9001</h3>
                   <p className="text-gray-600 text-sm">شهادة إدارة الجودة الدولية</p>

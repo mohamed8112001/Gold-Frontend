@@ -161,12 +161,12 @@ const TimeManagement = () => {
 
   const getAppointmentTypeColor = (type) => {
     const colors = {
-      consultation: 'bg-blue-100 text-blue-800 border-blue-200',
-      viewing: 'bg-green-100 text-green-800 border-green-200',
-      purchase: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-      repair: 'bg-red-100 text-red-800 border-red-200'
+      consultation: 'bg-[#FFF0CC] text-[#A66A00] border-[#FFDB99]',
+      viewing: 'bg-[#FFE6B3] text-[#8A5700] border-[#E6A500]',
+      purchase: 'bg-[#FFDB99] text-[#C37C00] border-[#E6A500]',
+      repair: 'bg-[#FFF8E6] text-[#5A3800] border-[#FFE6B3]'
     };
-    return colors[type] || 'bg-blue-100 text-blue-800 border-blue-200';
+    return colors[type] || 'bg-[#FFF0CC] text-[#A66A00] border-[#FFDB99]';
   };
 
   // Filter times based on active tab and search
@@ -213,7 +213,7 @@ const TimeManagement = () => {
             </div>
             <Button
               onClick={() => setShowAddForm(!showAddForm)}
-              className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-6 py-3 rounded-lg flex items-center gap-2 transition-all duration-300 transform hover:scale-105"
+              className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-6 py-3 rounded-lg flex items-center gap-2 transition-all duration-300 transform hover:scale-105"
             >
               <Plus size={20} />
               إضافة موعد جديد
@@ -223,9 +223,9 @@ const TimeManagement = () => {
 
         {/* Add Time Slot Form */}
         {showAddForm && (
-          <Card className="mb-8 border-yellow-200">
-            <CardHeader className="bg-gradient-to-r from-yellow-50 to-yellow-100">
-              <CardTitle className="text-yellow-800">إضافة موعد متاح جديد</CardTitle>
+          <Card className="mb-8 border-[#FFE6B3]">
+            <CardHeader className="bg-gradient-to-r from-[#FFF8E6] to-[#FFF0CC]">
+              <CardTitle className="text-[#C37C00]">إضافة موعد متاح جديد</CardTitle>
             </CardHeader>
             <CardContent className="p-6">
               <form onSubmit={handleAddTimeSlot} className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
@@ -258,7 +258,7 @@ const TimeManagement = () => {
                   <Button
                     type="submit"
                     disabled={loading}
-                    className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-6 py-2 rounded-md transition-all duration-300"
+                    className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-6 py-2 rounded-md transition-all duration-300"
                   >
                     {loading ? 'جاري الإضافة...' : 'إضافة'}
                   </Button>
@@ -338,9 +338,9 @@ const TimeManagement = () => {
         </div>
 
         {/* Filters and Tabs */}
-        <Card className="mb-8 border-yellow-200">
-          <CardHeader className="bg-gradient-to-r from-yellow-50 to-yellow-100">
-            <CardTitle className="text-yellow-800 flex items-center gap-2">
+        <Card className="mb-8 border-[#FFE6B3]">
+          <CardHeader className="bg-gradient-to-r from-[#FFF8E6] to-[#FFF0CC]">
+            <CardTitle className="text-[#C37C00] flex items-center gap-2">
               <Filter className="w-5 h-5" />
               التصفية والبحث
             </CardTitle>
@@ -358,14 +358,14 @@ const TimeManagement = () => {
               <Button
                 variant={activeTab === 'available' ? 'default' : 'outline'}
                 onClick={() => setActiveTab('available')}
-                className={activeTab === 'available' ? 'bg-blue-500 hover:bg-blue-600' : ''}
+                className={activeTab === 'available' ? 'bg-[#C37C00] hover:bg-[#A66A00]' : ''}
               >
                 المتاحة ({availableTimes.length})
               </Button>
               <Button
                 variant={activeTab === 'booked' ? 'default' : 'outline'}
                 onClick={() => setActiveTab('booked')}
-                className={activeTab === 'booked' ? 'bg-green-500 hover:bg-green-600' : ''}
+                className={activeTab === 'booked' ? 'bg-[#8A5700] hover:bg-[#5A3800]' : ''}
               >
                 المحجوزة ({bookedTimes.length})
               </Button>
@@ -448,9 +448,9 @@ const TimeManagement = () => {
         ) : (
           <div className="space-y-8">
             {sortedDates.map(date => (
-              <Card key={date} className="border-yellow-200">
-                <CardHeader className="bg-gradient-to-r from-yellow-50 to-yellow-100">
-                  <CardTitle className="text-yellow-800 flex items-center gap-2">
+              <Card key={date} className="border-[#FFE6B3]">
+                <CardHeader className="bg-gradient-to-r from-[#FFF8E6] to-[#FFF0CC]">
+                  <CardTitle className="text-[#C37C00] flex items-center gap-2">
                     <Calendar className="w-5 h-5" />
                     {formatDate(date)} ({groupedTimes[date].length} موعد)
                   </CardTitle>
@@ -460,19 +460,19 @@ const TimeManagement = () => {
                     {groupedTimes[date]
                       .sort((a, b) => a.time.localeCompare(b.time))
                       .map((time) => (
-                        <div key={time._id} className={`border rounded-lg p-4 hover:shadow-md transition-shadow ${time.isBooked ? 'border-green-200 bg-green-50' : 'border-blue-200 bg-blue-50'
+                        <div key={time._id} className={`border rounded-lg p-4 hover:shadow-md transition-shadow ${time.isBooked ? 'border-[#FFDB99] bg-[#FFF8E6]' : 'border-[#FFE6B3] bg-[#FFF0CC]'
                           }`}>
                           <div className="flex justify-between items-start">
                             <div className="flex-1">
                               {/* Time and Status */}
                               <div className="flex items-center gap-4 mb-3">
                                 <div className="flex items-center gap-2">
-                                  <Clock className={`w-4 h-4 ${time.isBooked ? 'text-green-600' : 'text-blue-600'}`} />
+                                  <Clock className={`w-4 h-4 ${time.isBooked ? 'text-[#8A5700]' : 'text-[#C37C00]'}`} />
                                   <span className="font-medium text-gray-900">{formatTime(time.time)}</span>
                                 </div>
                                 <Badge className={time.isBooked
-                                  ? 'bg-green-100 text-green-800 border-green-200'
-                                  : 'bg-blue-100 text-blue-800 border-blue-200'
+                                  ? 'bg-[#FFF8E6] text-[#B54A35] border-[#FFDB99]'
+                                  : 'bg-[#FFE6B3] text-[#C37C00] border-[#E6A500]'
                                 }>
                                   {time.isBooked ? 'محجوز' : 'متاح للحجز'}
                                 </Badge>

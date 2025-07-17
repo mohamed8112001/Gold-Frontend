@@ -1,6 +1,6 @@
 // API Base URL
 export const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:5001";
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:5002";
 
 // API Endpoints
 export const API_ENDPOINTS = {
@@ -144,23 +144,47 @@ export const ROUTES = {
   NOT_FOUND: "/404",
 };
 
-// Colors (matching the design)
+// Colors (Golden Brown & Beige Theme)
 export const COLORS = {
-  PRIMARY: "#D4A574", // Gold color from design
-  SECONDARY: "#8B7355",
-  BACKGROUND: "#F5F5F5",
+  // Primary Colors (Golden Brown)
+  PRIMARY: "#A37F41", // Main brand color
+  PRIMARY_LIGHT: "#C5A56D",
+  PRIMARY_DARK: "#8A6C37",
+  PRIMARY_DARKER: "#6D552C",
+  PRIMARY_DARKEST: "#49391D",
+
+  // Secondary Colors (Beige & Earthy)
+  SECONDARY: "#E2D2B6", // Secondary color
+  SECONDARY_LIGHT: "#F0E8DB",
+  SECONDARY_LIGHTER: "#F8F4ED",
+  SECONDARY_DARK: "#D3BB92",
+  SECONDARY_DARKER: "#92723A",
+
+  // Background Colors
+  BACKGROUND: "#F8F4ED", // Light beige background
+  SURFACE: "#FFFFFF", // White surface
+  SURFACE_ALT: "#F0E8DB", // Alternative surface
+
+  // Text Colors
+  TEXT: "#241C0F", // Primary text
+  TEXT_SECONDARY: "#49391D", // Secondary text
+  TEXT_TERTIARY: "#6D552C", // Less important text
+
+  // Status Colors
+  SUCCESS: "#5C8A3C", // Green
+  WARNING: "#D4A546", // Amber
+  ERROR: "#B54A35", // Reddish-brown
+  INFO: "#4A7997", // Blue-gray
+
+  // Basic Colors
   WHITE: "#FFFFFF",
   BLACK: "#000000",
-  GRAY: {
-    100: "#F7F7F7",
-    200: "#E5E5E5",
-    300: "#D1D1D1",
-    400: "#A3A3A3",
-    500: "#737373",
-    600: "#525252",
-    700: "#404040",
-    800: "#262626",
-    900: "#171717",
+
+  // Dark Mode Colors
+  DARK: {
+    BACKGROUND: "#120E07",
+    SURFACE: "#241C0F",
+    TEXT: "#F0E8DB",
   },
 };
 

@@ -137,7 +137,7 @@ const Register = () => {
   const typeInfo = getUserTypeInfo();
 
   return (
-    <div className="h-screen w-full relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #fef7ed 0%, #ffffff 50%, #fef3e2 100%)' }}>
+    <div className="h-screen w-full relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #F8F4ED 0%, #FFFFFF 50%, #F0E8DB 100%)' }}>
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full blur-3xl animate-pulse" style={{ background: 'linear-gradient(135deg, rgba(163, 127, 65, 0.15) 0%, rgba(163, 127, 65, 0.1) 100%)' }}></div>
@@ -212,7 +212,7 @@ const Register = () => {
           </div>
 
           {/* Right Side - Enhanced Form */}
-          <div className="w-full bg-gradient-to-br from-white to-gray-50 p-8 lg:p-12 flex flex-col justify-start relative overflow-y-auto">
+          <div className="w-full bg-gradient-to-br from-white to-[#FFF8E6] p-8 lg:p-12 flex flex-col justify-start relative overflow-y-auto">
             {/* Navigation */}
             <div className="flex justify-between items-center mb-6">
               <Button
@@ -232,14 +232,14 @@ const Register = () => {
 
             {/* Navigation Tabs with enhanced styling */}
             <div className="flex justify-center mb-8">
-              <div className="flex rounded-xl p-1 shadow-lg" style={{ backgroundColor: '#F5F1EB' }}>
-                <div className="px-8 py-3 bg-white rounded-lg font-medium shadow-md border transform scale-105" style={{ color: '#A37F41', borderColor: '#E5D5C3' }}>
+              <div className="flex rounded-xl p-1 shadow-lg" style={{ backgroundColor: '#F0E8DB' }}>
+                <div className="px-8 py-3 bg-white rounded-lg font-medium shadow-md border transform scale-105" style={{ color: '#A37F41', borderColor: '#E2D2B6' }}>
                   Sign Up
                 </div>
                 <Link
                   to={ROUTES.LOGIN}
                   className="px-8 py-3 rounded-lg font-medium transition-all duration-200 hover:bg-white/50"
-                  style={{ color: '#6B5B47' }}
+                  style={{ color: '#241C0F' }}
                 >
                   Sign In
                 </Link>
@@ -326,7 +326,7 @@ const Register = () => {
                         color: '#6B5B47'
                       }}
                       onFocus={(e) => e.target.style.borderColor = '#A37F41'}
-                      onBlur={(e) => e.target.style.borderColor = '#E5D5C3'}
+                      onBlur={(e) => e.target.style.borderColor = '#E2D2B6'}
                     />
                   </div>
                   {errors.email && (
@@ -353,7 +353,7 @@ const Register = () => {
                         color: '#6B5B47'
                       }}
                       onFocus={(e) => e.target.style.borderColor = '#A37F41'}
-                      onBlur={(e) => e.target.style.borderColor = '#E5D5C3'}
+                      onBlur={(e) => e.target.style.borderColor = '#E2D2B6'}
                     />
                   </div>
                   {errors.phone && (
@@ -398,7 +398,7 @@ const Register = () => {
                   </div>
 
                   <div className="group">
-                    <label className="block text-sm font-semibold mb-2" style={{ color: '#6B5B47' }}>
+                    <label className="block text-sm font-semibold mb-2" style={{ color: '#241C0F' }}>
                       Confirm Password *
                     </label>
                     <div className="relative">
@@ -411,8 +411,8 @@ const Register = () => {
                         onChange={handleInputChange}
                         className={`pl-14 pr-14 py-4 border-2 rounded-xl transition-all duration-200 ${errors.confirmPassword ? 'border-red-500' : ''}`}
                         style={{
-                          borderColor: errors.confirmPassword ? '#ef4444' : '#E5D5C3',
-                          color: '#6B5B47'
+                          borderColor: errors.confirmPassword ? '#B54A35' : '#E2D2B6',
+                          color: '#241C0F'
                         }}
                         onFocus={(e) => e.target.style.borderColor = '#A37F41'}
                         onBlur={(e) => e.target.style.borderColor = '#E5D5C3'}
@@ -495,7 +495,7 @@ const Register = () => {
                     <div className="w-full border-t-2" style={{ borderColor: '#E5D5C3' }}></div>
                   </div>
                   <div className="relative flex justify-center text-sm">
-                    <span className="px-6 bg-gradient-to-r from-gray-50 to-white font-medium" style={{ color: '#6B5B47' }}>Or Sign Up With</span>
+                    <span className="px-6 bg-gradient-to-r from-[#FFF8E6] to-white font-medium" style={{ color: '#8A5700' }}>Or Sign Up With</span>
                   </div>
                 </div>
 

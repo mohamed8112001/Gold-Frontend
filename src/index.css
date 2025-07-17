@@ -135,7 +135,7 @@
 
 /* Gradient text effect */
 .gradient-text {
-  background: linear-gradient(135deg, #f59e0b, #d97706);
+  background: linear-gradient(135deg, #A37F41, #6D552C);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -147,17 +147,17 @@
 }
 
 .shop-content::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #F0E8DB;
   border-radius: 3px;
 }
 
 .shop-content::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #D3BB92;
   border-radius: 3px;
 }
 
 .shop-content::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #C5A56D;
 }
 
 /* Line clamp utilities */

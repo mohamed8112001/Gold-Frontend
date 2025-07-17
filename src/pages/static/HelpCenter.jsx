@@ -3,9 +3,9 @@ import { motion } from 'framer-motion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.jsx';
 import { Button } from '@/components/ui/button.jsx';
 import { Input } from '@/components/ui/input.jsx';
-import { 
-  Search, 
-  HelpCircle, 
+import {
+  Search,
+  HelpCircle,
   Book,
   MessageCircle,
   Phone,
@@ -138,7 +138,7 @@ const HelpCenter = () => {
   const filteredFaqs = faqs.filter(faq => {
     const matchesCategory = selectedCategory === 'all' || faq.category === selectedCategory;
     const matchesSearch = faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         faq.answer.toLowerCase().includes(searchQuery.toLowerCase());
+      faq.answer.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
@@ -147,10 +147,10 @@ const HelpCenter = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50/30">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-[#FFF8E6]/30">
       {/* Hero Section */}
       <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-amber-400/10 via-yellow-400/5 to-amber-500/10"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-[#C37C00]/10 via-[#E6A500]/5 to-[#A66A00]/10"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -161,7 +161,7 @@ const HelpCenter = () => {
             <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
               مركز المساعدة
             </h1>
-            <div className="w-24 h-1 bg-gradient-to-r from-amber-400 to-yellow-500 mx-auto mb-8"></div>
+            <div className="w-24 h-1 bg-gradient-to-r from-[#C37C00] to-[#E6A500] mx-auto mb-8"></div>
             <p className="text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed mb-12">
               نحن هنا لمساعدتك! ابحث عن إجابات لأسئلتك أو تواصل مع فريق الدعم
             </p>
@@ -217,7 +217,7 @@ const HelpCenter = () => {
                     <CardDescription className="text-gray-600 mb-4">
                       {action.description}
                     </CardDescription>
-                    <Button className="bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-500 hover:to-yellow-600 text-white">
+                    <Button className="bg-gradient-to-r from-[#C37C00] to-[#E6A500] hover:from-[#A66A00] hover:to-[#C37C00] text-white">
                       ابدأ الآن
                     </Button>
                   </CardContent>
@@ -229,7 +229,7 @@ const HelpCenter = () => {
       </section>
 
       {/* Categories */}
-      <section className="py-16 bg-gradient-to-br from-slate-100 to-amber-50/50">
+      <section className="py-16 bg-gradient-to-br from-slate-100 to-[#FFF8E6]/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -254,11 +254,10 @@ const HelpCenter = () => {
                 <Button
                   variant={selectedCategory === category.id ? "default" : "outline"}
                   onClick={() => setSelectedCategory(category.id)}
-                  className={`w-full h-auto p-4 flex flex-col items-center space-y-2 ${
-                    selectedCategory === category.id
-                      ? 'bg-gradient-to-r from-amber-400 to-yellow-500 text-white border-0'
-                      : 'text-gray-600 hover:text-amber-600 bg-white/80 backdrop-blur-sm'
-                  }`}
+                  className={`w-full h-auto p-4 flex flex-col items-center space-y-2 ${selectedCategory === category.id
+                    ? 'bg-gradient-to-r from-[#C37C00] to-[#E6A500] text-white border-0'
+                    : 'text-gray-600 hover:text-[#C37C00] bg-white/80 backdrop-blur-sm'
+                    }`}
                 >
                   <category.icon className="w-6 h-6" />
                   <span className="text-sm font-medium text-center leading-tight">{category.name}</span>
@@ -331,7 +330,7 @@ const HelpCenter = () => {
       </section>
 
       {/* Guides */}
-      <section className="py-16 bg-gradient-to-br from-slate-100 to-amber-50/50">
+      <section className="py-16 bg-gradient-to-br from-slate-100 to-[#FFF8E6]/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -355,7 +354,7 @@ const HelpCenter = () => {
               >
                 <Card className="h-full hover:shadow-lg transition-all duration-300 border-0 bg-white/80 backdrop-blur-sm cursor-pointer hover:scale-105">
                   <CardHeader>
-                    <div className="w-12 h-12 bg-gradient-to-r from-amber-400 to-yellow-500 rounded-lg flex items-center justify-center mb-4">
+                    <div className="w-12 h-12 bg-gradient-to-r from-[#C37C00] to-[#E6A500] rounded-lg flex items-center justify-center mb-4">
                       <Book className="w-6 h-6 text-white" />
                     </div>
                     <CardTitle className="text-xl font-bold text-gray-900">
@@ -376,7 +375,7 @@ const HelpCenter = () => {
                         <span>{guide.steps} خطوات</span>
                       </div>
                     </div>
-                    <Button className="w-full bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-500 hover:to-yellow-600 text-white">
+                    <Button className="w-full bg-gradient-to-r from-[#C37C00] to-[#E6A500] hover:from-[#A66A00] hover:to-[#C37C00] text-white">
                       ابدأ الدليل
                     </Button>
                   </CardContent>
@@ -388,7 +387,7 @@ const HelpCenter = () => {
       </section>
 
       {/* Contact Support */}
-      <section className="py-16 bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-600">
+      <section className="py-16 bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -402,7 +401,7 @@ const HelpCenter = () => {
             <p className="text-xl text-white/90 mb-8 max-w-3xl mx-auto">
               فريق الدعم لدينا متاح 24/7 لمساعدتك في أي استفسار
             </p>
-            <Button 
+            <Button
               size="lg"
               className="bg-white text-amber-600 hover:bg-gray-100 font-bold px-8 py-3 text-lg"
             >

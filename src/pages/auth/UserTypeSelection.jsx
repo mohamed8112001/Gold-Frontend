@@ -42,9 +42,9 @@ const UserTypeSelection = () => {
         { icon: BarChart3, text: 'Compare prices' },
         { icon: Heart, text: 'Read reviews' }
       ],
-      color: 'bg-[#FEF7ED] border-[#E5D5C3] hover:bg-[#FDF4E8]',
-      iconColor: 'text-[#A37F41]',
-      buttonColor: 'bg-[#A37F41] hover:bg-[#8B6A35]'
+      color: 'bg-[#FFF8E6] border-[#FFE6B3] hover:bg-[#FFF0CC]',
+      iconColor: 'text-[#C37C00]',
+      buttonColor: 'bg-[#C37C00] hover:bg-[#A66A00]'
     },
     {
       id: 'seller',
@@ -57,14 +57,14 @@ const UserTypeSelection = () => {
         { icon: BarChart3, text: 'Track analytics' },
         { icon: Users, text: 'Customer management' }
       ],
-      color: 'bg-[#FEF7ED] border-[#E5D5C3] hover:bg-[#FDF4E8]',
-      iconColor: 'text-[#A37F41]',
-      buttonColor: 'bg-[#A37F41] hover:bg-[#8B6A35]'
+      color: 'bg-[#FFF8E6] border-[#FFE6B3] hover:bg-[#FFF0CC]',
+      iconColor: 'text-[#C37C00]',
+      buttonColor: 'bg-[#C37C00] hover:bg-[#A66A00]'
     }
   ];
 
   return (
-    <div className="h-screen w-full flex items-center justify-center p-4 overflow-y-auto" style={{ background: 'linear-gradient(135deg, #fef7ed 0%, #ffffff 50%, #fef3e2 100%)' }}>
+    <div className="h-screen w-full flex items-center justify-center p-4 overflow-y-auto" style={{ background: 'linear-gradient(135deg, #FFF8E6 0%, #FFFFFF 50%, #FFF0CC 100%)' }}>
       <div className="w-full max-w-6xl py-8">
 
         {/* Header */}
@@ -117,7 +117,7 @@ const UserTypeSelection = () => {
                     : 'hover:shadow-sm border'
                     }`}
                   style={{
-                    borderColor: isSelected ? '#A37F41' : '#E5D5C3',
+                    borderColor: isSelected ? '#A37F41' : '#E2D2B6',
                     ringColor: isSelected ? '#A37F41' : 'transparent'
                   }}
                   onClick={() => setSelectedType(type.id)}
@@ -132,10 +132,10 @@ const UserTypeSelection = () => {
                           }`}
                       />
                     </div>
-                    <CardTitle className="text-xl font-bold" style={{ color: isSelected ? '#A37F41' : '#6B5B47' }}>
+                    <CardTitle className="text-xl font-bold" style={{ color: isSelected ? '#A37F41' : '#241C0F' }}>
                       {type.title}
                     </CardTitle>
-                    <CardDescription style={{ color: isSelected ? '#6B5B47' : '#9CA3AF' }}>
+                    <CardDescription style={{ color: isSelected ? '#6D552C' : '#49391D' }}>
                       {type.description}
                     </CardDescription>
                   </CardHeader>

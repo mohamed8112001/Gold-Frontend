@@ -1,12 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.jsx';
-import { 
-  Users, 
-  Target, 
-  Heart, 
-  Shield, 
-  Award, 
+import {
+  Users,
+  Target,
+  Heart,
+  Shield,
+  Award,
   Clock,
   MapPin,
   Star,
@@ -68,10 +68,10 @@ const AboutUs = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50/30">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-[#FFF8E6]/30">
       {/* Hero Section */}
       <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-amber-400/10 via-yellow-400/5 to-amber-500/10"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-[#C37C00]/10 via-[#E6A500]/5 to-[#A66A00]/10"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -82,7 +82,7 @@ const AboutUs = () => {
             <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
               من نحن؟
             </h1>
-            <div className="w-24 h-1 bg-gradient-to-r from-amber-400 to-yellow-500 mx-auto mb-8"></div>
+            <div className="w-24 h-1 bg-gradient-to-r from-[#C37C00] to-[#E6A500] mx-auto mb-8"></div>
             <p className="text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
               نحن منصة رقمية مبتكرة تهدف إلى تسهيل عملية شراء الذهب والمجوهرات في مصر
             </p>
@@ -102,7 +102,7 @@ const AboutUs = () => {
           >
             <h2 className="text-4xl font-bold text-gray-900 mb-6">رسالتنا</h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              نسعى لتوفير الجهد على العملاء المشترين للذهب وأصحاب المحلات، ونسهل عليهم اتخاذ القرارات الصحيحة 
+              نسعى لتوفير الجهد على العملاء المشترين للذهب وأصحاب المحلات، ونسهل عليهم اتخاذ القرارات الصحيحة
               من خلال منصة شاملة تجمع بين الشفافية والثقة والسهولة في الاستخدام
             </p>
           </motion.div>
@@ -118,7 +118,7 @@ const AboutUs = () => {
               >
                 <Card className="h-full text-center hover:shadow-lg transition-shadow duration-300 border-0 bg-white/80 backdrop-blur-sm">
                   <CardHeader>
-                    <div className="w-16 h-16 bg-gradient-to-r from-amber-400 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <div className="w-16 h-16 bg-gradient-to-r from-[#C37C00] to-[#E6A500] rounded-full flex items-center justify-center mx-auto mb-4">
                       <feature.icon className="w-8 h-8 text-white" />
                     </div>
                     <CardTitle className="text-xl font-bold text-gray-900">
@@ -138,7 +138,7 @@ const AboutUs = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-600">
+      <section className="py-16 bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -203,7 +203,7 @@ const AboutUs = () => {
               >
                 <Card className="h-full text-center hover:shadow-lg transition-all duration-300 border-0 bg-white/80 backdrop-blur-sm hover:scale-105">
                   <CardHeader>
-                    <div className="w-20 h-20 bg-gradient-to-r from-amber-400 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <div className="w-20 h-20 bg-gradient-to-r from-[#C37C00] to-[#E6A500] rounded-full flex items-center justify-center mx-auto mb-6">
                       <value.icon className="w-10 h-10 text-white" />
                     </div>
                     <CardTitle className="text-2xl font-bold text-gray-900 mb-4">
@@ -223,7 +223,7 @@ const AboutUs = () => {
       </section>
 
       {/* Story Section */}
-      <section className="py-16 bg-gradient-to-br from-slate-100 to-amber-50/50">
+      <section className="py-16 bg-gradient-to-br from-slate-100 to-[#FFF8E6]/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -235,15 +235,15 @@ const AboutUs = () => {
             <h2 className="text-4xl font-bold text-gray-900 mb-8">قصتنا</h2>
             <div className="prose prose-lg mx-auto text-gray-600 leading-relaxed">
               <p className="text-xl mb-6">
-                بدأت فكرة "دبلة" من تجربة شخصية واجهناها عند البحث عن أفضل محلات الذهب في مصر. 
+                بدأت فكرة "دبلة" من تجربة شخصية واجهناها عند البحث عن أفضل محلات الذهب في مصر.
                 لاحظنا أن العملاء يقضون وقتاً طويلاً في البحث والمقارنة، بينما أصحاب المحلات يواجهون صعوبة في الوصول للعملاء المناسبين.
               </p>
               <p className="text-xl mb-6">
-                من هنا جاءت فكرة إنشاء منصة رقمية تجمع بين الطرفين، توفر للعملاء معلومات شاملة وموثوقة عن المحلات والمنتجات، 
+                من هنا جاءت فكرة إنشاء منصة رقمية تجمع بين الطرفين، توفر للعملاء معلومات شاملة وموثوقة عن المحلات والمنتجات،
                 وتساعد أصحاب المحلات في عرض منتجاتهم والوصول لعملاء جدد.
               </p>
               <p className="text-xl">
-                اليوم، نفخر بكوننا الوجهة الأولى لمحبي الذهب والمجوهرات في مصر، حيث نجمع بين التقنية الحديثة والخبرة التقليدية 
+                اليوم، نفخر بكوننا الوجهة الأولى لمحبي الذهب والمجوهرات في مصر، حيث نجمع بين التقنية الحديثة والخبرة التقليدية
                 لنقدم تجربة فريدة ومميزة لجميع عملائنا.
               </p>
             </div>
