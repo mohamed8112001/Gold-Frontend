@@ -20,8 +20,10 @@ import FloatingChat from '../components/ui/FloatingChat.jsx';
 import { motion } from "framer-motion";
 import { useTranslation } from 'react-i18next';
 import ConversationsFloatinButton from '@/components/ui/ConversationsFloatinButton.jsx';
+import { useAuth } from '@/context/AuthContext.jsx';
 
 const Home = () => {
+  const {user, setUser} = useAuth()
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
@@ -935,6 +937,9 @@ const Home = () => {
       {/* Floating Chat Component */}
       <FloatingChat />
 
+      <ConversationsFloatinButton user={user} onSelectConversation={(productId)=> {
+        navigate(ROUTES.PRODUCT_DETAILS(productId))
+      }}/>
     </motion.div >
   );
 };
