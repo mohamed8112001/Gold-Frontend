@@ -19,6 +19,8 @@ import FloatingChat from '../components/ui/FloatingChat.jsx';
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import { useTranslation } from 'react-i18next';
+import api from '@/services/api.js';
+import.meta.env.VITE_API_BASE_URL
 
 const Home = () => {
   const navigate = useNavigate();
@@ -65,15 +67,9 @@ const Home = () => {
       image: 'https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
       gradient: 'from-[#A37F41] to-[#C5A56D]'
     },
+
     {
       id: 5,
-      title: t('hero.diamond_collection.title') || 'Diamond Collection',
-      subtitle: t('hero.diamond_collection.subtitle') || 'Sparkling diamonds for special moments',
-      image: 'https://images.unsplash.com/photo-1544376664-80b17f09d399?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
-      gradient: 'from-[#F8F4ED] to-[#D3BB92]'
-    },
-    {
-      id: 6,
       title: t('hero.pearl_elegance.title') || 'Pearl Elegance',
       subtitle: t('hero.pearl_elegance.subtitle') || 'Timeless beauty of natural pearls',
       image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
@@ -90,7 +86,7 @@ const Home = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
-    }, 5000); // Change slide every 5 seconds
+    }, 3000); // Change slide every 5 seconds
 
     return () => clearInterval(interval);
   }, [heroSlides.length]);
@@ -111,7 +107,7 @@ const Home = () => {
     try {
       const response = await shopService.getAllShops();
       const shops = Array.isArray(response) ? response : response.data || [];
-      setFeaturedShops(shops.slice(0, 6));
+      setFeaturedShops(shops.slice(0, 4)); // Only load 4 shops for premium display
     } catch (error) {
       console.error('Error loading shops:', error);
       setFeaturedShops([]);
@@ -122,57 +118,81 @@ const Home = () => {
 
   const loadStats = async () => {
     try {
-      // Load public shops data (only approved shops)
+      // Step 1: Load public shops
       const response = await shopService.getAllShops();
-      const approvedShops = Array.isArray(response) ? response : response.data || [];
+      const approvedShops = Array.isArray(response?.data)
+        ? response.data
+        : Array.isArray(response)
+          ? response
+          : [];
 
-      // Load products data (you might need to import productService)
+      // Step 2: Load products
       let products = [];
+
       try {
-        const productsResponse = await fetch('/api/products'); // Adjust API endpoint
-        if (productsResponse.ok) {
-          console.log('Products API available, fetching data...');
-          console.log('Products API response:', productsResponse);
-          products = await productsResponse.json();
+        const token = localStorage.getItem("token");
+        console.log(" Fetching products from /product...");
+        console.log(" Token used:", token);
+
+        const headers = token
+          ? { Authorization: `Bearer ${token}` }
+          : {};
+
+        const productsResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}/product`, {
+          headers,
+        });
+
+        if (!productsResponse.ok) {
+          throw new Error(`Product API error: ${productsResponse.status}`);
         }
-      } catch {
-        console.log('Products API not available, using shop-based calculation');
+
+        products = await productsResponse.json();
+        console.log(" Products fetched:", products.length);
+      } catch (error) {
+        console.warn(' Products API not available or failed:', error.message);
       }
 
+      // Step 3: Calculate stats
       const totalShops = approvedShops.length;
-      const totalProducts = products.length || totalShops * 15; // Estimate if no products API
+      const totalProducts = products.length;
+      // const totalProducts = Array.isArray(products) ? products.length : approvedShops.length * 10;
 
-      // Calculate average rating from shops
-      const shopsWithRating = approvedShops.filter(shop => shop.averageRating && shop.averageRating > 0);
-      const averageShopRating = shopsWithRating.length > 0
-        ? shopsWithRating.reduce((sum, shop) => sum + shop.averageRating, 0) / shopsWithRating.length
-        : 4.8;
+      const shopsWithRating = approvedShops.filter(
+        (shop) => shop.averageRating && shop.averageRating > 0
+      );
 
-      // Calculate total reviews (estimate based on shops)
-      const totalReviews = totalShops * 5; // Estimate 5 reviews per shop
+      const averageShopRating =
+        shopsWithRating.length > 0
+          ? shopsWithRating.reduce((sum, shop) => sum + shop.averageRating, 0) /
+          shopsWithRating.length
+          : 4.8;
 
+      const totalReviews = totalShops * 5;
+
+      // Step 4: Set final stats
       setStats({
         totalShops,
         totalProducts,
         averageRating: averageShopRating,
-        totalReviews
+        totalReviews,
       });
 
-      console.log('📊 Dynamic stats loaded from public endpoint:', {
+      console.log(' Dynamic stats loaded:', {
         totalShops,
         totalProducts,
         averageRating: averageShopRating.toFixed(1),
-        totalReviews
+        totalReviews,
       });
 
     } catch (error) {
-      console.error('Error loading stats:', error);
-      // Fallback to default values
+      console.error(' Error loading stats:', error.message, error);
+
+      // Step 5: Fallback values
       setStats({
         totalShops: 50,
         totalProducts: 1000,
         averageRating: 4.8,
-        totalReviews: 250
+        totalReviews: 250,
       });
     }
   };
@@ -189,7 +209,7 @@ const Home = () => {
 
   const ShopCard = ({ shop }) => {
     // Debug shop image
-    console.log('🖼️ Home Shop image debug:', {
+    console.log(' Home Shop image debug:', {
       shopName: shop.name,
       logoUrl: shop.logoUrl,
       image: shop.image,
@@ -219,7 +239,7 @@ const Home = () => {
               alt={shop.name}
               className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-700"
               onError={(e) => {
-                console.log('❌ Home image failed to load:', e.target.src);
+                console.log(' Home image failed to load:', e.target.src);
                 // Hide the image and show fallback
                 e.target.style.display = 'none';
                 const fallback = e.target.parentElement.querySelector('.fallback-image');
@@ -228,11 +248,11 @@ const Home = () => {
                 }
               }}
               onLoad={(e) => {
-                console.log('✅ Home image loaded successfully:', e.target.src);
+                console.log(' Home image loaded successfully:', e.target.src);
               }}
             />
           ) : (
-            console.log('🖼️ No logoUrl for home shop:', shop.name, 'logoUrl:', shop.logoUrl)
+            console.log(' No logoUrl for home shop:', shop.name, 'logoUrl:', shop.logoUrl)
           )}
 
           {/* Premium fallback image */}
@@ -257,16 +277,6 @@ const Home = () => {
           {/* Enhanced Gradient Overlay on Image */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-          {/* Favorite Button */}
-          <div className="absolute top-4 right-4">
-            <Button
-              size="sm"
-              variant="ghost"
-              className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm hover:bg-white hover:scale-110 transition-all duration-300 shadow-lg border-0 p-0"
-            >
-              <Heart className="w-5 h-5 text-gray-600 hover:text-red-500 transition-colors duration-300" />
-            </Button>
-          </div>
 
           {/* Verified Badge */}
           <div className="absolute top-4 left-4">
@@ -275,12 +285,6 @@ const Home = () => {
             </div>
           </div>
 
-          {/* Premium Badge */}
-          {/* <div className="absolute bottom-4 right-4">
-            <div className="flex items-center space-x-2 bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-4 py-2 rounded-full shadow-xl border border-yellow-400/50">
-              <span className="text-sm font-bold">Premium</span>
-            </div>
-          </div> */}
         </div>
 
         {/* Enhanced Content Section */}
@@ -298,31 +302,7 @@ const Home = () => {
             <span className="text-base font-semibold line-clamp-1 text-gray-700">{shop.address || shop.area || shop.city || 'Location not specified'}</span>
           </div>
 
-          {/* Description */}
-          {/* {shop.description && (
-            <div className="mb-5">
-              <p className="text-sm text-gray-600 leading-relaxed line-clamp-2 bg-gray-50 p-3 rounded-lg">
-                {shop.description}
-              </p>
-            </div>
-          )} */}
 
-          {/* Specialties */}
-          {/* <div className="flex flex-wrap gap-3 mb-6">
-            {shop.specialties?.slice(0, 2).map((specialty, index) => (
-              <span
-                key={index}
-                className="text-sm bg-gradient-to-r from-yellow-100 to-yellow-200 text-yellow-800 px-4 py-2 rounded-full font-bold border border-yellow-300 shadow-sm hover:shadow-md transition-shadow duration-200"
-              >
-                ✨ {specialty}
-              </span>
-            ))}
-            {shop.specialties?.length > 2 && (
-              <span className="text-sm text-blue-600 bg-gradient-to-r from-blue-100 to-blue-200 px-4 py-2 rounded-full font-bold border border-blue-300 shadow-sm">
-                +{shop.specialties.length - 2} More
-              </span>
-            )}
-          </div> */}
 
           {/* Enhanced Action Section */}
           <div className="pt-6">
@@ -347,31 +327,43 @@ const Home = () => {
 
               {/* Secondary Actions */}
               <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  size="md"
-                  className="flex-1 border-2 border-[#E2D2B6] hover:border-[#8A6C37] hover:bg-[#F8F4ED] text-gray-700 hover:text-[#8A6C37] py-3 rounded-xl font-semibold transition-all duration-300"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
+                {/* Call Button */}
+                <a
+                  href={`tel:${shop.phone}`}
+                  className="flex-1"
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  <Phone className="w-4 h-4 mr-2" />
-                  Call
-                </Button>
-                <Button
-                  variant="outline"
-                  size="md"
-                  className="flex-1 border-2 border-[#E2D2B6] hover:border-[#6D552C] hover:bg-[#F0E8DB] text-gray-700 hover:text-[#6D552C] py-3 rounded-xl font-semibold transition-all duration-300"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
+                  <Button
+                    variant="outline"
+                    size="md"
+                    className="w-full border-2 border-[#E2D2B6] hover:border-[#8A6C37] hover:bg-[#F8F4ED] text-gray-700 hover:text-[#8A6C37] py-3 rounded-xl font-semibold transition-all duration-300"
+                  >
+                    <Phone className="w-4 h-4 mr-2" />
+                    Call
+                  </Button>
+                </a>
+
+                {/* Map Button */}
+                <a
+                  href={`https://www.google.com/maps?q=${encodeURIComponent(shop.location || shop.mapLink)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1"
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  <MapPin className="w-4 h-4 mr-2" />
-                  Map
-                </Button>
+                  <Button
+                    variant="outline"
+                    size="md"
+                    className="w-full border-2 border-[#E2D2B6] hover:border-[#6D552C] hover:bg-[#F0E8DB] text-gray-700 hover:text-[#6D552C] py-3 rounded-xl font-semibold transition-all duration-300"
+                  >
+                    <MapPin className="w-4 h-4 mr-2" />
+                    Map
+                  </Button>
+                </a>
               </div>
             </div>
           </div>
+
         </CardContent>
 
         {/* Hover Effect Border */}
@@ -425,10 +417,6 @@ const Home = () => {
               <div className="relative z-20 h-full flex items-center justify-center">
                 <div className="text-center text-white w-full px-4 sm:px-6 lg:px-8">
                   {/* Premium Badge with Animation */}
-                  <div className={`inline-flex items-center px-8 py-4 rounded-full bg-white/15 backdrop-blur-md border border-white/30 shadow-2xl mb-8 transition-all duration-700 ${index === currentSlide ? 'animate-fade-in scale-100' : 'scale-95 opacity-0'
-                    }`}>
-                    <span className="text-white font-semibold text-lg tracking-wide">✨ Premium Collection ✨</span>
-                  </div>
 
                   {/* Main Title with Stagger Animation */}
                   <h1 className={`text-6xl md:text-8xl lg:text-9xl font-black mb-8 leading-tight transition-all duration-1000 delay-200 ${index === currentSlide ? 'animate-fade-in translate-y-0' : 'translate-y-10 opacity-0'
@@ -456,7 +444,7 @@ const Home = () => {
                     <Button
                       size="lg"
                       onClick={() => navigate('/shops')}
-                      className={`bg-gradient-to-r ${slide.gradient} hover:scale-110 text-white px-12 py-5 text-xl font-bold rounded-full shadow-2xl hover:shadow-3xl transition-all duration-500 transform border-2 border-white/30 hover:border-white/50 backdrop-blur-sm`}
+                      className={`bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] hover:from-[#A66A00] hover:via-[#C37C00] hover:to-[#8A5700] text-white px-12 py-4 text-xl font-bold rounded-full shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:scale-110 hover:-translate-y-1 border-2 border-[#D3BB92]/50`}
                     >
                       <span className="flex items-center gap-3">
                         Explore Stores
@@ -471,10 +459,6 @@ const Home = () => {
                     >
                       <span className="flex items-center gap-3">
                         View Products
-                        <span className="text-2xl">✨</span>
-
-
-
                       </span>
                     </Button>
                   </div>
@@ -629,22 +613,7 @@ const Home = () => {
             </div>
           </div>
 
-          {/* Clean Action Buttons */}
-          <div className="flex flex-col sm:flex-row justify-center gap-4 mt-12">
-            <Button
-              onClick={() => navigate('/shops')}
-              className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-8 py-3 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-            >
-              {t('buttons.browse_all_stores') || "Browse All Stores"}
-            </Button>
-            <Button
-              onClick={() => navigate('/products')}
-              variant="outline"
-              className="border-2 border-[#E2D2B6] text-[#8A6C37] hover:bg-[#F8F4ED] px-8 py-3 text-lg rounded-full transition-all duration-300 transform hover:scale-105"
-            >
-              View All Products
-            </Button>
-          </div>
+         
         </div>
       </section>
 
@@ -708,64 +677,94 @@ const Home = () => {
             </div>
           </div>
 
-          {/* Enhanced Shops Grid */}
+          {/* Premium Featured Shops Section - Only 4 Cards */}
           {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[...Array(6)].map((_, index) => (
-                <div
-                  key={index}
-                  className="bg-white rounded-3xl shadow-lg overflow-hidden"
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  {/* Image Skeleton */}
-                  <div className="relative">
-                    <div className="h-56 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-pulse"></div>
-                    {/* Badges Skeleton */}
-                    <div className="absolute top-4 left-4">
-                      <div className="w-20 h-8 bg-gray-300 rounded-full animate-pulse"></div>
-                    </div>
-                    <div className="absolute top-4 right-4">
-                      <div className="w-10 h-10 bg-gray-300 rounded-full animate-pulse"></div>
-                    </div>
-                    <div className="absolute bottom-4 right-4">
-                      <div className="w-16 h-8 bg-gray-300 rounded-full animate-pulse"></div>
-                    </div>
-                  </div>
+            <div className="mb-16">
+              {/* Premium Badge Skeleton */}
+              <div className="flex items-center justify-center mb-6">
+                <div className="w-48 h-10 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded-full animate-pulse"></div>
+              </div>
 
-                  {/* Content Skeleton */}
-                  <div className="p-6">
-                    <div className="h-6 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded-full mb-3 animate-pulse"></div>
-                    <div className="h-4 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded-full mb-4 w-3/4 animate-pulse"></div>
-                    <div className="flex gap-2 mb-6">
-                      <div className="h-6 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded-full w-16 animate-pulse"></div>
-                      <div className="h-6 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded-full w-20 animate-pulse"></div>
+              {/* Premium Shops Grid Skeleton - Only 4 Cards */}
+              <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {[...Array(4)].map((_, index) => (
+                  <div
+                    key={index}
+                    className="relative bg-white rounded-3xl shadow-lg overflow-hidden"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    {/* Premium Badge Skeleton */}
+                    <div className="absolute -top-3 left-3 z-20">
+                      <div className="w-20 h-6 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded-full animate-pulse"></div>
                     </div>
-                    <div className="flex justify-between items-center pt-4 border-t border-gray-100">
-                      <div className="h-12 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded-2xl w-28 animate-pulse"></div>
-                      <div className="text-right">
-                        <div className="h-4 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded w-8 mb-1 animate-pulse"></div>
-                        <div className="h-3 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded w-12 animate-pulse"></div>
+                    {/* Premium Crown Skeleton */}
+                    <div className="absolute -top-2 right-3 z-20">
+                      <div className="w-6 h-6 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded-full animate-pulse"></div>
+                    </div>
+                    {/* Image Skeleton */}
+                    <div className="relative border-4 border-gradient-to-r rounded-3xl p-1">
+                      <div className="bg-white rounded-2xl overflow-hidden">
+                        <div className="h-56 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-pulse"></div>
+                        <div className="p-6">
+                          <div className="h-6 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded-full mb-3 animate-pulse"></div>
+                          <div className="h-4 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded-full mb-4 w-3/4 animate-pulse"></div>
+                          <div className="h-12 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded-2xl w-full animate-pulse"></div>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {featuredShops.slice(0, 6).map((shop, index) => (
-                <div
-                  key={shop._id || shop.id}
-                  className="opacity-0 animate-fade-in"
-                  style={{
-                    animationDelay: `${index * 0.15}s`,
-                    animationFillMode: 'forwards'
-                  }}
-                >
-                  <ShopCard shop={shop} />
+            featuredShops.length > 0 && (
+              <div className="mb-16">
+                <div className="flex items-center justify-center mb-6">
+                  <div className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] text-white px-6 py-2 rounded-full shadow-lg ">
+                    <div className="flex items-center gap-2 ">
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                      <span className="font-bold text-sm ">Premium Featured Stores</span>
+                    </div>
+                  </div>
                 </div>
-              ))}
-            </div>
+
+                {/* Premium Shops Grid - Only 4 Cards */}
+                <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                  {featuredShops.slice(0, 4).map((shop, index) => (
+                    <div key={shop._id || shop.id} className="relative opacity-0 animate-fade-in" style={{
+                      animationDelay: `${index * 0.15}s`,
+                      animationFillMode: 'forwards'
+                    }}>
+                      {/* Premium Badge */}
+                      <div className="absolute -top-3 left-3 z-20">
+                        <div className={`bg-gradient-to-r ${index === 0 ? 'from-yellow-400 to-yellow-600' :
+                          index === 1 ? 'from-gray-300 to-gray-500' :
+                            index === 2 ? 'from-amber-600 to-amber-800' :
+                              'from-blue-400 to-blue-600'} text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg`}>
+                          #{index + 1} Premium
+                        </div>
+                      </div>
+                      {/* Premium Crown */}
+                      <div className="absolute -top-2 right-3 z-20">
+                        <div className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] p-1.5 rounded-full shadow-lg">
+                          <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M5 4a1 1 0 00-2 0v7.268a2 2 0 000 3.464V16a1 1 0 102 0v-1.268a2 2 0 000-3.464V4zM11 4a1 1 0 10-2 0v1.268a2 2 0 000 3.464V16a1 1 0 102 0V8.732a2 2 0 000-3.464V4zM16 3a1 1 0 011 1v7.268a2 2 0 010 3.464V16a1 1 0 11-2 0v-1.268a2 2 0 010-3.464V4a1 1 0 011-1z" />
+                          </svg>
+                        </div>
+                      </div>
+                      {/* Premium Border with ShopCard */}
+                      <div className="border-4 border-gradient-to-r from-[#C37C00] to-[#A66A00] rounded-3xl p-1 bg-gradient-to-br from-[#C37C00] to-[#A66A00]">
+                        <div className="bg-white rounded-2xl overflow-hidden">
+                          <ShopCard shop={shop} />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )
           )}
 
           {/* Enhanced View All Button */}
@@ -814,10 +813,11 @@ const Home = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Service 1 */}
             <div className="text-center p-6 bg-[#F8F4ED] rounded-2xl hover:bg-white hover:shadow-lg transition-all duration-300">
-              <div className="w-20 h-20 bg-gradient-to-br from-[#A37F41] to-[#8A6C37] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
-                <Shield className="w-10 h-10 text-white" />
+              <div className="w-20 h-20  bg-gradient-to-br from-[#A66A00] to-[#A66A00] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <Shield className="w-10 h-10 text-white
+                " />
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-gray-900">
+              <h3 className="text-2xl font-bold mb-4 text-gray-900 ">
                 {t('services.quality_guarantee.title') || 'Quality Guarantee'}
               </h3>
               <p className="text-gray-600 leading-relaxed">
@@ -827,7 +827,7 @@ const Home = () => {
 
             {/* Service 2 */}
             <div className="text-center p-6 bg-[#F8F4ED] rounded-2xl hover:bg-white hover:shadow-lg transition-all duration-300">
-              <div className="w-20 h-20 bg-gradient-to-br from-[#C5A56D] to-[#A37F41] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+              <div className="w-20 h-20  bg-gradient-to-br from-[#A66A00] to-[#A66A00] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
                 <Award className="w-10 h-10 text-white" />
               </div>
               <h3 className="text-2xl font-bold mb-4 text-gray-900">
@@ -840,8 +840,8 @@ const Home = () => {
 
             {/* Service 3 */}
             <div className="text-center p-6 bg-[#F8F4ED] rounded-2xl hover:bg-white hover:shadow-lg transition-all duration-300">
-              <div className="w-20 h-20 bg-gradient-to-br from-[#6D552C] to-[#49391D] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
-                <Star className="w-10 h-10 text-white" />
+              <div className="w-20 h-20 bg-gradient-to-br from-[#A66A00] to-[#A66A00] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <Star className="w-10 h-10 text-white " />
               </div>
               <h3 className="text-2xl font-bold mb-4 text-gray-900">
                 {t('services.best_prices.title') || 'Best Prices'}
@@ -854,14 +854,15 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Clean CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-[#C37C00] to-[#A66A00]">
+      <section className="relative py-20 bg-gradient-to-br from-[#Fdfcf9] to-[#f8f1e4] overflow-hidden">
+        <div className="absolute inset-0 bg-[url('/gold-pattern.svg')] opacity-5 bg-center bg-cover pointer-events-none" />
 
-        <div className="w-full text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-5xl font-bold text-white mb-6">
+        <div className="relative w-full text-center px-4 sm:px-6 lg:px-8">
+          <h2 className="text-5xl font-bold  mb-6 bg-gradient-to-r from-[#C37C00] to-[#A66A00] bg-clip-text text-transparent">
             {t('cta.title') || 'Ready to Discover Your Perfect Jewelry?'}
           </h2>
-          <p className="text-xl text-[#F0E8DB] mb-8 w-full">
+
+          <p className="text-xl text-[#5C4A1C] mb-8 max-w-2xl mx-auto">
             {t('cta.description') || 'Join thousands of satisfied customers who found their dream jewelry through Dibla'}
           </p>
 
@@ -869,67 +870,28 @@ const Home = () => {
             <Button
               size="lg"
               onClick={() => navigate('/shops')}
-              className="bg-white text-[#C37C00] hover:bg-[#FFF8E6] px-8 py-3 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              className="bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] hover:from-[#A66A00] hover:via-[#C37C00] hover:to-[#8A5700] text-white px-12 py-4 text-xl font-bold rounded-full shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:scale-110 hover:-translate-y-1 border-2 border-[#D3BB92]/50"
             >
               {t('buttons.explore_stores') || 'Explore Stores Now'}
             </Button>
+
             <Button
               size="lg"
               variant="outline"
               onClick={() => navigate('/register')}
-              className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-[#C37C00] px-8 py-3 text-lg font-semibold rounded-full transition-all duration-300 transform hover:scale-105"
+              className="bg-transparent border-2 border-[#7A5200] text-[#7A5200] hover:bg-[#7A5200] hover:text-white px-8 py-3 text-lg font-semibold rounded-full transition-all duration-300 transform hover:scale-105"
             >
               {t('buttons.join_us') || 'Join Us Now'}
             </Button>
           </div>
 
-          <div className="mt-8 text-[#F0E8DB]">
-            <p className="text-lg">
+          <div className="mt-10 text-[#5C4A1C]">
+            <p className="text-lg font-medium">
               {t('cta.customers_trust', { count: stats.totalReviews || '1000' }) || `More than ${stats.totalReviews || '1000'} satisfied customers trust us`}
             </p>
           </div>
         </div>
       </section>
-
-
-      {/* Admin Access Section */}
-      {/* <section className="py-8 bg-gray-100">
-        <div className="w-full px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">
-              Admin Access
-            </h3>
-            <div className="flex justify-center gap-4 flex-wrap">
-              <Button
-                onClick={() => navigate('/demo-login')}
-                className="bg-[#C37C00] hover:bg-[#A66A00] text-white font-medium"
-              >
-
-                Demo Login (Quick Access)
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => navigate('/admin/create')}
-                className="border-red-600 text-red-600 hover:bg-red-600 hover:text-white"
-              >
-
-                Create Admin Account
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => navigate('/admin/promote')}
-                className="border-red-600 text-red-600 hover:bg-red-600 hover:text-white"
-              >
-
-                Promote to Admin
-              </Button>
-            </div>
-            <p className="text-xs text-gray-500 mt-2">
-              Admin Key: DIBLA_ADMIN_2024
-            </p>
-          </div>
-        </div>
-      </section> */}
 
       {/* Floating Chat Component */}
       <FloatingChat />

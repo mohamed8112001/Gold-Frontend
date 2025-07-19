@@ -9,7 +9,6 @@ import {
   Star,
   ShoppingBag,
   Clock,
-
   Eye,
   Edit,
   Trash2,
@@ -18,7 +17,7 @@ import {
   BarChart3,
   Users,
   Package,
-  Loader2
+  Loader2,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES } from '../../utils/constants.js';
@@ -30,7 +29,6 @@ const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   const [stats, setStats] = useState({
     favorites: 0,
     bookings: 0,
@@ -38,32 +36,26 @@ const Dashboard = () => {
     reviews: 0,
     shops: 0,
     products: 0,
-    customers: 0
+    customers: 0,
   });
-
   const [recentActivity, setRecentActivity] = useState([]);
-
   const [favorites, setFavorites] = useState([]);
   const [bookings, setBookings] = useState([]);
   const [availableTimes, setAvailableTimes] = useState([]);
 
-  // Check if user has access to dashboard
   useEffect(() => {
     if (isRegularUser) {
-      // Redirect regular users away from dashboard
       navigate('/');
       return;
     }
   }, [isRegularUser, navigate]);
 
-  // Load dashboard data
   useEffect(() => {
     const loadDashboardData = async () => {
       try {
         setLoading(true);
         setError(null);
 
-        // Load user stats
         if (isShopOwner) {
           const shopStats = await dashboardService.getShopOwnerStats();
           const shopActivity = await dashboardService.getShopOwnerActivity();
@@ -76,62 +68,18 @@ const Dashboard = () => {
           setRecentActivity(userActivity.data || []);
         }
 
-        // Load bookings
         const bookingsData = await dashboardService.getBookings();
         setBookings(bookingsData.data || []);
 
-        // Load available times for shop owners
         if (isShopOwner) {
-          try {
-            const response = await dashboardService.getAvailableTimes();
-            console.log('Dashboard - Shop owner available times FULL RESPONSE:', response);
-            console.log('Dashboard - Response data type:', typeof response.data);
-            console.log('Dashboard - Response data length:', response.data?.length);
-            console.log('Dashboard - Response data content:', response.data);
-
-            if (response && response.data) {
-              console.log('Setting availableTimes with response.data:', response.data);
-              setAvailableTimes(response.data);
-            } else if (Array.isArray(response)) {
-              console.log('Setting availableTimes with response array:', response);
-              setAvailableTimes(response);
-            } else {
-              console.log('No valid data found, setting empty array');
-              setAvailableTimes([]);
-            }
-          } catch (error) {
-            console.error('Error loading available times:', error);
-            setAvailableTimes([]);
-          }
+          const response = await dashboardService.getAvailableTimes();
+          setAvailableTimes(response.data || Array.isArray(response) ? response : []);
         } else {
-          // Load user bookings for regular users
-          try {
-            const response = await dashboardService.getUserBookings();
-            console.log('Dashboard - User bookings FULL RESPONSE:', response);
-            console.log('Dashboard - Response data type:', typeof response.data);
-            console.log('Dashboard - Response data length:', response.data?.length);
-            console.log('Dashboard - Response data content:', response.data);
-
-            if (response && response.data) {
-              console.log('Setting availableTimes with response.data:', response.data);
-              setAvailableTimes(response.data);
-            } else if (Array.isArray(response)) {
-              console.log('Setting availableTimes with response array:', response);
-              setAvailableTimes(response);
-            } else {
-              console.log('No valid data found, setting empty array');
-              setAvailableTimes([]);
-            }
-          } catch (error) {
-            console.error('Error loading user bookings:', error);
-            setAvailableTimes([]);
-          }
+          const response = await dashboardService.getUserBookings();
+          setAvailableTimes(response.data || Array.isArray(response) ? response : []);
         }
-
-
       } catch (err) {
-        console.error('Error loading dashboard data:', err);
-        setError(err.message || 'حدث خطأ في تحميل البيانات');
+        setError(err.message || 'Error loading data');
       } finally {
         setLoading(false);
       }
@@ -142,70 +90,48 @@ const Dashboard = () => {
     }
   }, [user, isShopOwner]);
 
-  // Handle booking cancellation
   const handleCancelBooking = async (bookingId) => {
     try {
       await dashboardService.cancelBooking(bookingId);
-      // Refresh bookings
       const bookingsData = await dashboardService.getBookings();
       setBookings(bookingsData.data || []);
-      // Show success message (you can add a toast notification here)
-      console.log('تم إلغاء الحجز بنجاح');
+      alert('Booking cancelled successfully');
     } catch (err) {
-      console.error('Error cancelling booking:', err);
-      setError(err.message || 'حدث خطأ في إلغاء الحجز');
+      setError(err.message || 'Error cancelling booking');
     }
   };
 
-  // Handle remove from favorites
   const handleRemoveFromFavorites = async (favoriteId) => {
     try {
       await dashboardService.removeFromFavorites(favoriteId);
-      // Refresh favorites
       const favoritesData = await dashboardService.getFavorites();
       setFavorites(favoritesData.data || []);
-      console.log('Item removed from favorites');
+      alert('Item removed from favorites');
     } catch (err) {
-      console.error('Error removing from favorites:', err);
-      setError(err.message || 'Error occurred while removing item from favorites');
+      setError(err.message || 'Error removing item from favorites');
     }
   };
 
-  // Map color names to Tailwind classes to avoid dynamic class issues
   const colorMap = {
-    yellow: {
-      bg: 'bg-[#FFF0CC]',
-      text: 'text-[#C37C00]'
-    },
-    blue: {
-      bg: 'bg-[#FFE6B3]',
-      text: 'text-[#A66A00]'
-    },
-    green: {
-      bg: 'bg-[#FFDB99]',
-      text: 'text-[#8A5700]'
-    },
-    purple: {
-      bg: 'bg-[#FFF8E6]',
-      text: 'text-[#B8850A]'
-    }
+    yellow: { bg: 'bg-[#FFF0CC]', text: 'text-[#C37C00]' },
+    blue: { bg: 'bg-[#FFE6B3]', text: 'text-[#A66A00]' },
+    green: { bg: 'bg-[#FFDB99]', text: 'text-[#8A5700]' },
+    purple: { bg: 'bg-[#FFF8E6]', text: 'text-[#B8850A]' },
   };
 
   const StatCard = ({ icon: IconComponent, title, value, description, color = 'yellow' }) => {
     const colorClasses = colorMap[color] || colorMap.yellow;
     return (
-      <Card className="hover:shadow-md transition-shadow">
-        <CardContent className="p-6">
+      <Card className="hover:shadow-lg transition-all duration-300 bg-white/90 backdrop-blur-md rounded-lg">
+        <CardContent className="p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-[#A66A00]">{title}</p>
-              <p className="text-3xl font-bold text-[#8A5700]">{value}</p>
-              {description && (
-                <p className="text-xs text-[#B8850A] mt-1">{description}</p>
-              )}
+              <p className="text-sm font-semibold text-[#8A5700]">{title}</p>
+              <p className="text-2xl font-bold text-[#C37C00]">{value}</p>
+              {description && <p className="text-xs text-[#A66A00] mt-1">{description}</p>}
             </div>
-            <div className={`w-12 h-12 ${colorClasses.bg} rounded-lg flex items-center justify-center`}>
-              {IconComponent && <IconComponent className={`w-6 h-6 ${colorClasses.text}`} />}
+            <div className={`w-10 h-10 ${colorClasses.bg} rounded-full flex items-center justify-center shadow-md`}>
+              <IconComponent className={`w-5 h-5 ${colorClasses.text}`} />
             </div>
           </div>
         </CardContent>
@@ -216,10 +142,10 @@ const Dashboard = () => {
   const ActivityItem = ({ activity }) => {
     const getIcon = () => {
       switch (activity.type) {
-        case 'booking': return <Calendar className="w-4 h-4" />;
-        case 'favorite': return <Heart className="w-4 h-4" />;
-        case 'review': return <Star className="w-4 h-4" />;
-        default: return <User className="w-4 h-4" />;
+        case 'booking': return <Calendar className="w-4 h-4 text-[#C37C00]" />;
+        case 'favorite': return <Heart className="w-4 h-4 text-[#C37C00]" />;
+        case 'review': return <Star className="w-4 h-4 text-[#C37C00]" />;
+        default: return <User className="w-4 h-4 text-[#C37C00]" />;
       }
     };
 
@@ -233,7 +159,7 @@ const Dashboard = () => {
     };
 
     return (
-      <div className="flex items-center space-x-3 rtl:space-x-reverse p-3 hover:bg-[#FFF8E6] rounded-lg">
+      <div className="flex items-center space-x-3 p-3 hover:bg-[#FFF8E6] rounded-lg transition-all duration-300">
         <div className="w-8 h-8 bg-[#FFF0CC] rounded-full flex items-center justify-center">
           {getIcon()}
         </div>
@@ -249,26 +175,33 @@ const Dashboard = () => {
   };
 
   const FavoriteItem = ({ item }) => (
-    <Card className="hover:shadow-md transition-shadow">
+    <Card className="hover:shadow-lg transition-all duration-300 bg-white/90 backdrop-blur-md rounded-lg">
       <CardContent className="p-4">
-        <div className="flex space-x-3 rtl:space-x-reverse">
+        <div className="flex space-x-3">
           <div className="w-16 h-16 bg-[#F0E8DB] rounded-lg flex items-center justify-center">
             <div className="text-2xl">💍</div>
           </div>
           <div className="flex-1">
-            <h4 className="font-medium text-[#6D552C]">{item.name}</h4>
+            <h4 className="font-semibold text-[#6D552C]">{item.name}</h4>
             <p className="text-sm text-[#8A6C37]">{item.shop}</p>
-            <p className="text-sm font-bold text-[#A37F41]">{item.price}</p>
+            <p className="text-sm font-bold text-[#C37C00]">{item.price}</p>
           </div>
           <div className="flex flex-col space-y-1">
-            <Button size="sm" variant="outline">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] rounded-lg"
+              onClick={() => navigate(ROUTES.PRODUCT_DETAILS(item.id))}
+              aria-label={`View ${item.name}`}
+            >
               <Eye className="w-3 h-3" />
             </Button>
             <Button
               size="sm"
               variant="outline"
+              className="border-red-400 text-red-600 hover:bg-red-500 hover:text-white rounded-lg"
               onClick={() => handleRemoveFromFavorites(item.id)}
-              title="Remove from favorites"
+              aria-label={`Remove ${item.name} from favorites`}
             >
               <Trash2 className="w-3 h-3" />
             </Button>
@@ -279,51 +212,63 @@ const Dashboard = () => {
   );
 
   const BookingItem = ({ booking }) => (
-    <Card className="hover:shadow-md transition-shadow">
+    <Card className="hover:shadow-lg transition-all duration-300 bg-white/90 backdrop-blur-md rounded-lg">
       <CardContent className="p-4">
         <div className="flex items-center justify-between">
           <div>
-            <h4 className="font-medium text-[#6D552C]">{booking.shop?.name || booking.shopName || 'متجر غير محدد'}</h4>
-            <div className="flex items-center space-x-2 rtl:space-x-reverse text-sm text-[#8A6C37] mt-1">
+            <h4 className="font-semibold text-[#6D552C]">{booking.shop?.name || booking.shopName || 'Unknown Shop'}</h4>
+            <div className="flex items-center space-x-2 text-sm text-[#8A6C37] mt-1">
               <Calendar className="w-4 h-4" />
-              <span>{booking.date || booking.appointmentDate || 'تاريخ غير محدد'}</span>
+              <span>{booking.date || booking.appointmentDate || 'Unknown Date'}</span>
               <Clock className="w-4 h-4" />
-              <span>{booking.time || booking.appointmentTime || 'وقت غير محدد'}</span>
+              <span>{booking.time || booking.appointmentTime || 'Unknown Time'}</span>
             </div>
-            <p className="text-xs text-[#92723A] mt-1">{booking.type || booking.serviceType || 'خدمة عامة'}</p>
+            <p className="text-xs text-[#92723A] mt-1">{booking.type || booking.serviceType || 'General Service'}</p>
           </div>
           <div className="flex flex-col items-end space-y-2">
-            <span className={`text-xs px-2 py-1 rounded-full ${(booking.status === 'confirmed' || booking.status === 'approved')
-              ? 'text-[#6D552C] bg-[#D3BB92]'
-              : booking.status === 'pending'
-                ? 'text-[#A37F41] bg-[#F0E8DB]'
-                : booking.status === 'cancelled'
+            <span
+              className={`text-xs px-2 py-1 rounded-full ${
+                booking.status === 'confirmed' || booking.status === 'approved'
+                  ? 'text-[#6D552C] bg-[#D3BB92]'
+                  : booking.status === 'pending'
+                  ? 'text-[#A37F41] bg-[#F0E8DB]'
+                  : booking.status === 'cancelled'
                   ? 'text-red-600 bg-red-100'
                   : 'text-[#92723A] bg-[#F8F4ED]'
-              }`}>
-              {booking.status === 'confirmed' ? 'مؤكد' :
-                booking.status === 'approved' ? 'موافق عليه' :
-                  booking.status === 'pending' ? 'في الانتظار' :
-                    booking.status === 'cancelled' ? 'ملغي' :
-                      booking.status || 'غير محدد'}
+              }`}
+            >
+              {booking.status === 'confirmed'
+                ? 'Confirmed'
+                : booking.status === 'approved'
+                ? 'Approved'
+                : booking.status === 'pending'
+                ? 'Pending'
+                : booking.status === 'cancelled'
+                ? 'Cancelled'
+                : booking.status || 'Unknown'}
             </span>
-            <div className="flex space-x-1">
-              {booking.status !== 'cancelled' && booking.status !== 'completed' && (
-                <>
-                  <Button size="sm" variant="outline" title="تعديل الحجز">
-                    <Edit className="w-3 h-3" />
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    title="إلغاء الحجز"
-                    onClick={() => handleCancelBooking(booking._id || booking.id)}
-                  >
-                    <Trash2 className="w-3 h-3" />
-                  </Button>
-                </>
-              )}
-            </div>
+            {booking.status !== 'cancelled' && booking.status !== 'completed' && (
+              <div className="flex space-x-1">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] rounded-lg"
+                  onClick={() => navigate(ROUTES.EDIT_BOOKING(booking._id || booking.id))}
+                  aria-label="Edit booking"
+                >
+                  <Edit className="w-3 h-3" />
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="border-red-400 text-red-600 hover:bg-red-500 hover:text-white rounded-lg"
+                  onClick={() => handleCancelBooking(booking._id || booking.id)}
+                  aria-label="Cancel booking"
+                >
+                  <Trash2 className="w-3 h-3" />
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </CardContent>
@@ -332,97 +277,66 @@ const Dashboard = () => {
 
   const OverviewTab = () => (
     <div className="space-y-6">
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
-        {/* <StatCard
-          icon={Heart}
-          title="Favorites"
-          value={stats.favorites}
-          description="saved items"
-        /> */}
-        <StatCard
-          icon={Calendar}
-          title="Bookings"
-          value={stats.bookings}
-          description={`${stats.activeBookings || 0} active bookings`}
-          color="blue"
-        />
-        <StatCard
-          icon={Star}
-          title="Reviews"
-          value={stats.reviews}
-          description="reviews written"
-          color="green"
-        />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard icon={Calendar} title="Bookings" value={stats.bookings} description={`${stats.activeBookings || 0} active bookings`} color="blue" />
+        <StatCard icon={Star} title="Reviews" value={stats.reviews} description="Reviews written" color="green" />
         {isShopOwner && (
-          <StatCard
-            icon={Store}
-            title="Shops"
-            value={stats.shops}
-            description="registered shops"
-            color="purple"
-          />
+          <>
+            <StatCard icon={Store} title="Shops" value={stats.shops} description="Registered shops" color="purple" />
+            <StatCard icon={Package} title="Products" value={stats.products} description="Displayed products" color="yellow" />
+          </>
         )}
       </div>
-
-      {/* Recent Activity */}
-      <Card>
+      <Card className="bg-white/90 backdrop-blur-md rounded-lg">
         <CardHeader>
-          <CardTitle> Recent activity</CardTitle>
+          <CardTitle>Recent Activity</CardTitle>
           <CardDescription>Latest activities and updates</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-2">
-            {recentActivity.length > 0 ? (
-              recentActivity.map((activity) => (
+          {recentActivity.length > 0 ? (
+            <div className="space-y-2">
+              {recentActivity.map(activity => (
                 <ActivityItem key={activity.id} activity={activity} />
-              ))
-            ) : (
-              <div className="text-center py-8 text-[#92723A]">
-                <Calendar className="w-12 h-12 mx-auto mb-4 text-[#D3BB92]" />
-                <p>No recent activities</p>
-                <p className="text-sm">Start browsing shops and booking appointments</p>
-              </div>
-            )}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8 text-[#92723A] bg-white/80 rounded-lg">
+              <Calendar className="w-12 h-12 mx-auto mb-4 text-[#D3BB92]" />
+              <p>No recent activities</p>
+              <p className="text-sm">Start browsing shops or booking appointments</p>
+            </div>
+          )}
         </CardContent>
       </Card>
-
-      {/* Quick Actions */}
-      <Card>
+      <Card className="bg-white/90 backdrop-blur-md rounded-lg">
         <CardHeader>
-          <CardTitle> Quick actions</CardTitle>
+          <CardTitle>Quick Actions</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-3 md:grid-cols-3c gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <Button
               variant="outline"
-              className="h-20 flex flex-col items-center justify-center border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6]"
+              className="h-20 flex flex-col items-center justify-center border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
               onClick={() => navigate(ROUTES.SHOPS)}
+              aria-label="Browse shops"
             >
               <ShoppingBag className="w-6 h-6 mb-2" />
-              <span className="text-sm"> Browse stores</span>
+              <span className="text-sm">Browse Shops</span>
             </Button>
-            {/* <Button
+            <Button
               variant="outline"
-              className="h-20 flex flex-col items-center justify-center"
+              className="h-20 flex flex-col items-center justify-center border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
               onClick={() => setActiveTab('bookings')}
+              aria-label="Book an appointment"
             >
               <Calendar className="w-6 h-6 mb-2" />
-              <span className="text-sm">Book an appointment </span>
-            </Button> */}
-            <Button
-              variant="outline"
-              className="h-20 flex flex-col items-center justify-center border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6]"
-              onClick={() => setActiveTab('favorites')}
-            >
-              <Heart className="w-6 h-6 mb-2" />
-              <span className="text-sm">Favorites</span>
+              <span className="text-sm">Book Appointment</span>
             </Button>
             <Button
               variant="outline"
-              className="h-20 flex flex-col items-center justify-center border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6]"
+              className="h-20 flex flex-col items-center justify-center border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
               onClick={() => navigate(ROUTES.PROFILE)}
+              aria-label="View profile"
             >
               <User className="w-6 h-6 mb-2" />
               <span className="text-sm">Profile</span>
@@ -433,82 +347,62 @@ const Dashboard = () => {
     </div>
   );
 
-  const FavoritesTab = () => (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-[#6D552C]">Favorites</h2>
-          <p className="text-[#8A6C37]">Your saved items</p>
-        </div>
-        <Button onClick={() => navigate(ROUTES.PRODUCTS)}>
-          <Plus className="w-4 h-4 mr-2" />
-          Browse Products
-        </Button>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {favorites.length > 0 ? (
-          favorites.map((item) => (
-            <FavoriteItem key={item.id} item={item} />
-          ))
-        ) : (
-          <div className="col-span-full text-center py-12 text-[#92723A]">
-            <Heart className="w-16 h-16 mx-auto mb-4 text-[#D3BB92]" />
-            <h3 className="text-lg font-medium mb-2">No items in favorites</h3>
-            <p className="mb-4">Start adding products you like to your favorites</p>
-            <Button onClick={() => navigate(ROUTES.SHOPS)}>
-              <ShoppingBag className="w-4 h-4 mr-2" />
-              Browse Products
-            </Button>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-
   const BookingsTab = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-[#6D552C]">
-            {isShopOwner ? 'Bookings Overview' : 'My Bookings'}
-          </h2>
-          <p className="text-[#8A6C37]">
-            {isShopOwner ? 'Overview of your shop bookings' : 'Your booked appointments'}
-          </p>
+          <h2 className="text-2xl font-bold text-[#6D552C]">{isShopOwner ? 'Bookings Overview' : 'My Bookings'}</h2>
+          <p className="text-[#8A6C37]">{isShopOwner ? 'Overview of your shop bookings' : 'Your booked appointments'}</p>
         </div>
         <div className="flex gap-2">
           {isShopOwner ? (
             <>
-              <Button onClick={() => navigate(ROUTES.TIME_MANAGEMENT)}>
+              <Button
+                onClick={() => navigate(ROUTES.TIME_MANAGEMENT)}
+                className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+                aria-label="Manage time"
+              >
                 <Clock className="w-4 h-4 mr-2" />
-                Time Management
+                Manage Time
               </Button>
-              <Button variant="outline" onClick={() => navigate(ROUTES.BOOKINGS_ONLY)}>
+              <Button
+                variant="outline"
+                onClick={() => navigate(ROUTES.BOOKINGS_ONLY)}
+                className="border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+                aria-label="View bookings only"
+              >
                 <Calendar className="w-4 h-4 mr-2" />
                 View Bookings Only
               </Button>
             </>
           ) : (
-            <Button onClick={() => navigate(ROUTES.SHOPS)}>
+            <Button
+              onClick={() => navigate(ROUTES.SHOPS)}
+              className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+              aria-label="Book new appointment"
+            >
               <Plus className="w-4 h-4 mr-2" />
               Book New Appointment
             </Button>
           )}
         </div>
       </div>
-
       <div className="space-y-4">
         {bookings.length > 0 ? (
-          bookings.map((booking) => (
-            <BookingItem key={booking._id || booking.id} booking={booking} />
-          ))
+          bookings.map(booking => <BookingItem key={booking._id || booking.id} booking={booking} />)
         ) : (
-          <div className="text-center py-12 text-[#92723A]">
+          <div className="text-center py-12 text-[#92723A] bg-white/90 backdrop-blur-md rounded-lg">
             <Calendar className="w-16 h-16 mx-auto mb-4 text-[#D3BB92]" />
-            <h3 className="text-lg font-medium mb-2">No appointments booked</h3>            <p className="mb-4">Start by booking an appointment at a store</p>            <Button onClick={() => navigate(ROUTES.SHOPS)}>
+            <h3 className="text-lg font-medium mb-2">No Bookings Found</h3>
+            <p className="mb-4">Start by booking an appointment at a shop</p>
+            <Button
+              onClick={() => navigate(ROUTES.SHOPS)}
+              className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+              aria-label="Browse shops"
+            >
               <ShoppingBag className="w-4 h-4 mr-2" />
-              Browse stores            </Button>
+              Browse Shops
+            </Button>
           </div>
         )}
       </div>
@@ -517,98 +411,99 @@ const Dashboard = () => {
 
   const ShopOwnerTab = () => (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <StatCard
-          icon={Store}
-          title="Shop"
-          value={stats.shops}
-          description="Active Shop"
-          color="purple"
-        />
-        <StatCard
-          icon={Package}
-          title="Products"
-          value={stats.products}
-          description="Displayed product"
-          color="blue"
-        />
-        <StatCard
-          icon={Users}
-          title="Users"
-          value={stats.customers}
-          description=" Registered customer"
-          color="green"
-        />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <StatCard icon={Store} title="Shops" value={stats.shops} description="Active shops" color="purple" />
+        <StatCard icon={Package} title="Products" value={stats.products} description="Displayed products" color="blue" />
+        <StatCard icon={Users} title="Customers" value={stats.customers} description="Registered customers" color="green" />
       </div>
-
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
+        <Card className="bg-white/90 backdrop-blur-md rounded-lg">
           <CardHeader>
-            <CardTitle>Store Management</CardTitle>          </CardHeader>
+            <CardTitle>Shop Management</CardTitle>
+          </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <Button className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white" onClick={() => navigate(ROUTES.CREATE_SHOP)}>
+              <Button
+                className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+                onClick={() => navigate(ROUTES.CREATE_SHOP)}
+                aria-label="Add new shop"
+              >
                 <Plus className="w-4 h-4 mr-2" />
-                Add a new store              </Button>
-              <Button variant="outline" className="w-full border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6]" onClick={() => navigate(ROUTES.MANAGE_SHOP)}>
+                Add New Shop
+              </Button>
+              <Button
+                variant="outline"
+                className="w-full border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+                onClick={() => navigate(ROUTES.MANAGE_SHOP)}
+                aria-label="Manage existing shops"
+              >
                 <Edit className="w-4 h-4 mr-2" />
-                Managing existing stores              </Button>
+                Manage Existing Shops
+              </Button>
             </div>
           </CardContent>
         </Card>
-
-        <Card>
+        <Card className="bg-white/90 backdrop-blur-md rounded-lg">
           <CardHeader>
-            <CardTitle>Product Management</CardTitle>          </CardHeader>
+            <CardTitle>Product Management</CardTitle>
+          </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <Button className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white" onClick={() => navigate(ROUTES.CREATE_PRODUCT)}>
+              <Button
+                className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+                onClick={() => navigate(ROUTES.CREATE_PRODUCT)}
+                aria-label="Add new product"
+              >
                 <Plus className="w-4 h-4 mr-2" />
-                Add a new product              </Button>
-              <Button variant="outline" className="w-full border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6]" onClick={() => navigate(ROUTES.MANAGE_SHOP)}>
+                Add New Product
+              </Button>
+              <Button
+                variant="outline"
+                className="w-full border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+                onClick={() => navigate(ROUTES.MANAGE_SHOP)}
+                aria-label="Manage products"
+              >
                 <Package className="w-4 h-4 mr-2" />
-                Product management              </Button>
+                Manage Products
+              </Button>
             </div>
           </CardContent>
         </Card>
       </div>
-
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
+        <Card className="bg-white/90 backdrop-blur-md rounded-lg">
           <CardHeader>
-            <CardTitle>Comprehensive Appointment Management</CardTitle>          </CardHeader>
+            <CardTitle>Appointment Management</CardTitle>
+          </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <Button className="w-100 bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white" onClick={() => navigate(ROUTES.TIME_MANAGEMENT)}>
+              <Button
+                className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+                onClick={() => navigate(ROUTES.TIME_MANAGEMENT)}
+                aria-label="Manage all appointments"
+              >
                 <Clock className="w-4 h-4 mr-2" />
-                Manage all appointments              </Button>
-              {/* <div className="grid grid-cols-2 gap-2">
-                <Button variant="outline" size="sm" className="border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6]" onClick={() => navigate(ROUTES.MANAGE_TIMES)}>
-                  Add appointment times
-                </Button>
-                <Button variant="outline" size="sm" className="border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6]" onClick={() => navigate(ROUTES.BOOKINGS_ONLY)}>
-                  Booked appointments                </Button>
-              </div> */}
+                Manage All Appointments
+              </Button>
             </div>
           </CardContent>
         </Card>
-
-        <Card>
+        <Card className="bg-white/90 backdrop-blur-md rounded-lg">
           <CardHeader>
-            <CardTitle>Appointment Statistics</CardTitle>          </CardHeader>
+            <CardTitle>Appointment Statistics</CardTitle>
+          </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-sm text-[#A66A00]">Booked appointments </span>
+                <span className="text-sm text-[#A66A00]">Booked Appointments</span>
                 <span className="font-semibold text-[#8A5700]">{stats.bookings || 0}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-[#A66A00]">Available appointments </span>
-                <span className="font-semibold text-[#A66A00]">{stats.availableTimes || 0}</span>
+                <span className="text-sm text-[#A66A00]">Available Appointments</span>
+                <span className="font-semibold text-[#8A5700]">{stats.availableTimes || 0}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-[#A66A00]">Total appointments
-                </span>
+                <span className="text-sm text-[#A66A00]">Total Appointments</span>
                 <span className="font-semibold text-[#8A5700]">{(stats.bookings || 0) + (stats.availableTimes || 0)}</span>
               </div>
             </div>
@@ -622,108 +517,56 @@ const Dashboard = () => {
     const [newTimeSlot, setNewTimeSlot] = useState({
       date: '',
       time: '',
-      duration: 60 // مدة الموعد بالدقائق
+      duration: 60,
     });
     const [isAdding, setIsAdding] = useState(false);
 
-
-
-
-
-
-
     const handleAddTimeSlot = async () => {
       if (!newTimeSlot.date || !newTimeSlot.time) {
-        alert('يرجى ملء جميع الحقول');
+        alert('Please fill all fields');
         return;
       }
 
-      console.log('=== DASHBOARD: STARTING ADD TIME SLOT ===');
-      console.log('Adding time slot:', newTimeSlot);
-      console.log('User info:', user);
-      console.log('User role:', user?.role);
-      console.log('Is seller?', user?.role === 'seller');
-
       try {
         setIsAdding(true);
-
-        // تحقق من أن المستخدم shop owner
         if (!user || user.role !== 'seller') {
-          alert('يجب أن تكون صاحب محل لإضافة المواعيد');
+          alert('You must be a shop owner to add time slots');
           return;
         }
 
-        // استدعاء API لإضافة الموعد المتاح في قاعدة البيانات
         const response = await dashboardService.addAvailableTime(newTimeSlot);
-        console.log('Add time slot response:', response);
-
-        // تحقق من نجاح العملية قبل إضافة الموعد للقائمة
         if (response && (response.status === 'success' || response.data)) {
-          // إضافة الموعد الجديد للقائمة فقط إذا تم حفظه بنجاح
           const newTime = {
             ...response.data,
             date: newTimeSlot.date,
             time: newTimeSlot.time,
             isBooked: false,
-            _id: response.data?._id || response._id || Date.now().toString()
+            _id: response.data?._id || response._id || Date.now().toString(),
           };
-
           setAvailableTimes(prev => [...prev, newTime]);
-
-          // مسح النموذج
           setNewTimeSlot({ date: '', time: '', duration: 60 });
-
-          // رسالة نجاح
-          alert('تم إضافة الموعد بنجاح وحفظه في قاعدة البيانات');
-
-          // إعادة تحميل البيانات للتأكد من الحفظ
-          console.log('Reloading dashboard data to verify save...');
-          // لا نحتاج لإعادة تحميل كامل - الموعد تم إضافته بالفعل للقائمة
+          alert('Time slot added successfully');
         } else {
-          throw new Error('فشل في حفظ الموعد في قاعدة البيانات');
+          throw new Error('Failed to save time slot');
         }
-
       } catch (error) {
-        console.error('=== DASHBOARD ERROR ===');
-        console.error('Error adding time slot:', error);
-        console.error('Error details:', error.response?.data);
-        console.error('=== END DASHBOARD ERROR ===');
-
-        let errorMessage = 'حدث خطأ في إضافة الموعد';
-        if (error.response?.status === 401) {
-          errorMessage = 'يجب تسجيل الدخول أولاً';
-        } else if (error.response?.status === 403) {
-          errorMessage = 'ليس لديك صلاحية لإضافة المواعيد';
-        } else if (error.message) {
-          errorMessage = error.message;
-        }
-
-        alert(errorMessage);
+        alert(error.message || 'Error adding time slot');
       } finally {
         setIsAdding(false);
       }
     };
 
     const handleDeleteTimeSlot = async (timeId) => {
-      if (!confirm('هل أنت متأكد من حذف هذا الموعد؟')) return;
+      if (!confirm('Are you sure you want to delete this time slot?')) return;
 
       try {
-        // استدعاء API لحذف الموعد من قاعدة البيانات
         await dashboardService.deleteAvailableTime(timeId);
-
-        // إزالة الموعد من القائمة
         setAvailableTimes(prev => prev.filter(time => time._id !== timeId));
-
-        // رسالة نجاح
-        alert('تم حذف الموعد بنجاح من قاعدة البيانات');
-
+        alert('Time slot deleted successfully');
       } catch (error) {
-        console.error('Error deleting time slot:', error);
-        alert(error.message || 'حدث خطأ في حذف الموعد');
+        alert(error.message || 'Error deleting time slot');
       }
     };
-
-
 
     const getTomorrowDate = () => {
       const tomorrow = new Date();
@@ -735,159 +578,142 @@ const Dashboard = () => {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-[#6D552C]">
-              {isShopOwner ? 'Manage Available Times' : 'My Booked Appointments'}
-            </h2>
-            <p className="text-[#8A6C37]">
-              {isShopOwner ? 'Manage available times for booking' : 'Your booked appointments in shops'}
-            </p>
+            <h2 className="text-2xl font-bold text-[#6D552C]">{isShopOwner ? 'Manage Available Times' : 'My Booked Appointments'}</h2>
+            <p className="text-[#8A6C37]">{isShopOwner ? 'Manage time slots for bookings' : 'Your booked appointments in shops'}</p>
           </div>
         </div>
-
-        {/* Add new appointment - for owners only */}
         {isShopOwner && (
-          <Card>
+          <Card className="bg-white/90 backdrop-blur-md rounded-lg">
             <CardHeader>
               <CardTitle>Add Available Time</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    التاريخ
-                  </label>
+                  <label className="block text-sm font-medium text-[#6D552C] mb-2">Date</label>
                   <input
                     type="date"
                     min={getTomorrowDate()}
                     value={newTimeSlot.date}
-                    onChange={(e) => setNewTimeSlot(prev => ({ ...prev, date: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#C37C00]"
+                    onChange={e => setNewTimeSlot(prev => ({ ...prev, date: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C37C00] bg-white/80"
+                    aria-label="Select date"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    الوقت
-                  </label>
+                  <label className="block text-sm font-medium text-[#6D552C] mb-2">Time</label>
                   <input
                     type="time"
                     value={newTimeSlot.time}
-                    onChange={(e) => setNewTimeSlot(prev => ({ ...prev, time: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#C37C00]"
+                    onChange={e => setNewTimeSlot(prev => ({ ...prev, time: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C37C00] bg-white/80"
+                    aria-label="Select time"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    المدة (دقيقة)
-                  </label>
+                  <label className="block text-sm font-medium text-[#6D552C] mb-2">Duration (minutes)</label>
                   <select
                     value={newTimeSlot.duration}
-                    onChange={(e) => setNewTimeSlot(prev => ({ ...prev, duration: parseInt(e.target.value) }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#C37C00]"
+                    onChange={e => setNewTimeSlot(prev => ({ ...prev, duration: parseInt(e.target.value) }))}
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C37C00] bg-white/80"
+                    aria-label="Select duration"
                   >
-                    <option value={30}>30 دقيقة</option>
-                    <option value={60}>60 دقيقة</option>
-                    <option value={90}>90 دقيقة</option>
-                    <option value={120}>120 دقيقة</option>
+                    <option value={30}>30 minutes</option>
+                    <option value={60}>60 minutes</option>
+                    <option value={90}>90 minutes</option>
+                    <option value={120}>120 minutes</option>
                   </select>
                 </div>
                 <div className="flex items-end">
                   <Button
                     onClick={handleAddTimeSlot}
                     disabled={isAdding}
-                    className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white"
+                    className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+                    aria-label="Add time slot"
                   >
-                    {isAdding ? 'جاري الإضافة...' : 'إضافة موعد'}
+                    {isAdding ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Plus className="w-4 h-4 mr-2" />}
+                    {isAdding ? 'Adding...' : 'Add Time Slot'}
                   </Button>
                 </div>
               </div>
             </CardContent>
           </Card>
         )}
-
-        {/* Appointments list */}
-        <Card>
+        <Card className="bg-white/90 backdrop-blur-md rounded-lg">
           <CardHeader>
-            <CardTitle>
-              {isShopOwner ? `Available Times (${availableTimes.length})` : `My Booked Appointments (${availableTimes.length})`}
-            </CardTitle>
+            <CardTitle>{isShopOwner ? `Available Times (${availableTimes.length})` : `My Booked Appointments (${availableTimes.length})`}</CardTitle>
           </CardHeader>
           <CardContent>
-            {(() => {
-              console.log('Rendering availableTimes:', availableTimes);
-              console.log('availableTimes length:', availableTimes.length);
-              console.log('availableTimes type:', typeof availableTimes);
-              return null;
-            })()}
             {availableTimes.length > 0 ? (
               <div className="space-y-3">
-                {availableTimes.map((timeSlot, index) => {
-                  console.log(`Rendering timeSlot ${index}:`, timeSlot);
-                  return (
-                    <div key={timeSlot._id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-                      <div className="flex items-center space-x-4 rtl:space-x-reverse">
-                        {!isShopOwner && (
-                          <div className="flex items-center space-x-2 rtl:space-x-reverse">
-                            <Store className="w-4 h-4 text-[#8A6C37]" />
-                            <span className="font-medium">{timeSlot.shop?.name || 'متجر غير محدد'}</span>
-                          </div>
-                        )}
-                        <div className="flex items-center space-x-2 rtl:space-x-reverse">
-                          <Calendar className="w-4 h-4 text-[#8A6C37]" />
-                          <span className="font-medium">{timeSlot.date}</span>
+                {availableTimes.map(timeSlot => (
+                  <div key={timeSlot._id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg bg-white/80">
+                    <div className="flex items-center space-x-4">
+                      {!isShopOwner && (
+                        <div className="flex items-center space-x-2">
+                          <Store className="w-4 h-4 text-[#8A6C37]" />
+                          <span className="font-medium">{timeSlot.shop?.name || 'Unknown Shop'}</span>
                         </div>
-                        <div className="flex items-center space-x-2 rtl:space-x-reverse">
-                          <Clock className="w-4 h-4 text-[#8A6C37]" />
-                          <span>{timeSlot.time}</span>
-                        </div>
-                        <div className="text-sm text-[#92723A]">
-                          ({timeSlot.duration} دقيقة)
-                        </div>
-                        <span className={`text-xs px-2 py-1 rounded-full ${isShopOwner
-                          ? (timeSlot.isBooked ? 'text-red-600 bg-red-100' : 'text-[#6D552C] bg-[#D3BB92]')
-                          : 'text-[#8A6C37] bg-[#E2D2B6]'
-                          }`}>
-                          {isShopOwner
-                            ? (timeSlot.isBooked ? 'محجوز' : 'متاح')
-                            : (timeSlot.status === 'confirmed' ? 'مؤكد' : timeSlot.status || 'محجوز')
-                          }
-                        </span>
+                      )}
+                      <div className="flex items-center space-x-2">
+                        <Calendar className="w-4 h-4 text-[#8A6C37]" />
+                        <span className="font-medium">{timeSlot.date}</span>
                       </div>
-                      <div className="flex space-x-2 rtl:space-x-reverse">
-                        {isShopOwner && !timeSlot.isBooked && (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => handleDeleteTimeSlot(timeSlot._id)}
-                            className="text-red-600 hover:text-red-700"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        )}
-                        {!isShopOwner && (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => handleCancelBooking(timeSlot._id)}
-                            className="text-red-600 hover:text-red-700"
-                          >
-                            إلغاء الحجز
-                          </Button>
-                        )}
+                      <div className="flex items-center space-x-2">
+                        <Clock className="w-4 h-4 text-[#8A6C37]" />
+                        <span>{timeSlot.time}</span>
                       </div>
+                      <div className="text-sm text-[#92723A]">({timeSlot.duration} minutes)</div>
+                      <span
+                        className={`text-xs px-2 py-1 rounded-full ${
+                          isShopOwner
+                            ? timeSlot.isBooked
+                              ? 'text-red-600 bg-red-100'
+                              : 'text-[#6D552C] bg-[#D3BB92]'
+                            : 'text-[#8A6C37] bg-[#E2D2B6]'
+                        }`}
+                      >
+                        {isShopOwner
+                          ? timeSlot.isBooked
+                            ? 'Booked'
+                            : 'Available'
+                          : timeSlot.status === 'confirmed'
+                          ? 'Confirmed'
+                          : timeSlot.status || 'Booked'}
+                      </span>
                     </div>
-                  );
-                })}
+                    <div className="flex space-x-2">
+                      {isShopOwner && !timeSlot.isBooked && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleDeleteTimeSlot(timeSlot._id)}
+                          className="border-red-400 text-red-600 hover:bg-red-500 hover:text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+                          aria-label="Delete time slot"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      )}
+                      {!isShopOwner && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleCancelBooking(timeSlot._id)}
+                          className="border-red-400 text-red-600 hover:bg-red-500 hover:text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+                          aria-label="Cancel booking"
+                        >
+                          Cancel Booking
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
             ) : (
-              <div className="text-center py-8 text-[#92723A]">
+              <div className="text-center py-8 text-[#92723A] bg-white/80 rounded-lg">
                 <Clock className="w-12 h-12 mx-auto mb-4 text-[#D3BB92]" />
-                <p>{isShopOwner ? 'لا توجد مواعيد متاحة' : 'لا توجد مواعيد محجوزة'}</p>
-                <p className="text-sm">
-                  {isShopOwner
-                    ? 'أضف مواعيد متاحة ليتمكن العملاء من حجزها'
-                    : 'ابدأ بحجز مواعيد من المتاجر المختلفة'
-                  }
-                </p>
+                <p>{isShopOwner ? 'No available times' : 'No booked appointments'}</p>
+                <p className="text-sm">{isShopOwner ? 'Add available times for customers to book' : 'Start booking appointments at shops'}</p>
               </div>
             )}
           </CardContent>
@@ -898,18 +724,14 @@ const Dashboard = () => {
 
   const tabs = [
     { id: 'overview', label: 'Overview', icon: BarChart3 },
-    // { id: 'favorites', label: 'Favorites', icon: Heart },
     { id: 'bookings', label: isShopOwner ? 'Bookings Overview' : 'My Bookings', icon: Calendar },
     { id: 'available-times', label: isShopOwner ? 'Time Management' : 'My Appointments', icon: Clock },
-    ...(isShopOwner ? [
-      { id: 'shop', label: 'Manage Shop', icon: Store }
-    ] : [])
+    ...(isShopOwner ? [{ id: 'shop', label: 'Manage Shop', icon: Store }] : []),
   ];
 
-  // Loading state
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#F8F4ED] to-[#F0E8DB] flex items-center justify-center pt-20">
+      <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] to-[#FFF0CC] flex items-center justify-center pt-20">
         <div className="text-center">
           <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-[#C37C00]" />
           <p className="text-[#A66A00]">Loading data...</p>
@@ -918,16 +740,16 @@ const Dashboard = () => {
     );
   }
 
-  // Error state
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#F8F4ED] to-[#F0E8DB] flex items-center justify-center pt-20">
+      <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] to-[#FFF0CC] flex items-center justify-center pt-20">
         <div className="text-center">
-          <div className="text-red-600 mb-4">❌</div>
+          <div className="text-red-600 mb-4 text-4xl">❌</div>
           <p className="text-red-600 mb-4">{error}</p>
           <Button
             onClick={() => window.location.reload()}
-            className="bg-[#A37F41] hover:bg-[#8A6C37] text-white"
+            className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+            aria-label="Try again"
           >
             Try Again
           </Button>
@@ -936,21 +758,19 @@ const Dashboard = () => {
     );
   }
 
-  // Show access denied message for regular users
   if (isRegularUser) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#F8F4ED] via-[#F0E8DB] to-[#E2D2B6] flex items-center justify-center" dir="ltr">
+      <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] to-[#FFF0CC] flex items-center justify-center pt-20">
         <div className="max-w-md mx-auto text-center">
           <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <span className="text-4xl">🚫</span>
           </div>
           <h1 className="text-3xl font-bold text-[#8A5700] mb-4">Access Denied</h1>
-          <p className="text-lg text-[#A66A00] mb-8">
-            Dashboard access is restricted to shop owners and administrators only.
-          </p>
+          <p className="text-lg text-[#A66A00] mb-8">Dashboard access is restricted to shop owners and administrators only.</p>
           <Button
             onClick={() => navigate('/')}
-            className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-8 py-3 rounded-full font-semibold"
+            className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-8 py-3 rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+            aria-label="Go to home"
           >
             Go to Home
           </Button>
@@ -960,46 +780,36 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] to-[#FFF0CC] pt-20">
+    <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] to-[#FFF0CC] pt-20 w-full">
       <div className="w-full px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-[#8A5700]">
-            Welcome, {user?.firstName || 'User'}
-          </h1>
-          <p className="text-[#A66A00] mt-1">
-            Manage your account and track your activities
-          </p>
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold text-[#8A5700]">Welcome, {user?.firstName || 'User'}</h1>
+          <p className="text-[#A66A00] mt-1">Manage your account and track your activities</p>
         </div>
-
-        {/* Tabs */}
-        <div className="mb-8">
-          <div className="border-b border-gray-200">
-            <nav className="-mb-px flex space-x-8 rtl:space-x-reverse">
-              {tabs.map((tab) => {
-                const Icon = tab.icon;
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center space-x-2 rtl:space-x-reverse py-2 px-1 border-b-2 font-medium text-sm ${activeTab === tab.id
-                      ? 'border-[#C37C00] text-[#C37C00]'
-                      : 'border-transparent text-[#A66A00] hover:text-[#8A5700] hover:border-[#FFDB99]'
-                      }`}
-                  >
-                    <Icon className="w-4 h-4" />
-                    <span>{tab.label}</span>
-                  </button>
-                );
-              })}
-            </nav>
-          </div>
+        <div className="sticky top-0 z-10 bg-white/90 backdrop-blur-md rounded-lg shadow-lg mb-6">
+          <nav className="flex space-x-4 p-4 border-b border-gray-200">
+            {tabs.map(tab => {
+              const Icon = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 ${
+                    activeTab === tab.id
+                      ? 'bg-gradient-to-r from-[#C37C00] to-[#A66A00] text-white shadow-md'
+                      : 'text-[#A66A00] hover:bg-[#FFF8E6] hover:text-[#8A5700] hover:shadow-sm'
+                  }`}
+                  aria-label={`Switch to ${tab.label}`}
+                >
+                  <Icon className="w-4 h-4" />
+                  <span>{tab.label}</span>
+                </button>
+              );
+            })}
+          </nav>
         </div>
-
-        {/* Tab Content */}
-        <div>
+        <div className="pt-4">
           {activeTab === 'overview' && <OverviewTab />}
-          {/* {activeTab === 'favorites' && <FavoritesTab />} */}
           {activeTab === 'bookings' && <BookingsTab />}
           {activeTab === 'shop' && isShopOwner && <ShopOwnerTab />}
           {activeTab === 'available-times' && <AvailableTimesTab />}

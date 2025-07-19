@@ -44,9 +44,9 @@ export const productService = {
     try {
       const response = await api.post(`/product/create`, productData, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'multipart/form-data'
-        }
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "multipart/form-data",
+        },
       });
       return response.data;
     } catch (error) {
@@ -59,11 +59,30 @@ export const productService = {
   // Update product (shop owner only)
   updateProduct: async (productId, productData) => {
     try {
-      const response = await api.put(`/product/${productId}`, productData);
+      console.log("🔄 Updating product:", productId);
+      console.log("📦 Data type: FormData");
+
+      const response = await api.put(`/product/${productId}`, productData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          // Don't set Content-Type, let browser set it automatically for FormData
+        },
+      });
+
+      console.log("✅ Product update response:", response.data);
       return response.data;
     } catch (error) {
+      console.error("❌ Update product error:", {
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+        message: error.message,
+      });
+
       throw new Error(
-        error.response?.data?.message || "Failed to update product"
+        error.response?.data?.message ||
+          error.response?.data?.error ||
+          `Server error (${error.response?.status || "Unknown"})`
       );
     }
   },
@@ -71,7 +90,7 @@ export const productService = {
   // Delete product (shop owner only)
   deleteProduct: async (productId) => {
     try {
-      const response = await api.delete(`/product/favorite/${productId}`);
+      const response = await api.delete(`/product/${productId}`);
       return response.data;
     } catch (error) {
       throw new Error(
@@ -83,13 +102,13 @@ export const productService = {
   // Add to favorites
   addToFavorites: async (productId) => {
     try {
-      const response = await api.post(`/product/favorite/${ productId }`);
+      const response = await api.post(`/product/favorite/${productId}`);
       console.log(`success add to fav: ${JSON.stringify(response.data)}`);
-      
+
       return response.data;
     } catch (error) {
       console.log(`error: ${error.response?.data?.message}`);
-      
+
       throw new Error(
         error.response?.data?.message || "Failed to add to favorites"
       );

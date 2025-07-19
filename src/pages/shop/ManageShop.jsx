@@ -109,8 +109,8 @@ const ManageShop = () => {
                     return productsData;
                 } catch (error) {
                     console.error('Error loading products:', error);
-                    setProducts(mockProducts);
-                    return mockProducts;
+                    setProducts([]);
+                    return [];
                 }
             };
 
@@ -125,8 +125,8 @@ const ManageShop = () => {
                     return bookingsData;
                 } catch (error) {
                     console.error('Error loading bookings:', error);
-                    setBookings(mockBookings);
-                    return mockBookings;
+                    setBookings([]);
+                    return [];
                 }
             };
 
@@ -163,14 +163,24 @@ const ManageShop = () => {
     };
 
     const handleDeleteProduct = async (productId) => {
-        const confirmed = window.confirm('هل أنت متأكد من حذف هذا المنتج؟');
+        const confirmed = window.confirm('Are you sure you want to delete this product?');
 
         if (confirmed) {
             try {
+                console.log('🗑️ Deleting product with ID:', productId);
                 await productService.deleteProduct(productId);
-                setProducts(prev => prev.filter(product => product.id !== productId));
+
+                // Update the products list by removing the deleted product
+                setProducts(prev => prev.filter(product => {
+                    const id = product._id || product.id;
+                    return id !== productId;
+                }));
+
+                alert('Product deleted successfully!');
+                console.log('✅ Product deleted successfully');
             } catch (error) {
-                console.error('Error deleting product:', error);
+                console.error('❌ Error deleting product:', error);
+                alert('Error deleting product: ' + (error.message || 'Unknown error'));
             }
         }
     };
@@ -393,8 +403,8 @@ const ManageShop = () => {
                                                 {/* Top Section - Image with Status and Quick Actions */}
                                                 <div className="relative group">
                                                     <img
-                                                        src={`${import.meta.env.VITE_API_BASE_URL}/product-image/${product.logoUrl}` || '/placeholder-product.jpg'}
-                                                        alt={product.name}
+                                                        src={product.logoUrl ? `${import.meta.env.VITE_API_BASE_URL}/product-image/${product.logoUrl}` : '/placeholder-product.jpg'}
+                                                        alt={product.title || product.name}
                                                         className="w-full h-48 object-cover"
                                                     />
 
@@ -429,14 +439,14 @@ const ManageShop = () => {
                                                     {/* Title and Price */}
                                                     <div className="flex justify-between items-start mb-2">
                                                         <div>
-                                                            <h3 className="font-bold text-lg text-gray-900">{product.name}</h3>
+                                                            <h3 className="font-bold text-lg text-gray-900">{product.title || product.name}</h3>
                                                             {product.description && (
                                                                 <p className="text-gray-500 text-sm mt-1 line-clamp-2">{product.description}</p>
                                                             )}
                                                         </div>
                                                         <div className="text-right">
                                                             <p className="text-yellow-600 font-bold text-xl">
-                                                                {product.price['$numberDecimal'] * 50} ج.م
+                                                                {product.price?.['$numberDecimal'] ? (product.price['$numberDecimal'] * 50) : product.price} EGP
                                                             </p>
                                                             {product.oldPrice && (
                                                                 <p className="text-gray-400 text-sm line-through">
@@ -490,14 +500,15 @@ const ManageShop = () => {
                                                             onClick={() => navigate(ROUTES.PRODUCT_DETAILS(product._id))}
                                                         >
                                                             <Eye className="w-4 h-4 mr-1" />
-                                                            عرض التفاصيل
+                                                            View Details
                                                         </Button>
                                                         <Button
                                                             size="sm"
                                                             className="flex-1 bg-gray-50 hover:bg-gray-100 text-gray-800"
+                                                            onClick={() => navigate(ROUTES.EDIT_PRODUCT(product._id))}
                                                         >
                                                             <Edit className="w-4 h-4 mr-1" />
-                                                            تعديل المنتج
+                                                            Edit Product
                                                         </Button>
                                                         <Button
                                                             size="sm"
@@ -505,7 +516,7 @@ const ManageShop = () => {
                                                             onClick={() => handleDeleteProduct(product._id)}
                                                         >
                                                             <Trash2 className="w-4 h-4 mr-1" />
-                                                            حذف
+                                                            Delete
                                                         </Button>
                                                     </div>
                                                 </div>

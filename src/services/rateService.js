@@ -33,10 +33,18 @@ export const rateService = {
     } catch (error) {
       console.error("Error in getAllRates:", error);
 
-      // If it's a 400 error, likely the shopId format is wrong
+      // Handle different error types gracefully
       if (error.response?.status === 400) {
-        console.warn("Bad request for rates, returning empty array");
+        console.warn(
+          "Bad request for rates (likely invalid shopId), returning empty array"
+        );
         return []; // Return empty array instead of throwing
+      } else if (error.response?.status === 404) {
+        console.warn("No rates found for this shop, returning empty array");
+        return [];
+      } else if (error.response?.status >= 500) {
+        console.warn("Server error for rates, returning empty array");
+        return [];
       }
 
       throw new Error(
@@ -111,4 +119,3 @@ export const rateService = {
     }
   },
 };
-
