@@ -17,6 +17,7 @@ import ManageShop from './pages/shop/ManageShop.jsx';
 import ProductList from './pages/product/ProductList.jsx';
 import ProductDetails from './pages/product/ProductDetails.jsx';
 import CreateProduct from './pages/product/CreateProduct.jsx';
+import EditProduct from './pages/product/EditProduct.jsx';
 import Favorites from './pages/product/Favorites.jsx';
 import Dashboard from './pages/user/Dashboard.jsx';
 import Profile from './pages/user/Profile.jsx';
@@ -27,6 +28,7 @@ import ManageBookings from './pages/seller/ManageBookings.jsx';
 import ManageTimes from './pages/seller/ManageTimes.jsx';
 import BookingsOnly from './pages/seller/BookingsOnly.jsx';
 import TimeManagement from './pages/seller/TimeManagement.jsx';
+import ManageRatings from './pages/seller/ManageRatings.jsx';
 import AdminDashboard from './pages/admin/AdminDashboard.jsx';
 // Static Pages
 import AboutUs from './pages/static/AboutUs.jsx';
@@ -107,7 +109,7 @@ function App() {
               {/* Shop Routes */}
               <Route path="/shops" element={<ShopList />} />
               <Route path="/shops/:id" element={<ShopDetails />} />
-              <Route path='/shops/:id/chat' element={<ShopChat/>}/>
+              <Route path='/shops/:id/chat' element={<ShopChat />} />
               <Route path="/shop/create" element={<CreateShop />} />
               <Route path="/shop/edit" element={<EditShop />} />
               <Route path="/shop/edit/:id" element={<EditShop />} />
@@ -117,6 +119,7 @@ function App() {
               <Route path="/products" element={<ProductList />} />
               <Route path="/products/:id" element={<ProductDetails />} />
               <Route path="/products/create" element={<CreateProduct />} />
+              <Route path="/products/edit/:id" element={<EditProduct />} />
               <Route path="/favorites" element={<FavoriteProducts />} />
 
               {/* User Routes */}
@@ -132,6 +135,7 @@ function App() {
               <Route path="/manage-times" element={<ManageTimes />} />
               <Route path="/bookings-only" element={<BookingsOnly />} />
               <Route path="/time-management" element={<TimeManagement />} />
+              <Route path="/manage-ratings" element={<ManageRatings />} />
 
               {/* Admin Routes */}
               <Route path="/admin" element={<AdminDashboard />} />

@@ -75,13 +75,9 @@ const GalleryUpload = ({ shopId, currentUser, onUploadSuccess }) => {
 
       const formData = new FormData();
 
-      // Add each file to FormData with different field names to try
+      // Add each file to FormData - use only one field name to avoid duplicates
       selectedFiles.forEach((file, index) => {
-        // Try multiple field names that backend might expect
         formData.append('gallery', file);
-        formData.append('images', file);
-        formData.append('galleryImages', file);
-        formData.append(`gallery_${index}`, file);
         console.log(`📎 Added file ${index + 1}:`, file.name, file.type, file.size);
       });
 

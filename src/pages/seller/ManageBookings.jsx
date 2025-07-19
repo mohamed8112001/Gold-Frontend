@@ -89,7 +89,7 @@ const ManageBookings = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-8 pt-20">
       <div className="max-w-6xl mx-auto px-4">
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+        <div className="bg-white rounded-lg p-6 mb-8">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-3xl font-bold text-gray-900">إدارة المواعيد</h1>
             <button
@@ -153,7 +153,7 @@ const ManageBookings = () => {
         </div>
 
         {/* Bookings List */}
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-white rounded-lg p-6">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">المواعيد المحجوزة</h2>
 
           {loading ? (

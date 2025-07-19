@@ -117,6 +117,7 @@ export const ROUTES = {
   PRODUCTS: "/products",
   PRODUCT_DETAILS: (id) => `/products/${id}`,
   CREATE_PRODUCT: "/products/create",
+  EDIT_PRODUCT: (id) => `/products/edit/${id}`,
   FAVORITES: "/favorites",
 
   // Booking routes
@@ -126,6 +127,9 @@ export const ROUTES = {
   MANAGE_TIMES: "/manage-times",
   BOOKINGS_ONLY: "/bookings-only",
   TIME_MANAGEMENT: "/time-management",
+
+  // Rating routes
+  MANAGE_RATINGS: "/manage-ratings",
 
   // User routes
   PROFILE: "/profile",

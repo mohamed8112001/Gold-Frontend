@@ -129,7 +129,7 @@ const Header = () => {
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-[#C37C00] to-[#A66A00] group-hover:w-full transition-all duration-300"></span>
               </Link>
               {(isAuthenticated && user && (isShopOwner)) && (
-                <Link isRegularUser
+                <Link
                   to="/dashboard"
                   className="relative text-[#8A5700] hover:text-[#C37C00] font-medium text-lg transition-all duration-300 group px-3 py-2"
                 >

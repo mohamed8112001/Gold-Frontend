@@ -179,7 +179,7 @@ const Favorites = () => {
                             }}
                         >
                             <Eye className="w-4 h-4 mr-1" />
-                            عرض
+                            show
                         </Button>
                         <Button
                             size="sm"
@@ -190,7 +190,7 @@ const Favorites = () => {
                             }}
                         >
                             <ShoppingBag className="w-4 h-4 mr-1" />
-                            المتجر
+                            Shop
                         </Button>
                     </div>
                 </div>

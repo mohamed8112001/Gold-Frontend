@@ -68,7 +68,7 @@ const ShopList = () => {
       setIsLoading(true);
       setError(null);
 
-      console.log('🏪 Loading shops with filters:', { searchQuery, filters });
+      console.log(' Loading shops with filters:', { searchQuery, filters });
 
       // Build query parameters
       const params = {
@@ -82,13 +82,13 @@ const ShopList = () => {
         params.search = searchQuery.trim();
       }
 
-      console.log('🏪 API params:', params);
+      console.log(' API params:', params);
 
       const response = await shopService.getAllShops(params);
 
       if (response.success) {
         const shopsData = response.data || [];
-        console.log('✅ Shops loaded:', shopsData.length);
+        console.log(' Shops loaded:', shopsData.length);
 
         setShops(prevShops =>
           pagination.page === 1
@@ -101,12 +101,12 @@ const ShopList = () => {
           total: response.meta?.total || 0
         }));
       } else {
-        console.error('❌ Failed to load shops:', response.message);
+        console.error('Failed to load shops:', response.message);
         setError(response.message || 'Failed to load shops');
         setShops([]);
       }
     } catch (error) {
-      console.error('❌ Error loading shops:', error);
+      console.error('Error loading shops:', error);
       setError(error.message || 'Network error occurred');
       setShops([]);
     } finally {
@@ -217,14 +217,14 @@ const ShopList = () => {
 
   // Handle filter changes
   const handleFilterChange = (key, value) => {
-    console.log(`🔧 Filter changed: ${key} = ${value}`);
+    console.log(` Filter changed: ${key} = ${value}`);
     setFilters(prev => ({ ...prev, [key]: value }));
     setPagination(prev => ({ ...prev, page: 1 }));
   };
 
   // Clear all filters
   const clearFilters = () => {
-    console.log('🧹 Clearing all filters');
+    console.log('Clearing all filters');
     setSearchQuery('');
     setFilters({
       location: '',
@@ -262,7 +262,6 @@ const ShopList = () => {
       : typeof shop.location === 'string'
         ? shop.location
         : shop.address?.address || shop.location?.address || shop.area || shop.city || 'Location not specified';
-    const shopPhone = shop.phone || shop.whatsapp || 'Not specified';
     const shopDescription = shop.description || 'No description available';
     const shopRating = shop.rating || shop.averageRating || 0;
     const shopSpecialties = shop.specialties || [];
@@ -305,37 +304,6 @@ const ShopList = () => {
           {/* Enhanced Overlay Gradient */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-          {/* Enhanced Favorite Button */}
-          <div className="absolute top-3 right-3 z-10">
-            <Button
-              size="sm"
-              variant="ghost"
-              className="bg-white/90 hover:bg-[#C37C00] hover:text-white border-0 shadow-lg backdrop-blur-sm transition-all duration-300 transform hover:scale-110"
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-            >
-              <Heart className="w-4 h-4" />
-            </Button>
-          </div>
-
-          {/* Enhanced Rating Badge */}
-          {shopRating > 0 && (
-            <div className="absolute top-3 left-3 z-10">
-              <div className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] text-white px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-lg backdrop-blur-sm">
-                <Star className="w-3.5 h-3.5 fill-current" />
-                <span className="text-sm font-bold">
-                  {shopRating.toFixed(1)}
-                </span>
-                {shopReviewCount > 0 && (
-                  <span className="text-xs opacity-90">
-                    ({shopReviewCount})
-                  </span>
-                )}
-              </div>
-            </div>
-          )}
-
           {/* New Badge for Featured Shops */}
           <div className="absolute bottom-3 left-3 z-10">
             <div className="bg-white/95 backdrop-blur-sm px-2.5 py-1 rounded-full">
@@ -352,18 +320,6 @@ const ShopList = () => {
               <h3 className="font-bold text-xl mb-1 group-hover:text-[#C37C00] transition-colors duration-300 line-clamp-2 flex-1">
                 {shopName}
               </h3>
-              {shopRating > 0 && (
-                <div className="flex items-center gap-1 ml-2">
-                  <div className="flex text-[#C37C00]">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`w-3 h-3 ${i < Math.floor(shopRating) ? 'fill-current' : 'text-gray-300'}`}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
 
             {/* Enhanced Description */}
@@ -379,14 +335,6 @@ const ShopList = () => {
                 </div>
                 <span className="truncate font-medium">{shopAddress}</span>
               </div>
-
-              <div className="flex items-center gap-2.5 text-sm text-gray-600 group-hover:text-gray-700 transition-colors">
-                <div className="w-8 h-8 bg-gradient-to-br from-[#FFF0CC] to-[#FFE6B3] rounded-full flex items-center justify-center">
-                  <Phone className="w-4 h-4 text-[#C37C00]" />
-                </div>
-                <span className="font-medium">{shopPhone}</span>
-              </div>
-
               <div className="flex items-center gap-2.5 text-sm text-gray-600 group-hover:text-gray-700 transition-colors">
                 <div className="w-8 h-8 bg-gradient-to-br from-[#FFF0CC] to-[#FFE6B3] rounded-full flex items-center justify-center">
                   <Clock className="w-4 h-4 text-[#C37C00]" />
@@ -419,10 +367,17 @@ const ShopList = () => {
           </div>
 
           {/* Enhanced Action Button */}
-          <div className="mt-6 pt-4 border-t border-gradient-to-r from-transparent via-[#E2D2B6]/50 to-transparent">
+          <div className="mt-6 pt-4 border-t border-gradient-to-r from-transparent via-[#E2D2B6]/50 to-transparent ">
             <Button
-              className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white py-3.5 rounded-xl font-bold transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl hover:shadow-[#C37C00]/30 group-hover:shadow-2xl"
-              onClick={(e) => {
+              className="
+  w-full 
+  bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] 
+  hover:from-[#A66A00] hover:via-[#C37C00] hover:to-[#8A5700]
+  text-white py-3.5 
+  rounded-xl font-bold 
+  transition-all duration-300 transform hover:scale-[1.02] 
+  shadow-lg hover:shadow-xl hover:shadow-[#C37C00]/30
+"              onClick={(e) => {
                 e.stopPropagation();
                 const shopId = shop._id || shop.id;
                 if (shopId) {
@@ -430,7 +385,7 @@ const ShopList = () => {
                 }
               }}
             >
-              <div className="flex items-center justify-center gap-2">
+              <div className="flex items-center justify-center gap-2 ">
                 <Eye className="w-5 h-5" />
                 <span>Explore Shop</span>
                 <div className="w-1 h-1 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -465,7 +420,7 @@ const ShopList = () => {
         <div className="w-full px-4 sm:px-6 lg:px-8 py-12">
           <div className="max-w-7xl mx-auto">
             <div className="text-center py-20">
-              <div className="text-6xl mb-4">❌</div>
+              <div className="text-6xl mb-4"></div>
               <h2 className="text-2xl font-bold text-gray-900 mb-2">Error Loading Shops</h2>
               <p className="text-gray-600 mb-4">{error}</p>
               <Button onClick={loadShops} className="bg-[#A37F41] hover:bg-[#8A6C37]">
@@ -488,132 +443,136 @@ const ShopList = () => {
       dir="ltr"
     >
       {/* Hero Section */}
-      <div className="relative bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] overflow-hidden mt-4">
-        <div className="absolute inset-0 bg-black/10"></div>
-        <div className="absolute top-0 left-0 w-full h-full">
-          <div className="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl"></div>
-          <div className="absolute top-20 right-20 w-24 h-24 bg-white/5 rounded-full blur-lg"></div>
-          <div className="absolute bottom-10 left-1/3 w-40 h-40 bg-white/5 rounded-full blur-2xl"></div>
-        </div>
+<div className="relative bg-white text-[#C37C00] overflow-hidden mt-4 ">
+  {/* تأثير خلفية ذهبي هادي */}
+  <div className="absolute inset-0 bg-[#C37C00]/5 pointer-events-none"></div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="text-center mb-12">
-            <h1 className="text-6xl md:text-7xl font-black text-white mb-6 leading-tight">
-              <span className="bg-gradient-to-r from-white to-[#F0E8DB] bg-clip-text text-transparent drop-shadow-2xl m-10">
-                Discover Stores
-              </span>
-            </h1>
+  {/* دوائر زخرفية بلون ذهبي خفيف */}
+  <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+    <div className="absolute top-10 left-10 w-32 h-32 bg-[#C37C00]/10 rounded-full blur-2xl"></div>
+    <div className="absolute top-20 right-20 w-24 h-24 bg-[#C37C00]/10 rounded-full blur-xl"></div>
+    <div className="absolute bottom-10 left-1/3 w-40 h-40 bg-[#C37C00]/10 rounded-full blur-[80px]"></div>
+  </div>
 
-            <form onSubmit={handleSearch} className="max-w-6xl mx-auto">
-              <div className="relative">
-                <div className="absolute inset-0 bg-white/20 rounded-2xl blur-sm"></div>
-                <div className="relative bg-white/95 backdrop-blur-md rounded-2xl p-4 shadow-2xl border border-white/30">
-                  <div className="flex flex-col lg:flex-row items-center gap-4">
-                    {/* Search Input */}
-                    <div className="flex-1 relative w-full lg:w-auto">
-                      <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-6 h-6" />
-                      <Input
-                        type="text"
-                        placeholder="Search for jewelry stores..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="pl-14 pr-4 py-4 text-lg rounded-xl border-0 focus:ring-2 focus:ring-[#C37C00]/30 bg-transparent text-gray-900 placeholder-gray-500 font-medium w-full"
-                      />
-                    </div>
+  <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 ">
+    <div className="text-center mb-12">
+      <h1 className="text-6xl md:text-7xl font-black mb-6 leading-tight text-[#C37C00]">
+        <span className="bg-gradient-to-r from-[#C37C00] to-[#E6A500] bg-clip-text text-transparent drop-shadow-2xl m-10">
+          Discover Stores
+        </span>
+      </h1>
 
-                    {/* Filters Row */}
-                    <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
-                      {/* Location Filter */}
-                      <div className="relative min-w-[200px]">
-                        <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                        <Input
-                          placeholder="Location"
-                          value={filters.location}
-                          onChange={(e) => handleFilterChange('location', e.target.value)}
-                          className="pl-10 pr-4 py-3 text-sm rounded-xl border border-gray-200 focus:border-[#C37C00] bg-white"
-                        />
-                      </div>
+      <form onSubmit={handleSearch} className="max-w-6xl mx-auto">
+        <div className="relative">
+          <div className="absolute inset-0 bg-white/20 rounded-2xl blur-sm"></div>
+          <div className="relative bg-white/95 backdrop-blur-md rounded-2xl p-4 shadow-2xl border border-white/30">
+            <div className="flex flex-col lg:flex-row items-center gap-4">
+              {/* Search Input */}
+              <div className="flex-1 relative w-full lg:w-auto">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#C37C00] w-6 h-6" />
+                <Input
+                  type="text"
+                  placeholder="Search for jewelry stores..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-14 pr-4 py-4 text-lg rounded-xl border-0 focus:ring-2 focus:ring-[#C37C00]/30 bg-transparent text-[#C37C00] placeholder-[#C37C00]/70 font-medium w-full"
+                />
+              </div>
 
-                      {/* Rating Filter */}
-                      <Select value={filters.rating || "all"} onValueChange={(value) => handleFilterChange('rating', value === "all" ? "" : value)}>
-                        <SelectTrigger className="min-w-[150px] py-3 rounded-xl border border-gray-200 focus:border-[#C37C00] bg-white text-sm">
-                          <SelectValue placeholder="Rating" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="all">All Ratings</SelectItem>
-                          <SelectItem value="4.5">4.5+ Stars</SelectItem>
-                          <SelectItem value="4.0">4.0+ Stars</SelectItem>
-                          <SelectItem value="3.5">3.5+ Stars</SelectItem>
-                          <SelectItem value="3.0">3.0+ Stars</SelectItem>
-                        </SelectContent>
-                      </Select>
-
-                      {/* Specialties Filter */}
-                      <Select value={filters.specialty || "all"} onValueChange={(value) => handleFilterChange('specialty', value === "all" ? "" : value)}>
-                        <SelectTrigger className="min-w-[150px] py-3 rounded-xl border border-gray-200 focus:border-[#C37C00] bg-white text-sm">
-                          <SelectValue placeholder="Specialty" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="all">All Specialties</SelectItem>
-                          <SelectItem value="rings">Rings</SelectItem>
-                          <SelectItem value="necklaces">Necklaces</SelectItem>
-                          <SelectItem value="bracelets">Bracelets</SelectItem>
-                          <SelectItem value="earrings">Earrings</SelectItem>
-                          <SelectItem value="watches">Watches</SelectItem>
-                        </SelectContent>
-                      </Select>
-
-                      {/* Clear Filters Button */}
-                      {getActiveFilterCount() > 0 && (
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={clearFilters}
-                          className="px-4 py-3 text-sm rounded-xl border border-gray-200 hover:border-[#C37C00] hover:text-[#C37C00]"
-                        >
-                          <X className="w-4 h-4 mr-1" />
-                          Clear
-                        </Button>
-                      )}
-
-                      {/* Search Button */}
-                      <Button
-                        type="submit"
-                        className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-6 py-3 text-sm rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 font-semibold"
-                      >
-                        <Search className="w-4 h-4 mr-1" />
-                        Search
-                      </Button>
-                    </div>
-                  </div>
+              {/* Filters Row */}
+              <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
+                {/* Location Filter */}
+                <div className="relative min-w-[200px]">
+                  <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#C37C00]/70 w-4 h-4" />
+                  <Input
+                    placeholder="Location"
+                    value={filters.location}
+                    onChange={(e) => handleFilterChange('location', e.target.value)}
+                    className="pl-10 pr-4 py-3 text-sm rounded-xl border border-[#C37C00]/50 focus:border-[#C37C00] bg-white text-[#C37C00]"
+                  />
                 </div>
-              </div>
-            </form>
 
-            {/* <div className="flex flex-wrap justify-center gap-6 mt-12">
-              <div className="flex items-center gap-3 bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full border border-white/30">
-                <div className="w-3 h-3 bg-[#6D552C] rounded-full animate-pulse"></div>
-                <span className="text-white font-medium">Available for All Users</span>
+                {/* Rating Filter */}
+                <Select
+                  value={filters.rating || "all"}
+                  onValueChange={(value) => handleFilterChange('rating', value === "all" ? "" : value)}
+                >
+                  <SelectTrigger className="min-w-[150px] py-3 rounded-xl border border-[#C37C00]/50 focus:border-[#C37C00] bg-white text-sm text-[#C37C00]">
+                    <SelectValue placeholder="Rating" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Ratings</SelectItem>
+                    <SelectItem value="4.5">4.5+ Stars</SelectItem>
+                    <SelectItem value="4.0">4.0+ Stars</SelectItem>
+                    <SelectItem value="3.5">3.5+ Stars</SelectItem>
+                    <SelectItem value="3.0">3.0+ Stars</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                {/* Specialties Filter */}
+                <Select
+                  value={filters.specialty || "all"}
+                  onValueChange={(value) => handleFilterChange('specialty', value === "all" ? "" : value)}
+                >
+                  <SelectTrigger className="min-w-[150px] py-3 rounded-xl border border-[#C37C00]/50 focus:border-[#C37C00] bg-white text-sm text-[#C37C00]">
+                    <SelectValue placeholder="Specialty" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Specialties</SelectItem>
+                    <SelectItem value="rings">Rings</SelectItem>
+                    <SelectItem value="necklaces">Necklaces</SelectItem>
+                    <SelectItem value="bracelets">Bracelets</SelectItem>
+                    <SelectItem value="earrings">Earrings</SelectItem>
+                    <SelectItem value="watches">Watches</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                {/* Clear Filters Button */}
+                {getActiveFilterCount() > 0 && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={clearFilters}
+                    className="px-4 py-3 text-sm rounded-xl border border-[#C37C00] hover:border-[#A37C00] hover:text-[#A37C00]"
+                  >
+                    <X className="w-4 h-4 mr-1 text-[#C37C00]" />
+                    Clear
+                  </Button>
+                )}
+
+                {/* Search Button */}
+                <Button
+                  type="submit"
+                  className="
+                    text-white 
+                    text-sm 
+                    px-6 py-3.5 
+                    rounded-xl 
+                    font-semibold 
+                    shadow-lg 
+                    transition-all duration-300 
+                    transform hover:scale-[1.02] 
+                    bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] 
+                    hover:from-[#A66A00] hover:via-[#C37C00] hover:to-[#8A5700]
+                    hover:shadow-xl hover:shadow-[#C37C00]/30
+                    
+                  "
+                >
+                  <Search className="w-4 h-4 mr-1" />
+                  Search
+                </Button>
               </div>
-              <div className="flex items-center gap-3 bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full border border-white/30">
-                <div className="w-3 h-3 bg-[#8A6C37] rounded-full animate-pulse"></div>
-                <span className="text-white font-medium">{pagination.total} Stores Available</span>
-              </div>
-              {user && (
-                <div className="flex items-center gap-3 bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full border border-white/30">
-                  <div className="w-3 h-3 bg-[#A37F41] rounded-full animate-pulse"></div>
-                  <span className="text-white font-medium">
-                    Logged in as {user.role === 'admin' ? 'Admin' : user.role === 'shop_owner' ? 'Shop Owner' : 'Customer'}
-                  </span>
-                </div>
-              )}
-            </div> */}
+            </div>
           </div>
         </div>
-      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 
       {/* Main Content */}
-      <div className="w-full px-4 sm:px-6 lg:px-8 py-12">
+      <div className="w-full ">
         <div className="max-w-[1600px] mx-auto">
           {/* Shops Grid/List */}
           <div className="w-full">
@@ -663,7 +622,7 @@ const ShopList = () => {
             {/* Shops Grid/List */}
             {filteredShops.length === 0 ? (
               <div className="text-center py-20 bg-gradient-to-br from-white to-[#F8F4ED]/50 rounded-2xl shadow-lg border border-[#E2D2B6]/30">
-                <div className="text-8xl mb-6">🏪</div>
+                <div className="text-8xl mb-6"></div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">No shops found</h3>
                 <p className="text-gray-600 text-lg mb-8 max-w-md mx-auto">
                   Try adjusting your search terms or filters to find what you're looking for
@@ -676,75 +635,15 @@ const ShopList = () => {
                 </Button>
               </div>
             ) : (
-              /* Premium Shops Section */
-              filteredShops.length > 0 && (
-                <>
-                  {/* Premium Badge */}
-                  <div className="mb-8">
-                    <div className="flex items-center justify-center mb-6">
-                      <div className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] text-white px-6 py-2 rounded-full shadow-lg">
-                        <div className="flex items-center gap-2">
-                          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                          </svg>
-                          <span className="font-bold text-sm">Premium Featured Stores</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Premium Shops Grid */}
-                    <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mb-16">
-                      {filteredShops.slice(0, 4).map((shop, index) => (
-                        <div key={shop._id || shop.id} className="relative">
-                          {/* Premium Badge */}
-                          <div className="absolute -top-3 left-3 z-20">
-                            <div className={`bg-gradient-to-r ${index === 0 ? 'from-yellow-400 to-yellow-600' :
-                              index === 1 ? 'from-gray-300 to-gray-500' :
-                                index === 2 ? 'from-amber-600 to-amber-800' :
-                                  'from-blue-400 to-blue-600'} text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg`}>
-                              #{index + 1} Premium
-                            </div>
-                          </div>
-                          {/* Premium Crown */}
-                          <div className="absolute -top-2 right-3 z-20">
-                            <div className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] p-1.5 rounded-full shadow-lg">
-                              <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M5 4a1 1 0 00-2 0v7.268a2 2 0 000 3.464V16a1 1 0 102 0v-1.268a2 2 0 000-3.464V4zM11 4a1 1 0 10-2 0v1.268a2 2 0 000 3.464V16a1 1 0 102 0V8.732a2 2 0 000-3.464V4zM16 3a1 1 0 011 1v7.268a2 2 0 010 3.464V16a1 1 0 11-2 0v-1.268a2 2 0 010-3.464V4a1 1 0 011-1z" />
-                              </svg>
-                            </div>
-                          </div>
-                          {/* Use Regular ShopCard */}
-                          <div className="border-4 border-gradient-to-r from-[#C37C00] to-[#A66A00] rounded-3xl p-1 bg-gradient-to-br from-[#C37C00] to-[#A66A00]">
-                            <div className="bg-white rounded-2xl overflow-hidden">
-                              <ShopCard shop={shop} isListView={false} />
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Regular Shops Section */}
-                  {filteredShops.length > 4 && (
-                    <>
-                      <div className="flex items-center justify-center mb-6">
-                        <div className="bg-gray-100 text-gray-700 px-6 py-2 rounded-full">
-                          <span className="font-semibold text-sm">All Stores</span>
-                        </div>
-                      </div>
-
-                      <div className={`grid ${viewMode === 'grid'
-                        ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8'
-                        : 'grid-cols-1 gap-6'
-                        }`}>
-                        {filteredShops.slice(4).map((shop) => (
-                          <ShopCard key={shop._id || shop.id} shop={shop} isListView={viewMode === 'list'} />
-                        ))}
-                      </div>
-                    </>
-                  )}
-                </>
-              )
+              /* All Shops Section - No Premium Distinction */
+              <div className={`grid ${viewMode === 'grid'
+                ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8'
+                : 'grid-cols-1 gap-6'
+                }`}>
+                {filteredShops.map((shop) => (
+                  <ShopCard key={shop._id || shop.id} shop={shop} isListView={viewMode === 'list'} />
+                ))}
+              </div>
             )}
 
             {/* Load More Button */}
