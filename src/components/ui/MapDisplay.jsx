@@ -25,7 +25,7 @@ const shopIcon = new L.Icon({
   shadowSize: [41, 41]
 });
 
-const MapDisplay = ({ 
+const MapDisplay = ({
   latitude,
   longitude,
   shopName = 'المتجر',
@@ -61,7 +61,7 @@ const MapDisplay = ({
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <MapPin className="w-5 h-5" />
-              موقع المتجر
+              Shop Location
             </CardTitle>
           </CardHeader>
         )}
@@ -69,7 +69,7 @@ const MapDisplay = ({
           <div className="flex items-center justify-center h-32 bg-gray-50 rounded-lg">
             <div className="text-center text-gray-500">
               <MapPin className="w-8 h-8 mx-auto mb-2 opacity-50" />
-              <p>لم يتم تحديد موقع للمتجر</p>
+              <p>No location specified for this shop</p>
             </div>
           </div>
         </CardContent>
@@ -83,7 +83,7 @@ const MapDisplay = ({
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <MapPin className="w-5 h-5" />
-            موقع المتجر
+            Shop Location
           </CardTitle>
           {shopAddress && (
             <CardDescription>{shopAddress}</CardDescription>
@@ -92,8 +92,8 @@ const MapDisplay = ({
       )}
       <CardContent className="space-y-4">
         {/* Map Container */}
-        <div 
-          style={{ height }} 
+        <div
+          style={{ height }}
           className="rounded-lg overflow-hidden border"
         >
           <MapContainer
@@ -111,7 +111,7 @@ const MapDisplay = ({
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            
+
             <Marker position={position} icon={shopIcon}>
               <Popup>
                 <div className="text-center">
@@ -139,7 +139,7 @@ const MapDisplay = ({
               className="flex-1"
             >
               <Navigation className="w-4 h-4 mr-2" />
-              الحصول على الاتجاهات
+              Get Directions
             </Button>
             <Button
               type="button"
@@ -149,7 +149,7 @@ const MapDisplay = ({
               className="flex-1"
             >
               <ExternalLink className="w-4 h-4 mr-2" />
-              فتح في الخرائط
+              Open in Maps
             </Button>
           </div>
         )}
@@ -158,11 +158,11 @@ const MapDisplay = ({
         <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">
           <div className="flex items-center gap-2 mb-1">
             <MapPin className="w-4 h-4" />
-            <span className="font-medium">الإحداثيات:</span>
+            <span className="font-medium">Coordinates:</span>
           </div>
           <div className="grid grid-cols-2 gap-2 text-xs">
-            <div>خط العرض: {lat.toFixed(6)}</div>
-            <div>خط الطول: {lng.toFixed(6)}</div>
+            <div>Latitude: {lat.toFixed(6)}</div>
+            <div>Longitude: {lng.toFixed(6)}</div>
           </div>
         </div>
       </CardContent>

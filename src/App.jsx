@@ -28,6 +28,7 @@ import ManageBookings from './pages/seller/ManageBookings.jsx';
 import ManageTimes from './pages/seller/ManageTimes.jsx';
 import BookingsOnly from './pages/seller/BookingsOnly.jsx';
 import TimeManagement from './pages/seller/TimeManagement.jsx';
+import ManageRatings from './pages/seller/ManageRatings.jsx';
 import AdminDashboard from './pages/admin/AdminDashboard.jsx';
 // Static Pages
 import AboutUs from './pages/static/AboutUs.jsx';
@@ -102,6 +103,7 @@ function App() {
               <Route path="/manage-times" element={<ManageTimes />} />
               <Route path="/bookings-only" element={<BookingsOnly />} />
               <Route path="/time-management" element={<TimeManagement />} />
+              <Route path="/manage-ratings" element={<ManageRatings />} />
 
               {/* Admin Routes */}
               <Route path="/admin" element={<AdminDashboard />} />

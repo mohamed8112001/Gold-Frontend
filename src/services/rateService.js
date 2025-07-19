@@ -18,16 +18,21 @@ export const rateService = {
     try {
       console.log("Getting rates with params:", params);
 
-      // Validate shopId if provided
-      if (params.shopId) {
-        // Check if shopId is a valid format
-        if (typeof params.shopId !== "string" || params.shopId.length < 3) {
-          console.error("Invalid shop ID format:", params.shopId);
+      const { shopId, ...otherParams } = params;
+      let endpoint = "/rate";
+
+      if (shopId) {
+        // Validate shopId if provided
+        if (typeof shopId !== "string" || shopId.length < 3) {
+          console.error("Invalid shop ID format:", shopId);
           throw new Error("Invalid shop ID format");
         }
+        endpoint = `/rate/shop/${shopId}`;
       }
 
-      const response = await api.get("/rate", { params });
+      const response = await api.get(endpoint, {
+        params: otherParams,
+      });
       console.log("Rates API response:", response.data);
       return response.data;
     } catch (error) {
@@ -38,13 +43,13 @@ export const rateService = {
         console.warn(
           "Bad request for rates (likely invalid shopId), returning empty array"
         );
-        return []; // Return empty array instead of throwing
+        return { data: [] }; // Return consistent structure
       } else if (error.response?.status === 404) {
         console.warn("No rates found for this shop, returning empty array");
-        return [];
+        return { data: [] };
       } else if (error.response?.status >= 500) {
         console.warn("Server error for rates, returning empty array");
-        return [];
+        return { data: [] };
       }
 
       throw new Error(

@@ -22,6 +22,7 @@ import {
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES } from '../../utils/constants.js';
 import dashboardService from '../../services/dashboardService.js';
+import ManageRatings from '../seller/ManageRatings.jsx';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -227,25 +228,24 @@ const Dashboard = () => {
           </div>
           <div className="flex flex-col items-end space-y-2">
             <span
-              className={`text-xs px-2 py-1 rounded-full ${
-                booking.status === 'confirmed' || booking.status === 'approved'
-                  ? 'text-[#6D552C] bg-[#D3BB92]'
-                  : booking.status === 'pending'
+              className={`text-xs px-2 py-1 rounded-full ${booking.status === 'confirmed' || booking.status === 'approved'
+                ? 'text-[#6D552C] bg-[#D3BB92]'
+                : booking.status === 'pending'
                   ? 'text-[#A37F41] bg-[#F0E8DB]'
                   : booking.status === 'cancelled'
-                  ? 'text-red-600 bg-red-100'
-                  : 'text-[#92723A] bg-[#F8F4ED]'
-              }`}
+                    ? 'text-red-600 bg-red-100'
+                    : 'text-[#92723A] bg-[#F8F4ED]'
+                }`}
             >
               {booking.status === 'confirmed'
                 ? 'Confirmed'
                 : booking.status === 'approved'
-                ? 'Approved'
-                : booking.status === 'pending'
-                ? 'Pending'
-                : booking.status === 'cancelled'
-                ? 'Cancelled'
-                : booking.status || 'Unknown'}
+                  ? 'Approved'
+                  : booking.status === 'pending'
+                    ? 'Pending'
+                    : booking.status === 'cancelled'
+                      ? 'Cancelled'
+                      : booking.status || 'Unknown'}
             </span>
             {booking.status !== 'cancelled' && booking.status !== 'completed' && (
               <div className="flex space-x-1">
@@ -665,21 +665,20 @@ const Dashboard = () => {
                       </div>
                       <div className="text-sm text-[#92723A]">({timeSlot.duration} minutes)</div>
                       <span
-                        className={`text-xs px-2 py-1 rounded-full ${
-                          isShopOwner
-                            ? timeSlot.isBooked
-                              ? 'text-red-600 bg-red-100'
-                              : 'text-[#6D552C] bg-[#D3BB92]'
-                            : 'text-[#8A6C37] bg-[#E2D2B6]'
-                        }`}
+                        className={`text-xs px-2 py-1 rounded-full ${isShopOwner
+                          ? timeSlot.isBooked
+                            ? 'text-red-600 bg-red-100'
+                            : 'text-[#6D552C] bg-[#D3BB92]'
+                          : 'text-[#8A6C37] bg-[#E2D2B6]'
+                          }`}
                       >
                         {isShopOwner
                           ? timeSlot.isBooked
                             ? 'Booked'
                             : 'Available'
                           : timeSlot.status === 'confirmed'
-                          ? 'Confirmed'
-                          : timeSlot.status || 'Booked'}
+                            ? 'Confirmed'
+                            : timeSlot.status || 'Booked'}
                       </span>
                     </div>
                     <div className="flex space-x-2">
@@ -726,7 +725,10 @@ const Dashboard = () => {
     { id: 'overview', label: 'Overview', icon: BarChart3 },
     { id: 'bookings', label: isShopOwner ? 'Bookings Overview' : 'My Bookings', icon: Calendar },
     { id: 'available-times', label: isShopOwner ? 'Time Management' : 'My Appointments', icon: Clock },
-    ...(isShopOwner ? [{ id: 'shop', label: 'Manage Shop', icon: Store }] : []),
+    ...(isShopOwner ? [
+      { id: 'shop', label: 'Manage Shop', icon: Store },
+      { id: 'ratings', label: 'Manage Ratings', icon: Star }
+    ] : []),
   ];
 
   if (loading) {
@@ -794,11 +796,10 @@ const Dashboard = () => {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 ${
-                    activeTab === tab.id
-                      ? 'bg-gradient-to-r from-[#C37C00] to-[#A66A00] text-white shadow-md'
-                      : 'text-[#A66A00] hover:bg-[#FFF8E6] hover:text-[#8A5700] hover:shadow-sm'
-                  }`}
+                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 ${activeTab === tab.id
+                    ? 'bg-gradient-to-r from-[#C37C00] to-[#A66A00] text-white shadow-md'
+                    : 'text-[#A66A00] hover:bg-[#FFF8E6] hover:text-[#8A5700] hover:shadow-sm'
+                    }`}
                   aria-label={`Switch to ${tab.label}`}
                 >
                   <Icon className="w-4 h-4" />
@@ -812,6 +813,7 @@ const Dashboard = () => {
           {activeTab === 'overview' && <OverviewTab />}
           {activeTab === 'bookings' && <BookingsTab />}
           {activeTab === 'shop' && isShopOwner && <ShopOwnerTab />}
+          {activeTab === 'ratings' && isShopOwner && <ManageRatings />}
           {activeTab === 'available-times' && <AvailableTimesTab />}
         </div>
       </div>

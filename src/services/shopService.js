@@ -408,27 +408,35 @@ export const shopService = {
               localStorage.getItem(`shop_gallery_${shopId}`) || "[]"
             );
 
-            // Convert files to base64 and save
-            for (let [, value] of formData.entries()) {
-              if (value instanceof File) {
-                const base64 = await new Promise((resolve) => {
-                  const reader = new FileReader();
-                  reader.onload = (e) => resolve(e.target.result);
-                  reader.readAsDataURL(value);
-                });
+            // Convert files to base64 and save (avoid duplicates)
+            const processedFiles = new Set();
+            for (let [key, value] of formData.entries()) {
+              if (value instanceof File && key === "gallery") {
+                // Create a unique identifier for the file to avoid duplicates
+                const fileId = `${value.name}_${value.size}_${value.lastModified}`;
 
-                const imageData = {
-                  id: `local_${Date.now()}_${Math.random()
-                    .toString(36)
-                    .substring(2, 11)}`,
-                  name: value.name,
-                  data: base64,
-                  size: value.size,
-                  type: value.type,
-                  uploadDate: new Date().toISOString(),
-                };
+                if (!processedFiles.has(fileId)) {
+                  processedFiles.add(fileId);
 
-                savedImages.push(imageData);
+                  const base64 = await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => resolve(e.target.result);
+                    reader.readAsDataURL(value);
+                  });
+
+                  const imageData = {
+                    id: `local_${Date.now()}_${Math.random()
+                      .toString(36)
+                      .substring(2, 11)}`,
+                    name: value.name,
+                    data: base64,
+                    size: value.size,
+                    type: value.type,
+                    uploadDate: new Date().toISOString(),
+                  };
+
+                  savedImages.push(imageData);
+                }
               }
             }
 
@@ -470,13 +478,39 @@ export const shopService = {
       const gallery = JSON.parse(
         localStorage.getItem(`shop_gallery_${shopId}`) || "[]"
       );
+
+      // Remove duplicates based on name and size
+      const uniqueGallery = [];
+      const seen = new Set();
+
+      gallery.forEach((image) => {
+        const key = `${image.name}_${image.size}`;
+        if (!seen.has(key)) {
+          seen.add(key);
+          uniqueGallery.push(image);
+        }
+      });
+
+      // If we removed duplicates, save the cleaned version
+      if (uniqueGallery.length !== gallery.length) {
+        localStorage.setItem(
+          `shop_gallery_${shopId}`,
+          JSON.stringify(uniqueGallery)
+        );
+        console.log(
+          `🧹 Cleaned ${
+            gallery.length - uniqueGallery.length
+          } duplicate images for shop ${shopId}`
+        );
+      }
+
       console.log(
-        `📁 Retrieved ${gallery.length} images from localStorage for shop ${shopId}`
+        `📁 Retrieved ${uniqueGallery.length} unique images from localStorage for shop ${shopId}`
       );
       return {
         success: true,
-        data: gallery,
-        images: gallery,
+        data: uniqueGallery,
+        images: uniqueGallery,
       };
     } catch (error) {
       console.error("Error getting shop gallery:", error);

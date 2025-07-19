@@ -9,7 +9,6 @@ import {
   MapPin,
   Phone,
   Eye,
-  Heart,
   Shield,
   Award
 } from 'lucide-react';
@@ -19,9 +18,14 @@ import FloatingChat from '../components/ui/FloatingChat.jsx';
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import { useTranslation } from 'react-i18next';
+// import api from '@/services/api.js';
+import.meta.env.VITE_API_BASE_URL
+
+import ConversationsFloatinButton from '@/components/ui/ConversationsFloatinButton.jsx';
+import { useAuth } from '@/context/AuthContext.jsx';
 
 const Home = () => {
-  const {user, setUser} = useAuth()
+  const { user } = useAuth()
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
@@ -218,7 +222,7 @@ const Home = () => {
 
     return (
       <Card
-        className="group relative overflow-hidden bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer transform hover:-translate-y-2 border-0"
+        className="group relative overflow-hidden bg-white rounded-3xl transition-all duration-500 cursor-pointer transform hover:-translate-y-2 border-0"
         onClick={() => {
           const shopId = shop._id || shop.id;
           if (shopId) {
@@ -263,7 +267,7 @@ const Home = () => {
                 <div className="text-7xl mb-2 filter drop-shadow-2xl">💍</div>
                 <div className="absolute inset-0 bg-gradient-to-r from-[#C37C00]/30 to-[#E6A500]/30 rounded-full blur-xl"></div>
               </div>
-              <div className="text-lg text-gray-800 font-bold px-4 py-2 bg-white/90 rounded-xl backdrop-blur-md shadow-lg border border-[#E2D2B6]">
+              <div className="text-lg text-gray-800 font-bold px-4 py-2 bg-white/90 rounded-xl backdrop-blur-md border border-[#E2D2B6]">
                 {shop.name}
               </div>
               <div className="mt-2 text-sm text-gray-600 font-semibold bg-[#F0E8DB] px-3 py-1 rounded-full">Jewelry Store</div>
@@ -279,7 +283,7 @@ const Home = () => {
 
           {/* Verified Badge */}
           <div className="absolute top-4 left-4">
-            <div className="bg-gradient-to-r from-green-500 to-green-600 text-white text-sm px-4 py-2 rounded-full shadow-lg backdrop-blur-sm border border-white/20">
+            <div className="bg-gradient-to-r from-green-500 to-green-600 text-white text-sm px-4 py-2 rounded-full backdrop-blur-sm border border-white/20">
               <span className="font-semibold">✓ Verified</span>
             </div>
           </div>
@@ -309,7 +313,7 @@ const Home = () => {
               {/* Main Visit Button */}
               <Button
                 size="lg"
-                className="w-full bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] hover:from-[#A66A00] hover:via-[#C37C00] hover:to-[#8A5700] text-white px-6 py-4 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 font-bold text-lg border border-[#D3BB92]/50"
+                className="w-full bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] hover:from-[#A66A00] hover:via-[#C37C00] hover:to-[#8A5700] text-white px-6 py-4 rounded-2xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 font-bold text-lg border border-[#D3BB92]/50"
                 onClick={(e) => {
                   e.stopPropagation();
                   const shopId = shop._id || shop.id;
@@ -443,7 +447,7 @@ const Home = () => {
                     <Button
                       size="lg"
                       onClick={() => navigate('/shops')}
-                      className={`bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] hover:from-[#A66A00] hover:via-[#C37C00] hover:to-[#8A5700] text-white px-12 py-4 text-xl font-bold rounded-full shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:scale-110 hover:-translate-y-1 border-2 border-[#D3BB92]/50`}
+                      className={`bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] hover:from-[#A66A00] hover:via-[#C37C00] hover:to-[#8A5700] text-white px-12 py-4 text-xl font-bold rounded-full transition-all duration-500 transform hover:scale-110 hover:-translate-y-1 border-2 border-[#D3BB92]/50`}
                     >
                       <span className="flex items-center gap-3">
                         Explore Stores
@@ -454,7 +458,7 @@ const Home = () => {
                       size="lg"
                       variant="outline"
                       onClick={() => navigate('/products')}
-                      className="bg-white/15 backdrop-blur-md border-2 border-white/40 text-white hover:bg-white/25 hover:border-white/60 px-12 py-5 text-xl font-bold rounded-full shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:scale-110"
+                      className="bg-white/15 backdrop-blur-md border-2 border-white/40 text-white hover:bg-white/25 hover:border-white/60 px-12 py-5 text-xl font-bold rounded-full transition-all duration-500 transform hover:scale-110"
                     >
                       <span className="flex items-center gap-3">
                         View Products
@@ -483,19 +487,19 @@ const Home = () => {
           {/* Enhanced Navigation Arrows */}
           <button
             onClick={prevSlide}
-            className="absolute left-8 top-1/2 transform -translate-y-1/2 w-16 h-16 bg-white/15 backdrop-blur-md rounded-full shadow-2xl hover:shadow-3xl transition-all duration-500 flex items-center justify-center text-white hover:bg-white/25 z-30 border-2 border-white/30 hover:border-white/50 group"
+            className="absolute left-8 top-1/2 transform -translate-y-1/2 w-16 h-16 bg-white/15 backdrop-blur-md rounded-full transition-all duration-500 flex items-center justify-center text-white hover:bg-white/25 z-30 border-2 border-white/30 hover:border-white/50 group"
           >
             <span className="text-3xl font-bold group-hover:scale-110 transition-transform duration-300">‹</span>
           </button>
           <button
             onClick={nextSlide}
-            className="absolute right-8 top-1/2 transform -translate-y-1/2 w-16 h-16 bg-white/15 backdrop-blur-md rounded-full shadow-2xl hover:shadow-3xl transition-all duration-500 flex items-center justify-center text-white hover:bg-white/25 z-30 border-2 border-white/30 hover:border-white/50 group"
+            className="absolute right-8 top-1/2 transform -translate-y-1/2 w-16 h-16 bg-white/15 backdrop-blur-md rounded-full transition-all duration-500 flex items-center justify-center text-white hover:bg-white/25 z-30 border-2 border-white/30 hover:border-white/50 group"
           >
             <span className="text-3xl font-bold group-hover:scale-110 transition-transform duration-300">›</span>
           </button>
 
           {/* Enhanced Slide Counter */}
-          <div className="absolute bottom-8 right-8 bg-black/40 backdrop-blur-md text-white px-6 py-3 rounded-full text-lg font-semibold z-30 border border-white/20 shadow-xl">
+          <div className="absolute bottom-8 right-8 bg-black/40 backdrop-blur-md text-white px-6 py-3 rounded-full text-lg font-semibold z-30 border border-white/20">
             <span className="text-[#C5A56D]">{currentSlide + 1}</span>
             <span className="text-white/60 mx-2">/</span>
             <span className="text-white/80">{heroSlides.length}</span>
@@ -525,7 +529,7 @@ const Home = () => {
 
           {/* Simple Search Bar */}
           <div className="w-full mb-16">
-            <div className="relative bg-gray-50 rounded-2xl p-2 shadow-lg border border-gray-200 hover:border-[#A37F41] transition-all duration-300">
+            <div className="relative bg-gray-50 rounded-2xl p-2 border border-gray-200 hover:border-[#A37F41] transition-all duration-300">
               <div className="flex items-center gap-4">
                 <div className="flex-1 relative">
                   <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -561,7 +565,7 @@ const Home = () => {
               <Button
                 variant="outline"
                 onClick={() => navigate('/shops?category=gold')}
-                className="group bg-white border-2 border-gray-200 hover:border-[#C37C00] text-gray-700 hover:text-[#C37C00] transition-all duration-300 p-6 h-auto rounded-2xl shadow-md hover:shadow-lg"
+                className="group bg-white border-2 border-gray-200 hover:border-[#C37C00] text-gray-700 hover:text-[#C37C00] transition-all duration-300 p-6 h-auto rounded-2xl"
               >
                 <div className="text-center">
                   <div className="w-16 h-16 bg-gradient-to-br from-[#F8F4ED] to-[#E2D2B6] rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
@@ -574,7 +578,7 @@ const Home = () => {
               <Button
                 variant="outline"
                 onClick={() => navigate('/shops?category=necklaces')}
-                className="group bg-white border-2 border-gray-200 hover:border-[#8A6C37] text-gray-700 hover:text-[#8A6C37] transition-all duration-300 p-6 h-auto rounded-2xl shadow-md hover:shadow-lg"
+                className="group bg-white border-2 border-gray-200 hover:border-[#8A6C37] text-gray-700 hover:text-[#8A6C37] transition-all duration-300 p-6 h-auto rounded-2xl"
               >
                 <div className="text-center">
                   <div className="w-16 h-16 bg-gradient-to-br from-[#F0E8DB] to-[#D3BB92] rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
@@ -587,7 +591,7 @@ const Home = () => {
               <Button
                 variant="outline"
                 onClick={() => navigate('/shops?category=bracelets')}
-                className="group bg-white border-2 border-gray-200 hover:border-[#C5A56D] text-gray-700 hover:text-[#C5A56D] transition-all duration-300 p-6 h-auto rounded-2xl shadow-md hover:shadow-lg"
+                className="group bg-white border-2 border-gray-200 hover:border-[#C5A56D] text-gray-700 hover:text-[#C5A56D] transition-all duration-300 p-6 h-auto rounded-2xl"
               >
                 <div className="text-center">
                   <div className="w-16 h-16 bg-gradient-to-br from-[#E2D2B6] to-[#D3BB92] rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
@@ -600,7 +604,7 @@ const Home = () => {
               <Button
                 variant="outline"
                 onClick={() => navigate('/shops?category=earrings')}
-                className="group bg-white border-2 border-gray-200 hover:border-[#92723A] text-gray-700 hover:text-[#92723A] transition-all duration-300 p-6 h-auto rounded-2xl shadow-md hover:shadow-lg"
+                className="group bg-white border-2 border-gray-200 hover:border-[#92723A] text-gray-700 hover:text-[#92723A] transition-all duration-300 p-6 h-auto rounded-2xl"
               >
                 <div className="text-center">
                   <div className="w-16 h-16 bg-gradient-to-br from-[#F0E8DB] to-[#E2D2B6] rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
@@ -612,7 +616,7 @@ const Home = () => {
             </div>
           </div>
 
-         
+
         </div>
       </section>
 
@@ -643,7 +647,7 @@ const Home = () => {
 
             {/* Clean Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full mb-16">
-              <div className="bg-white rounded-2xl p-6 shadow-md text-center">
+              <div className="bg-white rounded-2xl p-6 text-center">
                 <div className="text-3xl font-bold text-[#C37C00] mb-2">
                   {isLoading ? (
                     <div className="animate-pulse bg-gray-200 h-8 w-12 rounded mx-auto"></div>
@@ -653,7 +657,7 @@ const Home = () => {
                 </div>
                 <div className="text-gray-600 font-medium">{t('stats.stores') || 'Stores'}</div>
               </div>
-              <div className="bg-white rounded-2xl p-6 shadow-md text-center">
+              <div className="bg-white rounded-2xl p-6 text-center">
                 <div className="text-3xl font-bold text-[#C37C00] mb-2">
                   {isLoading ? (
                     <div className="animate-pulse bg-gray-200 h-8 w-16 rounded mx-auto"></div>
@@ -663,7 +667,7 @@ const Home = () => {
                 </div>
                 <div className="text-gray-600 font-medium">{t('stats.products') || 'Products'}</div>
               </div>
-              <div className="bg-white rounded-2xl p-6 shadow-md text-center">
+              <div className="bg-white rounded-2xl p-6 text-center">
                 <div className="text-3xl font-bold text-[#C37C00] mb-2">
                   {isLoading ? (
                     <div className="animate-pulse bg-gray-200 h-8 w-12 rounded mx-auto"></div>
@@ -689,7 +693,7 @@ const Home = () => {
                 {[...Array(4)].map((_, index) => (
                   <div
                     key={index}
-                    className="relative bg-white rounded-3xl shadow-lg overflow-hidden"
+                    className="relative bg-white rounded-3xl overflow-hidden"
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
                     {/* Premium Badge Skeleton */}
@@ -741,13 +745,13 @@ const Home = () => {
                         <div className={`bg-gradient-to-r ${index === 0 ? 'from-yellow-400 to-yellow-600' :
                           index === 1 ? 'from-gray-300 to-gray-500' :
                             index === 2 ? 'from-amber-600 to-amber-800' :
-                              'from-blue-400 to-blue-600'} text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg`}>
+                              'from-blue-400 to-blue-600'} text-white px-3 py-1 rounded-full text-xs font-bold`}>
                           #{index + 1} Premium
                         </div>
                       </div>
                       {/* Premium Crown */}
                       <div className="absolute -top-2 right-3 z-20">
-                        <div className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] p-1.5 rounded-full shadow-lg">
+                        <div className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] p-1.5 rounded-full">
                           <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M5 4a1 1 0 00-2 0v7.268a2 2 0 000 3.464V16a1 1 0 102 0v-1.268a2 2 0 000-3.464V4zM11 4a1 1 0 10-2 0v1.268a2 2 0 000 3.464V16a1 1 0 102 0V8.732a2 2 0 000-3.464V4zM16 3a1 1 0 011 1v7.268a2 2 0 010 3.464V16a1 1 0 11-2 0v-1.268a2 2 0 010-3.464V4a1 1 0 011-1z" />
                           </svg>
@@ -774,7 +778,7 @@ const Home = () => {
 
               <Button
                 onClick={() => navigate('/shops')}
-                className="relative bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] hover:from-[#A66A00] hover:via-[#C37C00] hover:to-[#8A5700] text-white px-12 py-4 text-xl font-bold rounded-full shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:scale-110 hover:-translate-y-1 border-2 border-[#D3BB92]/50"
+                className="relative bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] hover:from-[#A66A00] hover:via-[#C37C00] hover:to-[#8A5700] text-white px-12 py-4 text-xl font-bold rounded-full transition-all duration-500 transform hover:scale-110 hover:-translate-y-1 border-2 border-[#D3BB92]/50"
               >
                 <span className="flex items-center gap-3">
                   <span>Explore All Stores</span>
@@ -811,8 +815,8 @@ const Home = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Service 1 */}
-            <div className="text-center p-6 bg-[#F8F4ED] rounded-2xl hover:bg-white hover:shadow-lg transition-all duration-300">
-              <div className="w-20 h-20  bg-gradient-to-br from-[#A66A00] to-[#A66A00] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+            <div className="text-center p-6 bg-[#F8F4ED] rounded-2xl hover:bg-white transition-all duration-300">
+              <div className="w-20 h-20  bg-gradient-to-br from-[#A66A00] to-[#A66A00] rounded-2xl flex items-center justify-center mx-auto mb-6">
                 <Shield className="w-10 h-10 text-white
                 " />
               </div>
@@ -825,8 +829,8 @@ const Home = () => {
             </div>
 
             {/* Service 2 */}
-            <div className="text-center p-6 bg-[#F8F4ED] rounded-2xl hover:bg-white hover:shadow-lg transition-all duration-300">
-              <div className="w-20 h-20  bg-gradient-to-br from-[#A66A00] to-[#A66A00] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+            <div className="text-center p-6 bg-[#F8F4ED] rounded-2xl hover:bg-white transition-all duration-300">
+              <div className="w-20 h-20  bg-gradient-to-br from-[#A66A00] to-[#A66A00] rounded-2xl flex items-center justify-center mx-auto mb-6">
                 <Award className="w-10 h-10 text-white" />
               </div>
               <h3 className="text-2xl font-bold mb-4 text-gray-900">
@@ -838,8 +842,8 @@ const Home = () => {
             </div>
 
             {/* Service 3 */}
-            <div className="text-center p-6 bg-[#F8F4ED] rounded-2xl hover:bg-white hover:shadow-lg transition-all duration-300">
-              <div className="w-20 h-20 bg-gradient-to-br from-[#A66A00] to-[#A66A00] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+            <div className="text-center p-6 bg-[#F8F4ED] rounded-2xl hover:bg-white transition-all duration-300">
+              <div className="w-20 h-20 bg-gradient-to-br from-[#A66A00] to-[#A66A00] rounded-2xl flex items-center justify-center mx-auto mb-6">
                 <Star className="w-10 h-10 text-white " />
               </div>
               <h3 className="text-2xl font-bold mb-4 text-gray-900">
@@ -869,7 +873,7 @@ const Home = () => {
             <Button
               size="lg"
               onClick={() => navigate('/shops')}
-              className="bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] hover:from-[#A66A00] hover:via-[#C37C00] hover:to-[#8A5700] text-white px-12 py-4 text-xl font-bold rounded-full shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:scale-110 hover:-translate-y-1 border-2 border-[#D3BB92]/50"
+              className="bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] hover:from-[#A66A00] hover:via-[#C37C00] hover:to-[#8A5700] text-white px-12 py-4 text-xl font-bold rounded-full transition-all duration-500 transform hover:scale-110 hover:-translate-y-1 border-2 border-[#D3BB92]/50"
             >
               {t('buttons.explore_stores') || 'Explore Stores Now'}
             </Button>
@@ -895,9 +899,9 @@ const Home = () => {
       {/* Floating Chat Component */}
       <FloatingChat />
 
-      <ConversationsFloatinButton user={user} onSelectConversation={(productId)=> {
+      <ConversationsFloatinButton user={user} onSelectConversation={(productId) => {
         navigate(ROUTES.PRODUCT_DETAILS(productId))
-      }}/>
+      }} />
     </motion.div >
   );
 };

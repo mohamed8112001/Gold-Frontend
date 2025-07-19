@@ -128,6 +128,9 @@ export const ROUTES = {
   BOOKINGS_ONLY: "/bookings-only",
   TIME_MANAGEMENT: "/time-management",
 
+  // Rating routes
+  MANAGE_RATINGS: "/manage-ratings",
+
   // User routes
   PROFILE: "/profile",
   SETTINGS: "/settings",

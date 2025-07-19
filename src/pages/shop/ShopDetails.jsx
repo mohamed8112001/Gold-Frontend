@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '../../components/ui/button';
 import { Card, CardContent } from '../../components/ui/card';
@@ -21,7 +21,8 @@ import {
     ShoppingBag,
     Grid,
     List,
-    X
+    X,
+    Bot
 } from 'lucide-react';
 import { shopService } from '../../services/shopService';
 import { productService } from '../../services/productService';
@@ -29,6 +30,7 @@ import { ROUTES } from '../../utils/constants';
 import { useTranslation } from 'react-i18next';
 import MapDisplay from '../../components/ui/MapDisplay.jsx';
 import GalleryUpload from '../../components/shop/GalleryUpload.jsx';
+import RatingDisplay from '../../components/rating/RatingDisplay.jsx';
 
 // WhatsApp Icon Component
 const WhatsAppIcon = ({ className = "w-5 h-5" }) => (
@@ -48,19 +50,19 @@ const ShopImageSlider = ({ images = [], shopName }) => {
         ? validImages
         : ['https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&h=600&fit=crop&crop=center&auto=format&q=80'];
 
-    const nextSlide = () => {
+    const nextSlide = useCallback(() => {
         setCurrentSlide((prev) => (prev + 1) % displayImages.length);
-    };
+    }, [displayImages.length]);
 
-    const prevSlide = () => {
+    const prevSlide = useCallback(() => {
         setCurrentSlide((prev) => (prev - 1 + displayImages.length) % displayImages.length);
-    };
+    }, [displayImages.length]);
 
     useEffect(() => {
         if (displayImages.length <= 1) return; // Skip auto-slide if only one image
         const interval = setInterval(nextSlide, 4000);
         return () => clearInterval(interval);
-    }, [displayImages.length]);
+    }, [displayImages.length, nextSlide]);
 
     return (
         <div className="relative w-full h-full overflow-hidden">
@@ -121,7 +123,8 @@ const ShopDetails = () => {
     const { user } = useAuth();
     const [shop, setShop] = useState(null);
     const [products, setProducts] = useState([]);
-    const [reviews] = useState([]);
+    const [reviews, setReviews] = useState([]);
+    const [reviewsCount, setReviewsCount] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('products');
     const [viewMode, setViewMode] = useState('grid');
@@ -130,13 +133,7 @@ const ShopDetails = () => {
     const safeProducts = Array.isArray(products) ? products : [];
     const safeReviews = Array.isArray(reviews) ? reviews : [];
 
-    useEffect(() => {
-        if (id) {
-            loadShopDetails();
-        }
-    }, [id]);
-
-    const loadShopDetails = async () => {
+    const loadShopDetails = useCallback(async () => {
         try {
             setIsLoading(true);
             console.log('🔄 Loading shop details for ID:', id);
@@ -146,6 +143,25 @@ const ShopDetails = () => {
             const shopData = shopResponse.data || shopResponse;
 
             if (shopData) {
+                console.log('🏪 Shop data received:', shopData);
+                console.log('📍 Location data:', shopData.location);
+
+                // Load gallery images from localStorage and merge with shop data
+                try {
+                    const localGalleryResponse = await shopService.getShopGallery(id);
+                    const localGalleryImages = localGalleryResponse.images || [];
+
+                    if (localGalleryImages.length > 0) {
+                        console.log('📁 Found', localGalleryImages.length, 'local gallery images');
+                        // Merge local images with existing gallery
+                        const existingGallery = shopData.gallery || [];
+                        const mergedGallery = [...existingGallery, ...localGalleryImages];
+                        shopData.gallery = mergedGallery;
+                    }
+                } catch (galleryError) {
+                    console.warn('⚠️ Error loading local gallery:', galleryError);
+                }
+
                 setShop(shopData);
             }
 
@@ -156,8 +172,9 @@ const ShopDetails = () => {
                     ? productsResponse
                     : productsResponse.data || [];
                 setProducts(productsData);
+                console.log('✅ Products loaded successfully:', productsData.length, 'products');
             } catch (error) {
-                console.error('Error loading products:', error);
+                console.warn('⚠️ No products found for this shop or API unavailable:', error.message);
                 setProducts([]);
             }
 
@@ -167,7 +184,15 @@ const ShopDetails = () => {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [id]);
+
+    useEffect(() => {
+        if (id) {
+            loadShopDetails();
+        }
+    }, [id, loadShopDetails]);
+
+
 
     const handleBookAppointment = () => {
         if (!user) {
@@ -206,10 +231,13 @@ const ShopDetails = () => {
         try {
             console.log('🗑️ Deleting gallery image:', imageName);
             await shopService.deleteGalleryImage(shop._id || shop.id, imageName);
+
+            // Update the shop state by removing the image at the specified index
             setShop(prev => ({
                 ...prev,
                 gallery: prev.gallery.filter((_, i) => i !== index)
             }));
+
             alert('تم حذف الصورة بنجاح!');
         } catch (error) {
             console.error('Error deleting gallery image:', error);
@@ -359,6 +387,10 @@ const ShopDetails = () => {
         );
     }
 
+    console.log('🔍 Processing shop data for safeShop:', shop);
+    console.log('📍 Shop location:', shop.location);
+    console.log('📍 Coordinates:', shop.location?.coordinates);
+
     const safeShop = {
         name: shop.name || 'Unnamed Shop',
         description: shop.description || 'No description available',
@@ -376,6 +408,11 @@ const ShopDetails = () => {
         longitude: shop.location?.coordinates?.[0] || null,
         ...shop
     };
+
+    console.log('📍 Extracted coordinates:', {
+        latitude: safeShop.latitude,
+        longitude: safeShop.longitude
+    });
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-[#F8F4ED] via-white to-[#F0E8DB]">
@@ -593,7 +630,7 @@ const ShopDetails = () => {
                             className="data-[state=active]:bg-white data-[state=active]:shadow-lg rounded-2xl py-5 px-8 font-bold text-lg transition-all"
                         >
                             <Star className="w-6 h-6 mr-3" />
-                            {t('shop_details.reviews')} ({safeReviews.length})
+                            {t('shop_details.reviews')} ({reviewsCount})
                         </TabsTrigger>
                         <TabsTrigger
                             value="location"
@@ -702,82 +739,16 @@ const ShopDetails = () => {
 
 
                     <TabsContent value="reviews" className="px-4 sm:px-6 lg:px-8 py-8">
-                        <div className="mb-8 ">
-                            <h2 className="text-3xl flex-row font-bold text-gray-900 mb-2"> Customer Reviews</h2>
+                        <div className="mb-8">
+                            <h2 className="text-3xl font-bold text-gray-900 mb-2">Customer Reviews</h2>
                             <p className="text-gray-600">Read what our customers have to say about their experience</p>
                         </div>
 
-                        {safeReviews.length > 0 ? (
-                            <div className="space-y-6">
-                                {safeReviews.map((review) => (
-                                    <Card key={review.id} className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-2xl overflow-hidden">
-                                        <CardContent className="p-8">
-                                            <div className="flex items-start gap-4">
-                                                <Avatar className="w-12 h-12 border-2 border-gray-200">
-                                                    <AvatarImage src={review.userAvatar} />
-                                                    <AvatarFallback className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] text-white font-bold">
-                                                        {review.userName?.charAt(0) || 'ع'}
-                                                    </AvatarFallback>
-                                                </Avatar>
-
-                                                <div className="flex-1">
-                                                    <div className="flex items-center justify-between mb-3">
-                                                        <div className="flex items-center gap-3">
-                                                            <span className="font-bold text-lg text-gray-900">{review.userName}</span>
-                                                            {review.verified && (
-                                                                <Badge className="bg-[#F0E8DB] text-[#6D552C] border-[#E2D2B6]">
-                                                                    <Shield className="w-3 h-3 mr-1" />
-                                                                    عميل موثق
-                                                                </Badge>
-                                                            )}
-                                                        </div>
-                                                        <span className="text-sm text-gray-500 bg-[#F0E8DB] px-3 py-1 rounded-full border border-[#E2D2B6]/50">
-                                                            {review.date}
-                                                        </span>
-                                                    </div>
-
-                                                    <div className="flex items-center mb-4">
-                                                        <div className="flex mr-2">
-                                                            {[...Array(5)].map((_, i) => (
-                                                                <Star
-                                                                    key={i}
-                                                                    className={`w-5 h-5 ${i < review.rating
-                                                                        ? 'fill-[#C37C00] text-[#C37C00]'
-                                                                        : 'text-gray-300'
-                                                                        }`}
-                                                                />
-                                                            ))}
-                                                        </div>
-                                                        <span className="text-sm font-medium text-gray-700">
-                                                            {review.rating}/5
-                                                        </span>
-                                                    </div>
-
-                                                    <p className="text-gray-700 leading-relaxed text-lg">
-                                                        "{review.comment}"
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </CardContent>
-                                    </Card>
-                                ))}
-                            </div>
-                        ) : (
-                            <div className="text-center py-16 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl">
-                                <div className="text-8xl mb-6">⭐</div>
-                                <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                                    No reviews yet
-                                </h3>
-                                <p className="text-gray-600 text-lg mb-6">
-                                    Be the first to review this shop and share your experience
-                                </p>
-                                <Button
-                                    className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-8 py-3 rounded-full font-semibold"
-                                >
-                                    Write a Review
-                                </Button>
-                            </div>
-                        )}
+                        <RatingDisplay
+                            shopId={id}
+                            shopName={safeShop.name}
+                            onRatingsUpdate={(count) => setReviewsCount(count)}
+                        />
                     </TabsContent>
 
                     <TabsContent value="gallery" className="px-4 sm:px-6 lg:px-8 py-8">
@@ -792,10 +763,7 @@ const ShopDetails = () => {
                                     currentUser={user}
                                     onUploadSuccess={(newImages) => {
                                         console.log('🖼️ Gallery upload success, updating shop state with:', newImages);
-                                        setShop(prev => ({
-                                            ...prev,
-                                            gallery: [...(prev.gallery || []), ...newImages]
-                                        }));
+                                        // Reload shop details to get the updated gallery including local images
                                         loadShopDetails();
                                     }}
                                 />

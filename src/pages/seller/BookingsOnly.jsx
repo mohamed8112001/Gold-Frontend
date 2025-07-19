@@ -303,7 +303,7 @@ const BookingsOnly = () => {
                     {groupedBookings[date]
                       .sort((a, b) => a.time.localeCompare(b.time))
                       .map((booking) => (
-                        <div key={booking._id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                        <div key={booking._id} className="border border-gray-200 rounded-lg p-4 transition-all">
                           <div className="flex justify-between items-start">
                             <div className="flex-1">
                               <div className="flex items-center gap-4 mb-3">

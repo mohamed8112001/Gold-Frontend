@@ -37,7 +37,7 @@ const MapClickHandler = ({ onLocationSelect }) => {
   return null;
 };
 
-const MapPicker = ({ 
+const MapPicker = ({
   latitude = 30.0444, // Default to Cairo, Egypt
   longitude = 31.2357,
   onLocationChange,
@@ -59,10 +59,10 @@ const MapPicker = ({
 
   const handleLocationSelect = ({ latitude: lat, longitude: lng }) => {
     if (disabled) return;
-    
+
     const newPosition = [lat, lng];
     setPosition(newPosition);
-    
+
     if (onLocationChange) {
       onLocationChange({ latitude: lat, longitude: lng });
     }
@@ -70,13 +70,13 @@ const MapPicker = ({
 
   const getCurrentLocation = () => {
     if (disabled || !navigator.geolocation) return;
-    
+
     setIsGettingLocation(true);
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude: lat, longitude: lng } = position.coords;
         handleLocationSelect({ latitude: lat, longitude: lng });
-        
+
         // Center map on current location
         if (mapRef.current) {
           mapRef.current.setView([lat, lng], 15);
@@ -85,7 +85,7 @@ const MapPicker = ({
       },
       (error) => {
         console.error('Error getting location:', error);
-        alert('لا يمكن الحصول على موقعك الحالي. تأكد من السماح بالوصول للموقع.');
+        alert('Cannot get your current location. Please allow location access.');
         setIsGettingLocation(false);
       },
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
@@ -94,7 +94,7 @@ const MapPicker = ({
 
   const searchLocation = async () => {
     if (!searchQuery.trim() || disabled) return;
-    
+
     setIsSearching(true);
     try {
       // Using Nominatim API for geocoding (free alternative to Google Maps)
@@ -102,24 +102,24 @@ const MapPicker = ({
         `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}&limit=1&countrycodes=eg`
       );
       const data = await response.json();
-      
+
       if (data && data.length > 0) {
         const { lat, lon } = data[0];
         const latitude = parseFloat(lat);
         const longitude = parseFloat(lon);
-        
+
         handleLocationSelect({ latitude, longitude });
-        
+
         // Center map on searched location
         if (mapRef.current) {
           mapRef.current.setView([latitude, longitude], 15);
         }
       } else {
-        alert('لم يتم العثور على الموقع المطلوب');
+        alert('Location not found');
       }
     } catch (error) {
       console.error('Error searching location:', error);
-      alert('حدث خطأ في البحث عن الموقع');
+      alert('Error searching for location');
     } finally {
       setIsSearching(false);
     }
@@ -136,10 +136,10 @@ const MapPicker = ({
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <MapPin className="w-5 h-5" />
-          اختيار الموقع على الخريطة
+          Choose Location on Map
         </CardTitle>
         <CardDescription>
-          انقر على الخريطة لتحديد موقع المتجر أو استخدم أدوات البحث
+          Click on the map to select shop location or use search tools
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -149,7 +149,7 @@ const MapPicker = ({
             {showSearch && (
               <div className="flex-1 flex gap-2">
                 <Input
-                  placeholder="ابحث عن موقع (مثل: القاهرة، الإسكندرية)"
+                  placeholder="Search for location (e.g: Cairo, Alexandria)"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyPress={handleKeyPress}
@@ -162,11 +162,11 @@ const MapPicker = ({
                   disabled={disabled || isSearching || !searchQuery.trim()}
                 >
                   <Search className="w-4 h-4" />
-                  {isSearching ? 'جاري البحث...' : 'بحث'}
+                  {isSearching ? 'Searching...' : 'Search'}
                 </Button>
               </div>
             )}
-            
+
             {showCurrentLocation && (
               <Button
                 type="button"
@@ -175,15 +175,15 @@ const MapPicker = ({
                 disabled={disabled || isGettingLocation}
               >
                 <Locate className="w-4 h-4 mr-2" />
-                {isGettingLocation ? 'جاري التحديد...' : 'موقعي الحالي'}
+                {isGettingLocation ? 'Locating...' : 'Current Location'}
               </Button>
             )}
           </div>
         )}
 
         {/* Map Container */}
-        <div 
-          style={{ height }} 
+        <div
+          style={{ height }}
           className={`rounded-lg overflow-hidden border ${disabled ? 'opacity-50 pointer-events-none' : ''}`}
         >
           <MapContainer
@@ -196,11 +196,11 @@ const MapPicker = ({
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            
+
             {!disabled && (
               <MapClickHandler onLocationSelect={handleLocationSelect} />
             )}
-            
+
             <Marker position={position} icon={customIcon} />
           </MapContainer>
         </div>
@@ -209,17 +209,17 @@ const MapPicker = ({
         <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">
           <div className="flex items-center gap-2 mb-1">
             <MapPin className="w-4 h-4" />
-            <span className="font-medium">الموقع المحدد:</span>
+            <span className="font-medium">Selected Location:</span>
           </div>
           <div className="grid grid-cols-2 gap-2 text-xs">
-            <div>خط العرض: {position[0].toFixed(6)}</div>
-            <div>خط الطول: {position[1].toFixed(6)}</div>
+            <div>Latitude: {position[0].toFixed(6)}</div>
+            <div>Longitude: {position[1].toFixed(6)}</div>
           </div>
         </div>
 
         {!disabled && (
           <p className="text-xs text-gray-500 text-center">
-            💡 نصيحة: انقر على أي مكان في الخريطة لتحديد موقع المتجر
+            💡 Tip: Click anywhere on the map to select shop location
           </p>
         )}
       </CardContent>

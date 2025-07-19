@@ -7,10 +7,10 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import chatService from '../../services/chatService';
 import { STORAGE_KEYS } from '@/utils/constants';
 
-const ShopChatInterface = ({ 
-  isOpen, 
-  onClose, 
-  shop, 
+const ShopChatInterface = ({
+  isOpen,
+  onClose,
+  shop,
   user,
   product
 }) => {
@@ -28,7 +28,7 @@ const ShopChatInterface = ({
 
   useEffect(() => {
     console.log(`Chat opened: isOpen=${isOpen}, user=${user?._id}, shop=${shop?._id}, product=${product?._id}`);
-    
+
     if (isOpen && user && shop && product) {
       initializeChat();
     }
@@ -51,11 +51,11 @@ const ShopChatInterface = ({
   const initializeChat = async () => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       // Get token from localStorage or user object
       const token = localStorage.getItem(STORAGE_KEYS.TOKEN);
-      
+
       if (!token) {
         throw new Error('لم يتم العثور على رمز المصادقة');
       }
@@ -95,22 +95,22 @@ const ShopChatInterface = ({
       }
 
       console.log(`Creating conversation: productId=${product._id}, shopOwnerId=${shopOwnerId}`);
-      
+
       const response = await chatService.createShopConversation(product._id, shopOwnerId);
       console.log('Conversation created:', response);
-      
+
       setConversationId(response.conversationId);
-      
+
       // Join the conversation room
       await chatService.joinConversation(response.conversationId);
       console.log('Joined conversation room');
-      
+
       // Load existing messages
       await loadMessages(response.conversationId);
-      
+
       // Setup message listeners
       setupMessageListeners();
-      
+
     } catch (error) {
       console.error('Error initializing chat:', error);
       setError(error.message || 'فشل في الاتصال بالدردشة');
@@ -122,14 +122,14 @@ const ShopChatInterface = ({
 
   const setupMessageListeners = () => {
     console.log('Setting up message listeners...');
-    
+
     // Listen for new messages
     chatService.onNewMessage((message) => {
       console.log('New message received:', message);
       if (message.conversation === conversationId) {
         setMessages(prev => [...prev, message]);
         setIsTyping(false);
-        
+
         // Mark message as read if it's not from current user
         if (message.sender._id !== user._id) {
           chatService.markAsRead(message._id).catch(console.error);
@@ -151,7 +151,7 @@ const ShopChatInterface = ({
     if (typingTimeoutRef.current) {
       clearTimeout(typingTimeoutRef.current);
     }
-    
+
     // Remove listeners
     chatService.offNewMessage();
     chatService.offUserTyping();
@@ -172,17 +172,17 @@ const ShopChatInterface = ({
   const handleInputChange = (e) => {
     const value = e.target.value;
     setNewMessage(value);
-    
+
     // Send typing indicator
     if (conversationId && isConnected) {
       // Debounce typing indicator
       if (typingTimeoutRef.current) {
         clearTimeout(typingTimeoutRef.current);
       }
-      
+
       // Send typing start
       chatService.sendTypingIndicator(conversationId, true);
-      
+
       // Send typing stop after 1 second of no typing
       typingTimeoutRef.current = setTimeout(() => {
         chatService.sendTypingIndicator(conversationId, false);
@@ -206,7 +206,7 @@ const ShopChatInterface = ({
 
     try {
       console.log('Sending message:', messageContent);
-      
+
       // Add optimistic message for better UX
       const optimisticMessage = {
         _id: Date.now() + Math.random(),
@@ -217,18 +217,18 @@ const ShopChatInterface = ({
         read: false,
         optimistic: true
       };
-      
+
       setMessages(prev => [...prev, optimisticMessage]);
 
       // Send actual message
       const sentMessage = await chatService.sendMessage(conversationId, messageContent, product._id);
       console.log('Message sent:', sentMessage);
-      
+
       // Replace optimistic message with real one
-      setMessages(prev => 
-        prev.map(msg => 
-          msg.optimistic && msg.content === messageContent 
-            ? sentMessage 
+      setMessages(prev =>
+        prev.map(msg =>
+          msg.optimistic && msg.content === messageContent
+            ? sentMessage
             : msg
         )
       );
@@ -236,7 +236,7 @@ const ShopChatInterface = ({
     } catch (error) {
       console.error('Failed to send message:', error);
       setError('فشل في إرسال الرسالة');
-      
+
       // Remove optimistic message and restore content
       setMessages(prev => prev.filter(msg => !msg.optimistic));
       setNewMessage(messageContent);
@@ -292,12 +292,12 @@ const ShopChatInterface = ({
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4" dir="rtl">
-      <Card className="w-full max-w-2xl h-[80vh] flex flex-col bg-white rounded-2xl shadow-2xl">
+      <Card className="w-full max-w-2xl h-[80vh] flex flex-col bg-white rounded-2xl">
         {/* Chat Header */}
         <CardHeader className="flex-shrink-0 p-6 border-b bg-gradient-to-l from-blue-50 to-indigo-50 rounded-t-2xl">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Avatar className="w-12 h-12 border-2 border-white shadow-lg">
+              <Avatar className="w-12 h-12 border-2 border-white">
                 <AvatarImage src={shop?.image || `${import.meta.env.VITE_API_BASE_URL}/shop-image/${shop?.logoUrl}`} />
                 <AvatarFallback className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-bold">
                   <Store className="w-6 h-6" />
@@ -343,7 +343,7 @@ const ShopChatInterface = ({
                 <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
                 <h4 className="text-lg font-semibold text-gray-900 mb-2">خطأ في الاتصال</h4>
                 <p className="text-gray-600 mb-4 max-w-md text-center">{error}</p>
-                <Button 
+                <Button
                   onClick={initializeChat}
                   className="bg-blue-500 hover:bg-blue-600 text-white"
                 >
@@ -393,11 +393,10 @@ const ShopChatInterface = ({
                               </Avatar>
                             )}
                             <div
-                              className={`px-4 py-3 rounded-2xl ${
-                                isOwnMessage
-                                  ? 'bg-gradient-to-l from-blue-500 to-blue-600 text-white rounded-br-md'
-                                  : 'bg-gray-100 text-gray-900 rounded-bl-md'
-                              } shadow-sm ${message.optimistic ? 'opacity-70' : ''}`}
+                              className={`px-4 py-3 rounded-2xl ${isOwnMessage
+                                ? 'bg-gradient-to-l from-blue-500 to-blue-600 text-white rounded-br-md'
+                                : 'bg-gray-100 text-gray-900 rounded-bl-md'
+                                } ${message.optimistic ? 'opacity-70' : ''}`}
                             >
                               <p className="text-sm leading-relaxed text-right">{message.content}</p>
                               <div className="flex items-center justify-start mt-1 gap-1">
@@ -452,7 +451,7 @@ const ShopChatInterface = ({
               <Button
                 onClick={sendMessage}
                 disabled={!newMessage.trim() || !isConnected || isSending}
-                className="bg-gradient-to-l from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-gradient-to-l from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-full p-3 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSending ? (
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -472,7 +471,7 @@ const ShopChatInterface = ({
                   style={{ minHeight: '44px' }}
                   disabled={!isConnected || isSending}
                 />
-                
+
               </div>
               <Button
                 variant="ghost"

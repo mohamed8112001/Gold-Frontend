@@ -113,6 +113,7 @@ const CreateProduct = () => {
 
         // Validate required fields
         if (!formData.title || !formData.price || !formData.karat || !formData.weight || !formData.design_type) {
+
             alert('يرجى ملء جميع الحقول المطلوبة (اسم المنتج، السعر، العيار، الوزن، نوع التصميم)');
             return;
         }
@@ -127,17 +128,49 @@ const CreateProduct = () => {
             const willGenerateAI = !formData.description || formData.description.trim() === '';
             setLoadingMessage(willGenerateAI ? 'جاري توليد الوصف بالذكاء الاصطناعي...' : 'جاري حفظ المنتج...');
 
+            // تحقق من صحة القيم قبل الإرسال
+            const validDesignTypes = [
+                'rings', 'chains', 'bracelets', 'earrings', 'necklaces', 'pendants', 'sets', 'watches', 'other'
+            ];
+            if (!validDesignTypes.includes(formData.design_type)) {
+                alert('نوع التصميم غير صحيح. اختر من القائمة فقط.');
+                setIsLoading(false);
+                return;
+            }
+            if (formData.category && !validDesignTypes.includes(formData.category)) {
+                alert('الفئة غير صحيحة. اختر من القائمة فقط أو اتركها فارغة.');
+                setIsLoading(false);
+                return;
+            }
+            if (!["18", "21", "24"].includes(formData.karat)) {
+                alert('العيار يجب أن يكون 18 أو 21 أو 24 فقط.');
+                setIsLoading(false);
+                return;
+            }
+            if (isNaN(formData.price) || parseFloat(formData.price) <= 0) {
+                alert('يرجى إدخال سعر صحيح أكبر من صفر.');
+                setIsLoading(false);
+                return;
+            }
+            if (isNaN(formData.weight) || parseFloat(formData.weight) <= 0) {
+                alert('يرجى إدخال وزن صحيح أكبر من صفر.');
+                setIsLoading(false);
+                return;
+            }
+
             // Create FormData object for multipart/form-data
             const formDataToSend = new FormData();
             formDataToSend.append('title', formData.title);
             if (formData.description && formData.description.trim() !== '') {
                 formDataToSend.append('description', formData.description);
             }
-            formDataToSend.append('price', parseFloat(formData.price));
+            // Ensure price and weight are numbers and not empty
+            formDataToSend.append('price', formData.price ? parseFloat(formData.price) : 0);
             formDataToSend.append('karat', formData.karat);
-            formDataToSend.append('weight', parseFloat(formData.weight));
+            formDataToSend.append('weight', formData.weight ? parseFloat(formData.weight) : 0);
             formDataToSend.append('design_type', formData.design_type || 'other');
-            formDataToSend.append('category', formData.category || 'other');
+            // If category is empty, use design_type as fallback
+            formDataToSend.append('category', formData.category || formData.design_type || 'other');
             formDataToSend.append('shop', userShop._id || userShop.id);
 
             // Append logo file
@@ -212,7 +245,22 @@ const CreateProduct = () => {
                     );
 
                     if (confirmDefault) {
-                        formDataToSend.set('description', defaultDescription);
+                        // إعادة تعريف formDataToSend هنا
+                        const formDataToSend = new FormData();
+                        formDataToSend.append('title', formData.title);
+                        formDataToSend.append('description', defaultDescription);
+                        formDataToSend.append('price', formData.price ? parseFloat(formData.price) : 0);
+                        formDataToSend.append('karat', formData.karat);
+                        formDataToSend.append('weight', formData.weight ? parseFloat(formData.weight) : 0);
+                        formDataToSend.append('design_type', formData.design_type || 'other');
+                        formDataToSend.append('category', formData.category || formData.design_type || 'other');
+                        formDataToSend.append('shop', userShop._id || userShop.id);
+                        if (logo) {
+                            formDataToSend.append('logo', logo);
+                        }
+                        images.forEach((image) => {
+                            formDataToSend.append('images', image);
+                        });
                         try {
                             const response = await productService.createProduct(formDataToSend);
                             console.log('Product created with default description:', response);
@@ -349,9 +397,9 @@ const CreateProduct = () => {
                                         required
                                     >
                                         <option value="">اختر العيار</option>
-                                        <option value="18K">18 قيراط</option>
-                                        <option value="21K">21 قيراط</option>
-                                        <option value="24K">24 قيراط</option>
+                                        <option value="18">18 قيراط</option>
+                                        <option value="21">21 قيراط</option>
+                                        <option value="24">24 قيراط</option>
                                     </select>
                                 </div>
                                 <div>
@@ -382,8 +430,8 @@ const CreateProduct = () => {
                                         onChange={handleInputChange}
                                         placeholder="اكتب وصفاً مفصلاً للمنتج، أو اتركه فارغاً ليتم توليده تلقائياً بالذكاء الاصطناعي"
                                         className={`w-full p-3 border rounded-md resize-none h-32 ${formData.description.trim() === ''
-                                                ? 'border-blue-300 bg-blue-50'
-                                                : 'border-gray-300'
+                                            ? 'border-blue-300 bg-blue-50'
+                                            : 'border-gray-300'
                                             }`}
                                     />
                                     {formData.description.trim() === '' && (
