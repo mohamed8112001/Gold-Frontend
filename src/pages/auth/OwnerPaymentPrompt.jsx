@@ -29,24 +29,38 @@ const Logo = () => (
 );
 
 export default function OwnerPaymentPrompt() {
-  const {user, setUser} = useAuth();
+  const { user, setUser, isLoading } = useAuth();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [error, setError] = useState('');
+  const [hasCheckedPayment, setHasCheckedPayment] = useState(false);
 
-  useEffect(()=>{
-    if (user)
-    {
-      navigate(
-        '/home'
-      )
+  useEffect(() => {
+    // Don't redirect during auth loading
+    if (isLoading) return;
+    
+    // Don't check multiple times
+    if (hasCheckedPayment) return;
+    
+    // Mark as checked
+    setHasCheckedPayment(true);
+    
+    // If user is paid or not a seller, redirect to home
+    if (user && (user.paid || user.role !== 'seller')) {
+      console.log('User is paid or not a seller, redirecting to home');
+      navigate('/home', { replace: true });
     }
-  }, [user])
+  }, [user, isLoading, navigate, hasCheckedPayment]);
 
   const handlePayment = async () => {
     setLoading(true);
     setError('');
     
+    if (!user){
+      setLoading(false);
+      setError('user is not exist');
+      return;
+    }
     try {
       const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/create-portal-session`, {
         method: 'POST',
@@ -55,8 +69,7 @@ export default function OwnerPaymentPrompt() {
         },
         body: JSON.stringify({ 
           productId: 'price_1RmZ5F2XYUV5klvcqmbi27VF',
-          // Add user email if available from context
-          email: user?.email // Make sure to get user from useAuth()
+          email: user?.email
         }),
       });
 
@@ -67,10 +80,11 @@ export default function OwnerPaymentPrompt() {
       const data = await response.json();
       console.log('Payment response:', data);
       
-      // data should contain the Stripe checkout URL
       if (data && typeof data === 'string' && data.startsWith('https://checkout.stripe.com')) {
-        // Redirect to Stripe checkout
-        window.location.href = data;
+        // Show loading state briefly before redirect
+        setTimeout(() => {
+          window.location.href = data;
+        }, 500);
       } else {
         setError('Invalid payment session URL received.');
       }
@@ -81,6 +95,20 @@ export default function OwnerPaymentPrompt() {
       setLoading(false);
     }
   };
+
+  // Show loading during auth check
+  if (isLoading || !hasCheckedPayment) {
+    return (
+      <section>
+        <div className="product Box-root" style={{ maxWidth: 420, width: '100%', margin: '2rem auto', textAlign: 'center' }}>
+          <div style={{ marginTop: 24 }}>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#A37F41] mx-auto mb-4"></div>
+            <p style={{ color: '#6b7280' }}>Loading...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section>
@@ -120,11 +148,20 @@ export default function OwnerPaymentPrompt() {
               border: 'none',
               borderRadius: 8,
               fontSize: '1rem',
-              cursor: loading ? 'not-allowed' : 'pointer'
+              cursor: loading ? 'not-allowed' : 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              margin: '0 auto'
             }}
           >
+            {loading && (
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+            )}
             {loading ? 'Processing...' : 'Pay & Activate Account'}
           </button>
+          
           {error && (
             <div style={{ 
               color: '#dc2626', 
@@ -137,6 +174,22 @@ export default function OwnerPaymentPrompt() {
               {error}
             </div>
           )}
+          
+          <div style={{ marginTop: 16 }}>
+            <button
+              onClick={() => navigate('/home')}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#6b7280',
+                textDecoration: 'underline',
+                cursor: 'pointer',
+                fontSize: '0.9rem'
+              }}
+            >
+              Continue browsing (limited access)
+            </button>
+          </div>
         </div>
       </div>
     </section>

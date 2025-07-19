@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { AuthProvider } from './context/AuthContext.jsx';
@@ -30,7 +30,6 @@ import BookingsOnly from './pages/seller/BookingsOnly.jsx';
 import TimeManagement from './pages/seller/TimeManagement.jsx';
 import ManageRatings from './pages/seller/ManageRatings.jsx';
 import AdminDashboard from './pages/admin/AdminDashboard.jsx';
-// Static Pages
 import AboutUs from './pages/static/AboutUs.jsx';
 import ContactUs from './pages/static/ContactUs.jsx';
 import Careers from './pages/static/Careers.jsx';
@@ -53,32 +52,64 @@ import ShopChat from './components/ui/ShopChat.jsx';
 import FloatingChat from './components/ui/FloatingChat.jsx';
 import OwnerPaymentPrompt from './pages/auth/OwnerPaymentPrompt.jsx';
 import { useAuth } from './context/AuthContext.jsx';
-import { useEffect } from 'react';
 import SuccessPage from './components/ui/successPage.jsx';
 
+// Optimized SellerPaymentRedirect with better performance
 function SellerPaymentRedirect() {
   const { user, isShopOwner, isLoading } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-  console.log(`seller redirect { user: ${JSON.stringify(user)} }`);
+  const [hasChecked, setHasChecked] = useState(false);
   
-
   useEffect(() => {
-    if (isLoading) return;
-    if (
-      user &&
-      isShopOwner &&
-      location.pathname !== '/owner-payment' &&
-      !location.pathname.startsWith('/auth') &&
-      location.pathname !== '/login' &&
-      location.pathname !== '/register' && 
-      !user.paid
-    ) {
-      navigate('/owner-payment', { replace: true });
+    // Only run once when auth is ready and we haven't checked yet
+    if (isLoading || hasChecked) return;
+    
+    // Mark as checked to prevent future runs
+    setHasChecked(true);
+    
+    // Only redirect shop owners who haven't paid and aren't on excluded pages
+    const isExcludedPath = location.pathname === '/owner-payment' ||
+                          location.pathname.startsWith('/auth') ||
+                          location.pathname === '/login' ||
+                          location.pathname === '/register' ||
+                          location.pathname === '/success';
+    
+    if (user && isShopOwner && !user.paid && !isExcludedPath) {
+      console.log('Redirecting unpaid shop owner to payment page');
+      // Use setTimeout to prevent blocking the UI
+      setTimeout(() => {
+        navigate('/owner-payment', { replace: true });
+      }, 0);
     }
-  }, [isShopOwner, isLoading, location, navigate]);
+  }, [user, isShopOwner, isLoading, location.pathname, navigate, hasChecked]);
 
   return null;
+}
+
+// Protected Route Component for better performance
+function ProtectedRoute({ children, requiresPayment = false }) {
+  const { user, isShopOwner, isLoading } = useAuth();
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    if (isLoading) return;
+    
+    if (requiresPayment && isShopOwner && !user?.paid) {
+      navigate('/owner-payment', { replace: true });
+      return;
+    }
+  }, [user, isShopOwner, isLoading, requiresPayment, navigate]);
+  
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#A37F41]"></div>
+      </div>
+    );
+  }
+  
+  return children;
 }
 
 function App() {
@@ -88,7 +119,6 @@ function App() {
         <Layout>
           <SellerPaymentRedirect />
           <AnimatePresence mode="wait">
-
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/home" element={<Home />} />
@@ -106,20 +136,62 @@ function App() {
               <Route path="/owner-payment" element={<OwnerPaymentPrompt />} />
               <Route path='/success' element={<SuccessPage />} />
 
-              {/* Shop Routes */}
+              {/* Shop Routes - Protected for paid shop owners */}
               <Route path="/shops" element={<ShopList />} />
               <Route path="/shops/:id" element={<ShopDetails />} />
               <Route path='/shops/:id/chat' element={<ShopChat />} />
-              <Route path="/shop/create" element={<CreateShop />} />
-              <Route path="/shop/edit" element={<EditShop />} />
-              <Route path="/shop/edit/:id" element={<EditShop />} />
-              <Route path="/shop/manage" element={<ManageShop />} />
+              <Route 
+                path="/shop/create" 
+                element={
+                  <ProtectedRoute requiresPayment={true}>
+                    <CreateShop />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/shop/edit" 
+                element={
+                  <ProtectedRoute requiresPayment={true}>
+                    <EditShop />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/shop/edit/:id" 
+                element={
+                  <ProtectedRoute requiresPayment={true}>
+                    <EditShop />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/shop/manage" 
+                element={
+                  <ProtectedRoute requiresPayment={true}>
+                    <ManageShop />
+                  </ProtectedRoute>
+                } 
+              />
 
-              {/* Product Routes */}
+              {/* Product Routes - Protected for paid shop owners */}
               <Route path="/products" element={<ProductList />} />
               <Route path="/products/:id" element={<ProductDetails />} />
-              <Route path="/products/create" element={<CreateProduct />} />
-              <Route path="/products/edit/:id" element={<EditProduct />} />
+              <Route 
+                path="/products/create" 
+                element={
+                  <ProtectedRoute requiresPayment={true}>
+                    <CreateProduct />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/products/edit/:id" 
+                element={
+                  <ProtectedRoute requiresPayment={true}>
+                    <EditProduct />
+                  </ProtectedRoute>
+                } 
+              />
               <Route path="/favorites" element={<FavoriteProducts />} />
 
               {/* User Routes */}
@@ -131,11 +203,46 @@ function App() {
               <Route path="/book-appointment/:shopId" element={<BookAppointment />} />
               <Route path="/booking/:shopId" element={<BookAppointment />} />
               <Route path="/my-bookings" element={<MyBookings />} />
-              <Route path="/bookings/manage" element={<ManageBookings />} />
-              <Route path="/manage-times" element={<ManageTimes />} />
-              <Route path="/bookings-only" element={<BookingsOnly />} />
-              <Route path="/time-management" element={<TimeManagement />} />
-              <Route path="/manage-ratings" element={<ManageRatings />} />
+              <Route 
+                path="/bookings/manage" 
+                element={
+                  <ProtectedRoute requiresPayment={true}>
+                    <ManageBookings />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/manage-times" 
+                element={
+                  <ProtectedRoute requiresPayment={true}>
+                    <ManageTimes />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/bookings-only" 
+                element={
+                  <ProtectedRoute requiresPayment={true}>
+                    <BookingsOnly />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/time-management" 
+                element={
+                  <ProtectedRoute requiresPayment={true}>
+                    <TimeManagement />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/manage-ratings" 
+                element={
+                  <ProtectedRoute requiresPayment={true}>
+                    <ManageRatings />
+                  </ProtectedRoute>
+                } 
+              />
 
               {/* Admin Routes */}
               <Route path="/admin" element={<AdminDashboard />} />
@@ -169,4 +276,3 @@ function App() {
 }
 
 export default App;
-

@@ -74,19 +74,43 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!validateForm()) {
       return;
     }
-
+  
     try {
-      await login(formData);
+      console.log('🔄 Starting login process...');
+      
+      const res = await login(formData);
+      
+      console.log('✅ Login response received:', JSON.stringify(res, null, 2));
+      console.log('👤 User data:', JSON.stringify(res?.user, null, 2));
+      console.log('💳 Payment status:', res?.user?.paid);
+      console.log('🏪 User role:', res?.user?.role);
+      
+      // Check if user is a seller and hasn't paid
+      if (res?.user?.role === 'seller' && !res?.user?.paid) {
+        console.log('🔄 Seller needs to pay, redirecting to payment page...');
+        navigate('/owner-payment');
+        return;
+      }
+      
+      // For regular customers or paid sellers
+      console.log('🏠 Redirecting to home page...');
       navigate(ROUTES.HOME);
+      
     } catch (error) {
+      console.error('❌ Login error:', error);
+      console.error('❌ Error details:', {
+        message: error.message,
+        stack: error.stack,
+        response: error.response?.data
+      });
       setErrors({ submit: error.message || 'حدث خطأ أثناء تسجيل الدخول' });
     }
   };
-
+  
   const handleGoogleLogin = () => {
     // Assuming googleLogin is provided by useAuth context
     googleLogin();
