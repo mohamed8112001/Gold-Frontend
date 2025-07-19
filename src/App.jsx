@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { AuthProvider } from './context/AuthContext.jsx';
 import Layout from './components/layout/Layout.jsx';
@@ -49,12 +49,42 @@ import './App.css';
 import FavoriteProducts from './pages/product/FavoriteProducts.jsx';
 import ShopChat from './components/ui/ShopChat.jsx';
 import FloatingChat from './components/ui/FloatingChat.jsx';
+import OwnerPaymentPrompt from './pages/auth/OwnerPaymentPrompt.jsx';
+import { useAuth } from './context/AuthContext.jsx';
+import { useEffect } from 'react';
+import SuccessPage from './components/ui/successPage.jsx';
+
+function SellerPaymentRedirect() {
+  const { user, isShopOwner, isLoading } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+  console.log(`seller redirect { user: ${JSON.stringify(user)} }`);
+  
+
+  useEffect(() => {
+    if (isLoading) return;
+    if (
+      user &&
+      isShopOwner &&
+      location.pathname !== '/owner-payment' &&
+      !location.pathname.startsWith('/auth') &&
+      location.pathname !== '/login' &&
+      location.pathname !== '/register' && 
+      !user.paid
+    ) {
+      navigate('/owner-payment', { replace: true });
+    }
+  }, [isShopOwner, isLoading, location, navigate]);
+
+  return null;
+}
 
 function App() {
   return (
     <AuthProvider>
       <Router>
         <Layout>
+          <SellerPaymentRedirect />
           <AnimatePresence mode="wait">
 
             <Routes>
@@ -71,6 +101,8 @@ function App() {
               <Route path="/auth/forgot-password" element={<ForgotPassword />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/auth/google/callback" element={<GoogleCallback />} />
+              <Route path="/owner-payment" element={<OwnerPaymentPrompt />} />
+              <Route path='/success' element={<SuccessPage />} />
 
               {/* Shop Routes */}
               <Route path="/shops" element={<ShopList />} />
