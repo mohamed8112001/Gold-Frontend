@@ -205,8 +205,7 @@ const Home = () => {
     console.log('hello');
 
     navigate(`${ROUTES.SHOPS}?search=${encodeURIComponent(searchQuery)}`);
-    // if (searchQuery.trim()) {
-    // }
+
   };
 
 

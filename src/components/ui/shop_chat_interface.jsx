@@ -27,7 +27,7 @@ const ShopChatInterface = ({
   const typingTimeoutRef = useRef(null);
 
   useEffect(() => {
-    console.log(`Chat opened: isOpen=${isOpen}, user=${user?._id}, shop=${shop?._id}, product=${product?._id}`);
+    console.log(`Chat opened: isOpen=${isOpen}, user=${user?._id}, shop=${product?.shop._id},  product=${product._id}`);
 
     if (isOpen && user && shop && product) {
       initializeChat();

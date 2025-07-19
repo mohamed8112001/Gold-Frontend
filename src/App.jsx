@@ -54,39 +54,6 @@ import OwnerPaymentPrompt from './pages/auth/OwnerPaymentPrompt.jsx';
 import { useAuth } from './context/AuthContext.jsx';
 import SuccessPage from './components/ui/successPage.jsx';
 
-// Optimized SellerPaymentRedirect with better performance
-function SellerPaymentRedirect() {
-  const { user, isShopOwner, isLoading } = useAuth();
-  const location = useLocation();
-  const navigate = useNavigate();
-  const [hasChecked, setHasChecked] = useState(false);
-  
-  useEffect(() => {
-    // Only run once when auth is ready and we haven't checked yet
-    if (isLoading || hasChecked) return;
-    
-    // Mark as checked to prevent future runs
-    setHasChecked(true);
-    
-    // Only redirect shop owners who haven't paid and aren't on excluded pages
-    const isExcludedPath = location.pathname === '/owner-payment' ||
-                          location.pathname.startsWith('/auth') ||
-                          location.pathname === '/login' ||
-                          location.pathname === '/register' ||
-                          location.pathname === '/success';
-    
-    if (user && isShopOwner && !user.paid && !isExcludedPath) {
-      console.log('Redirecting unpaid shop owner to payment page');
-      // Use setTimeout to prevent blocking the UI
-      setTimeout(() => {
-        navigate('/owner-payment', { replace: true });
-      }, 0);
-    }
-  }, [user, isShopOwner, isLoading, location.pathname, navigate, hasChecked]);
-
-  return null;
-}
-
 // Protected Route Component for better performance
 function ProtectedRoute({ children, requiresPayment = false }) {
   const { user, isShopOwner, isLoading } = useAuth();
@@ -94,8 +61,12 @@ function ProtectedRoute({ children, requiresPayment = false }) {
   
   useEffect(() => {
     if (isLoading) return;
+    console.log(`requiresPayment: ${requiresPayment} 
+      && isShopOwner: ${isShopOwner } 
+      && !user?.paid: ${!user?.paid}`);
     
     if (requiresPayment && isShopOwner && !user?.paid) {
+      alert(`user paid: ${!user?.paid}`)
       navigate('/owner-payment', { replace: true });
       return;
     }
@@ -117,7 +88,6 @@ function App() {
     <AuthProvider>
       <Router>
         <Layout>
-          <SellerPaymentRedirect />
           <AnimatePresence mode="wait">
             <Routes>
               <Route path="/" element={<Home />} />

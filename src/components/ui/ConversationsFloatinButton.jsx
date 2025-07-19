@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { toast } from 'sonner';
 import chatService from '@/services/chatService';
+import { productService } from '@/services/productService'; 
 import { STORAGE_KEYS } from '@/utils/constants';
 import ShopChatInterface from './shop_chat_interface';
 
@@ -105,7 +106,7 @@ const ConversationsModal = ({ isOpen, onClose, onSelectConversation, conversatio
                 return (
                   <div
                     key={conversation._id}
-                    onClick={() => onSelectConversation(conversation.product)}
+                    onClick={() => onSelectConversation(conversation)}
                     className="flex items-center gap-4 p-4 hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100 last:border-b-0"
                   >
                     <div className="relative">
@@ -157,6 +158,9 @@ const ConversationsFloatinButton = ({ user, onOpenChat, onSelectConversation }) 
   const [connectionError, setConnectionError] = useState(null);
   const [conversations, setConversations] = useState([]);
   const [showConversations, setShowConversations] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [isLoadingProduct, setIsLoadingProduct] = useState(false);
+  const [showChatInterface, setShowChatInterface] = useState(false);
 
   // Initialize socket connection
   const initializeSocket = useCallback(async () => {
@@ -436,32 +440,76 @@ const ConversationsFloatinButton = ({ user, onOpenChat, onSelectConversation }) 
   };
 
   // Handle conversation selection
-  const handleSelectConversation = (conversation) => {
+  const handleSelectConversation = async (conversation) => {
+    console.log('Conversation selected:', conversation);
     setShowConversations(false);
+    setIsLoadingProduct(true);
 
-    // Mark conversation as read
-    setConversations(prev =>
-      prev.map(conv =>
-        conv._id === conversation._id
-          ? { ...conv, unreadCount: 0 }
-          : conv
-      )
-    );
+    try {
+      // Mark conversation as read
+      setConversations(prev =>
+        prev.map(conv =>
+          conv._id === conversation._id
+            ? { ...conv, unreadCount: 0 }
+            : conv
+        )
+      );
 
-    // Update total unread count
-    setUnreadCount(prev => prev - (conversation.unreadCount || 0));
+      // Update total unread count
+      setUnreadCount(prev => prev - (conversation.unreadCount || 0));
 
-    // Call the callback if provided
-    if (onSelectConversation) {
-      onSelectConversation(conversation);
-    } else if (onOpenChat) {
-      onOpenChat(conversation);
+      // Check if user is a seller (has shop)
+      const isSeller = user?.role === 'seller';
+      console.log('User role:', user?.role);
+      console.log('Is seller:', isSeller);
+      console.log('Conversation product:', conversation.product);
+      
+      if (isSeller && conversation.product) {
+        // Fetch product details first
+        console.log('Fetching product details for:', conversation.product);
+        const productData = await productService.getProduct(conversation.product);
+        console.log('Product fetched:', productData);
+        
+        
+        setSelectedProduct(productData);
+        setShowChatInterface(true);
+      } else {
+        console.log(`prod id: ${JSON.stringify(conversation.product)}`);
+        
+        // For non-sellers or if no product, use the original callback
+        if (onSelectConversation) {
+          onSelectConversation(conversation.product);
+        } else if (onOpenChat) {
+          onOpenChat(conversation);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching product:', error);
+      toast.error('خطأ في تحميل تفاصيل المنتج', {
+        description: error.message || 'فشل في تحميل تفاصيل المنتج',
+        duration: 5000,
+      });
+      
+      // Fallback to original behavior
+      if (onSelectConversation) {
+        onSelectConversation(conversation);
+      } else if (onOpenChat) {
+        onOpenChat(conversation);
+      }
+    } finally {
+      setIsLoadingProduct(false);
     }
   };
 
   // Handle close conversations modal
   const handleCloseConversations = () => {
     setShowConversations(false);
+  };
+
+  // Handle close chat interface
+  const handleCloseChatInterface = () => {
+    setShowChatInterface(false);
+    setSelectedProduct(null);
   };
 
   // Get button status
@@ -567,6 +615,32 @@ const ConversationsFloatinButton = ({ user, onOpenChat, onSelectConversation }) 
         isLoading={isConnecting}
         user={user}
       />
+
+      {/* Shop Chat Interface */}
+      {showChatInterface && selectedProduct && (
+        <ShopChatInterface
+          isOpen={showChatInterface}
+          onClose={handleCloseChatInterface}
+          shop={selectedProduct.shop || selectedProduct.shopId}
+          user={user}
+          product={selectedProduct.data}
+        />
+      )}
+
+      {/* Loading overlay for product fetching */}
+      {isLoadingProduct && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center">
+          <div className="bg-white rounded-2xl p-8 shadow-2xl">
+            <div className="flex items-center gap-4">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+              <div className="text-right">
+                <h3 className="text-lg font-semibold text-gray-900">جاري تحميل تفاصيل المنتج...</h3>
+                <p className="text-gray-600">يرجى الانتظار</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
     </>
   );
