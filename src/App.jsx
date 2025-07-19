@@ -49,6 +49,7 @@ import TestPage from './pages/TestPage.jsx';
 import './App.css';
 import FavoriteProducts from './pages/product/FavoriteProducts.jsx';
 import ShopChat from './components/ui/ShopChat.jsx';
+import FloatingChat from './components/ui/FloatingChat.jsx';
 
 function App() {
   return (
@@ -126,6 +127,7 @@ function App() {
               <Route path="*" element={<NotFound />} />
             </Routes>
           </AnimatePresence>
+          <FloatingChat />
         </Layout>
       </Router>
     </AuthProvider>

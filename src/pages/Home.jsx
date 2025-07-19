@@ -19,10 +19,9 @@ import FloatingChat from '../components/ui/FloatingChat.jsx';
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import { useTranslation } from 'react-i18next';
-import api from '@/services/api.js';
-import.meta.env.VITE_API_BASE_URL
 
 const Home = () => {
+  const {user, setUser} = useAuth()
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
@@ -896,6 +895,9 @@ const Home = () => {
       {/* Floating Chat Component */}
       <FloatingChat />
 
+      <ConversationsFloatinButton user={user} onSelectConversation={(productId)=> {
+        navigate(ROUTES.PRODUCT_DETAILS(productId))
+      }}/>
     </motion.div >
   );
 };

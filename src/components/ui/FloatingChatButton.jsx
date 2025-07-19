@@ -2,7 +2,7 @@ import React from 'react';
 import { Bot, X } from 'lucide-react';
 import { Button } from './button.jsx';
 
-const FloatingChatButton = ({ isOpen, onClick }) => {
+const FloatingChatButton = ({ isOpen, onClick, unreadCount }) => {
   return (
     <div className="fixed bottom-6 right-6 z-50">
       <div className="relative">
@@ -37,8 +37,15 @@ const FloatingChatButton = ({ isOpen, onClick }) => {
             )}
           </div>
 
-          {/* Notification dot */}
-          {!isOpen && (
+          {/* Notification badge for unread messages */}
+          {!isOpen && unreadCount > 0 && (
+            <div className="absolute -top-2 -right-2 w-7 h-7 bg-gradient-to-r from-red-500 to-red-600 rounded-full border-3 border-white flex items-center justify-center shadow-lg">
+              <span className="text-white text-xs font-bold">{unreadCount > 99 ? '99+' : unreadCount}</span>
+            </div>
+          )}
+
+          {/* Notification dot (legacy, if unreadCount not provided) */}
+          {!isOpen && !unreadCount && (
             <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-red-500 to-red-600 rounded-full border-3 border-white flex items-center justify-center shadow-lg">
               <div className="w-2.5 h-2.5 bg-white rounded-full animate-pulse"></div>
             </div>
