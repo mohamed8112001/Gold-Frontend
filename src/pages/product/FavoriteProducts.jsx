@@ -122,11 +122,11 @@ const FavoriteProducts = () => {
 
     return (
       <Card
-        className={`group hover:shadow-xl transition-all duration-300 cursor-pointer border-0 shadow-md rounded-xl overflow-hidden flex ${viewMode === 'grid' ? 'flex-col' : 'flex-row'}`}
+        className={`group hover:border-[#C37C00]/50 hover:bg-gray-50/50 transition-all duration-300 cursor-pointer border border-gray-200 rounded-2xl overflow-hidden flex ${viewMode === 'grid' ? 'flex-col' : 'flex-row'} bg-white`}
         onClick={() => navigate(ROUTES.PRODUCT_DETAILS(safeProduct.id))}
         aria-label={`View details for ${safeProduct.name}`}
       >
-        <div className={`${viewMode === 'grid' ? 'h-56' : 'w-1/3 h-48'} relative overflow-hidden rounded-t-xl`}>
+        <div className={`${viewMode === 'grid' ? 'h-64' : 'w-1/3 h-52'} relative overflow-hidden ${viewMode === 'grid' ? 'rounded-t-2xl' : 'rounded-l-2xl'}`}>
           {safeProduct.image && safeProduct.image !== '/placeholder-product.jpg' ? (
             <img
               src={`${import.meta.env.VITE_API_BASE_URL}/product-image/${safeProduct.image}`}
@@ -136,11 +136,11 @@ const FavoriteProducts = () => {
               onError={(e) => (e.target.style.display = 'none')}
             />
           ) : (
-            <div className="fallback-image absolute inset-0 bg-gradient-to-br from-amber-100 to-yellow-200 flex items-center justify-center group-hover:from-amber-200 group-hover:to-yellow-300 transition-all duration-300">
+            <div className="fallback-image absolute inset-0 bg-gradient-to-br from-[#F8F4ED] to-[#F0E8DB] flex items-center justify-center group-hover:from-[#F0E8DB] group-hover:to-[#E8DCC6] transition-all duration-300">
               <div className="text-center">
-                <div className="text-5xl mb-2">💎</div>
-                <div className="text-sm text-gray-800 font-semibold px-3 py-1 bg-white/80 rounded-lg backdrop-blur-sm">
-                  {safeProduct.name}
+                <div className="text-6xl mb-3">💎</div>
+                <div className="text-xs text-gray-700 font-medium px-3 py-1.5 bg-white/90 rounded-lg border border-gray-200">
+                  {safeProduct.name.length > 20 ? safeProduct.name.substring(0, 20) + '...' : safeProduct.name}
                 </div>
               </div>
             </div>
@@ -148,52 +148,49 @@ const FavoriteProducts = () => {
           <Button
             size="sm"
             variant="ghost"
-            className="absolute top-2 right-2 bg-white/90 hover:bg-white rounded-full w-10 h-10 p-0 opacity-0 group-hover:opacity-100 transition-all duration-300"
+            className="absolute top-4 right-4 bg-white/95 hover:bg-red-50 rounded-full w-8 h-8 p-0 opacity-0 group-hover:opacity-100 transition-all duration-300"
             onClick={(e) => handleRemoveFavorite(safeProduct.favoriteId, e)}
             aria-label={`Remove ${safeProduct.name} from favorites`}
           >
-            <Heart className="w-5 h-5 fill-red-500 text-red-500" />
+            <Heart className="w-4 h-4 fill-red-500 text-red-500" />
           </Button>
           {safeProduct.category && (
-            <Badge className="absolute top-2 left-2 bg-gradient-to-r from-[#C37C00] to-[#A66A00] text-white px-3 py-1 text-xs font-semibold opacity-0 group-hover:opacity-100 transition-all duration-300">
+            <Badge className="absolute top-4 left-4 bg-[#C37C00] text-white px-3 py-1 text-xs font-medium rounded-full opacity-90 group-hover:opacity-100 transition-all duration-300">
               {PRODUCT_CATEGORIES[safeProduct.category.toUpperCase()] || safeProduct.category}
             </Badge>
           )}
         </div>
-        <CardContent className={`p-4 flex ${viewMode === 'grid' ? 'flex-col' : 'flex-col w-2/3'} flex-1`}>
-          <h3 className="font-semibold text-lg mb-2 group-hover:text-[#C37C00] transition-colors line-clamp-2">
-            {safeProduct.name}
-          </h3>
-          {safeProduct.shopName && safeProduct.shopName !== 'Unknown Shop' && (
-            <div className="flex items-center gap-2 mb-3">
-              <ShoppingBag className="w-4 h-4 text-[#C37C00]" />
-              <p
-                className="text-sm text-gray-600 hover:text-[#C37C00] cursor-pointer"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  if (safeProduct.shopId) navigate(ROUTES.SHOP_DETAILS(safeProduct.shopId));
-                }}
-                aria-label={`Visit ${safeProduct.shopName}`}
-              >
-                {safeProduct.shopName}
+        <CardContent className={`p-6 flex ${viewMode === 'grid' ? 'flex-col' : 'flex-col w-2/3'} flex-1`}>
+          <div className="flex-1">
+            <h3 className="font-semibold text-lg mb-3 group-hover:text-[#C37C00] transition-colors line-clamp-2 leading-tight">
+              {safeProduct.name}
+            </h3>
+            {safeProduct.shopName && safeProduct.shopName !== 'Unknown Shop' && (
+              <div className="flex items-center gap-2 mb-4">
+                <ShoppingBag className="w-4 h-4 text-[#C37C00] flex-shrink-0" />
+                <p
+                  className="text-sm text-gray-600 hover:text-[#C37C00] cursor-pointer truncate"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (safeProduct.shopId) navigate(ROUTES.SHOP_DETAILS(safeProduct.shopId));
+                  }}
+                  aria-label={`Visit ${safeProduct.shopName}`}
+                >
+                  {safeProduct.shopName}
+                </p>
+              </div>
+            )}
+
+            {safeProduct.price > 0 && (
+              <p className="text-xl font-bold text-[#C37C00] mb-4">
+                ${safeProduct.price.toFixed(2)}
               </p>
-            </div>
-          )}
-          <div className="flex items-center gap-1 mb-3">
-            <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-            <span className="text-sm font-medium text-gray-700">
-              {safeProduct.rating.toFixed(1)} ({safeProduct.reviewCount} {t('reviews') || 'reviews'})
-            </span>
+            )}
           </div>
-          {safeProduct.price > 0 && (
-            <p className="text-lg font-bold text-[#C37C00] mb-4">
-              ${safeProduct.price.toFixed(2)}
-            </p>
-          )}
-          <div className="mt-auto flex flex-col gap-2">
+          <div className="flex flex-col gap-3 mt-4">
             <Button
               size="sm"
-              className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+              className="w-full bg-[#C37C00] hover:bg-[#A66A00] text-white rounded-xl py-2.5 transition-all duration-300 font-medium"
               onClick={(e) => {
                 e.stopPropagation();
                 navigate(ROUTES.PRODUCT_DETAILS(safeProduct.id));
@@ -201,33 +198,33 @@ const FavoriteProducts = () => {
               aria-label={`View details for ${safeProduct.name}`}
             >
               <Eye className="w-4 h-4 mr-2" />
-              {t('buttons.view_details') || 'View Product Details'}
+              {t('buttons.view_details') || 'View Details'}
             </Button>
             <div className="flex gap-2">
               {safeProduct.shopId && safeProduct.shopName !== 'Unknown Shop' && (
                 <Button
                   variant="outline"
                   size="sm"
-                  className="flex-1 border-[#C37C00] text-[#C37C00] hover:bg-[#C37C00]/10 rounded-lg"
+                  className="flex-1 border-[#C37C00] text-[#C37C00] hover:bg-[#C37C00] hover:text-white rounded-xl py-2 transition-all duration-300 font-medium"
                   onClick={(e) => {
                     e.stopPropagation();
                     navigate(ROUTES.SHOP_DETAILS(safeProduct.shopId));
                   }}
                   aria-label={`Visit ${safeProduct.shopName}`}
                 >
-                  <ShoppingBag className="w-4 h-4 mr-2" />
-                  {t('buttons.visit_shop') || 'Visit Shop'}
+                  <ShoppingBag className="w-4 h-4 mr-1" />
+                  Shop
                 </Button>
               )}
               <Button
                 variant="outline"
                 size="sm"
-                className="flex-1 border-red-400 text-red-600 hover:bg-red-500 hover:text-white rounded-lg"
+                className="flex-1 border-red-400 text-red-600 hover:bg-red-500 hover:text-white rounded-xl py-2 transition-all duration-300 font-medium"
                 onClick={(e) => handleRemoveFavorite(safeProduct.favoriteId, e)}
                 aria-label={`Remove ${safeProduct.name} from favorites`}
               >
-                <X className="w-4 h-4 mr-2" />
-                {t('buttons.remove') || 'Remove'}
+                <X className="w-4 h-4 mr-1" />
+                Remove
               </Button>
             </div>
           </div>
@@ -238,52 +235,48 @@ const FavoriteProducts = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#F8F4ED] via-white to-[#F0E8DB] pt-20 w-full">
-      <div className="w-full px-4 sm:px-6 lg:px-8 py-8">
-        {/* Fixed Header Inside Content */}
-        <div
-          className="sticky top-0 z-10 bg-white/90 backdrop-blur-md rounded-2xl shadow-lg p-6 mb-6"
-          aria-label="Favorites header"
-        >
-          <div className="text-center mb-6">
-            <div className="flex items-center justify-center gap-4 mb-4">
-              <div className="w-16 h-16 bg-gradient-to-r from-[#C37C00] to-[#A66A00] rounded-full flex items-center justify-center shadow-md">
-                <Heart className="w-8 h-8 text-white fill-current" />
-              </div>
-              <div>
-                <h1 className="text-4xl font-bold text-gray-900 mb-2">
-                  {t('favorites.title') || 'My Favorite Products'}
-                </h1>
-                <div className="w-24 h-1 bg-gradient-to-r from-[#C37C00] to-[#A66A00] mx-auto rounded-full"></div>
-              </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <div className="w-14 h-14 bg-[#C37C00] rounded-full flex items-center justify-center">
+              <Heart className="w-7 h-7 text-white fill-current" />
             </div>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              {Array.isArray(favoriteProducts) && favoriteProducts.length > 0
-                ? t('favorites.count_message', { count: favoriteProducts.length }) || `You have ${favoriteProducts.length} saved favorites`
-                : t('favorites.empty_message') || 'Save your favorite products to see them here'}
-            </p>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                {t('favorites.title') || 'My Favorite Products'}
+              </h1>
+              <div className="w-20 h-0.5 bg-[#C37C00] mx-auto rounded-full"></div>
+            </div>
           </div>
-          <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
+          <p className="text-gray-600 max-w-2xl mx-auto mb-6">
+            {Array.isArray(favoriteProducts) && favoriteProducts.length > 0
+              ? t('favorites.count_message', { count: favoriteProducts.length }) || `You have ${favoriteProducts.length} saved favorites`
+              : t('favorites.empty_message') || 'Save your favorite products to see them here'}
+          </p>
+          {/* Controls */}
+          <div className="flex flex-col sm:flex-row gap-4 items-center justify-between bg-white rounded-xl border border-gray-200 p-4">
             <div className="flex items-center gap-4">
-              <Badge className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] text-white px-4 py-2 text-sm font-semibold shadow-md">
+              <Badge className="bg-[#C37C00] text-white px-4 py-2 text-sm font-medium">
                 <ShoppingBag className="w-4 h-4 mr-2" />
                 {Array.isArray(favoriteProducts) ? favoriteProducts.length : 0} {t('favorites.favorites') || 'favorites'}
               </Badge>
               <Button
                 variant="outline"
                 onClick={() => navigate(ROUTES.PRODUCTS)}
-                className="px-4 py-2 text-sm border-[#C37C00] text-[#C37C00] hover:bg-[#C37C00] hover:text-white rounded-lg"
+                className="px-4 py-2 text-sm border-[#C37C00] text-[#C37C00] hover:bg-[#C37C00] hover:text-white rounded-lg transition-all duration-300 font-medium"
                 aria-label="Browse more products"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 {t('buttons.browse_products') || 'Browse More Products'}
               </Button>
             </div>
-            <div className="flex border border-[#C37C00]/30 rounded-lg overflow-hidden bg-white shadow-md">
+            <div className="flex border border-[#C37C00]/30 rounded-lg overflow-hidden bg-gray-50">
               <Button
                 variant={viewMode === 'grid' ? 'default' : 'ghost'}
                 size="sm"
                 onClick={() => setViewMode('grid')}
-                className={`px-4 py-2 text-sm ${viewMode === 'grid' ? 'bg-gradient-to-r from-[#C37C00] to-[#A66A00] text-white' : 'text-[#C37C00] hover:bg-[#C37C00]/10'}`}
+                className={`px-4 py-2 text-sm font-medium transition-all duration-300 ${viewMode === 'grid' ? 'bg-[#C37C00] text-white' : 'text-[#C37C00] hover:bg-[#C37C00]/10'}`}
                 aria-label="Switch to grid view"
               >
                 <Grid className="w-4 h-4 mr-2" />
@@ -293,7 +286,7 @@ const FavoriteProducts = () => {
                 variant={viewMode === 'list' ? 'default' : 'ghost'}
                 size="sm"
                 onClick={() => setViewMode('list')}
-                className={`px-4 py-2 text-sm ${viewMode === 'list' ? 'bg-gradient-to-r from-[#C37C00] to-[#A66A00] text-white' : 'text-[#C37C00] hover:bg-[#C37C00]/10'}`}
+                className={`px-4 py-2 text-sm font-medium transition-all duration-300 ${viewMode === 'list' ? 'bg-[#C37C00] text-white' : 'text-[#C37C00] hover:bg-[#C37C00]/10'}`}
                 aria-label="Switch to list view"
               >
                 <List className="w-4 h-4 mr-2" />
@@ -303,21 +296,22 @@ const FavoriteProducts = () => {
           </div>
         </div>
 
-        {/* Content with padding to avoid overlap */}
-        <div className="pt-4 w-full">
+        {/* Content */}
+        <div className="w-full">
           {isLoading ? (
             <div className={`grid gap-6 ${viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4' : 'grid-cols-1'}`}>
-              {[...Array(6)].map((_, index) => (
-                <div key={index} className="animate-pulse bg-white rounded-xl shadow-md overflow-hidden flex flex-col h-full">
-                  <div className="bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 h-56"></div>
-                  <div className="p-4 flex flex-col flex-1">
-                    <div className="h-5 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded mb-2"></div>
-                    <div className="h-4 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded mb-3 w-3/4"></div>
-                    <div className="h-3 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded mb-3 w-1/2"></div>
-                    <div className="mt-auto pt-3">
+              {[...Array(8)].map((_, index) => (
+                <div key={index} className="animate-pulse bg-white rounded-2xl border border-gray-200 overflow-hidden flex flex-col h-full">
+                  <div className="bg-gray-200 h-64"></div>
+                  <div className="p-6 flex flex-col flex-1">
+                    <div className="h-5 bg-gray-200 rounded-lg mb-3"></div>
+                    <div className="h-4 bg-gray-200 rounded-lg mb-4 w-3/4"></div>
+                    <div className="h-6 bg-gray-200 rounded-lg mb-4 w-1/2"></div>
+                    <div className="mt-auto pt-3 space-y-3">
+                      <div className="h-10 bg-gray-200 rounded-xl"></div>
                       <div className="flex gap-2">
-                        <div className="h-8 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded flex-1"></div>
-                        <div className="h-8 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded flex-1"></div>
+                        <div className="h-9 bg-gray-200 rounded-xl flex-1"></div>
+                        <div className="h-9 bg-gray-200 rounded-xl flex-1"></div>
                       </div>
                     </div>
                   </div>
@@ -325,24 +319,25 @@ const FavoriteProducts = () => {
               ))}
             </div>
           ) : !Array.isArray(favoriteProducts) || favoriteProducts.length === 0 ? (
-            <div className="text-center py-16 bg-white rounded-xl shadow-lg">
-              <div className="text-6xl mb-4">❤️</div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">
+            <div className="text-center py-20 bg-white rounded-2xl border border-gray-200">
+              <div className="text-8xl mb-6">❤️</div>
+              <h3 className="text-3xl font-bold text-gray-900 mb-4">
                 {t('favorites.no_favorites') || 'No favorites yet'}
               </h3>
-              <p className="text-gray-600 mb-6 max-w-md mx-auto">
+              <p className="text-gray-600 mb-8 max-w-lg mx-auto text-lg">
                 {t('favorites.save_instruction') || 'Save your favorite products by clicking the heart icon on any product'}
               </p>
               <Button
                 onClick={() => navigate(ROUTES.PRODUCTS)}
-                className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-6 py-3 rounded-lg"
+                className="bg-[#C37C00] hover:bg-[#A66A00] text-white px-8 py-3 rounded-xl transition-all duration-300 font-medium text-lg"
                 aria-label="Browse products"
               >
+                <Plus className="w-5 h-5 mr-2" />
                 {t('buttons.browse_products') || 'Browse Products'}
               </Button>
             </div>
           ) : (
-            <div className={`grid gap-6 ${viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4' : 'grid-cols-1'}`}>
+            <div className={`grid gap-6 ${viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' : 'grid-cols-1'}`}>
               {favoriteProducts.map((product, index) => (
                 <ProductCard
                   key={product.id || product._id || product.favoriteId || index}
