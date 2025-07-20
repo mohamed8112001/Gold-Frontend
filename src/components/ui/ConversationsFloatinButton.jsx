@@ -617,11 +617,11 @@ const ConversationsFloatinButton = ({ user, onOpenChat, onSelectConversation }) 
       />
 
       {/* Shop Chat Interface */}
-      {showChatInterface && selectedProduct && (
+      {showChatInterface && selectedProduct &&  (
         <ShopChatInterface
           isOpen={showChatInterface}
           onClose={handleCloseChatInterface}
-          shop={selectedProduct.shop || selectedProduct.shopId}
+          shop={selectedProduct.data.shop}
           user={user}
           product={selectedProduct.data}
         />

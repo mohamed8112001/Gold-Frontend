@@ -72,13 +72,7 @@ const Dashboard = () => {
         const bookingsData = await dashboardService.getBookings();
         setBookings(bookingsData.data || []);
 
-        if (isShopOwner) {
-          const response = await dashboardService.getAvailableTimes();
-          setAvailableTimes(response.data || Array.isArray(response) ? response : []);
-        } else {
-          const response = await dashboardService.getUserBookings();
-          setAvailableTimes(response.data || Array.isArray(response) ? response : []);
-        }
+
       } catch (err) {
         setError(err.message || 'Error loading data');
       } finally {
