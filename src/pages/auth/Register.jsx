@@ -115,11 +115,7 @@ const Register = () => {
         password: formData.password,
         role: userType
       });
-      if (userType === 'seller') {
-        navigate('/owner-payment');
-      } else {
-        navigate(ROUTES.HOME);
-      }
+      navigate(ROUTES.LOGIN);
     } catch (error) {
       setErrors({ submit: error.message || 'حدث خطأ أثناء التسجيل' });
     }
