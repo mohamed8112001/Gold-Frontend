@@ -15,9 +15,9 @@ import {
   Plus,
   Store,
   BarChart3,
-  Users,
   Package,
   Loader2,
+  CheckCircle,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES } from '../../utils/constants.js';
@@ -344,10 +344,6 @@ const Dashboard = () => {
   const BookingsTab = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-[#6D552C]">{isShopOwner ? 'Bookings Overview' : 'My Bookings'}</h2>
-          <p className="text-[#8A6C37]">{isShopOwner ? 'Overview of your shop bookings' : 'Your booked appointments'}</p>
-        </div>
         <div className="flex gap-2">
           {isShopOwner ? (
             <>
@@ -404,105 +400,167 @@ const Dashboard = () => {
   );
 
   const ShopOwnerTab = () => (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <StatCard icon={Store} title="Shops" value={stats.shops} description="Active shops" color="purple" />
-        <StatCard icon={Package} title="Products" value={stats.products} description="Displayed products" color="blue" />
-        <StatCard icon={Users} title="Customers" value={stats.customers} description="Registered customers" color="green" />
+    <div className="space-y-8">
+      {/* Main Management Sections - Side by Side Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Section 1: Shop Management */}
+        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300">
+          <div className="flex items-center mb-6">
+            <div className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] p-3 rounded-lg mr-4">
+              <Store className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-[#8A5700]">Shop Management</h3>
+              <p className="text-sm text-[#A66A00]">Create and manage shops</p>
+            </div>
+          </div>
+          <div className="space-y-4">
+            <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-sm font-medium text-[#A66A00]">Active Shops</span>
+                <span className="text-2xl font-bold text-[#8A5700]">{stats.shops || 0}</span>
+              </div>
+              <div className="space-y-3">
+                <Button
+                  className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+                  onClick={() => navigate(ROUTES.CREATE_SHOP)}
+                  aria-label="Add new shop"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add New Shop
+                </Button>
+                <Button
+                  variant="outline"
+                  className="w-full border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+                  onClick={() => navigate(ROUTES.MANAGE_SHOP)}
+                  aria-label="Manage existing shops"
+                >
+                  <Edit className="w-4 h-4 mr-2" />
+                  Manage Existing Shops
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 2: Product Management */}
+        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300">
+          <div className="flex items-center mb-6">
+            <div className="bg-gradient-to-r from-[#A66A00] to-[#8A5700] p-3 rounded-lg mr-4">
+              <Package className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-[#8A5700]">Product Management</h3>
+              <p className="text-sm text-[#A66A00]">Manage product catalog</p>
+            </div>
+          </div>
+          <div className="space-y-4">
+            <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-sm font-medium text-[#A66A00]">Total Products</span>
+                <span className="text-2xl font-bold text-[#8A5700]">{stats.products || 0}</span>
+              </div>
+              <div className="space-y-3">
+                <Button
+                  className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+                  onClick={() => navigate(ROUTES.CREATE_PRODUCT)}
+                  aria-label="Add new product"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add New Product
+                </Button>
+                <Button
+                  variant="outline"
+                  className="w-full border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+                  onClick={() => navigate(ROUTES.MANAGE_SHOP)}
+                  aria-label="Manage products"
+                >
+                  <Package className="w-4 h-4 mr-2" />
+                  Manage Products
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 3: Appointment Management */}
+        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300">
+          <div className="flex items-center mb-6">
+            <div className="bg-gradient-to-r from-[#8A5700] to-[#6D552C] p-3 rounded-lg mr-4">
+              <Clock className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-[#8A5700]">Appointment Management</h3>
+              <p className="text-sm text-[#A66A00]">Manage appointments</p>
+            </div>
+          </div>
+          <div className="space-y-4">
+            <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-sm font-medium text-[#A66A00]">Active Bookings</span>
+                <span className="text-2xl font-bold text-[#8A5700]">{stats.bookings || 0}</span>
+              </div>
+              <div className="space-y-3">
+                <Button
+                  className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+                  onClick={() => navigate(ROUTES.TIME_MANAGEMENT)}
+                  aria-label="Manage all appointments"
+                >
+                  <Clock className="w-4 h-4 mr-2" />
+                  Manage All Appointments
+                </Button>
+                <Button
+                  variant="outline"
+                  className="w-full border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+                  onClick={() => setActiveTab('available-times')}
+                  aria-label="View time management"
+                >
+                  <Calendar className="w-4 h-4 mr-2" />
+                  View Time Management
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="bg-white/90 backdrop-blur-md rounded-lg">
-          <CardHeader>
-            <CardTitle>Shop Management</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <Button
-                className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
-                onClick={() => navigate(ROUTES.CREATE_SHOP)}
-                aria-label="Add new shop"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Add New Shop
-              </Button>
-              <Button
-                variant="outline"
-                className="w-full border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
-                onClick={() => navigate(ROUTES.MANAGE_SHOP)}
-                aria-label="Manage existing shops"
-              >
-                <Edit className="w-4 h-4 mr-2" />
-                Manage Existing Shops
-              </Button>
+
+      {/* Section 4: Appointment Statistics */}
+      <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+        <div className="flex items-center mb-6">
+          <div className="bg-gradient-to-r from-[#6D552C] to-[#49391D] p-3 rounded-lg mr-4">
+            <BarChart3 className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h3 className="text-2xl font-bold text-[#8A5700]">Appointment Statistics</h3>
+            <p className="text-[#A66A00]">Track your appointment performance and metrics</p>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 text-center">
+            <div className="flex items-center justify-center mb-3">
+              <CheckCircle className="w-8 h-8 text-green-600 mr-2" />
+              <span className="text-sm font-medium text-[#A66A00]">Booked</span>
             </div>
-          </CardContent>
-        </Card>
-        <Card className="bg-white/90 backdrop-blur-md rounded-lg">
-          <CardHeader>
-            <CardTitle>Product Management</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <Button
-                className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
-                onClick={() => navigate(ROUTES.CREATE_PRODUCT)}
-                aria-label="Add new product"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Add New Product
-              </Button>
-              <Button
-                variant="outline"
-                className="w-full border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
-                onClick={() => navigate(ROUTES.MANAGE_SHOP)}
-                aria-label="Manage products"
-              >
-                <Package className="w-4 h-4 mr-2" />
-                Manage Products
-              </Button>
+            <span className="text-3xl font-bold text-[#8A5700]">{stats.bookings || 0}</span>
+            <p className="text-xs text-[#A66A00] mt-1">Confirmed appointments</p>
+          </div>
+          <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 text-center">
+            <div className="flex items-center justify-center mb-3">
+              <Clock className="w-8 h-8 text-blue-600 mr-2" />
+              <span className="text-sm font-medium text-[#A66A00]">Available</span>
             </div>
-          </CardContent>
-        </Card>
-      </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="bg-white/90 backdrop-blur-md rounded-lg">
-          <CardHeader>
-            <CardTitle>Appointment Management</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <Button
-                className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
-                onClick={() => navigate(ROUTES.TIME_MANAGEMENT)}
-                aria-label="Manage all appointments"
-              >
-                <Clock className="w-4 h-4 mr-2" />
-                Manage All Appointments
-              </Button>
+            <span className="text-3xl font-bold text-[#8A5700]">{stats.availableTimes || 0}</span>
+            <p className="text-xs text-[#A66A00] mt-1">Open time slots</p>
+          </div>
+          <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 text-center">
+            <div className="flex items-center justify-center mb-3">
+              <Calendar className="w-8 h-8 text-purple-600 mr-2" />
+              <span className="text-sm font-medium text-[#A66A00]">Total</span>
             </div>
-          </CardContent>
-        </Card>
-        <Card className="bg-white/90 backdrop-blur-md rounded-lg">
-          <CardHeader>
-            <CardTitle>Appointment Statistics</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-[#A66A00]">Booked Appointments</span>
-                <span className="font-semibold text-[#8A5700]">{stats.bookings || 0}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-[#A66A00]">Available Appointments</span>
-                <span className="font-semibold text-[#8A5700]">{stats.availableTimes || 0}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-[#A66A00]">Total Appointments</span>
-                <span className="font-semibold text-[#8A5700]">{(stats.bookings || 0) + (stats.availableTimes || 0)}</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            <span className="text-3xl font-bold text-[#8A5700]">{(stats.bookings || 0) + (stats.availableTimes || 0)}</span>
+            <p className="text-xs text-[#A66A00] mt-1">All appointments</p>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -570,12 +628,6 @@ const Dashboard = () => {
 
     return (
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-2xl font-bold text-[#6D552C]">{isShopOwner ? 'Manage Available Times' : 'My Booked Appointments'}</h2>
-            <p className="text-[#8A6C37]">{isShopOwner ? 'Manage time slots for bookings' : 'Your booked appointments in shops'}</p>
-          </div>
-        </div>
         {isShopOwner && (
           <Card className="bg-white/90 backdrop-blur-md rounded-lg">
             <CardHeader>
@@ -717,17 +769,17 @@ const Dashboard = () => {
 
   const tabs = [
     { id: 'overview', label: 'Overview', icon: BarChart3 },
-    { id: 'bookings', label: isShopOwner ? 'Bookings Overview' : 'My Bookings', icon: Calendar },
-    { id: 'available-times', label: isShopOwner ? 'Time Management' : 'My Appointments', icon: Clock },
+    { id: 'bookings', label: isShopOwner ? 'Bookings' : 'My Bookings', icon: Calendar },
+    { id: 'available-times', label: isShopOwner ? 'Available Times' : 'My Appointments', icon: Clock },
     ...(isShopOwner ? [
       { id: 'shop', label: 'Manage Shop', icon: Store },
-      { id: 'ratings', label: 'Manage Ratings', icon: Star }
+      { id: 'ratings', label: 'Ratings', icon: Star }
     ] : []),
   ];
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] to-[#FFF0CC] flex items-center justify-center pt-20">
+      <div className="min-h-screen bg-white flex items-center justify-center pt-20">
         <div className="text-center">
           <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-[#C37C00]" />
           <p className="text-[#A66A00]">Loading data...</p>
@@ -738,7 +790,7 @@ const Dashboard = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] to-[#FFF0CC] flex items-center justify-center pt-20">
+      <div className="min-h-screen bg-white flex items-center justify-center pt-20">
         <div className="text-center">
           <div className="text-red-600 mb-4 text-4xl">❌</div>
           <p className="text-red-600 mb-4">{error}</p>
@@ -756,7 +808,7 @@ const Dashboard = () => {
 
   if (isRegularUser) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] to-[#FFF0CC] flex items-center justify-center pt-20">
+      <div className="min-h-screen bg-white flex items-center justify-center pt-20">
         <div className="max-w-md mx-auto text-center">
           <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <span className="text-4xl">🚫</span>
@@ -776,39 +828,71 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] to-[#FFF0CC] pt-20 w-full">
-      <div className="w-full px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-[#8A5700]">Welcome, {user?.firstName || 'User'}</h1>
-          <p className="text-[#A66A00] mt-1">Manage your account and track your activities</p>
+    <div className="min-h-screen bg-white pt-20 w-full">
+      <div className="flex w-full">
+        {/* Main Content Area */}
+        <div className="flex-1 px-4 sm:px-6 lg:px-8 py-8 lg:pr-80">
+          <div className="mb-6">
+            <h1 className="text-3xl font-bold text-[#8A5700]">Welcome, {user?.firstName || 'User'}</h1>
+            <p className="text-[#A66A00] mt-1">Manage your account and track your activities</p>
+          </div>
+
+          {/* Mobile Navigation - Horizontal tabs for mobile */}
+          <div className="lg:hidden sticky top-0 z-10 bg-white/90 backdrop-blur-md rounded-lg shadow-lg mb-6">
+            <nav className="flex space-x-2 p-4 border-b border-gray-200 overflow-x-auto">
+              {tabs.map(tab => {
+                const Icon = tab.icon;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`flex items-center space-x-2 px-3 py-2 rounded-lg font-medium text-xs whitespace-nowrap transition-all duration-300 ${activeTab === tab.id
+                      ? 'bg-gradient-to-r from-[#C37C00] to-[#A66A00] text-white shadow-md'
+                      : 'text-[#A66A00] hover:bg-[#FFF8E6] hover:text-[#8A5700] hover:shadow-sm'
+                      }`}
+                    aria-label={`Switch to ${tab.label}`}
+                  >
+                    <Icon className="w-4 h-4" />
+                    <span>{tab.label}</span>
+                  </button>
+                );
+              })}
+            </nav>
+          </div>
+
+          <div className="pt-4">
+            {activeTab === 'overview' && <OverviewTab />}
+            {activeTab === 'bookings' && <BookingsTab />}
+            {activeTab === 'shop' && isShopOwner && <ShopOwnerTab />}
+            {activeTab === 'ratings' && isShopOwner && <ManageRatings />}
+            {activeTab === 'available-times' && <AvailableTimesTab />}
+          </div>
         </div>
-        <div className="sticky top-0 z-10 bg-white/90 backdrop-blur-md rounded-lg shadow-lg mb-6">
-          <nav className="flex space-x-4 p-4 border-b border-gray-200">
-            {tabs.map(tab => {
-              const Icon = tab.icon;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 ${activeTab === tab.id
-                    ? 'bg-gradient-to-r from-[#C37C00] to-[#A66A00] text-white shadow-md'
-                    : 'text-[#A66A00] hover:bg-[#FFF8E6] hover:text-[#8A5700] hover:shadow-sm'
-                    }`}
-                  aria-label={`Switch to ${tab.label}`}
-                >
-                  <Icon className="w-4 h-4" />
-                  <span>{tab.label}</span>
-                </button>
-              );
-            })}
-          </nav>
-        </div>
-        <div className="pt-4">
-          {activeTab === 'overview' && <OverviewTab />}
-          {activeTab === 'bookings' && <BookingsTab />}
-          {activeTab === 'shop' && isShopOwner && <ShopOwnerTab />}
-          {activeTab === 'ratings' && isShopOwner && <ManageRatings />}
-          {activeTab === 'available-times' && <AvailableTimesTab />}
+
+        {/* Right Sidebar - Desktop only */}
+        <div className="hidden lg:block fixed right-0 top-20 h-[calc(100vh-5rem)] w-72 bg-white/90 backdrop-blur-md shadow-lg border-l border-gray-200">
+          <div className="p-6">
+            <h2 className="text-xl font-bold text-[#8A5700] mb-6">Dashboard Menu</h2>
+            <nav className="space-y-2">
+              {tabs.map(tab => {
+                const Icon = tab.icon;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg font-medium text-sm transition-all duration-300 text-left ${activeTab === tab.id
+                      ? 'bg-gradient-to-r from-[#C37C00] to-[#A66A00] text-white shadow-md'
+                      : 'text-[#A66A00] hover:bg-[#FFF8E6] hover:text-[#8A5700] hover:shadow-sm'
+                      }`}
+                    aria-label={`Switch to ${tab.label}`}
+                  >
+                    <Icon className="w-5 h-5" />
+                    <span>{tab.label}</span>
+                  </button>
+                );
+              })}
+            </nav>
+          </div>
         </div>
       </div>
     </div>
