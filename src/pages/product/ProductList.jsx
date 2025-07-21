@@ -15,7 +15,7 @@ import {
     SlidersHorizontal,
     X
 } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+
 import { productService } from '../../services/productService.js';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES, PRODUCT_CATEGORIES } from '../../utils/constants.js';
@@ -24,7 +24,7 @@ const baseUrl = import.meta.env.VITE_API_BASE_URL;
 const ProductList = () => {
     const navigate = useNavigate();
     const { user } = useAuth();
-    const { t } = useTranslation();
+
     const [searchParams, setSearchParams] = useSearchParams();
     const [products, setProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);
@@ -105,7 +105,7 @@ const ProductList = () => {
         // const isFirstTime = viewedCount === 0 && !hasSearched && !hasFiltered;
 
         return {
-            text: `You've viewed ${viewedCount} products`,
+            text: `لقد شاهدت ${viewedCount} منتج`,
             icon: "",
             color: "text-gray-600",
             bgColor: "bg-gray-50"
@@ -145,34 +145,34 @@ const ProductList = () => {
         const resultsCount = filteredProducts.length;
 
         if (searchQuery && resultsCount === 0) {
-            return "🔍 No matches found. Try different keywords or browse our categories!";
+            return "🔍 لم يتم العثور على نتائج. جرب كلمات مختلفة أو تصفح فئاتنا!";
         }
 
         if (filters.category && resultsCount === 0) {
-            return "🎯 No products in this category yet. Check back soon for new arrivals!";
+            return "🎯 لا توجد منتجات في هذه الفئة حتى الآن. تحقق قريباً للوافدات الجديدة!";
         }
 
         if (resultsCount === 0) {
-            return "🌟 Start exploring our amazing jewelry collection!";
+            return "🌟 ابدأ استكشاف مجموعة المجوهرات الرائعة لدينا!";
         }
 
         if (viewedCount === 0 && resultsCount > 0) {
-            return "✨ So many beautiful pieces to discover! Start browsing now.";
+            return "✨ الكثير من القطع الجميلة لاكتشافها! ابدأ التصفح الآن.";
         }
 
         if (viewedCount > 0 && viewedCount < 5) {
-            return "👀 You're off to a great start! Keep exploring to find your perfect piece.";
+            return "👀 بداية رائعة! استمر في الاستكشاف للعثور على قطعتك المثالية.";
         }
 
         if (viewedCount >= 5 && viewedCount < 15) {
-            return "🎯 You're really getting into it! Found anything you love yet?";
+            return "🎯 أنت حقاً منغمس في التسوق! هل وجدت شيئاً تحبه؟";
         }
 
         if (viewedCount >= 15) {
-            return "💎 You're a true jewelry enthusiast! Your taste is impeccable.";
+            return "💎 أنت عاشق حقيقي للمجوهرات! ذوقك لا تشوبه شائبة.";
         }
 
-        return "🛍️ Happy shopping! Take your time to find the perfect piece.";
+        return "🛍️ تسوق سعيد! خذ وقتك للعثور على القطعة المثالية.";
     };
 
     // Load user behavior from localStorage on mount
@@ -196,26 +196,26 @@ const ProductList = () => {
         switch (displayMode) {
             case 'searching':
                 return {
-                    title: `Search Results for "${searchQuery}"`,
-                    subtitle: `Found ${filteredProducts.length} products matching your search`,
+                    title: `نتائج البحث عن "${searchQuery}"`,
+                    subtitle: `تم العثور على ${filteredProducts.length} منتج يطابق بحثك`,
                     icon: '🔍'
                 };
             case 'filtered':
                 return {
-                    title: 'Filtered Products',
-                    subtitle: `Showing ${filteredProducts.length} products based on your preferences`,
+                    title: 'المنتجات المفلترة',
+                    subtitle: `عرض ${filteredProducts.length} منتج بناءً على تفضيلاتك`,
                     icon: ' '
                 };
             case 'browsing':
                 return {
-                    title: 'Browse Products',
-                    subtitle: `Discover ${filteredProducts.length} amazing products`,
+                    title: 'تصفح المنتجات',
+                    subtitle: `اكتشف ${filteredProducts.length} منتج رائع`,
                     icon: ''
                 };
             default:
                 return {
-                    title: 'Product Gallery',
-                    subtitle: 'Discover the finest jewelry and gold pieces from the best stores',
+                    title: 'معرض المنتجات',
+                    subtitle: 'اكتشف أجود قطع المجوهرات والذهب من أفضل المتاجر',
                     icon: ''
                 };
         }
@@ -224,9 +224,9 @@ const ProductList = () => {
     const getSuggestionMessage = () => {
         if (displayMode === 'searching' && filteredProducts.length === 0) {
             return {
-                title: "No products found",
-                message: "Try adjusting your search terms or browse our categories",
-                action: "Clear Search",
+                title: "لم يتم العثور على منتجات",
+                message: "جرب تعديل مصطلحات البحث أو تصفح فئاتنا",
+                action: "مسح البحث",
                 actionFn: () => {
                     setSearchQuery('');
                     setSearchParams({});
@@ -236,18 +236,18 @@ const ProductList = () => {
 
         if (displayMode === 'filtered' && filteredProducts.length === 0) {
             return {
-                title: "No products match your filters",
-                message: "Try removing some filters to see more products",
-                action: "Clear Filters",
+                title: "لا توجد منتجات تطابق الفلاتر",
+                message: "جرب إزالة بعض الفلاتر لرؤية المزيد من المنتجات",
+                action: "مسح الفلاتر",
                 actionFn: clearFilters
             };
         }
 
         if (userBehavior.viewedProducts.length > 3) {
             return {
-                title: "Based on your browsing",
-                message: "You seem interested in jewelry! Check out our featured collections",
-                action: "View Collections",
+                title: "بناءً على تصفحك",
+                message: "يبدو أنك مهتم بالمجوهرات! تحقق من مجموعاتنا المميزة",
+                action: "عرض المجموعات",
                 actionFn: () => navigate('/collections')
             };
         }
@@ -563,7 +563,7 @@ const ProductList = () => {
                                 }}
                             >
                                 <Eye className="w-4 h-4 mr-2" />
-                                View Details
+                                عرض التفاصيل
                             </Button>
 
                             {/* Secondary Actions */}
@@ -580,7 +580,7 @@ const ProductList = () => {
                                         }}
                                     >
                                         <ShoppingBag className="w-3 h-3 mr-1" />
-                                        Shop
+                                        المتجر
                                     </Button>
                                 )}
                                 <Button
@@ -648,7 +648,7 @@ const ProductList = () => {
                                         {/* Enhanced input field */}
                                         <Input
                                             type="text"
-                                            placeholder="Search for products, jewelry, gold items..."
+                                            placeholder="ابحث عن المنتجات، المجوهرات، قطع الذهب..."
                                             value={searchQuery}
                                             onChange={(e) => {
                                                 const value = e.target.value;
@@ -683,7 +683,7 @@ const ProductList = () => {
                                     className="bg-gradient-to-r from-[#C37C00] via-[#A66A00] to-[#8A5700] hover:from-[#A66A00] hover:via-[#8A5700] hover:to-[#6D4500] text-white px-8 py-5 rounded-full font-bold shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-105 border border-[#C37C00]/50"
                                 >
                                     <Search className="w-5 h-5 mr-2" />
-                                    <span className="text-base">Search</span>
+                                    <span className="text-base">بحث</span>
                                 </Button>
                             </div>
                         </div>
@@ -691,7 +691,7 @@ const ProductList = () => {
                         <div className="flex items-center gap-4">
                             <div className="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-full">
                                 <span className="text-sm font-medium text-gray-600">
-                                    {filteredProducts.length} products
+                                    {filteredProducts.length} منتج
                                 </span>
                             </div>
 
@@ -710,7 +710,7 @@ const ProductList = () => {
                                     className="flex items-center gap-2 border-2 border-red-300 text-red-600 hover:bg-red-50 hover:border-red-500 hover:text-red-700 px-4 py-2.5 rounded-full font-semibold shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
                                 >
                                     <X className="w-4 h-4" />
-                                    <span>Clear Search</span>
+                                    <span>مسح البحث</span>
                                 </Button>
                             )}
 
@@ -721,7 +721,7 @@ const ProductList = () => {
                                 className="flex items-center gap-2 border-2 border-yellow-300 text-yellow-700 hover:bg-yellow-50 hover:border-yellow-500 hover:text-yellow-800 px-4 py-2.5 rounded-full font-semibold shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
                             >
                                 <SlidersHorizontal className="w-4 h-4" />
-                                <span>Filters</span>
+                                <span>فلاتر</span>
                                 {Object.keys(filters).some(key => filters[key]) && (
                                     <span className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></span>
                                 )}
@@ -768,7 +768,7 @@ const ProductList = () => {
                                 <CardContent className="space-y-6">
                                     {/* Category Filter */}
                                     <div>
-                                        <h3 className="font-medium mb-3">Category</h3>
+                                        <h3 className="font-medium mb-3">الفئة</h3>
                                         <div className="space-y-2">
                                             <label className="flex items-center">
                                                 <input
@@ -779,7 +779,7 @@ const ProductList = () => {
                                                     onChange={(e) => handleFilterChange('category', e.target.value)}
                                                     className="mr-2"
                                                 />
-                                                All
+                                                الكل
                                             </label>
                                             {Object.entries(PRODUCT_CATEGORIES).map(([key, value]) => (
                                                 <label key={key} className="flex items-center">
@@ -801,7 +801,7 @@ const ProductList = () => {
 
                                     {/* Rating Filter */}
                                     <div>
-                                        <h3 className="font-medium mb-3">Rating</h3>
+                                        <h3 className="font-medium mb-3">التقييم</h3>
                                         <div className="space-y-2">
                                             {[
                                                 { label: 'All', value: '' },
@@ -826,7 +826,7 @@ const ProductList = () => {
 
                                     {/* Sort */}
                                     <div>
-                                        <h3 className="font-medium mb-3">Sort By</h3>
+                                        <h3 className="font-medium mb-3">ترتيب حسب</h3>
                                         <select
                                             value={filters.sortBy}
                                             onChange={(e) => handleFilterChange('sortBy', e.target.value)}
@@ -843,7 +843,7 @@ const ProductList = () => {
                                         onClick={clearFilters}
                                         className="w-full"
                                     >
-                                        Clear All Filters
+                                        مسح جميع الفلاتر
                                     </Button>
                                 </CardContent>
                             </Card>
@@ -856,16 +856,16 @@ const ProductList = () => {
                         <div className="flex items-center justify-between mb-8 bg-white rounded-xl p-4 shadow-sm border border-gray-100">
                             <div>
                                 <p className="text-lg font-semibold text-gray-900">
-                                    {filteredProducts.length} products available
+                                    {filteredProducts.length} منتج متاح
                                 </p>
                                 {searchQuery && (
                                     <p className="text-sm text-gray-600">
-                                        Search results for: <span className="font-medium text-yellow-600">"{searchQuery}"</span>
+                                        نتائج البحث عن: <span className="font-medium text-yellow-600">"{searchQuery}"</span>
                                     </p>
                                 )}
                                 {filters.category && (
                                     <p className="text-sm text-gray-600">
-                                        Category: <span className="font-medium text-yellow-600">{PRODUCT_CATEGORIES[filters.category.toUpperCase()]}</span>
+                                        الفئة: <span className="font-medium text-yellow-600">{PRODUCT_CATEGORIES[filters.category.toUpperCase()]}</span>
                                     </p>
                                 )}
                                 {(() => {
@@ -884,19 +884,19 @@ const ProductList = () => {
                                 <div className="mb-2">
                                     <p className="text-sm text-gray-600 font-medium">{getMotivationalMessage()}</p>
                                 </div>
-                                <p className="text-sm text-gray-500">Display mode</p>
+                                <p className="text-sm text-gray-500">وضع العرض</p>
                                 <p className="text-lg font-bold text-yellow-600">{viewMode === 'grid' ? '🔲' : '📋'}</p>
                                 {userBehavior.hasSearched && (
                                     <div className="mt-2">
                                         <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full">
-                                            Searching
+                                            البحث
                                         </span>
                                     </div>
                                 )}
                                 {userBehavior.hasFiltered && (
                                     <div className="mt-2">
                                         <span className="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full">
-                                            Filtered
+                                            مفلتر
                                         </span>
                                     </div>
                                 )}
@@ -937,16 +937,16 @@ const ProductList = () => {
                                                 {displayMode === 'searching' ? '🔍' : displayMode === 'filtered' ? '🎯' : '💎'}
                                             </div>
                                             <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                                                {suggestion?.title || "No products found"}
+                                                {suggestion?.title || "لم يتم العثور على منتجات"}
                                             </h3>
                                             <p className="text-gray-600 text-lg mb-8 max-w-md mx-auto">
-                                                {suggestion?.message || "Try adjusting your search or filters"}
+                                                {suggestion?.message || "جرب تعديل البحث أو الفلاتر"}
                                             </p>
                                             <Button
                                                 onClick={suggestion?.actionFn || clearFilters}
                                                 className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-8 py-3"
                                             >
-                                                {suggestion?.action || "Clear All Filters"}
+                                                {suggestion?.action || "مسح جميع الفلاتر"}
                                             </Button>
                                         </>
                                     );
@@ -972,10 +972,10 @@ const ProductList = () => {
                             <div className="mt-16">
                                 <div className="bg-gradient-to-r from-[#FFF8E6] to-[#FFF0CC] rounded-2xl p-8 shadow-lg mb-8">
                                     <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                                        Recommended Based on Your Views
+                                        موصى به بناءً على مشاهداتك
                                     </h3>
                                     <p className="text-gray-600 mb-6">
-                                        Products similar to what you've been browsing
+                                        منتجات مشابهة لما كنت تتصفحه
                                     </p>
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                         {relatedProducts.slice(0, 6).map((product) => {
@@ -1054,7 +1054,7 @@ const ProductList = () => {
                                                                 }}
                                                             >
                                                                 <Eye className="w-4 h-4 mr-1" />
-                                                                View
+                                                                عرض
                                                             </Button>
                                                         </div>
                                                     </CardContent>

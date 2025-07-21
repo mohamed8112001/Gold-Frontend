@@ -776,7 +776,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] to-[#FFF0CC] pt-20 w-full">
+    <div className="min-h-screen  pt-20 w-full">
       <div className="w-full px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-[#8A5700]">Welcome, {user?.firstName || 'User'}</h1>

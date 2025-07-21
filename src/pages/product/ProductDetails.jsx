@@ -184,7 +184,7 @@ const ProductDetails = () => {
 
     const handleOpenChat = () => {
         if (!user) {
-            alert('Please login first to chat with the shop');
+            alert('يرجى تسجيل الدخول أولاً للدردشة مع المتجر');
             navigate(ROUTES.LOGIN);
             return;
         }
@@ -211,7 +211,7 @@ const ProductDetails = () => {
             }
         } catch (error) {
             console.error('Error updating favorites:', error);
-            alert('Error updating favorites. Please try again.');
+            alert('خطأ في تحديث المفضلة. يرجى المحاولة مرة أخرى.');
         }
     };
 
@@ -224,7 +224,7 @@ const ProductDetails = () => {
         if (shopId) {
             navigate(ROUTES.BOOK_APPOINTMENT(shopId));
         } else {
-            alert('Shop information not available for booking');
+            alert('معلومات المتجر غير متاحة للحجز');
         }
     };
 
@@ -233,7 +233,7 @@ const ProductDetails = () => {
         if (shopId) {
             navigate(ROUTES.SHOP_DETAILS(shopId));
         } else {
-            alert('Shop information not available');
+            alert('معلومات المتجر غير متاحة');
         }
     };
 
@@ -242,7 +242,7 @@ const ProductDetails = () => {
             <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] via-white to-[#FFF8E6] flex items-center justify-center">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-16 w-16 border-4 border-[#C37C00] border-t-transparent mx-auto mb-6"></div>
-                    <p className="text-gray-600 text-lg">Loading product details...</p>
+                    <p className="text-gray-600 text-lg">جاري تحميل تفاصيل المنتج...</p>
                 </div>
             </div>
         );
@@ -257,7 +257,7 @@ const ProductDetails = () => {
                     <p className="text-gray-600 mb-6">{error || 'The requested product could not be found'}</p>
                     <div className="flex gap-4 justify-center">
                         <Button onClick={() => navigate(-1)} variant="outline">
-                            Go Back
+                            العودة
                         </Button>
                         <Button onClick={() => navigate(ROUTES.PRODUCTS)} className="bg-yellow-500 hover:bg-yellow-600">
                             Browse Products
@@ -281,7 +281,7 @@ const ProductDetails = () => {
                             className="flex items-center gap-2 hover:bg-gray-50 transition-all duration-200 rounded-lg px-3 py-2"
                         >
                             <ArrowLeft className="w-4 h-4" />
-                            Back
+                            العودة
                         </Button>
                         <ChevronRight className="w-4 h-4 text-gray-400" />
                         <span

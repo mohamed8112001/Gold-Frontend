@@ -2,24 +2,24 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { 
-  Heart, 
-  Star, 
-  Calendar, 
-  MessageSquare, 
-  ShoppingBag, 
-  Shield, 
-  Truck, 
+import {
+  Heart,
+  Star,
+  Calendar,
+  MessageSquare,
+  ShoppingBag,
+  Shield,
+  Truck,
   RefreshCw,
   Verified
 } from 'lucide-react';
 
-const ProductInfoCard = ({ 
-  product, 
-  shop, 
-  user, 
-  isFavorited, 
-  setIsFavorited, 
+const ProductInfoCard = ({
+  product,
+  shop,
+  user,
+  isFavorited,
+  setIsFavorited,
   onOpenChat,
   onBookAppointment,
   onVisitShop,
@@ -51,7 +51,7 @@ const ProductInfoCard = ({
           </h1>
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <span>by</span>
-            <span 
+            <span
               className="font-semibold text-yellow-600 cursor-pointer hover:underline"
               onClick={onVisitShop}
             >
@@ -79,11 +79,10 @@ const ProductInfoCard = ({
             {[...Array(5)].map((_, i) => (
               <Star
                 key={i}
-                className={`w-5 h-5 ${
-                  i < Math.floor(product.rating || 0)
-                    ? 'fill-yellow-400 text-yellow-400'
-                    : 'text-gray-300'
-                }`}
+                className={`w-5 h-5 ${i < Math.floor(product.rating || 0)
+                  ? 'fill-yellow-400 text-yellow-400'
+                  : 'text-gray-300'
+                  }`}
               />
             ))}
           </div>
@@ -92,9 +91,9 @@ const ProductInfoCard = ({
           </span>
         </div>
         <Separator orientation="vertical" className="h-6" />
-        <span className="text-gray-600">{product.reviewCount || 0} reviews</span>
+        <span className="text-gray-600">{product.reviewCount || 0} تقييم</span>
         <Separator orientation="vertical" className="h-6" />
-        <span className="text-gray-600">{product.soldCount || 0} sold</span>
+        <span className="text-gray-600">{product.soldCount || 0} مُباع</span>
       </div>
 
       {/* Price */}
@@ -111,7 +110,7 @@ const ProductInfoCard = ({
         </div>
         {product.originalPrice && product.originalPrice > product.price && (
           <p className="text-green-600 font-semibold">
-            Save {formatPrice(product.originalPrice - product.price)} EGP
+            وفر {formatPrice(product.originalPrice - product.price)} جنيه
           </p>
         )}
         <p className="text-sm text-gray-600 mt-1">
@@ -150,7 +149,7 @@ const ProductInfoCard = ({
             className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white py-4 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300"
           >
             <Calendar className="w-5 h-5 mr-2" />
-            Book Appointment
+            حجز موعد
           </Button>
           <Button
             size="lg"
@@ -159,10 +158,10 @@ const ProductInfoCard = ({
             className="border-2 border-blue-400 text-blue-700 hover:bg-blue-50 hover:border-blue-600 hover:text-blue-800 py-4 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300"
           >
             <MessageSquare className="w-5 h-5 mr-2" />
-            Chat Now
+            دردشة الآن
           </Button>
         </div>
-        
+
         <Button
           size="lg"
           variant="outline"
@@ -170,7 +169,7 @@ const ProductInfoCard = ({
           className="w-full border-2 border-gray-300 hover:border-gray-400 py-4 rounded-2xl font-bold text-lg"
         >
           <ShoppingBag className="w-5 h-5 mr-2" />
-          Visit Shop
+          زيارة المتجر
         </Button>
       </div>
 

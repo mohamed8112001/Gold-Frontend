@@ -7,14 +7,14 @@ import { ArrowLeft, User, Eye, EyeOff, Phone, Mail, Lock, Check } from 'lucide-r
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES } from '../../utils/constants.js';
 import { GoogleLogin } from '@react-oauth/google';
-import { useTranslation } from 'react-i18next';
+
 
 const Register = () => {
   const [searchParams] = useSearchParams();
   const userType = searchParams.get('type') || 'regular';
   const navigate = useNavigate();
   const { register, isLoading, googleRegister } = useAuth();
-  const { t } = useTranslation();
+
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -182,14 +182,14 @@ const Register = () => {
             {/* Enhanced Dibla text with animation */}
             <h1 className="text-7xl font-bold mb-8 relative" style={{ fontFamily: 'serif', color: '#2D1810' }}>
               <span className="relative z-10">
-                Dibla
+                ديبلا
               </span>
               <div className="absolute inset-0 blur-lg opacity-30 animate-pulse" style={{ background: 'linear-gradient(90deg, #D4AF37 0%, #F4E4BC 100%)' }}></div>
             </h1>
 
             {/* Enhanced subtitle */}
             <p className="text-xl text-center mb-12 max-w-sm leading-relaxed font-medium" style={{ color: '#2D1810' }}>
-              Choose the nearest shop in just a click.
+              اختر أقرب متجر بنقرة واحدة
             </p>
 
             {/* Enhanced pagination dots */}
@@ -220,7 +220,7 @@ const Register = () => {
                 className="flex items-center space-x-2 rtl:space-x-reverse text-gray-600 hover:text-gray-900 transition-colors duration-200"
               >
                 <ArrowLeft className="w-4 h-4" />
-                <span>Back To Account Type</span>
+                <span>العودة لنوع الحساب</span>
               </Button>
 
               <div className="flex items-center space-x-2 rtl:space-x-reverse px-4 py-2 rounded-full shadow-sm" style={{ backgroundColor: '#F5F1EB' }}>
@@ -233,14 +233,14 @@ const Register = () => {
             <div className="flex justify-center mb-8">
               <div className="flex rounded-xl p-1 shadow-lg" style={{ backgroundColor: '#F0E8DB' }}>
                 <div className="px-8 py-3 bg-white rounded-lg font-medium shadow-md border transform scale-105" style={{ color: '#A37F41', borderColor: '#E2D2B6' }}>
-                  Sign Up
+                  إنشاء حساب
                 </div>
                 <Link
                   to={ROUTES.LOGIN}
                   className="px-8 py-3 rounded-lg font-medium transition-all duration-200 hover:bg-white/50"
                   style={{ color: '#241C0F' }}
                 >
-                  Sign In
+                  تسجيل الدخول
                 </Link>
               </div>
             </div>
@@ -249,10 +249,10 @@ const Register = () => {
               {/* Enhanced Header */}
               <div className="text-center mb-8">
                 <h2 className="text-4xl font-bold mb-3" style={{ color: '#A37F41' }}>
-                  Create Account
+                  إنشاء حساب
                 </h2>
                 <p className="text-lg" style={{ color: '#6B5B47' }}>
-                  Join The Dibla Community And Discover Exquisite Jewelry
+                  انضم إلى مجتمع ديبلا واكتشف المجوهرات الرائعة
                 </p>
               </div>
 
@@ -261,12 +261,12 @@ const Register = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="group">
                     <label className="block text-sm font-semibold mb-2" style={{ color: '#6B5B47' }}>
-                      First Name *
+                      الاسم الأول *
                     </label>
                     <Input
                       name="firstName"
                       type="text"
-                      placeholder="First Name"
+                      placeholder="الاسم الأول"
                       value={formData.firstName}
                       onChange={handleInputChange}
                       className={`py-3 border-2 rounded-xl transition-all duration-200 ${errors.firstName ? 'border-red-500' : ''}`}
@@ -284,12 +284,12 @@ const Register = () => {
 
                   <div className="group">
                     <label className="block text-sm font-semibold mb-2" style={{ color: '#6B5B47' }}>
-                      Last Name *
+                      الاسم الأخير *
                     </label>
                     <Input
                       name="lastName"
                       type="text"
-                      placeholder="Last Name"
+                      placeholder="الاسم الأخير"
                       value={formData.lastName}
                       onChange={handleInputChange}
                       className={`py-3 border-2 rounded-xl transition-all duration-200 ${errors.lastName ? 'border-red-500' : ''}`}
@@ -309,14 +309,14 @@ const Register = () => {
                 {/* Enhanced Email Field */}
                 <div className="group">
                   <label className="block text-sm font-semibold mb-2" style={{ color: '#6B5B47' }}>
-                    E-Mail *
+                    البريد الإلكتروني *
                   </label>
                   <div className="relative">
                     <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors" style={{ color: '#A37F41' }} />
                     <Input
                       name="email"
                       type="email"
-                      placeholder="Enter Your Email"
+                      placeholder="أدخل بريدك الإلكتروني"
                       value={formData.email}
                       onChange={handleInputChange}
                       className={`pl-14 py-4 border-2 rounded-xl transition-all duration-200 ${errors.email ? 'border-red-500' : ''}`}
@@ -336,7 +336,7 @@ const Register = () => {
                 {/* Enhanced Phone Field */}
                 <div className="group">
                   <label className="block text-sm font-semibold mb-2" style={{ color: '#6B5B47' }}>
-                    Phone *
+                    رقم الهاتف *
                   </label>
                   <div className="relative">
                     <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors" style={{ color: '#A37F41' }} />
@@ -364,14 +364,14 @@ const Register = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="group">
                     <label className="block text-sm font-semibold mb-2" style={{ color: '#6B5B47' }}>
-                      Password *
+                      كلمة المرور *
                     </label>
                     <div className="relative">
                       <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors" style={{ color: '#A37F41' }} />
                       <Input
                         name="password"
                         type={showPassword ? 'text' : 'password'}
-                        placeholder="Password"
+                        placeholder="كلمة المرور"
                         value={formData.password}
                         onChange={handleInputChange}
                         className={`pl-14 pr-14 py-4 border-2 rounded-xl transition-all duration-200 ${errors.password ? 'border-red-500' : ''}`}
@@ -398,14 +398,14 @@ const Register = () => {
 
                   <div className="group">
                     <label className="block text-sm font-semibold mb-2" style={{ color: '#241C0F' }}>
-                      Confirm Password *
+                      تأكيد كلمة المرور *
                     </label>
                     <div className="relative">
                       <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors" style={{ color: '#A37F41' }} />
                       <Input
                         name="confirmPassword"
                         type={showConfirmPassword ? 'text' : 'password'}
-                        placeholder="Confirm Password"
+                        placeholder="تأكيد كلمة المرور"
                         value={formData.confirmPassword}
                         onChange={handleInputChange}
                         className={`pl-14 pr-14 py-4 border-2 rounded-xl transition-all duration-200 ${errors.confirmPassword ? 'border-red-500' : ''}`}
@@ -445,9 +445,9 @@ const Register = () => {
                     }}
                   />
                   <label className="text-sm font-medium" style={{ color: '#6B5B47' }}>
-                    I agree to the{' '}
+                    أوافق على{' '}
                     <Link to="/terms" className="underline decoration-2 underline-offset-2 hover:opacity-80" style={{ color: '#A37F41' }}>
-                      terms and conditions
+                      الشروط والأحكام
                     </Link>
                   </label>
                 </div>
@@ -481,10 +481,10 @@ const Register = () => {
                   {isLoading ? (
                     <div className="flex items-center justify-center space-x-2">
                       <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      <span>Creating Account...</span>
+                      <span>جاري إنشاء الحساب...</span>
                     </div>
                   ) : (
-                    'Sign Up'
+                    'إنشاء حساب'
                   )}
                 </Button>
 
@@ -494,7 +494,7 @@ const Register = () => {
                     <div className="w-full border-t-2" style={{ borderColor: '#E5D5C3' }}></div>
                   </div>
                   <div className="relative flex justify-center text-sm">
-                    <span className="px-6 bg-gradient-to-r from-[#FFF8E6] to-white font-medium" style={{ color: '#8A5700' }}>Or Sign Up With</span>
+                    <span className="px-6 bg-gradient-to-r from-[#FFF8E6] to-white font-medium" style={{ color: '#8A5700' }}>أو إنشاء حساب بـ</span>
                   </div>
                 </div>
 
@@ -528,12 +528,12 @@ const Register = () => {
 
                 {/* Enhanced Sign In Link */}
                 <div className="text-center mt-6">
-                  <span className="text-gray-600">Already have account? </span>
+                  <span className="text-gray-600">لديك حساب بالفعل؟ </span>
                   <Link
                     to={ROUTES.LOGIN}
                     className="text-amber-600 hover:text-amber-700 font-semibold underline decoration-2 underline-offset-2 hover:decoration-amber-700 transition-all duration-200"
                   >
-                    Sign In
+                    تسجيل الدخول
                   </Link>
                 </div>
               </form>

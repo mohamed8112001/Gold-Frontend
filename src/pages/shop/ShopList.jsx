@@ -405,7 +405,7 @@ const ShopList = () => {
           <div className="max-w-7xl mx-auto">
             <div className="text-center py-20">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#A37F41] mx-auto mb-4"></div>
-              <p className="text-gray-600">Loading shops...</p>
+              <p className="text-gray-600">جاري تحميل المتاجر...</p>
             </div>
           </div>
         </div>
@@ -421,10 +421,10 @@ const ShopList = () => {
           <div className="max-w-7xl mx-auto">
             <div className="text-center py-20">
               <div className="text-6xl mb-4"></div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Error Loading Shops</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">خطأ في تحميل المتاجر</h2>
               <p className="text-gray-600 mb-4">{error}</p>
               <Button onClick={loadShops} className="bg-[#A37F41] hover:bg-[#8A6C37]">
-                Try Again
+                حاول مرة أخرى
               </Button>
             </div>
           </div>
@@ -443,107 +443,107 @@ const ShopList = () => {
       dir="ltr"
     >
       {/* Hero Section */}
-<div className="relative bg-white text-[#C37C00] overflow-hidden mt-4 ">
-  {/* تأثير خلفية ذهبي هادي */}
-  <div className="absolute inset-0 bg-[#C37C00]/5 pointer-events-none"></div>
+      <div className="relative bg-white text-[#C37C00] overflow-hidden mt-4 ">
+        {/* تأثير خلفية ذهبي هادي */}
+        <div className="absolute inset-0 bg-[#C37C00]/5 pointer-events-none"></div>
 
-  {/* دوائر زخرفية بلون ذهبي خفيف */}
-  <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
-    <div className="absolute top-10 left-10 w-32 h-32 bg-[#C37C00]/10 rounded-full blur-2xl"></div>
-    <div className="absolute top-20 right-20 w-24 h-24 bg-[#C37C00]/10 rounded-full blur-xl"></div>
-    <div className="absolute bottom-10 left-1/3 w-40 h-40 bg-[#C37C00]/10 rounded-full blur-[80px]"></div>
-  </div>
+        {/* دوائر زخرفية بلون ذهبي خفيف */}
+        <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+          <div className="absolute top-10 left-10 w-32 h-32 bg-[#C37C00]/10 rounded-full blur-2xl"></div>
+          <div className="absolute top-20 right-20 w-24 h-24 bg-[#C37C00]/10 rounded-full blur-xl"></div>
+          <div className="absolute bottom-10 left-1/3 w-40 h-40 bg-[#C37C00]/10 rounded-full blur-[80px]"></div>
+        </div>
 
-  <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 ">
-    <div className="text-center mb-12">
-      <h1 className="text-6xl md:text-7xl font-black mb-6 leading-tight text-[#C37C00]">
-        <span className="bg-gradient-to-r from-[#C37C00] to-[#E6A500] bg-clip-text text-transparent drop-shadow-2xl m-10">
-          Discover Stores
-        </span>
-      </h1>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 ">
+          <div className="text-center mb-12">
+            <h1 className="text-6xl md:text-7xl font-black mb-6 leading-tight text-[#C37C00]">
+              <span className="bg-gradient-to-r from-[#C37C00] to-[#E6A500] bg-clip-text text-transparent drop-shadow-2xl m-10">
+                اكتشف المتاجر
+              </span>
+            </h1>
 
-      <form onSubmit={handleSearch} className="max-w-6xl mx-auto">
-        <div className="relative">
-          <div className="absolute inset-0 bg-white/20 rounded-2xl blur-sm"></div>
-          <div className="relative bg-white/95 backdrop-blur-md rounded-2xl p-4 shadow-2xl border border-white/30">
-            <div className="flex flex-col lg:flex-row items-center gap-4">
-              {/* Search Input */}
-              <div className="flex-1 relative w-full lg:w-auto">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#C37C00] w-6 h-6" />
-                <Input
-                  type="text"
-                  placeholder="Search for jewelry stores..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-14 pr-4 py-4 text-lg rounded-xl border-0 focus:ring-2 focus:ring-[#C37C00]/30 bg-transparent text-[#C37C00] placeholder-[#C37C00]/70 font-medium w-full"
-                />
-              </div>
+            <form onSubmit={handleSearch} className="max-w-6xl mx-auto">
+              <div className="relative">
+                <div className="absolute inset-0 bg-white/20 rounded-2xl blur-sm"></div>
+                <div className="relative bg-white/95 backdrop-blur-md rounded-2xl p-4 shadow-2xl border border-white/30">
+                  <div className="flex flex-col lg:flex-row items-center gap-4">
+                    {/* Search Input */}
+                    <div className="flex-1 relative w-full lg:w-auto">
+                      <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#C37C00] w-6 h-6" />
+                      <Input
+                        type="text"
+                        placeholder="ابحث عن متاجر المجوهرات..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="pl-14 pr-4 py-4 text-lg rounded-xl border-0 focus:ring-2 focus:ring-[#C37C00]/30 bg-transparent text-[#C37C00] placeholder-[#C37C00]/70 font-medium w-full"
+                      />
+                    </div>
 
-              {/* Filters Row */}
-              <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
-                {/* Location Filter */}
-                <div className="relative min-w-[200px]">
-                  <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#C37C00]/70 w-4 h-4" />
-                  <Input
-                    placeholder="Location"
-                    value={filters.location}
-                    onChange={(e) => handleFilterChange('location', e.target.value)}
-                    className="pl-10 pr-4 py-3 text-sm rounded-xl border border-[#C37C00]/50 focus:border-[#C37C00] bg-white text-[#C37C00]"
-                  />
-                </div>
+                    {/* Filters Row */}
+                    <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
+                      {/* Location Filter */}
+                      <div className="relative min-w-[200px]">
+                        <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#C37C00]/70 w-4 h-4" />
+                        <Input
+                          placeholder="الموقع"
+                          value={filters.location}
+                          onChange={(e) => handleFilterChange('location', e.target.value)}
+                          className="pl-10 pr-4 py-3 text-sm rounded-xl border border-[#C37C00]/50 focus:border-[#C37C00] bg-white text-[#C37C00]"
+                        />
+                      </div>
 
-                {/* Rating Filter */}
-                <Select
-                  value={filters.rating || "all"}
-                  onValueChange={(value) => handleFilterChange('rating', value === "all" ? "" : value)}
-                >
-                  <SelectTrigger className="min-w-[150px] py-3 rounded-xl border border-[#C37C00]/50 focus:border-[#C37C00] bg-white text-sm text-[#C37C00]">
-                    <SelectValue placeholder="Rating" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Ratings</SelectItem>
-                    <SelectItem value="4.5">4.5+ Stars</SelectItem>
-                    <SelectItem value="4.0">4.0+ Stars</SelectItem>
-                    <SelectItem value="3.5">3.5+ Stars</SelectItem>
-                    <SelectItem value="3.0">3.0+ Stars</SelectItem>
-                  </SelectContent>
-                </Select>
+                      {/* Rating Filter */}
+                      <Select
+                        value={filters.rating || "all"}
+                        onValueChange={(value) => handleFilterChange('rating', value === "all" ? "" : value)}
+                      >
+                        <SelectTrigger className="min-w-[150px] py-3 rounded-xl border border-[#C37C00]/50 focus:border-[#C37C00] bg-white text-sm text-[#C37C00]">
+                          <SelectValue placeholder="التقييم" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">جميع التقييمات</SelectItem>
+                          <SelectItem value="4.5">4.5+ نجوم</SelectItem>
+                          <SelectItem value="4.0">4.0+ نجوم</SelectItem>
+                          <SelectItem value="3.5">3.5+ نجوم</SelectItem>
+                          <SelectItem value="3.0">3.0+ نجوم</SelectItem>
+                        </SelectContent>
+                      </Select>
 
-                {/* Specialties Filter */}
-                <Select
-                  value={filters.specialty || "all"}
-                  onValueChange={(value) => handleFilterChange('specialty', value === "all" ? "" : value)}
-                >
-                  <SelectTrigger className="min-w-[150px] py-3 rounded-xl border border-[#C37C00]/50 focus:border-[#C37C00] bg-white text-sm text-[#C37C00]">
-                    <SelectValue placeholder="Specialty" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Specialties</SelectItem>
-                    <SelectItem value="rings">Rings</SelectItem>
-                    <SelectItem value="necklaces">Necklaces</SelectItem>
-                    <SelectItem value="bracelets">Bracelets</SelectItem>
-                    <SelectItem value="earrings">Earrings</SelectItem>
-                    <SelectItem value="watches">Watches</SelectItem>
-                  </SelectContent>
-                </Select>
+                      {/* Specialties Filter */}
+                      <Select
+                        value={filters.specialty || "all"}
+                        onValueChange={(value) => handleFilterChange('specialty', value === "all" ? "" : value)}
+                      >
+                        <SelectTrigger className="min-w-[150px] py-3 rounded-xl border border-[#C37C00]/50 focus:border-[#C37C00] bg-white text-sm text-[#C37C00]">
+                          <SelectValue placeholder="التخصص" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">جميع التخصصات</SelectItem>
+                          <SelectItem value="rings">خواتم</SelectItem>
+                          <SelectItem value="necklaces">قلائد</SelectItem>
+                          <SelectItem value="bracelets">أساور</SelectItem>
+                          <SelectItem value="earrings">أقراط</SelectItem>
+                          <SelectItem value="watches">ساعات</SelectItem>
+                        </SelectContent>
+                      </Select>
 
-                {/* Clear Filters Button */}
-                {getActiveFilterCount() > 0 && (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={clearFilters}
-                    className="px-4 py-3 text-sm rounded-xl border border-[#C37C00] hover:border-[#A37C00] hover:text-[#A37C00]"
-                  >
-                    <X className="w-4 h-4 mr-1 text-[#C37C00]" />
-                    Clear
-                  </Button>
-                )}
+                      {/* Clear Filters Button */}
+                      {getActiveFilterCount() > 0 && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={clearFilters}
+                          className="px-4 py-3 text-sm rounded-xl border border-[#C37C00] hover:border-[#A37C00] hover:text-[#A37C00]"
+                        >
+                          <X className="w-4 h-4 mr-1 text-[#C37C00]" />
+                          مسح
+                        </Button>
+                      )}
 
-                {/* Search Button */}
-                <Button
-                  type="submit"
-                  className="
+                      {/* Search Button */}
+                      <Button
+                        type="submit"
+                        className="
                     text-white 
                     text-sm 
                     px-6 py-3.5 
@@ -557,18 +557,18 @@ const ShopList = () => {
                     hover:shadow-xl hover:shadow-[#C37C00]/30
                     
                   "
-                >
-                  <Search className="w-4 h-4 mr-1" />
-                  Search
-                </Button>
+                      >
+                        <Search className="w-4 h-4 mr-1" />
+                        بحث
+                      </Button>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
+            </form>
           </div>
         </div>
-      </form>
-    </div>
-  </div>
-</div>
+      </div>
 
 
       {/* Main Content */}
@@ -582,17 +582,17 @@ const ShopList = () => {
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 bg-[#A37F41] rounded-full"></div>
                   <span className="text-lg font-semibold text-gray-800">
-                    {filteredShops.length} of {pagination.total} Stores
+                    {filteredShops.length} من {pagination.total} متجر
                   </span>
                 </div>
                 {searchQuery && (
                   <div className="text-sm text-gray-500">
-                    for "{searchQuery}"
+                    لـ "{searchQuery}"
                   </div>
                 )}
                 {getActiveFilterCount() > 0 && (
                   <div className="text-sm text-gray-500">
-                    {getActiveFilterCount()} active filter{getActiveFilterCount() !== 1 ? 's' : ''}
+                    {getActiveFilterCount()} فلتر نشط
                   </div>
                 )}
               </div>
@@ -623,15 +623,15 @@ const ShopList = () => {
             {filteredShops.length === 0 ? (
               <div className="text-center py-20 bg-gradient-to-br from-white to-[#F8F4ED]/50 rounded-2xl shadow-lg border border-[#E2D2B6]/30">
                 <div className="text-8xl mb-6"></div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">No shops found</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">لم يتم العثور على متاجر</h3>
                 <p className="text-gray-600 text-lg mb-8 max-w-md mx-auto">
-                  Try adjusting your search terms or filters to find what you're looking for
+                  جرب تعديل مصطلحات البحث أو الفلاتر للعثور على ما تبحث عنه
                 </p>
                 <Button
                   onClick={clearFilters}
                   className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-8 py-3 shadow-lg hover:shadow-[#C37C00]/30"
                 >
-                  Clear All Filters
+                  مسح جميع الفلاتر
                 </Button>
               </div>
             ) : (
@@ -654,7 +654,7 @@ const ShopList = () => {
                   disabled={isLoading}
                   className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-8 py-3 rounded-xl font-semibold shadow-lg hover:shadow-[#C37C00]/30 disabled:opacity-50"
                 >
-                  {isLoading ? 'Loading...' : 'Load More Shops'}
+                  {isLoading ? 'جاري التحميل...' : 'تحميل المزيد من المتاجر'}
                 </Button>
               </div>
             )}
