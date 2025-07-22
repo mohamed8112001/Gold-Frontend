@@ -352,7 +352,7 @@ const Login = () => {
                     <div className="w-full border-t-2" style={{ borderColor: '#E5D5C3' }}></div>
                   </div>
                   <div className="relative flex justify-center text-sm">
-                    <span className="px-6 bg-gradient-to-r from-[#FFF8E6] to-white font-medium" style={{ color: '#8A5700' }}>Or Sign In With</span>
+                    {/* <span className="px-6 bg-gradient-to-r from-[#FFF8E6] to-white font-medium" style={{ color: '#8A5700' }}>Or Sign In With</span> */}
                   </div>
                 </div>
 

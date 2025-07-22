@@ -755,10 +755,10 @@ const ProductList = () => {
                         <div className="w-64 flex-shrink-0">
                             <Card>
                                 <CardHeader className="flex flex-row items-center justify-between">
-                                    <CardTitle className="text-lg">الفلاتر</CardTitle>
+                                    <CardTitle className="text-lg">filters</CardTitle>
                                     <Button
                                         variant="ghost"
-                                        size="sm"
+                                        size="sm"n
                                         onClick={() => setShowFilters(false)}
                                         className="lg:hidden"
                                     >

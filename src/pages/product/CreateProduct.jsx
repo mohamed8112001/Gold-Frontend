@@ -112,7 +112,7 @@ const CreateProduct = () => {
         e.preventDefault();
 
         // Validate required fields
-        if (!formData.title || !formData.price || !formData.karat || !formData.weight || !formData.design_type) {
+        if (!formData.title ||  !formData.karat || !formData.weight || !formData.design_type) {
 
             alert('يرجى ملء جميع الحقول المطلوبة (اسم المنتج، السعر، العيار، الوزن، نوع التصميم)');
             return;
@@ -350,27 +350,27 @@ const CreateProduct = () => {
                                         ))}
                                     </select>
                                 </div>
-                                <div>
+                                    {/* <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            الفئة
+                                        </label>
+                                        <select
+                                            name="category"
+                                            value={formData.category}
+                                            onChange={handleInputChange}
+                                            className="w-full p-2 border border-gray-300 rounded-md"
+                                        >
+                                            <option value="">اختر الفئة</option>
+                                            {categories.map((category) => (
+                                                <option key={category.value} value={category.value}>
+                                                    {category.label}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div> */}
+                                {/* <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        الفئة
-                                    </label>
-                                    <select
-                                        name="category"
-                                        value={formData.category}
-                                        onChange={handleInputChange}
-                                        className="w-full p-2 border border-gray-300 rounded-md"
-                                    >
-                                        <option value="">اختر الفئة</option>
-                                        {categories.map((category) => (
-                                            <option key={category.value} value={category.value}>
-                                                {category.label}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        السعر (ج.م) *
+                                        السعر (ج.م) 
                                     </label>
                                     <Input
                                         name="price"
@@ -380,9 +380,9 @@ const CreateProduct = () => {
                                         placeholder="0.00"
                                         min="0"
                                         step="0.01"
-                                        required
+                                        
                                     />
-                                </div>
+                                </div> */}
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
                                         العيار *
@@ -444,7 +444,7 @@ const CreateProduct = () => {
                                     <p className="text-sm text-gray-500">
                                         <strong>نصيحة:</strong> إذا تركت هذا الحقل فارغاً، سيتم توليد وصف تلقائي للمنتج باستخدام الذكاء الاصطناعي بناءً على اسم المنتج، الفئة، والسعر.
                                     </p>
-                                    {formData.description.trim() === '' && (formData.title || formData.design_type || formData.price) && (
+                                    {formData.description.trim() === '' && (formData.title || formData.design_type ) && (
                                         <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                                             <p className="text-sm font-medium text-blue-800 mb-2">
                                                 معاينة البيانات للتوليد التلقائي:
