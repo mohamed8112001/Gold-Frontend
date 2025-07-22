@@ -33,14 +33,14 @@ const UserTypeSelection = () => {
   const userTypes = [
     {
       id: 'customer',
-      title: 'Regular User',
-      description: 'Browse and explore gold shops',
+      title: 'مستخدم عادي',
+      description: 'تصفح واستكشف متاجر الذهب',
       icon: User,
       features: [
-        { icon: ShoppingBag, text: 'Browse jewelry collections' },
-        { icon: Star, text: 'Save favorite items' },
-        { icon: BarChart3, text: 'Compare prices' },
-        { icon: Heart, text: 'Read reviews' }
+        { icon: ShoppingBag, text: 'تصفح مجموعات المجوهرات' },
+        { icon: Star, text: 'حفظ العناصر المفضلة' },
+        { icon: BarChart3, text: 'مقارنة الأسعار' },
+        { icon: Heart, text: 'قراءة التقييمات' }
       ],
       color: 'bg-[#FFF8E6] border-[#FFE6B3] hover:bg-[#FFF0CC]',
       iconColor: 'text-[#C37C00]',
@@ -48,14 +48,14 @@ const UserTypeSelection = () => {
     },
     {
       id: 'seller',
-      title: 'Shop Owner',
-      description: 'Register Your Jewelry Store',
+      title: 'صاحب متجر',
+      description: 'سجل متجر المجوهرات الخاص بك',
       icon: Store,
       features: [
-        { icon: Store, text: 'Manage your jewelry store' },
-        { icon: Package, text: 'Upload product catalog' },
-        { icon: BarChart3, text: 'Track analytics' },
-        { icon: Users, text: 'Customer management' }
+        { icon: Store, text: 'إدارة متجر المجوهرات الخاص بك' },
+        { icon: Package, text: 'رفع كتالوج المنتجات' },
+        { icon: BarChart3, text: 'تتبع التحليلات' },
+        { icon: Users, text: 'إدارة العملاء' }
       ],
       color: 'bg-[#FFF8E6] border-[#FFE6B3] hover:bg-[#FFF0CC]',
       iconColor: 'text-[#C37C00]',
@@ -71,14 +71,14 @@ const UserTypeSelection = () => {
         <div className="text-center mb-12">
           <div className="flex justify-center mb-6">
             <div className="w-20 h-20 rounded-full flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #A37F41 0%, #B8904F 100%)' }}>
-              <span className="text-2xl font-bold text-white">Dibla</span>
+              <span className="text-2xl font-bold text-white">ديبلا</span>
             </div>
           </div>
           <h1 className="text-4xl font-bold mb-4" style={{ color: '#A37F41' }}>
-            Create Your Account
+            إنشاء حسابك
           </h1>
           <p className="text-lg max-w-2xl mx-auto" style={{ color: '#6B5B47' }}>
-            Join The Dibla Community And Discover Exquisite Jewelry
+            انضم إلى مجتمع ديبلا واكتشف المجوهرات الرائعة
           </p>
         </div>
 
@@ -86,14 +86,14 @@ const UserTypeSelection = () => {
         <div className="flex justify-center mb-8">
           <div className="flex bg-white rounded-lg p-1 shadow-sm border" style={{ borderColor: '#E5D5C3' }}>
             <div className="px-6 py-2 rounded-md font-medium" style={{ backgroundColor: '#F5F1EB', color: '#A37F41' }}>
-              Sign Up
+              إنشاء حساب
             </div>
             <Link
               to={ROUTES.LOGIN}
               className="px-6 py-2 rounded-md font-medium transition-colors hover:opacity-80"
               style={{ color: '#6B5B47' }}
             >
-              Sign In
+              تسجيل الدخول
             </Link>
           </div>
         </div>
@@ -101,7 +101,7 @@ const UserTypeSelection = () => {
         {/* Account Type Selection */}
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-center mb-8" style={{ color: '#A37F41' }}>
-            Choose Your Account Type
+            اختر نوع حسابك
           </h2>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-4xl mx-auto">
@@ -197,17 +197,17 @@ const UserTypeSelection = () => {
               }
             }}
           >
-            Continue
+            متابعة
           </Button>
 
           <div className="mt-6 text-center">
-            <span style={{ color: '#6B5B47' }}>Already have account? </span>
+            <span style={{ color: '#6B5B47' }}>لديك حساب بالفعل؟ </span>
             <Link
               to={ROUTES.LOGIN}
               className="font-medium hover:opacity-80 transition-opacity"
               style={{ color: '#A37F41' }}
             >
-              Sign in
+              تسجيل الدخول
             </Link>
           </div>
         </div>

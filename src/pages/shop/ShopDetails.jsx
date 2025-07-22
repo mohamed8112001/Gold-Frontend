@@ -196,7 +196,7 @@ const ShopDetails = () => {
 
     const handleBookAppointment = () => {
         if (!user) {
-            alert('Please login first to book an appointment');
+            alert('يرجى تسجيل الدخول أولاً لحجز موعد');
             navigate(ROUTES.LOGIN);
             return;
         }
@@ -517,7 +517,7 @@ const ShopDetails = () => {
                                     <MapPin className="w-6 h-6 text-white" />
                                 </div>
                                 <div>
-                                    <p className="text-sm text-[#C37C00] font-medium mb-1">Address</p>
+                                    <p className="text-sm text-[#C37C00] font-medium mb-1">العنوان</p>
                                     <p className="text-gray-800 font-semibold text-base">{safeShop.address}</p>
                                 </div>
                             </CardContent>
@@ -651,8 +651,8 @@ const ShopDetails = () => {
                     <TabsContent value="products" className="px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
                         <div className="flex items-center justify-between mb-10">
                             <div>
-                                <h2 className="text-4xl font-bold text-gray-900 mb-3">Shop Products</h2>
-                                <p className="text-gray-600 text-lg">Discover our exclusive collection</p>
+                                <h2 className="text-4xl font-bold text-gray-900 mb-3">منتجات المتجر</h2>
+                                <p className="text-gray-600 text-lg">اكتشف مجموعتنا الحصرية</p>
                             </div>
                             <div className="flex items-center gap-4">
                                 <div className="flex bg-[#F0E8DB] rounded-full p-2 border border-[#E2D2B6]/50">
@@ -681,7 +681,7 @@ const ShopDetails = () => {
                         {safeProducts.length > 0 ? (
                             <div>
                                 <div className="mb-6 text-base text-gray-600 font-medium">
-                                    Showing {safeProducts.length} products from {safeShop.name}
+                                    عرض {safeProducts.length} منتج من {safeShop.name}
                                 </div>
                                 <div className={`grid gap-6 ${viewMode === 'grid'
                                     ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
@@ -699,10 +699,10 @@ const ShopDetails = () => {
                             <div className="text-center py-12 bg-gradient-to-br from-[#F8F4ED] to-[#F0E8DB] rounded-lg border border-[#E2D2B6]/30">
                                 <div className="text-6xl mb-4">📦</div>
                                 <h3 className="text-xl font-medium text-gray-900 mb-2">
-                                    No products available in this shop
+                                    لا توجد منتجات متاحة في هذا المتجر
                                 </h3>
                                 <p className="text-gray-600 mb-4">
-                                    No products have been added to "{safeShop.name}" yet
+                                    لم يتم إضافة منتجات إلى "{safeShop.name}" بعد
                                 </p>
                                 {user?.role === 'admin' || user?.id === safeShop.ownerId || user?._id === safeShop.ownerId ? (
                                     <Button
@@ -713,7 +713,7 @@ const ShopDetails = () => {
                                     </Button>
                                 ) : (
                                     <p className="text-sm text-gray-500">
-                                        Contact the shop owner to request product additions
+                                        تواصل مع صاحب المتجر لطلب إضافة منتجات
                                     </p>
                                 )}
                             </div>
@@ -740,8 +740,8 @@ const ShopDetails = () => {
 
                     <TabsContent value="reviews" className="px-4 sm:px-6 lg:px-8 py-8">
                         <div className="mb-8">
-                            <h2 className="text-3xl font-bold text-gray-900 mb-2">Customer Reviews</h2>
-                            <p className="text-gray-600">Read what our customers have to say about their experience</p>
+                            <h2 className="text-3xl font-bold text-gray-900 mb-2">تقييمات العملاء</h2>
+                            <p className="text-gray-600">اقرأ ما يقوله عملاؤنا عن تجربتهم</p>
                         </div>
 
                         <RatingDisplay
@@ -754,8 +754,8 @@ const ShopDetails = () => {
                     <TabsContent value="gallery" className="px-4 sm:px-6 lg:px-8 py-8">
                         <div className="flex items-center justify-between mb-12">
                             <div>
-                                <h2 className="text-4xl font-bold text-gray-900 mb-3">Shop Gallery</h2>
-                                <p className="text-gray-600 text-lg">Explore high-quality photos of the shop and featured work</p>
+                                <h2 className="text-4xl font-bold text-gray-900 mb-3">معرض المتجر</h2>
+                                <p className="text-gray-600 text-lg">استكشف صور عالية الجودة للمتجر والأعمال المميزة</p>
                             </div>
                             {(user?.role === 'admin' || user?.id === safeShop.ownerId || user?._id === safeShop.ownerId) && (
                                 <GalleryUpload
@@ -803,7 +803,7 @@ const ShopDetails = () => {
                                                         <p className="font-bold text-lg mb-1">{imageName}</p>
                                                         <p className="text-sm text-white/80">Click to view full size</p>
                                                         {isLocalImage && (
-                                                            <p className="text-xs text-[#C5A56D] mt-1">Saved locally</p>
+                                                            <p className="text-xs text-[#C5A56D] mt-1">محفوظ محلياً</p>
                                                         )}
                                                     </div>
 
@@ -826,7 +826,7 @@ const ShopDetails = () => {
 
                                             <div className="mt-4 text-center">
                                                 <h3 className="font-semibold text-gray-900 text-lg">{imageName}</h3>
-                                                <p className="text-gray-500 text-sm mt-1">Gallery {safeShop.name}</p>
+                                                <p className="text-gray-500 text-sm mt-1">معرض {safeShop.name}</p>
                                             </div>
                                         </div>
                                     );
@@ -836,10 +836,10 @@ const ShopDetails = () => {
                             <div className="text-center py-16 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl">
                                 <div className="text-8xl mb-6">📸</div>
                                 <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                                    No Images in the Gallery
+                                    لا توجد صور في المعرض
                                 </h3>
                                 <p className="text-gray-600 text-lg mb-6">
-                                    No images have been added to the shop's gallery yet
+                                    لم يتم إضافة صور إلى معرض المتجر بعد
                                 </p>
                                 {(user?.role === 'admin' || user?.id === safeShop.ownerId || user?._id === safeShop.ownerId) && (
                                     <GalleryUpload

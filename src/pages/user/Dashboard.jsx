@@ -15,11 +15,9 @@ import {
   Plus,
   Store,
   BarChart3,
-  Users,
   Package,
   Loader2,
-  Menu,
-  X,
+  CheckCircle,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES } from '../../utils/constants.js';
@@ -76,7 +74,7 @@ const Dashboard = () => {
         setBookings(bookingsData.data || []);
 
       } catch (err) {
-        setError(err.message || 'Error loading data');
+        setError(err.message || 'خطأ في تحميل البيانات');
       } finally {
         setLoading(false);
       }
@@ -92,9 +90,9 @@ const Dashboard = () => {
       await dashboardService.cancelBooking(bookingId);
       const bookingsData = await dashboardService.getBookings();
       setBookings(bookingsData.data || []);
-      alert('Booking cancelled successfully');
+      alert('تم إلغاء الحجز بنجاح');
     } catch (err) {
-      setError(err.message || 'Error cancelling booking');
+      setError(err.message || 'خطأ في إلغاء الحجز');
     }
   };
 
@@ -103,9 +101,9 @@ const Dashboard = () => {
       await dashboardService.removeFromFavorites(favoriteId);
       const favoritesData = await dashboardService.getFavorites();
       setFavorites(favoritesData.data || []);
-      alert('Item removed from favorites');
+      alert('تم حذف العنصر من المفضلة');
     } catch (err) {
-      setError(err.message || 'Error removing item from favorites');
+      setError(err.message || 'خطأ في حذف العنصر من المفضلة');
     }
   };
 
@@ -210,25 +208,19 @@ const Dashboard = () => {
 
   const BookingItem = ({ booking }) => (
     <Card className="hover:shadow-lg transition-all duration-300 bg-white/90 backdrop-blur-md rounded-lg">
-      <CardContent className="p-3 sm:p-4">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
-          <div className="flex-1 min-w-0">
-            <h4 className="font-semibold text-[#6D552C] text-sm sm:text-base truncate">
-              {booking.shop?.name || booking.shopName || 'Unknown Shop'}
-            </h4>
-            <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 text-sm text-[#8A6C37] mt-1 space-y-1 sm:space-y-0">
-              <div className="flex items-center space-x-1">
-                <Calendar className="w-4 h-4 flex-shrink-0" />
-                <span className="truncate">{booking.date || booking.appointmentDate || 'Unknown Date'}</span>
-              </div>
-              <div className="flex items-center space-x-1">
-                <Clock className="w-4 h-4 flex-shrink-0" />
-                <span className="truncate">{booking.time || booking.appointmentTime || 'Unknown Time'}</span>
-              </div>
+      <CardContent className="p-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h4 className="font-semibold text-[#6D552C]">{booking.shop?.name || booking.shopName || 'متجر غير معروف'}</h4>
+            <div className="flex items-center space-x-2 text-sm text-[#8A6C37] mt-1">
+              <Calendar className="w-4 h-4" />
+              <span>{booking.date || booking.appointmentDate || 'تاريخ غير معروف'}</span>
+              <Clock className="w-4 h-4" />
+              <span>{booking.time || booking.appointmentTime || 'وقت غير معروف'}</span>
             </div>
-            <p className="text-xs text-[#92723A] mt-1 truncate">{booking.type || booking.serviceType || 'General Service'}</p>
+            <p className="text-xs text-[#92723A] mt-1">{booking.type || booking.serviceType || 'خدمة عامة'}</p>
           </div>
-          <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-start space-x-2 sm:space-x-0 sm:space-y-2">
+          <div className="flex flex-col items-end space-y-2">
             <span
               className={`text-xs px-2 py-1 rounded-full whitespace-nowrap ${booking.status === 'confirmed' || booking.status === 'approved'
                 ? 'text-[#6D552C] bg-[#D3BB92]'
@@ -240,14 +232,14 @@ const Dashboard = () => {
                 }`}
             >
               {booking.status === 'confirmed'
-                ? 'Confirmed'
+                ? 'مؤكد'
                 : booking.status === 'approved'
-                  ? 'Approved'
+                  ? 'موافق عليه'
                   : booking.status === 'pending'
-                    ? 'Pending'
+                    ? 'في الانتظار'
                     : booking.status === 'cancelled'
-                      ? 'Cancelled'
-                      : booking.status || 'Unknown'}
+                      ? 'ملغي'
+                      : booking.status || 'غير معروف'}
             </span>
             {booking.status !== 'cancelled' && booking.status !== 'completed' && (
               <div className="flex space-x-1">
@@ -278,22 +270,22 @@ const Dashboard = () => {
   );
 
   const OverviewTab = () => (
-    <div className="space-y-4 sm:space-y-6">
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <StatCard icon={Calendar} title="Bookings" value={stats.bookings} description={`${stats.activeBookings || 0} active bookings`} color="blue" />
-        <StatCard icon={Star} title="Reviews" value={stats.reviews} description="Reviews written" color="green" />
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard icon={Calendar} title="الحجوزات" value={stats.bookings} description={`${stats.activeBookings || 0} حجز نشط`} color="blue" />
+        <StatCard icon={Star} title="التقييمات" value={stats.reviews} description="التقييمات المكتوبة" color="green" />
         {isShopOwner && (
           <>
-            <StatCard icon={Store} title="Shops" value={stats.shops} description="Registered shops" color="purple" />
-            <StatCard icon={Package} title="Products" value={stats.products} description="Displayed products" color="yellow" />
+            <StatCard icon={Store} title="المتاجر" value={stats.shops} description="المتاجر المسجلة" color="purple" />
+            <StatCard icon={Package} title="المنتجات" value={stats.products} description="المنتجات المعروضة" color="yellow" />
           </>
         )}
       </div>
       
       <Card className="bg-white/90 backdrop-blur-md rounded-lg">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg sm:text-xl">Recent Activity</CardTitle>
-          <CardDescription className="text-sm">Latest activities and updates</CardDescription>
+        <CardHeader>
+          <CardTitle className="font-cairo">النشاط الأخير</CardTitle>
+          <CardDescription className="font-tajawal">آخر الأنشطة والتحديثات</CardDescription>
         </CardHeader>
         <CardContent>
           {recentActivity.length > 0 ? (
@@ -303,10 +295,10 @@ const Dashboard = () => {
               ))}
             </div>
           ) : (
-            <div className="text-center py-6 sm:py-8 text-[#92723A] bg-white/80 rounded-lg">
-              <Calendar className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-4 text-[#D3BB92]" />
-              <p className="text-sm sm:text-base">No recent activities</p>
-              <p className="text-xs sm:text-sm">Start browsing shops or booking appointments</p>
+            <div className="text-center py-8 text-[#92723A] bg-white/80 rounded-lg">
+              <Calendar className="w-12 h-12 mx-auto mb-4 text-[#D3BB92]" />
+              <p>لا توجد أنشطة حديثة</p>
+              <p className="text-sm">ابدأ بتصفح المتاجر أو حجز المواعيد</p>
             </div>
           )}
         </CardContent>
@@ -324,8 +316,8 @@ const Dashboard = () => {
               onClick={() => navigate(ROUTES.SHOPS)}
               aria-label="Browse shops"
             >
-              <ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6 mb-1 sm:mb-2" />
-              <span className="text-xs sm:text-sm">Browse Shops</span>
+              <ShoppingBag className="w-6 h-6 mb-2" />
+              <span className="text-sm">تصفح المتاجر</span>
             </Button>
             <Button
               variant="outline"
@@ -333,8 +325,8 @@ const Dashboard = () => {
               onClick={() => setActiveTab('bookings')}
               aria-label="Book an appointment"
             >
-              <Calendar className="w-5 h-5 sm:w-6 sm:h-6 mb-1 sm:mb-2" />
-              <span className="text-xs sm:text-sm">Book Appointment</span>
+              <Calendar className="w-6 h-6 mb-2" />
+              <span className="text-sm">حجز موعد</span>
             </Button>
             <Button
               variant="outline"
@@ -342,8 +334,8 @@ const Dashboard = () => {
               onClick={() => navigate(ROUTES.PROFILE)}
               aria-label="View profile"
             >
-              <User className="w-5 h-5 sm:w-6 sm:h-6 mb-1 sm:mb-2" />
-              <span className="text-xs sm:text-sm">Profile</span>
+              <User className="w-6 h-6 mb-2" />
+              <span className="text-sm">حسابك</span>
             </Button>
           </div>
         </CardContent>
@@ -352,13 +344,9 @@ const Dashboard = () => {
   );
 
   const BookingsTab = () => (
-    <div className="space-y-4 sm:space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
-        <div>
-          <h2 className="text-xl sm:text-2xl font-bold text-[#6D552C]">{isShopOwner ? 'Bookings Overview' : 'My Bookings'}</h2>
-          <p className="text-sm sm:text-base text-[#8A6C37]">{isShopOwner ? 'Overview of your shop bookings' : 'Your booked appointments'}</p>
-        </div>
-        <div className="flex flex-col sm:flex-row gap-2">
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div className="flex gap-2">
           {isShopOwner ? (
             <>
               <Button
@@ -367,7 +355,7 @@ const Dashboard = () => {
                 aria-label="Manage time"
               >
                 <Clock className="w-4 h-4 mr-2" />
-                Manage Time
+                إدارة الوقت
               </Button>
               <Button
                 variant="outline"
@@ -376,8 +364,7 @@ const Dashboard = () => {
                 aria-label="View bookings only"
               >
                 <Calendar className="w-4 h-4 mr-2" />
-                <span className="hidden sm:inline">View Bookings Only</span>
-                <span className="sm:hidden">Bookings</span>
+                عرض الحجوزات فقط
               </Button>
             </>
           ) : (
@@ -387,8 +374,7 @@ const Dashboard = () => {
               aria-label="Book new appointment"
             >
               <Plus className="w-4 h-4 mr-2" />
-              <span className="hidden sm:inline">Book New Appointment</span>
-              <span className="sm:hidden">Book New</span>
+              حجز موعد جديد
             </Button>
           )}
         </div>
@@ -397,17 +383,17 @@ const Dashboard = () => {
         {bookings.length > 0 ? (
           bookings.map(booking => <BookingItem key={booking._id || booking.id} booking={booking} />)
         ) : (
-          <div className="text-center py-8 sm:py-12 text-[#92723A] bg-white/90 backdrop-blur-md rounded-lg">
-            <Calendar className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 text-[#D3BB92]" />
-            <h3 className="text-base sm:text-lg font-medium mb-2">No Bookings Found</h3>
-            <p className="mb-4 text-sm sm:text-base">Start by booking an appointment at a shop</p>
+          <div className="text-center py-12 text-[#92723A] bg-white/90 backdrop-blur-md rounded-lg">
+            <Calendar className="w-16 h-16 mx-auto mb-4 text-[#D3BB92]" />
+            <h3 className="text-lg font-medium font-cairo mb-2">لم يتم العثور على حجوزات</h3>
+            <p className="mb-4 font-tajawal">ابدأ بحجز موعد في أحد المتاجر</p>
             <Button
               onClick={() => navigate(ROUTES.SHOPS)}
               className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
               aria-label="Browse shops"
             >
               <ShoppingBag className="w-4 h-4 mr-2" />
-              Browse Shops
+              تصفح المتاجر
             </Button>
           </div>
         )}
@@ -416,109 +402,167 @@ const Dashboard = () => {
   );
 
   const ShopOwnerTab = () => (
-    <div className="space-y-4 sm:space-y-6">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-        <StatCard icon={Store} title="Shops" value={stats.shops} description="Active shops" color="purple" />
-        <StatCard icon={Package} title="Products" value={stats.products} description="Displayed products" color="blue" />
-        <StatCard icon={Users} title="Customers" value={stats.customers} description="Registered customers" color="green" />
+    <div className="space-y-8">
+      {/* Main Management Sections - Side by Side Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Section 1: Shop Management */}
+        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300">
+          <div className="flex items-center mb-6">
+            <div className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] p-3 rounded-lg mr-4">
+              <Store className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold font-cairo text-[#8A5700]">إدارة المتاجر</h3>
+              <p className="text-sm font-tajawal text-[#A66A00]">إنشاء وإدارة المتاجر</p>
+            </div>
+          </div>
+          <div className="space-y-4">
+            <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-sm font-medium text-[#A66A00]">المتاجر النشطة</span>
+                <span className="text-2xl font-bold text-[#8A5700]">{stats.shops || 0}</span>
+              </div>
+              <div className="space-y-3">
+                <Button
+                  className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+                  onClick={() => navigate(ROUTES.CREATE_SHOP)}
+                  aria-label="Add new shop"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  إضافة متجر جديد
+                </Button>
+                <Button
+                  variant="outline"
+                  className="w-full border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+                  onClick={() => navigate(ROUTES.MANAGE_SHOP)}
+                  aria-label="Manage existing shops"
+                >
+                  <Edit className="w-4 h-4 mr-2" />
+                  إدارة المتاجر الموجودة
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 2: Product Management */}
+        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300">
+          <div className="flex items-center mb-6">
+            <div className="bg-gradient-to-r from-[#A66A00] to-[#8A5700] p-3 rounded-lg mr-4">
+              <Package className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold font-cairo text-[#8A5700]">إدارة المنتجات</h3>
+              <p className="text-sm font-tajawal text-[#A66A00]">إدارة كتالوج المنتجات</p>
+            </div>
+          </div>
+          <div className="space-y-4">
+            <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-sm font-medium text-[#A66A00]">إجمالي المنتجات</span>
+                <span className="text-2xl font-bold text-[#8A5700]">{stats.products || 0}</span>
+              </div>
+              <div className="space-y-3">
+                <Button
+                  className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+                  onClick={() => navigate(ROUTES.CREATE_PRODUCT)}
+                  aria-label="Add new product"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  إضافة منتج جديد
+                </Button>
+                <Button
+                  variant="outline"
+                  className="w-full border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+                  onClick={() => navigate(ROUTES.MANAGE_SHOP)}
+                  aria-label="Manage products"
+                >
+                  <Package className="w-4 h-4 mr-2" />
+                  إدارة المنتجات
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 3: Appointment Management */}
+        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300">
+          <div className="flex items-center mb-6">
+            <div className="bg-gradient-to-r from-[#8A5700] to-[#6D552C] p-3 rounded-lg mr-4">
+              <Clock className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold font-cairo text-[#8A5700]">إدارة المواعيد</h3>
+              <p className="text-sm font-tajawal text-[#A66A00]">إدارة المواعيد</p>
+            </div>
+          </div>
+          <div className="space-y-4">
+            <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-sm font-medium text-[#A66A00]">الحجوزات النشطة</span>
+                <span className="text-2xl font-bold text-[#8A5700]">{stats.bookings || 0}</span>
+              </div>
+              <div className="space-y-3">
+                <Button
+                  className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+                  onClick={() => navigate(ROUTES.TIME_MANAGEMENT)}
+                  aria-label="Manage all appointments"
+                >
+                  <Clock className="w-4 h-4 mr-2" />
+                  إدارة جميع المواعيد
+                </Button>
+                <Button
+                  variant="outline"
+                  className="w-full border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+                  onClick={() => setActiveTab('available-times')}
+                  aria-label="View time management"
+                >
+                  <Calendar className="w-4 h-4 mr-2" />
+                  عرض إدارة الوقت
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-        <Card className="bg-white/90 backdrop-blur-md rounded-lg">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-lg sm:text-xl">Shop Management</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3 sm:space-y-4">
-              <Button
-                className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-sm"
-                onClick={() => navigate(ROUTES.CREATE_SHOP)}
-                aria-label="Add new shop"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Add New Shop
-              </Button>
-              <Button
-                variant="outline"
-                className="w-full border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-sm"
-                onClick={() => navigate(ROUTES.MANAGE_SHOP)}
-                aria-label="Manage existing shops"
-              >
-                <Edit className="w-4 h-4 mr-2" />
-                Manage Existing Shops
-              </Button>
+
+      {/* Section 4: Appointment Statistics */}
+      <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+        <div className="flex items-center mb-6">
+          <div className="bg-gradient-to-r from-[#6D552C] to-[#49391D] p-3 rounded-lg mr-4">
+            <BarChart3 className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h3 className="text-2xl font-bold font-cairo text-[#8A5700]">إحصائيات المواعيد</h3>
+            <p className="font-tajawal text-[#A66A00]">تتبع أداء المواعيد والمقاييس الخاصة بك</p>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 text-center">
+            <div className="flex items-center justify-center mb-3">
+              <CheckCircle className="w-8 h-8 text-green-600 mr-2" />
+              <span className="text-sm font-medium text-[#A66A00]">محجوز</span>
             </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="bg-white/90 backdrop-blur-md rounded-lg">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-lg sm:text-xl">Product Management</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3 sm:space-y-4">
-              <Button
-                className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-sm"
-                onClick={() => navigate(ROUTES.CREATE_PRODUCT)}
-                aria-label="Add new product"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Add New Product
-              </Button>
-              <Button
-                variant="outline"
-                className="w-full border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-sm"
-                onClick={() => navigate(ROUTES.MANAGE_SHOP)}
-                aria-label="Manage products"
-              >
-                <Package className="w-4 h-4 mr-2" />
-                Manage Products
-              </Button>
+            <span className="text-3xl font-bold text-[#8A5700]">{stats.bookings || 0}</span>
+            <p className="text-xs text-[#A66A00] mt-1">المواعيد المؤكدة</p>
+          </div>
+          <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 text-center">
+            <div className="flex items-center justify-center mb-3">
+              <Clock className="w-8 h-8 text-blue-600 mr-2" />
+              <span className="text-sm font-medium text-[#A66A00]">Available</span>
             </div>
-          </CardContent>
-        </Card>
-      </div>
-      
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-        <Card className="bg-white/90 backdrop-blur-md rounded-lg">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-lg sm:text-xl">Appointment Management</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3 sm:space-y-4">
-              <Button
-                className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-sm"
-                onClick={() => navigate(ROUTES.TIME_MANAGEMENT)}
-                aria-label="Manage all appointments"
-              >
-                <Clock className="w-4 h-4 mr-2" />
-                Manage All Appointments
-              </Button>
+            <span className="text-3xl font-bold text-[#8A5700]">{stats.availableTimes || 0}</span>
+            <p className="text-xs text-[#A66A00] mt-1">Open time slots</p>
+          </div>
+          <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 text-center">
+            <div className="flex items-center justify-center mb-3">
+              <Calendar className="w-8 h-8 text-purple-600 mr-2" />
+              <span className="text-sm font-medium text-[#A66A00]">الإجمالي</span>
             </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="bg-white/90 backdrop-blur-md rounded-lg">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-lg sm:text-xl">Appointment Statistics</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3 sm:space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-xs sm:text-sm text-[#A66A00]">Booked Appointments</span>
-                <span className="font-semibold text-[#8A5700] text-sm sm:text-base">{stats.bookings || 0}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-xs sm:text-sm text-[#A66A00]">Available Appointments</span>
-                <span className="font-semibold text-[#8A5700] text-sm sm:text-base">{stats.availableTimes || 0}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-xs sm:text-sm text-[#A66A00]">Total Appointments</span>
-                <span className="font-semibold text-[#8A5700] text-sm sm:text-base">{(stats.bookings || 0) + (stats.availableTimes || 0)}</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            <span className="text-3xl font-bold text-[#8A5700]">{(stats.bookings || 0) + (stats.availableTimes || 0)}</span>
+            <p className="text-xs text-[#A66A00] mt-1">جميع المواعيد</p>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -533,14 +577,14 @@ const Dashboard = () => {
 
     const handleAddTimeSlot = async () => {
       if (!newTimeSlot.date || !newTimeSlot.time) {
-        alert('Please fill all fields');
+        alert('يرجى ملء جميع الحقول');
         return;
       }
 
       try {
         setIsAdding(true);
         if (!user || user.role !== 'seller') {
-          alert('You must be a shop owner to add time slots');
+          alert('يجب أن تكون صاحب متجر لإضافة فترات زمنية');
           return;
         }
 
@@ -555,26 +599,26 @@ const Dashboard = () => {
           };
           setAvailableTimes(prev => [...prev, newTime]);
           setNewTimeSlot({ date: '', time: '', duration: 60 });
-          alert('Time slot added successfully');
+          alert('تم إضافة الفترة الزمنية بنجاح');
         } else {
-          throw new Error('Failed to save time slot');
+          throw new Error('فشل في حفظ الفترة الزمنية');
         }
       } catch (error) {
-        alert(error.message || 'Error adding time slot');
+        alert(error.message || 'خطأ في إضافة الفترة الزمنية');
       } finally {
         setIsAdding(false);
       }
     };
 
     const handleDeleteTimeSlot = async (timeId) => {
-      if (!confirm('Are you sure you want to delete this time slot?')) return;
+      if (!confirm('هل أنت متأكد من حذف هذه الفترة الزمنية؟')) return;
 
       try {
         await dashboardService.deleteAvailableTime(timeId);
         setAvailableTimes(prev => prev.filter(time => time._id !== timeId));
-        alert('Time slot deleted successfully');
+        alert('تم حذف الفترة الزمنية بنجاح');
       } catch (error) {
-        alert(error.message || 'Error deleting time slot');
+        alert(error.message || 'خطأ في حذف الفترة الزمنية');
       }
     };
 
@@ -585,23 +629,16 @@ const Dashboard = () => {
     };
 
     return (
-      <div className="space-y-4 sm:space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
-          <div>
-            <h2 className="text-xl sm:text-2xl font-bold text-[#6D552C]">{isShopOwner ? 'Manage Available Times' : 'My Booked Appointments'}</h2>
-            <p className="text-sm sm:text-base text-[#8A6C37]">{isShopOwner ? 'Manage time slots for bookings' : 'Your booked appointments in shops'}</p>
-          </div>
-        </div>
-        
+      <div className="space-y-6">
         {isShopOwner && (
           <Card className="bg-white/90 backdrop-blur-md rounded-lg">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg sm:text-xl">Add Available Time</CardTitle>
+            <CardHeader>
+              <CardTitle className="font-cairo">إضافة وقت متاح</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-[#6D552C] mb-2">Date</label>
+                  <label className="block text-sm font-medium text-[#6D552C] mb-2">التاريخ</label>
                   <input
                     type="date"
                     min={getTomorrowDate()}
@@ -612,7 +649,7 @@ const Dashboard = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-[#6D552C] mb-2">Time</label>
+                  <label className="block text-sm font-medium text-[#6D552C] mb-2">الوقت</label>
                   <input
                     type="time"
                     value={newTimeSlot.time}
@@ -622,17 +659,17 @@ const Dashboard = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-[#6D552C] mb-2">Duration (minutes)</label>
+                  <label className="block text-sm font-medium text-[#6D552C] mb-2">المدة (بالدقائق)</label>
                   <select
                     value={newTimeSlot.duration}
                     onChange={e => setNewTimeSlot(prev => ({ ...prev, duration: parseInt(e.target.value) }))}
                     className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C37C00] bg-white/80 text-sm"
                     aria-label="Select duration"
                   >
-                    <option value={30}>30 minutes</option>
-                    <option value={60}>60 minutes</option>
-                    <option value={90}>90 minutes</option>
-                    <option value={120}>120 minutes</option>
+                    <option value={30}>30 دقيقة</option>
+                    <option value={60}>60 دقيقة</option>
+                    <option value={90}>90 دقيقة</option>
+                    <option value={120}>120 دقيقة</option>
                   </select>
                 </div>
                 <div className="flex items-end">
@@ -643,7 +680,7 @@ const Dashboard = () => {
                     aria-label="Add time slot"
                   >
                     {isAdding ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Plus className="w-4 h-4 mr-2" />}
-                    {isAdding ? 'Adding...' : 'Add Time Slot'}
+                    {isAdding ? 'جاري الإضافة...' : 'إضافة فترة زمنية'}
                   </Button>
                 </div>
               </div>
@@ -652,8 +689,8 @@ const Dashboard = () => {
         )}
         
         <Card className="bg-white/90 backdrop-blur-md rounded-lg">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-lg sm:text-xl">{isShopOwner ? `Available Times (${availableTimes.length})` : `My Booked Appointments (${availableTimes.length})`}</CardTitle>
+          <CardHeader>
+            <CardTitle className="font-cairo">{isShopOwner ? `الأوقات المتاحة (${availableTimes.length})` : `مواعيدي المحجوزة (${availableTimes.length})`}</CardTitle>
           </CardHeader>
           <CardContent>
             {availableTimes.length > 0 ? (
@@ -686,11 +723,11 @@ const Dashboard = () => {
                       >
                         {isShopOwner
                           ? timeSlot.isBooked
-                            ? 'Booked'
-                            : 'Available'
+                            ? 'محجوز'
+                            : 'متاح'
                           : timeSlot.status === 'confirmed'
-                            ? 'Confirmed'
-                            : timeSlot.status || 'Booked'}
+                            ? 'مؤكد'
+                            : timeSlot.status || 'محجوز'}
                       </span>
                     </div>
                     <div className="flex justify-end space-x-2">
@@ -713,7 +750,7 @@ const Dashboard = () => {
                           className="border-red-400 text-red-600 hover:bg-red-500 hover:text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-xs px-3"
                           aria-label="Cancel booking"
                         >
-                          Cancel Booking
+                          إلغاء الحجز
                         </Button>
                       )}
                     </div>
@@ -721,10 +758,10 @@ const Dashboard = () => {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-6 sm:py-8 text-[#92723A] bg-white/80 rounded-lg">
-                <Clock className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-4 text-[#D3BB92]" />
-                <p className="text-sm sm:text-base">{isShopOwner ? 'No available times' : 'No booked appointments'}</p>
-                <p className="text-xs sm:text-sm">{isShopOwner ? 'Add available times for customers to book' : 'Start booking appointments at shops'}</p>
+              <div className="text-center py-8 text-[#92723A] bg-white/80 rounded-lg">
+                <Clock className="w-12 h-12 mx-auto mb-4 text-[#D3BB92]" />
+                <p>{isShopOwner ? 'لا توجد أوقات متاحة' : 'لا توجد مواعيد محجوزة'}</p>
+                <p className="text-sm">{isShopOwner ? 'أضف أوقات متاحة للعملاء للحجز' : 'ابدأ بحجز المواعيد في المتاجر'}</p>
               </div>
             )}
           </CardContent>
@@ -734,21 +771,21 @@ const Dashboard = () => {
   };
 
   const tabs = [
-    { id: 'overview', label: 'Overview', icon: BarChart3 },
-    { id: 'bookings', label: isShopOwner ? 'Bookings Overview' : 'My Bookings', icon: Calendar },
-    { id: 'available-times', label: isShopOwner ? 'Time Management' : 'My Appointments', icon: Clock },
+    { id: 'overview', label: 'نظرة عامة', icon: BarChart3 },
+    { id: 'bookings', label: isShopOwner ? 'الحجوزات' : 'حجوزاتي', icon: Calendar },
+    { id: 'available-times', label: isShopOwner ? 'الأوقات المتاحة' : 'مواعيدي', icon: Clock },
     ...(isShopOwner ? [
-      { id: 'shop', label: 'Manage Shop', icon: Store },
-      { id: 'ratings', label: 'Manage Ratings', icon: Star }
+      { id: 'shop', label: 'إدارة المتجر', icon: Store },
+      { id: 'ratings', label: 'التقييمات', icon: Star }
     ] : []),
   ];
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] to-[#FFF0CC] flex items-center justify-center pt-20 px-4">
+      <div className="min-h-screen bg-white flex items-center justify-center pt-20">
         <div className="text-center">
-          <Loader2 className="w-6 h-6 sm:w-8 sm:h-8 animate-spin mx-auto mb-4 text-[#C37C00]" />
-          <p className="text-sm sm:text-base text-[#A66A00]">Loading data...</p>
+          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-[#C37C00]" />
+          <p className="text-[#A66A00]">جاري تحميل البيانات...</p>
         </div>
       </div>
     );
@@ -756,10 +793,10 @@ const Dashboard = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] to-[#FFF0CC] flex items-center justify-center pt-20 px-4">
-        <div className="text-center max-w-sm mx-auto">
-          <div className="text-red-600 mb-4 text-3xl sm:text-4xl">❌</div>
-          <p className="text-red-600 mb-4 text-sm sm:text-base">{error}</p>
+      <div className="min-h-screen bg-white flex items-center justify-center pt-20">
+        <div className="text-center">
+          <div className="text-red-600 mb-4 text-4xl">❌</div>
+          <p className="text-red-600 mb-4">{error}</p>
           <Button
             onClick={() => window.location.reload()}
             className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-sm"
@@ -774,13 +811,13 @@ const Dashboard = () => {
 
   if (isRegularUser) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] to-[#FFF0CC] flex items-center justify-center pt-20 px-4">
+      <div className="min-h-screen bg-white flex items-center justify-center pt-20">
         <div className="max-w-md mx-auto text-center">
           <div className="w-20 h-20 sm:w-24 sm:h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <span className="text-3xl sm:text-4xl">🚫</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-[#8A5700] mb-4">Access Denied</h1>
-          <p className="text-base sm:text-lg text-[#A66A00] mb-8">Dashboard access is restricted to shop owners and administrators only.</p>
+          <h1 className="text-3xl font-bold font-cairo text-[#8A5700] mb-4">تم رفض الوصول</h1>
+          <p className="text-lg font-tajawal text-[#A66A00] mb-8">الوصول إلى لوحة التحكم مقتصر على أصحاب المتاجر والمديرين فقط.</p>
           <Button
             onClick={() => navigate('/')}
             className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-6 sm:px-8 py-2 sm:py-3 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-sm sm:text-base"
@@ -794,41 +831,25 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] to-[#FFF0CC] pt-16 sm:pt-20 w-full">
-      <div className="w-full px-3 sm:px-4 lg:px-8 py-4 sm:py-8">
-        {/* Header */}
-        <div className="mb-4 sm:mb-6">
-          <h1 className="text-2xl sm:text-3xl font-bold text-[#8A5700]">Welcome, {user?.firstName || 'User'}</h1>
-          <p className="text-[#A66A00] mt-1 text-sm sm:text-base">Manage your account and track your activities</p>
-        </div>
+    <div className="min-h-screen bg-white pt-20 w-full">
+      <div className="flex w-full">
+        {/* Main Content Area */}
+        <div className="flex-1 px-4 sm:px-6 lg:px-8 py-8 lg:pr-80">
+          <div className="mb-6">
+            <h1 className="text-3xl font-bold font-cairo text-[#8A5700]">اهلا, {user?.name || 'User'}</h1>
+            <p className="text-[#A66A00] mt-1 font-tajawal">إدارة حسابك وتتبع أنشطتك</p>
+          </div>
 
-        {/* Mobile Menu Toggle */}
-        <div className="lg:hidden mb-4">
-          <Button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            variant="outline"
-            className="w-full border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] rounded-lg flex items-center justify-center"
-          >
-            {isMobileMenuOpen ? <X className="w-4 h-4 mr-2" /> : <Menu className="w-4 h-4 mr-2" />}
-            {isMobileMenuOpen ? 'Close Menu' : 'Open Menu'}
-          </Button>
-        </div>
-
-        {/* Navigation Tabs */}
-        <div className={`bg-white/90 backdrop-blur-md rounded-lg shadow-lg mb-4 sm:mb-6 transition-all duration-300 ${isMobileMenuOpen ? 'block' : 'hidden lg:block'}`}>
-          <nav className="p-3 sm:p-4 border-b border-gray-200">
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex space-x-4">
+          {/* Mobile Navigation - Horizontal tabs for mobile */}
+          <div className="lg:hidden sticky top-0 z-10 bg-white/90 backdrop-blur-md rounded-lg shadow-lg mb-6">
+            <nav className="flex space-x-2 p-4 border-b border-gray-200 overflow-x-auto">
               {tabs.map(tab => {
                 const Icon = tab.icon;
                 return (
                   <button
                     key={tab.id}
-                    onClick={() => {
-                      setActiveTab(tab.id);
-                      setIsMobileMenuOpen(false);
-                    }}
-                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 ${activeTab === tab.id
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`flex items-center space-x-2 px-3 py-2 rounded-lg font-medium text-xs whitespace-nowrap transition-all duration-300 ${activeTab === tab.id
                       ? 'bg-gradient-to-r from-[#C37C00] to-[#A66A00] text-white shadow-md'
                       : 'text-[#A66A00] hover:bg-[#FFF8E6] hover:text-[#8A5700] hover:shadow-sm'
                       }`}
@@ -839,20 +860,30 @@ const Dashboard = () => {
                   </button>
                 );
               })}
-            </div>
+            </nav>
+          </div>
 
-            {/* Mobile Navigation */}
-            <div className="lg:hidden space-y-2">
+          <div className="pt-4">
+            {activeTab === 'overview' && <OverviewTab />}
+            {activeTab === 'bookings' && <BookingsTab />}
+            {activeTab === 'shop' && isShopOwner && <ShopOwnerTab />}
+            {activeTab === 'ratings' && isShopOwner && <ManageRatings />}
+            {activeTab === 'available-times' && <AvailableTimesTab />}
+          </div>
+        </div>
+
+        {/* Right Sidebar - Desktop only */}
+        <div className="hidden lg:block fixed right-0 top-20 h-[calc(100vh-5rem)] w-72 bg-white/90 backdrop-blur-md shadow-lg border-l border-gray-200">
+          <div className="p-6">
+            <h2 className="text-xl font-bold font-cairo text-[#8A5700] mb-6">قائمة لوحة التحكم</h2>
+            <nav className="space-y-2">
               {tabs.map(tab => {
                 const Icon = tab.icon;
                 return (
                   <button
                     key={tab.id}
-                    onClick={() => {
-                      setActiveTab(tab.id);
-                      setIsMobileMenuOpen(false);
-                    }}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg font-medium text-sm transition-all duration-300 ${activeTab === tab.id
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg font-medium text-sm transition-all duration-300 text-left ${activeTab === tab.id
                       ? 'bg-gradient-to-r from-[#C37C00] to-[#A66A00] text-white shadow-md'
                       : 'text-[#A66A00] hover:bg-[#FFF8E6] hover:text-[#8A5700] hover:shadow-sm'
                       }`}
@@ -863,17 +894,8 @@ const Dashboard = () => {
                   </button>
                 );
               })}
-            </div>
-          </nav>
-        </div>
-
-        {/* Tab Content */}
-        <div className="pt-2 sm:pt-4">
-          {activeTab === 'overview' && <OverviewTab />}
-          {activeTab === 'bookings' && <BookingsTab />}
-          {activeTab === 'shop' && isShopOwner && <ShopOwnerTab />}
-          {activeTab === 'ratings' && isShopOwner && <ManageRatings />}
-          {activeTab === 'available-times' && <AvailableTimesTab />}
+            </nav>
+          </div>
         </div>
       </div>
     </div>

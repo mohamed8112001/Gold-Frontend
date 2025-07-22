@@ -7,14 +7,14 @@ import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES } from '../../utils/constants.js';
 import { GoogleLogin } from '@react-oauth/google';
-import { useTranslation } from 'react-i18next';
+
 
 const Login = () => {
   const navigate = useNavigate();
 
   const location = useLocation();
   const { login, googleLogin, isLoading } = useAuth();
-  const { t } = useTranslation();
+
 
   const [formData, setFormData] = useState({
     email: '',
@@ -74,32 +74,32 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!validateForm()) {
       return;
     }
-  
+
     try {
       console.log('🔄 Starting login process...');
-      
+
       const res = await login(formData);
-      
+
       console.log('✅ Login response received:', JSON.stringify(res, null, 2));
       console.log('👤 User data:', JSON.stringify(res?.user, null, 2));
       console.log('💳 Payment status:', res?.user?.paid);
       console.log('🏪 User role:', res?.user?.role);
-      
+
       // Check if user is a seller and hasn't paid
       if (res?.user?.role === 'seller' && !res?.user?.paid) {
         console.log('🔄 Seller needs to pay, redirecting to payment page...');
         navigate('/owner-payment');
         return;
       }
-      
+
       // For regular customers or paid sellers
       console.log('🏠 Redirecting to home page...');
       navigate(ROUTES.HOME);
-      
+
     } catch (error) {
       console.error('❌ Login error:', error);
       console.error('❌ Error details:', {
@@ -110,7 +110,7 @@ const Login = () => {
       setErrors({ submit: error.message || 'حدث خطأ أثناء تسجيل الدخول' });
     }
   };
-  
+
   const handleGoogleLogin = () => {
     // Assuming googleLogin is provided by useAuth context
     googleLogin();
@@ -165,14 +165,14 @@ const Login = () => {
             {/* Enhanced Dibla text with animation */}
             <h1 className="text-7xl font-bold mb-8 relative" style={{ fontFamily: 'serif', color: '#2D1810' }}>
               <span className="relative z-10">
-                Dibla
+                ديبلا
               </span>
               <div className="absolute inset-0 blur-lg opacity-30 animate-pulse" style={{ background: 'linear-gradient(90deg, #D4AF37 0%, #F4E4BC 100%)' }}></div>
             </h1>
 
             {/* Enhanced subtitle */}
             <p className="text-xl text-center mb-12 max-w-sm leading-relaxed font-medium" style={{ color: '#2D1810' }}>
-              Choose the nearest shop in just a click.
+              اختر أقرب متجر بنقرة واحدة
             </p>
 
             {/* Enhanced pagination dots */}
@@ -203,10 +203,10 @@ const Login = () => {
                   className="px-8 py-3 rounded-lg font-medium transition-all duration-200 hover:bg-white/50"
                   style={{ color: '#6B5B47' }}
                 >
-                  Sign Up
+                  إنشاء حساب
                 </Link>
                 <div className="px-8 py-3 bg-white rounded-lg font-medium shadow-md border transform scale-105" style={{ color: '#A37F41', borderColor: '#E5D5C3' }}>
-                  Sign In
+                  تسجيل الدخول
                 </div>
               </div>
             </div>
@@ -214,11 +214,11 @@ const Login = () => {
             <div className="max-w-md mx-auto w-full">
               {/* Enhanced Header */}
               <div className="text-center mb-10">
-                <h2 className="text-5xl font-bold mb-3" style={{ color: '#A37F41' }}>
-                  Welcome
+                <h2 className="text-4xl font-bold mb-3" style={{ color: '#A37F41' }}>
+                  أهلاً بك
                 </h2>
-                <p className="text-lg" style={{ color: '#6B5B47' }}>
-                  Please Enter Your Credentials To Access Your Account
+                <p className="text-base" style={{ color: '#6B5B47' }}>
+                  يرجى إدخال بياناتك للوصول إلى حسابك
                 </p>
               </div>
 
@@ -226,14 +226,14 @@ const Login = () => {
                 {/* Enhanced Email Field */}
                 <div className="group">
                   <label className="block text-sm font-semibold mb-3" style={{ color: '#241C0F' }}>
-                    Enter Your Email
+                    أدخل بريدك الإلكتروني
                   </label>
                   <div className="relative">
                     <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors" style={{ color: '#A37F41' }} />
                     <Input
                       name="email"
                       type="email"
-                      placeholder="E-Mail *"
+                      placeholder="البريد الإلكتروني *"
                       value={formData.email}
                       onChange={handleInputChange}
                       className={`pl-14 py-4 border-2 rounded-xl transition-all duration-200 ${errors.email ? 'border-red-500' : ''}`}
@@ -253,14 +253,14 @@ const Login = () => {
                 {/* Enhanced Password Field */}
                 <div className="group">
                   <label className="block text-sm font-semibold mb-3" style={{ color: '#241C0F' }}>
-                    Enter Your Password
+                    أدخل كلمة المرور
                   </label>
                   <div className="relative">
                     <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors" style={{ color: '#A37F41' }} />
                     <Input
                       name="password"
                       type={showPassword ? 'text' : 'password'}
-                      placeholder="Password *"
+                      placeholder="كلمة المرور *"
                       value={formData.password}
                       onChange={handleInputChange}
                       className={`pl-14 pr-14 py-4 border-2 rounded-xl transition-all duration-200 ${errors.password ? 'border-red-500' : ''}`}
@@ -300,7 +300,7 @@ const Login = () => {
                       }}
                     />
                     <label className="text-sm font-medium" style={{ color: '#241C0F' }}>
-                      Remember me
+                      تذكرني
                     </label>
                   </div>
 
@@ -309,7 +309,7 @@ const Login = () => {
                     className="text-sm font-medium transition-colors duration-200 hover:opacity-80"
                     style={{ color: '#A37F41' }}
                   >
-                    Forget Password?
+                    نسيت كلمة المرور؟
                   </Link>
                 </div>
 
@@ -339,10 +339,10 @@ const Login = () => {
                   {isLoading ? (
                     <div className="flex items-center justify-center space-x-2">
                       <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      <span>Signing In...</span>
+                      <span>جاري تسجيل الدخول...</span>
                     </div>
                   ) : (
-                    'Sign In'
+                    'تسجيل الدخول'
                   )}
                 </Button>
 
