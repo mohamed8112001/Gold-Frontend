@@ -37,6 +37,7 @@ const CreateShop = () => {
     });
     const [logo, setLogo] = useState(null);
     const [images, setImages] = useState([]);
+    const [commercialRecord, setCommercialRecord] = useState(null);
 
     React.useEffect(() => {
         if (!user || !isShopOwner) {
@@ -105,11 +106,51 @@ const CreateShop = () => {
         setImages(prev => prev.filter((_, i) => i !== index));
     };
 
+    const handleCommercialRecordUpload = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            // Validate file type
+            if (file.type !== 'application/pdf') {
+                alert('يرجى اختيار ملف PDF فقط للسجل التجاري');
+                e.target.value = '';
+                return;
+            }
+
+            // Validate file size (15MB limit as per backend)
+            if (file.size > 15 * 1024 * 1024) {
+                alert('حجم الملف كبير جداً. الحد الأقصى 15 ميجابايت');
+                e.target.value = '';
+                return;
+            }
+
+            setCommercialRecord(file);
+        }
+    };
+
+    const removeCommercialRecord = () => {
+        setCommercialRecord(null);
+        // Reset the file input
+        const fileInput = document.getElementById('commercial-record-upload');
+        if (fileInput) {
+            fileInput.value = '';
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!formData.name || !formData.description || !formData.address || !formData.phone) {
             alert('يرجى ملء جميع الحقول المطلوبة');
+            return;
+        }
+
+        if (!logo) {
+            alert('يرجى اختيار شعار للمتجر');
+            return;
+        }
+
+        if (!commercialRecord) {
+            alert('يرجى تحميل السجل التجاري (ملف PDF)');
             return;
         }
 
@@ -149,6 +190,11 @@ const CreateShop = () => {
                 formDataToSend.append('images', image);
             });
 
+            // Append commercial record file
+            if (commercialRecord) {
+                formDataToSend.append('commercialRecord', commercialRecord);
+            }
+
             console.log('Creating shop with FormData:');
             for (const [key, value] of formDataToSend.entries()) {
                 console.log(`${key}:`, value instanceof File ? `File(${value.name})` : value);
@@ -180,7 +226,7 @@ const CreateShop = () => {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="w-full px-2 sm:px-4 py-8">
                 {/* Header */}
                 <div className="mb-8">
                     <Button
@@ -443,7 +489,7 @@ const CreateShop = () => {
                                     </Button>
                                 </div>
                                 {images.length > 0 && (
-                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4 mt-4">
                                         {images.map((image, index) => (
                                             <div key={index} className="relative">
                                                 <img
@@ -462,6 +508,68 @@ const CreateShop = () => {
                                                 </Button>
                                             </div>
                                         ))}
+                                    </div>
+                                )}
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    {/* Commercial Record */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>السجل التجاري</CardTitle>
+                            <CardDescription>
+                                يرجى تحميل السجل التجاري للمتجر (ملف PDF فقط) *
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    ملف السجل التجاري (PDF) *
+                                </label>
+                                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                                    <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                                    <p className="text-gray-600 mb-4">اسحب ملف السجل التجاري أو انقر للاختيار</p>
+                                    <p className="text-sm text-gray-500 mb-4">يجب أن يكون الملف بصيغة PDF وحجم أقل من 15 ميجابايت</p>
+                                    <input
+                                        type="file"
+                                        accept="application/pdf"
+                                        onChange={handleCommercialRecordUpload}
+                                        className="hidden"
+                                        id="commercial-record-upload"
+                                        required
+                                    />
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        onClick={() => document.getElementById('commercial-record-upload').click()}
+                                    >
+                                        اختيار ملف PDF
+                                    </Button>
+                                </div>
+                                {commercialRecord && (
+                                    <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center">
+                                                <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center mr-3">
+                                                    <span className="text-red-600 font-semibold text-sm">PDF</span>
+                                                </div>
+                                                <div>
+                                                    <p className="text-sm font-medium text-gray-900">{commercialRecord.name}</p>
+                                                    <p className="text-xs text-gray-500">
+                                                        {(commercialRecord.size / (1024 * 1024)).toFixed(2)} ميجابايت
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <Button
+                                                type="button"
+                                                variant="destructive"
+                                                size="sm"
+                                                onClick={removeCommercialRecord}
+                                            >
+                                                <X className="w-4 h-4" />
+                                            </Button>
+                                        </div>
                                     </div>
                                 )}
                             </div>

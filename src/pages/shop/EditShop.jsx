@@ -31,6 +31,8 @@ const EditShop = () => {
     });
     const [imagePreview, setImagePreview] = useState(null);
     const [galleryPreviews, setGalleryPreviews] = useState([]);
+    const [commercialRecord, setCommercialRecord] = useState(null);
+    const [currentCommercialRecord, setCurrentCommercialRecord] = useState(null);
 
     useEffect(() => {
         if (!user || !isShopOwner) {
@@ -118,6 +120,11 @@ const EditShop = () => {
 
             if (shopData.gallery && shopData.gallery.length > 0) {
                 setGalleryPreviews(shopData.gallery);
+            }
+
+            // Set current commercial record if exists
+            if (shopData.commercialRecord) {
+                setCurrentCommercialRecord(shopData.commercialRecord);
             }
 
         } catch (error) {
@@ -215,6 +222,36 @@ const EditShop = () => {
         }));
     };
 
+    const handleCommercialRecordUpload = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            // Validate file type
+            if (file.type !== 'application/pdf') {
+                alert('يرجى اختيار ملف PDF فقط للسجل التجاري');
+                e.target.value = '';
+                return;
+            }
+
+            // Validate file size (15MB limit as per backend)
+            if (file.size > 15 * 1024 * 1024) {
+                alert('حجم الملف كبير جداً. الحد الأقصى 15 ميجابايت');
+                e.target.value = '';
+                return;
+            }
+
+            setCommercialRecord(file);
+        }
+    };
+
+    const removeCommercialRecord = () => {
+        setCommercialRecord(null);
+        // Reset the file input
+        const fileInput = document.getElementById('commercial-record-upload');
+        if (fileInput) {
+            fileInput.value = '';
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -227,25 +264,75 @@ const EditShop = () => {
         try {
             setIsLoading(true);
 
-            const updateData = {
-                ...formData,
-                specialties: formData.specialties.filter(specialty => specialty.trim() !== '')
-            };
+            // Check if we have files to upload
+            const hasFiles = formData.image || formData.gallery.length > 0 || commercialRecord;
 
-            // Remove file objects and location fields for API call
-            const { image, gallery, latitude, longitude, ...shopData } = updateData;
+            if (hasFiles) {
+                // Use FormData for file uploads
+                const formDataToSend = new FormData();
 
-            // Add location data in GeoJSON format if coordinates exist
-            if (latitude && longitude) {
-                shopData.location = {
-                    type: "Point",
-                    coordinates: [longitude, latitude] // [longitude, latitude] for GeoJSON
+                // Add basic shop data
+                formDataToSend.append('name', formData.name);
+                formDataToSend.append('description', formData.description);
+                formDataToSend.append('address', formData.address);
+                formDataToSend.append('phone', formData.phone);
+                formDataToSend.append('whatsapp', formData.whatsapp || '');
+                formDataToSend.append('workingHours', formData.workingHours || '');
+
+                // Add specialties
+                formData.specialties.filter(specialty => specialty.trim() !== '').forEach((specialty, index) => {
+                    formDataToSend.append(`specialties[${index}]`, specialty);
+                });
+
+                // Add location data in GeoJSON format if coordinates exist
+                if (formData.latitude && formData.longitude) {
+                    const locationData = {
+                        type: "Point",
+                        coordinates: [formData.longitude, formData.latitude]
+                    };
+                    formDataToSend.append('location', JSON.stringify(locationData));
+                }
+
+                // Add files
+                if (formData.image) {
+                    formDataToSend.append('logo', formData.image);
+                }
+
+                formData.gallery.forEach((image) => {
+                    formDataToSend.append('images', image);
+                });
+
+                if (commercialRecord) {
+                    formDataToSend.append('commercialRecord', commercialRecord);
+                }
+
+                console.log('Updating shop with FormData:');
+                for (const [key, value] of formDataToSend.entries()) {
+                    console.log(`${key}:`, value instanceof File ? `File(${value.name})` : value);
+                }
+
+                await shopService.updateShop(shop.id || shop._id, formDataToSend);
+            } else {
+                // Use regular JSON for updates without files
+                const updateData = {
+                    ...formData,
+                    specialties: formData.specialties.filter(specialty => specialty.trim() !== '')
                 };
+
+                // Remove file objects and location fields for API call
+                const { image, gallery, latitude, longitude, ...shopData } = updateData;
+
+                // Add location data in GeoJSON format if coordinates exist
+                if (latitude && longitude) {
+                    shopData.location = {
+                        type: "Point",
+                        coordinates: [longitude, latitude] // [longitude, latitude] for GeoJSON
+                    };
+                }
+
+                console.log('Updating shop with data:', shopData);
+                await shopService.updateShop(shop.id || shop._id, shopData);
             }
-
-            console.log('Updating shop with data:', shopData);
-
-            await shopService.updateShop(shop.id || shop._id, shopData);
 
             // TODO: Handle image upload separately if needed
             // if (image) {
@@ -833,6 +920,89 @@ const EditShop = () => {
                                                     </div>
                                                 </div>
                                             )}
+                                        </div>
+
+                                        {/* Commercial Record */}
+                                        <div className="space-y-6">
+                                            <div className="flex items-center justify-between">
+                                                <label className="flex items-center gap-2 text-sm font-bold text-gray-800">
+                                                    <div className="w-1.5 h-1.5 bg-[#C37C00] rounded-full"></div>
+                                                    Commercial Record (PDF) *
+                                                </label>
+                                                <span className="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                                                    {commercialRecord ? 'New PDF Selected' : currentCommercialRecord ? 'Current PDF' : 'No PDF'}
+                                                </span>
+                                            </div>
+
+                                            <div className="relative">
+                                                <div className="border-2 border-dashed border-[#C37C00]/30 rounded-2xl p-8 bg-gradient-to-br from-[#FFF8E6] via-[#FFFBF0] to-[#FFF0CC] hover:from-[#FFF0CC] hover:to-[#FFE6B3] transition-all duration-300">
+                                                    {commercialRecord ? (
+                                                        <div className="relative group">
+                                                            <div className="p-6 bg-green-50 border border-green-200 rounded-2xl">
+                                                                <div className="flex items-center justify-between">
+                                                                    <div className="flex items-center">
+                                                                        <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mr-4">
+                                                                            <span className="text-red-600 font-bold text-sm">PDF</span>
+                                                                        </div>
+                                                                        <div>
+                                                                            <p className="text-sm font-bold text-gray-900">{commercialRecord.name}</p>
+                                                                            <p className="text-xs text-gray-500">
+                                                                                {(commercialRecord.size / (1024 * 1024)).toFixed(2)} MB
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <Button
+                                                                        type="button"
+                                                                        variant="destructive"
+                                                                        size="sm"
+                                                                        onClick={removeCommercialRecord}
+                                                                        className="rounded-full w-8 h-8 p-0"
+                                                                    >
+                                                                        <X className="w-4 h-4" />
+                                                                    </Button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ) : currentCommercialRecord ? (
+                                                        <div className="text-center py-8">
+                                                            <div className="w-20 h-20 bg-gradient-to-br from-green-500/20 to-green-600/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                                                                <span className="text-2xl font-bold text-green-600">PDF</span>
+                                                            </div>
+                                                            <h3 className="text-xl font-bold text-gray-900 mb-2">Current Commercial Record</h3>
+                                                            <p className="text-gray-600 mb-1">A commercial record is already uploaded</p>
+                                                            <p className="text-sm text-gray-500">Upload a new PDF to replace the current one</p>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="text-center py-12">
+                                                            <div className="w-24 h-24 bg-gradient-to-br from-red-500/20 to-red-600/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                                                                <Upload className="w-12 h-12 text-red-600" />
+                                                            </div>
+                                                            <h3 className="text-xl font-bold text-gray-900 mb-2">Upload Commercial Record</h3>
+                                                            <p className="text-gray-600 mb-1">Required legal document for your store</p>
+                                                            <p className="text-sm text-gray-500">PDF format only • Max 15MB</p>
+                                                        </div>
+                                                    )}
+                                                    <input
+                                                        type="file"
+                                                        accept="application/pdf"
+                                                        onChange={handleCommercialRecordUpload}
+                                                        className="hidden"
+                                                        id="commercial-record-upload"
+                                                    />
+                                                </div>
+
+                                                <div className="mt-6">
+                                                    <Button
+                                                        type="button"
+                                                        variant="outline"
+                                                        onClick={() => document.getElementById('commercial-record-upload').click()}
+                                                        className="w-full h-14 border-2 border-red-500 text-red-600 hover:bg-red-500 hover:text-white rounded-2xl font-bold text-base transition-all duration-300"
+                                                    >
+                                                        <Upload className="w-5 h-5 mr-3" />
+                                                        {commercialRecord ? 'Change Commercial Record' : currentCommercialRecord ? 'Replace Commercial Record' : 'Upload Commercial Record'}
+                                                    </Button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

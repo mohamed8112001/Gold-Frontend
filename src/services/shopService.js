@@ -167,7 +167,21 @@ export const shopService = {
   // Update shop (shop owner only)
   updateShop: async (shopId, shopData) => {
     try {
-      const response = await api.put(`/shop/${shopId}`, shopData);
+      // Check if shopData is FormData (contains files) or regular object
+      const isFormData = shopData instanceof FormData;
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        }
+      };
+
+      // If it's FormData, set multipart content type
+      if (isFormData) {
+        config.headers["Content-Type"] = "multipart/form-data";
+      }
+
+      const response = await api.put(`/shop/${shopId}`, shopData, config);
       return response.data;
     } catch (error) {
       throw new Error(error.response?.data?.message || "Failed to update shop");
