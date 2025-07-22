@@ -334,7 +334,7 @@ const ManageTimes = () => {
                 ) : (
                   <div className="space-y-4 max-h-96 overflow-y-auto">
                     {availableTimesOnly.map((time) => (
-                      <div key={time._id} className="border border-[#C5A56D] rounded-lg p-4 hover:shadow-md transition-shadow">
+                      <div key={time._id} className="border border-[#C5A56D] rounded-lg p-4 hover: transition-">
                         <div className="flex justify-between items-start">
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-2">
@@ -383,7 +383,7 @@ const ManageTimes = () => {
                 ) : (
                   <div className="space-y-4 max-h-96 overflow-y-auto">
                     {bookedTimes.map((time) => (
-                      <div key={time._id} className="border border-[#D3BB92] rounded-lg p-4 hover:shadow-md transition-shadow">
+                      <div key={time._id} className="border border-[#D3BB92] rounded-lg p-4 hover: transition-">
                         <div className="flex justify-between items-start">
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-2">

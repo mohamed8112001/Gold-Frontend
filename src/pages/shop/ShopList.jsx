@@ -270,7 +270,7 @@ const ShopList = () => {
 
     return (
       <Card
-        className={`group relative overflow-hidden hover:shadow-2xl hover:-translate-y-3 transition-all duration-700 cursor-pointer border-2 border-[#E2D2B6]/40 hover:border-[#C37C00]/60 bg-gradient-to-br from-white via-[#FFF8E6]/20 to-[#F0E8DB]/30 rounded-3xl shadow-xl hover:shadow-[#C37C00]/25 h-full flex flex-col transform hover:scale-[1.02] ${isListView ? 'lg:flex-row lg:h-auto' : ''}`}
+        className={`group relative overflow-hidden hover: hover:-translate-y-3 transition-all duration-700 cursor-pointer border-2 border-[#E2D2B6]/40 hover:border-[#C37C00]/60 bg-gradient-to-br from-white via-[#FFF8E6]/20 to-[#F0E8DB]/30 rounded-3xl  hover:[#C37C00]/25 h-full flex flex-col transform hover:scale-[1.02] ${isListView ? 'lg:flex-row lg:h-auto' : ''}`}
         onClick={() => {
           const shopId = shop._id || shop.id;
           console.log('Navigating to shop:', shopId, shop.name);
@@ -351,13 +351,13 @@ const ShopList = () => {
                   {shopSpecialties.slice(0, 3).map((specialty, index) => (
                     <span
                       key={index}
-                      className="bg-gradient-to-r from-[#FFF0CC] to-[#FFE6B3] text-[#C37C00] text-xs px-3 py-1.5 rounded-full font-semibold border border-[#FFE6B3] shadow-sm"
+                      className="bg-gradient-to-r from-[#FFF0CC] to-[#FFE6B3] text-[#C37C00] text-xs px-3 py-1.5 rounded-full font-semibold border border-[#FFE6B3] "
                     >
                       {specialty}
                     </span>
                   ))}
                   {shopSpecialties.length > 3 && (
-                    <span className="bg-gradient-to-r from-[#E2D2B6] to-[#D3BB92] text-[#8A6C37] text-xs px-3 py-1.5 rounded-full font-semibold border border-[#D3BB92] shadow-sm">
+                    <span className="bg-gradient-to-r from-[#E2D2B6] to-[#D3BB92] text-[#8A6C37] text-xs px-3 py-1.5 rounded-full font-semibold border border-[#D3BB92] ">
                       +{shopSpecialties.length - 3} more
                     </span>
                   )}
@@ -376,7 +376,7 @@ const ShopList = () => {
   text-white py-3.5 
   rounded-xl font-bold 
   transition-all duration-300 transform hover:scale-[1.02] 
-  shadow-lg hover:shadow-xl hover:shadow-[#C37C00]/30
+   hover: hover:[#C37C00]/30
 "              onClick={(e) => {
                 e.stopPropagation();
                 const shopId = shop._id || shop.id;
@@ -457,7 +457,7 @@ const ShopList = () => {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 ">
           <div className="text-center mb-12">
             <h1 className="text-6xl md:text-7xl font-black mb-6 leading-tight text-[#C37C00]">
-              <span className="bg-gradient-to-r from-[#C37C00] to-[#E6A500] bg-clip-text text-transparent drop-shadow-2xl m-10">
+              <span className="bg-gradient-to-r from-[#C37C00] to-[#E6A500] bg-clip-text text-transparent drop- m-10">
                 اكتشف المتاجر
               </span>
             </h1>
@@ -465,7 +465,7 @@ const ShopList = () => {
             <form onSubmit={handleSearch} className="max-w-6xl mx-auto">
               <div className="relative">
                 <div className="absolute inset-0 bg-white/20 rounded-2xl blur-sm"></div>
-                <div className="relative bg-white/95 backdrop-blur-md rounded-2xl p-4 shadow-2xl border border-white/30">
+                <div className="relative bg-white/95 backdrop-blur-md rounded-2xl p-4  border border-white/30">
                   <div className="flex flex-col lg:flex-row items-center gap-4">
                     {/* Search Input */}
                     <div className="flex-1 relative w-full lg:w-auto">
@@ -549,12 +549,12 @@ const ShopList = () => {
                     px-6 py-3.5 
                     rounded-xl 
                     font-semibold 
-                    shadow-lg 
+                     
                     transition-all duration-300 
                     transform hover:scale-[1.02] 
                     bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] 
                     hover:from-[#A66A00] hover:via-[#C37C00] hover:to-[#8A5700]
-                    hover:shadow-xl hover:shadow-[#C37C00]/30
+                    hover: hover:[#C37C00]/30
                     
                   "
                       >
@@ -577,7 +577,7 @@ const ShopList = () => {
           {/* Shops Grid/List */}
           <div className="w-full">
             {/* Results Info */}
-            <div className="flex items-center justify-between mb-8 bg-white rounded-2xl p-6 shadow-lg border-0">
+            <div className="flex items-center justify-between mb-8 bg-white rounded-2xl p-6  border-0">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 bg-[#A37F41] rounded-full"></div>
@@ -621,7 +621,7 @@ const ShopList = () => {
 
             {/* Shops Grid/List */}
             {filteredShops.length === 0 ? (
-              <div className="text-center py-20 bg-gradient-to-br from-white to-[#F8F4ED]/50 rounded-2xl shadow-lg border border-[#E2D2B6]/30">
+              <div className="text-center py-20 bg-gradient-to-br from-white to-[#F8F4ED]/50 rounded-2xl  border border-[#E2D2B6]/30">
                 <div className="text-8xl mb-6"></div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">لم يتم العثور على متاجر</h3>
                 <p className="text-gray-600 text-lg mb-8 max-w-md mx-auto">
@@ -629,7 +629,7 @@ const ShopList = () => {
                 </p>
                 <Button
                   onClick={clearFilters}
-                  className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-8 py-3 shadow-lg hover:shadow-[#C37C00]/30"
+                  className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-8 py-3  hover:[#C37C00]/30"
                 >
                   مسح جميع الفلاتر
                 </Button>
@@ -652,7 +652,7 @@ const ShopList = () => {
                 <Button
                   onClick={loadMore}
                   disabled={isLoading}
-                  className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-8 py-3 rounded-xl font-semibold shadow-lg hover:shadow-[#C37C00]/30 disabled:opacity-50"
+                  className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-8 py-3 rounded-xl font-semibold  hover:[#C37C00]/30 disabled:opacity-50"
                 >
                   {isLoading ? 'جاري التحميل...' : 'تحميل المزيد من المتاجر'}
                 </Button>

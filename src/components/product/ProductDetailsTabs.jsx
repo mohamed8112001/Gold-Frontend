@@ -20,7 +20,7 @@ const ProductDetailsTabs = ({ product, reviews }) => {
   const [activeTab, setActiveTab] = useState('description');
 
   return (
-    <Card className="border-0 shadow-xl rounded-3xl">
+    <Card className="border-0  rounded-3xl">
       <CardHeader className="pb-0">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-4 mb-6">

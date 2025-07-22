@@ -10,7 +10,7 @@ const ChatTest = () => {
           🤖 اختبار المساعد الذكي المحسن
         </h1>
         
-        <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
+        <div className="bg-white rounded-2xl  p-8 mb-8">
           <h2 className="text-2xl font-semibold mb-6 text-gray-800">✨ التحسينات الجديدة:</h2>
           <div className="grid md:grid-cols-2 gap-6">
             <div>
@@ -34,7 +34,7 @@ const ChatTest = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
+        <div className="bg-white rounded-2xl  p-8 mb-8">
           <h2 className="text-xl font-semibold mb-4 text-gray-800">📋 تعليمات الاختبار:</h2>
           <ul className="list-disc list-inside space-y-2 text-gray-700">
             <li>انقر على الزر العائم في الأسفل لفتح المساعد الذكي</li>

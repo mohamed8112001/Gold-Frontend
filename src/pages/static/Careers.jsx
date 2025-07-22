@@ -233,7 +233,7 @@ const Careers = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="bg-white/80 backdrop-blur-sm rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow duration-300"
+                className="bg-white/80 backdrop-blur-sm rounded-lg p-6  hover: transition- duration-300"
               >
                 <div className="flex items-center space-x-3 rtl:space-x-reverse">
                   <div className="w-3 h-3 bg-gradient-to-r from-amber-400 to-yellow-500 rounded-full"></div>
@@ -270,7 +270,7 @@ const Careers = () => {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Card className="h-full text-center hover:shadow-lg transition-all duration-300 border-0 bg-white/80 backdrop-blur-sm hover:scale-105">
+                <Card className="h-full text-center hover: transition-all duration-300 border-0 bg-white/80 backdrop-blur-sm hover:scale-105">
                   <CardHeader>
                     <div className="w-16 h-16 bg-gradient-to-r from-amber-400 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
                       <benefit.icon className="w-8 h-8 text-white" />
@@ -316,7 +316,7 @@ const Careers = () => {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Card className="h-full hover:shadow-lg transition-all duration-300 border-0 bg-white/80 backdrop-blur-sm cursor-pointer hover:scale-105"
+                <Card className="h-full hover: transition-all duration-300 border-0 bg-white/80 backdrop-blur-sm cursor-pointer hover:scale-105"
                       onClick={() => setSelectedJob(job)}>
                   <CardHeader>
                     <div className="flex items-start justify-between">

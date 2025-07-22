@@ -135,7 +135,7 @@ const BookAppointment = () => {
       <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] to-[#FFF0CC] pt-20">
         <div className="flex items-center justify-center py-20">
           <div className="text-center">
-            <div className="w-20 h-20 bg-gradient-to-r from-[#C37C00] to-[#A66A00] rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl">
+            <div className="w-20 h-20 bg-gradient-to-r from-[#C37C00] to-[#A66A00] rounded-full flex items-center justify-center mx-auto mb-6 ">
               <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-white"></div>
             </div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Loading Appointments</h2>
@@ -152,7 +152,7 @@ const BookAppointment = () => {
       return (
         <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] to-[#FFF0CC] pt-20">
           <div className="max-w-2xl mx-auto px-4 py-16">
-            <Card className="shadow-xl border-0 bg-white rounded-2xl overflow-hidden">
+            <Card className=" border-0 bg-white rounded-2xl overflow-hidden">
               <CardHeader className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] text-white text-center py-8">
                 <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Store className="w-8 h-8" />
@@ -216,7 +216,7 @@ const BookAppointment = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center pt-20">
         <div className="text-center max-w-md mx-auto px-4">
-          <div className="bg-white rounded-xl shadow-lg p-8">
+          <div className="bg-white rounded-xl  p-8">
             <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-2xl">⚠️</span>
             </div>
@@ -248,7 +248,7 @@ const BookAppointment = () => {
             Back
           </Button>
 
-          <div className="bg-white rounded-lg p-6 shadow-sm">
+          <div className="bg-white rounded-lg p-6 ">
             <div className="flex items-center space-x-4 rtl:space-x-reverse">
               <Store className="w-8 h-8 text-[#C37C00]" />
               <div>
@@ -277,7 +277,7 @@ const BookAppointment = () => {
                 {availableTimes.map((timeSlot) => (
                   <div
                     key={timeSlot._id}
-                    className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-all"
+                    className="bg-white border border-gray-200 rounded-lg p-4 hover: transition-all"
                   >
                     <div className="space-y-3">
                       <div className="flex items-center space-x-2 rtl:space-x-reverse">

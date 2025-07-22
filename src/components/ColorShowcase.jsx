@@ -33,9 +33,9 @@ const ColorShowcase = () => {
   ];
 
   const ColorSwatch = ({ color }) => (
-    <div className="flex items-center space-x-3 rtl:space-x-reverse p-3 rounded-lg bg-white shadow-sm border border-secondary-200">
+    <div className="flex items-center space-x-3 rtl:space-x-reverse p-3 rounded-lg bg-white  border border-secondary-200">
       <div 
-        className="w-12 h-12 rounded-lg shadow-sm border border-secondary-300"
+        className="w-12 h-12 rounded-lg  border border-secondary-300"
         style={{ backgroundColor: color.value }}
       />
       <div className="flex-1">

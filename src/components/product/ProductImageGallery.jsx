@@ -63,7 +63,7 @@ const ProductImageGallery = ({ product, mainImage, setMainImage, selectedImage, 
     <div className="space-y-6">
       {/* Main Image */}
       <div className="relative group">
-        <div className="aspect-square bg-white rounded-3xl overflow-hidden shadow-2xl border border-gray-100">
+        <div className="aspect-square bg-white rounded-3xl overflow-hidden  border border-gray-100">
           <img
             src={getImageUrl(mainImage)}
             alt={product.name}
@@ -79,13 +79,13 @@ const ProductImageGallery = ({ product, mainImage, setMainImage, selectedImage, 
             <>
               <button
                 onClick={prevImage}
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-3 shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300"
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-3  opacity-0 group-hover:opacity-100 transition-all duration-300"
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
               <button
                 onClick={nextImage}
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-3 shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300"
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-3  opacity-0 group-hover:opacity-100 transition-all duration-300"
               >
                 <ChevronRight className="w-5 h-5" />
               </button>
@@ -93,13 +93,13 @@ const ProductImageGallery = ({ product, mainImage, setMainImage, selectedImage, 
           )}
 
           {/* Zoom Button */}
-          <button className="absolute top-4 right-4 bg-white/90 hover:bg-white rounded-full p-3 shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300">
+          <button className="absolute top-4 right-4 bg-white/90 hover:bg-white rounded-full p-3  opacity-0 group-hover:opacity-100 transition-all duration-300">
             <ZoomIn className="w-5 h-5" />
           </button>
 
           {/* Discount Badge */}
           {product.discount && (
-            <div className="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full font-bold text-sm shadow-lg">
+            <div className="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full font-bold text-sm ">
               -{product.discount}%
             </div>
           )}
@@ -115,7 +115,7 @@ const ProductImageGallery = ({ product, mainImage, setMainImage, selectedImage, 
               onClick={() => changeImage(index)}
               className={`flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden border-2 transition-all duration-300 ${
                 selectedImage === index 
-                  ? 'border-yellow-500 shadow-lg scale-105' 
+                  ? 'border-yellow-500  scale-105' 
                   : 'border-gray-200 hover:border-gray-300'
               }`}
             >

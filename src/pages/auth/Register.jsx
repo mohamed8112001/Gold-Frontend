@@ -147,7 +147,7 @@ const Register = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 items-stretch h-full bg-white/80 backdrop-blur-sm">
 
           {/* Left Side - Enhanced Branding with Slider */}
-          <div className="relative flex flex-col items-center justify-center p-12 overflow-hidden" style={{ background: 'linear-gradient(135deg, #A37F41 0%, #B8904F 50%, #C9A05D 100%)' }}>
+          <div className="relative flex flex-col items-center justify-center p-12 overflow-hidden order-1 lg:order-2" style={{ background: 'linear-gradient(135deg, #A37F41 0%, #B8904F 50%, #C9A05D 100%)' }}>
             {/* Decorative elements */}
             <div className="absolute top-10 left-10 w-20 h-20 bg-white/20 rounded-full blur-xl"></div>
             <div className="absolute bottom-10 right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
@@ -155,9 +155,9 @@ const Register = () => {
             {/* Image Slider Container */}
             <div className="relative w-80 h-80 mb-12">
               {/* Main circular container */}
-              <div className="w-full h-full rounded-full flex items-center justify-center shadow-2xl relative overflow-hidden border-8 border-white/50" style={{ background: 'linear-gradient(135deg, #FEF7ED 0%, #FDF4E8 100%)' }}>
+              <div className="w-full h-full rounded-full flex items-center justify-center  relative overflow-hidden border-8 border-white/50" style={{ background: 'linear-gradient(135deg, #FEF7ED 0%, #FDF4E8 100%)' }}>
                 {/* Slider images */}
-                <div className="relative w-64 h-64 rounded-full overflow-hidden shadow-lg">
+                <div className="relative w-64 h-64 rounded-full overflow-hidden ">
                   {sliderImages.map((image, index) => (
                     <img
                       key={index}
@@ -211,7 +211,7 @@ const Register = () => {
           </div>
 
           {/* Right Side - Enhanced Form */}
-          <div className="w-full bg-gradient-to-br from-white to-[#FFF8E6] p-8 lg:p-12 flex flex-col justify-start relative overflow-y-auto">
+          <div className="w-full bg-gradient-to-br from-white to-[#FFF8E6] p-8 lg:p-12 flex flex-col justify-start relative overflow-y-auto order-2 lg:order-1">
             {/* Navigation */}
             <div className="flex justify-between items-center mb-6">
               <Button
@@ -223,7 +223,7 @@ const Register = () => {
                 <span>العودة لنوع الحساب</span>
               </Button>
 
-              <div className="flex items-center space-x-2 rtl:space-x-reverse px-4 py-2 rounded-full shadow-sm" style={{ backgroundColor: '#F5F1EB' }}>
+              <div className="flex items-center space-x-2 rtl:space-x-reverse px-4 py-2 rounded-full " style={{ backgroundColor: '#F5F1EB' }}>
                 <User className="w-4 h-4" style={{ color: '#A37F41' }} />
                 <span className="text-sm font-medium" style={{ color: '#6B5B47' }}>{typeInfo.titleAr}</span>
               </div>
@@ -231,8 +231,8 @@ const Register = () => {
 
             {/* Navigation Tabs with enhanced styling */}
             <div className="flex justify-center mb-8">
-              <div className="flex rounded-xl p-1 shadow-lg" style={{ backgroundColor: '#F0E8DB' }}>
-                <div className="px-8 py-3 bg-white rounded-lg font-medium shadow-md border transform scale-105" style={{ color: '#A37F41', borderColor: '#E2D2B6' }}>
+              <div className="flex rounded-xl p-1 " style={{ backgroundColor: '#F0E8DB' }}>
+                <div className="px-8 py-3 bg-white rounded-lg font-medium  border transform scale-105" style={{ color: '#A37F41', borderColor: '#E2D2B6' }}>
                   إنشاء حساب
                 </div>
                 <Link
@@ -466,7 +466,7 @@ const Register = () => {
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full text-white py-5 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full text-white py-5 text-lg font-semibold rounded-xl  hover: transform hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{
                     background: 'linear-gradient(135deg, #A37F41 0%, #B8904F 50%, #C9A05D 100%)',
                     border: 'none'

@@ -44,7 +44,7 @@ const ForgotPassword = () => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-yellow-50 flex items-center justify-center p-4">
         <div className="w-full max-w-md">
-          <Card className="shadow-lg text-center">
+          <Card className=" text-center">
             <CardHeader>
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <CheckCircle className="w-8 h-8 text-green-600" />
@@ -102,7 +102,7 @@ const ForgotPassword = () => {
           </Button>
         </div>
 
-        <Card className="shadow-lg">
+        <Card className="">
           <CardHeader className="text-center">
             <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <Mail className="w-8 h-8 text-yellow-600" />

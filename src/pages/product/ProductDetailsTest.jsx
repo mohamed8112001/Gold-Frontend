@@ -122,7 +122,7 @@ const ProductDetailsTest = () => {
         </h1>
         
         {/* Status */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+        <div className="bg-white rounded-lg  p-6 mb-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="bg-blue-50 p-4 rounded">
               <h3 className="font-semibold text-blue-800">Status</h3>
@@ -152,7 +152,7 @@ const ProductDetailsTest = () => {
         </div>
 
         {/* Debug Logs */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+        <div className="bg-white rounded-lg  p-6 mb-6">
           <h2 className="text-xl font-semibold mb-4">🔍 Debug Logs</h2>
           <div className="bg-gray-900 text-green-400 p-4 rounded font-mono text-sm max-h-80 overflow-y-auto">
             {logs.length === 0 ? (
@@ -176,7 +176,7 @@ const ProductDetailsTest = () => {
         {/* Product Display */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Product Info */}
-          <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="bg-white rounded-lg  p-6">
             <h2 className="text-xl font-semibold mb-4">🛍️ Product Details</h2>
             
             {loading ? (
@@ -233,7 +233,7 @@ const ProductDetailsTest = () => {
           </div>
 
           {/* Shop Info */}
-          <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="bg-white rounded-lg  p-6">
             <h2 className="text-xl font-semibold mb-4">🏪 Shop Details</h2>
             
             {!shop ? (

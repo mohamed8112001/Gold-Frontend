@@ -126,7 +126,7 @@ const ContactUs = () => {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Card className="h-full text-center hover:shadow-lg transition-all duration-300 border-0 bg-white/80 backdrop-blur-sm hover:scale-105">
+                <Card className="h-full text-center hover: transition-all duration-300 border-0 bg-white/80 backdrop-blur-sm hover:scale-105">
                   <CardHeader>
                     <div className="w-16 h-16 bg-gradient-to-r from-[#C37C00] to-[#E6A500] rounded-full flex items-center justify-center mx-auto mb-4">
                       <info.icon className="w-8 h-8 text-white" />
@@ -165,7 +165,7 @@ const ContactUs = () => {
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
-              <Card className="border-0 bg-white/90 backdrop-blur-sm shadow-xl">
+              <Card className="border-0 bg-white/90 backdrop-blur-sm ">
                 <CardHeader>
                   <CardTitle className="text-3xl font-bold text-gray-900 flex items-center gap-3">
                     <MessageCircle className="w-8 h-8 text-amber-500" />
@@ -295,7 +295,7 @@ const ContactUs = () => {
               className="space-y-8"
             >
               {/* Map */}
-              <Card className="border-0 bg-white/90 backdrop-blur-sm shadow-xl">
+              <Card className="border-0 bg-white/90 backdrop-blur-sm ">
                 <CardHeader>
                   <CardTitle className="text-2xl font-bold text-gray-900 flex items-center gap-3">
                     <MapPin className="w-6 h-6 text-amber-500" />
@@ -314,7 +314,7 @@ const ContactUs = () => {
               </Card>
 
               {/* Social Links */}
-              <Card className="border-0 bg-white/90 backdrop-blur-sm shadow-xl">
+              <Card className="border-0 bg-white/90 backdrop-blur-sm ">
                 <CardHeader>
                   <CardTitle className="text-2xl font-bold text-gray-900">
                     تابعنا على وسائل التواصل

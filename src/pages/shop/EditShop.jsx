@@ -316,7 +316,7 @@ const EditShop = () => {
             <div className="w-full px-4 sm:px-6 lg:px-8 py-8 -mt-6 relative z-10">
 
                 {/* Professional Form Container */}
-                <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden">
+                <div className="bg-white rounded-3xl  border border-gray-100 overflow-hidden">
                     <form onSubmit={handleSubmit}>
                         <Tabs defaultValue="basic" className="w-full">
                             {/* Enhanced Tab Navigation */}
@@ -324,7 +324,7 @@ const EditShop = () => {
                                 <TabsList className="grid w-full grid-cols-4 bg-transparent h-auto p-2">
                                     <TabsTrigger
                                         value="basic"
-                                        className="data-[state=active]:bg-white data-[state=active]:text-[#C37C00] data-[state=active]:shadow-lg rounded-xl py-4 px-6 font-bold text-base transition-all duration-300 hover:bg-white/50"
+                                        className="data-[state=active]:bg-white data-[state=active]:text-[#C37C00] data-[state=active]: rounded-xl py-4 px-6 font-bold text-base transition-all duration-300 hover:bg-white/50"
                                     >
                                         <div className="flex items-center gap-2">
                                             <div className="w-2 h-2 bg-current rounded-full"></div>
@@ -333,7 +333,7 @@ const EditShop = () => {
                                     </TabsTrigger>
                                     <TabsTrigger
                                         value="details"
-                                        className="data-[state=active]:bg-white data-[state=active]:text-[#C37C00] data-[state=active]:shadow-lg rounded-xl py-4 px-6 font-bold text-base transition-all duration-300 hover:bg-white/50"
+                                        className="data-[state=active]:bg-white data-[state=active]:text-[#C37C00] data-[state=active]: rounded-xl py-4 px-6 font-bold text-base transition-all duration-300 hover:bg-white/50"
                                     >
                                         <div className="flex items-center gap-2">
                                             <div className="w-2 h-2 bg-current rounded-full"></div>
@@ -342,7 +342,7 @@ const EditShop = () => {
                                     </TabsTrigger>
                                     <TabsTrigger
                                         value="location"
-                                        className="data-[state=active]:bg-white data-[state=active]:text-[#C37C00] data-[state=active]:shadow-lg rounded-xl py-4 px-6 font-bold text-base transition-all duration-300 hover:bg-white/50"
+                                        className="data-[state=active]:bg-white data-[state=active]:text-[#C37C00] data-[state=active]: rounded-xl py-4 px-6 font-bold text-base transition-all duration-300 hover:bg-white/50"
                                     >
                                         <div className="flex items-center gap-2">
                                             <div className="w-2 h-2 bg-current rounded-full"></div>
@@ -351,7 +351,7 @@ const EditShop = () => {
                                     </TabsTrigger>
                                     <TabsTrigger
                                         value="media"
-                                        className="data-[state=active]:bg-white data-[state=active]:text-[#C37C00] data-[state=active]:shadow-lg rounded-xl py-4 px-6 font-bold text-base transition-all duration-300 hover:bg-white/50"
+                                        className="data-[state=active]:bg-white data-[state=active]:text-[#C37C00] data-[state=active]: rounded-xl py-4 px-6 font-bold text-base transition-all duration-300 hover:bg-white/50"
                                     >
                                         <div className="flex items-center gap-2">
                                             <div className="w-2 h-2 bg-current rounded-full"></div>
@@ -390,7 +390,7 @@ const EditShop = () => {
                                                         onChange={handleInputChange}
                                                         placeholder="Enter your store name"
                                                         required
-                                                        className="h-14 border-2 border-gray-200 focus:border-[#C37C00] focus:ring-[#C37C00] rounded-2xl text-base pl-4 pr-4 font-medium shadow-sm hover:shadow-md transition-all duration-200"
+                                                        className="h-14 border-2 border-gray-200 focus:border-[#C37C00] focus:ring-[#C37C00] rounded-2xl text-base pl-4 pr-4 font-medium  hover: transition-all duration-200"
                                                     />
                                                     <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
                                                         <div className="w-1 h-6 bg-gradient-to-b from-[#C37C00] to-[#A66A00] rounded-full"></div>
@@ -410,7 +410,7 @@ const EditShop = () => {
                                                         onChange={handleInputChange}
                                                         placeholder="Enter phone number"
                                                         required
-                                                        className="h-14 border-2 border-gray-200 focus:border-[#C37C00] focus:ring-[#C37C00] rounded-2xl text-base pl-4 pr-4 font-medium shadow-sm hover:shadow-md transition-all duration-200"
+                                                        className="h-14 border-2 border-gray-200 focus:border-[#C37C00] focus:ring-[#C37C00] rounded-2xl text-base pl-4 pr-4 font-medium  hover: transition-all duration-200"
                                                     />
                                                     <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
                                                         <div className="w-1 h-6 bg-gradient-to-b from-[#C37C00] to-[#A66A00] rounded-full"></div>
@@ -431,7 +431,7 @@ const EditShop = () => {
                                                     value={formData.description}
                                                     onChange={handleInputChange}
                                                     placeholder="Describe your store, services, and what makes you unique..."
-                                                    className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#C37C00] focus:border-[#C37C00] text-base resize-none font-medium shadow-sm hover:shadow-md transition-all duration-200"
+                                                    className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#C37C00] focus:border-[#C37C00] text-base resize-none font-medium  hover: transition-all duration-200"
                                                     rows={5}
                                                     required
                                                 />
@@ -455,7 +455,7 @@ const EditShop = () => {
                                                         onChange={handleInputChange}
                                                         placeholder="Enter complete store address"
                                                         required
-                                                        className="h-14 border-2 border-gray-200 focus:border-[#C37C00] focus:ring-[#C37C00] rounded-2xl text-base pl-4 pr-4 font-medium shadow-sm hover:shadow-md transition-all duration-200"
+                                                        className="h-14 border-2 border-gray-200 focus:border-[#C37C00] focus:ring-[#C37C00] rounded-2xl text-base pl-4 pr-4 font-medium  hover: transition-all duration-200"
                                                     />
                                                     <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
                                                         <div className="w-1 h-6 bg-gradient-to-b from-[#C37C00] to-[#A66A00] rounded-full"></div>
@@ -475,7 +475,7 @@ const EditShop = () => {
                                                         value={formData.whatsapp}
                                                         onChange={handleInputChange}
                                                         placeholder="WhatsApp number for customers"
-                                                        className="h-14 border-2 border-gray-200 focus:border-[#C37C00] focus:ring-[#C37C00] rounded-2xl text-base pl-4 pr-4 font-medium shadow-sm hover:shadow-md transition-all duration-200"
+                                                        className="h-14 border-2 border-gray-200 focus:border-[#C37C00] focus:ring-[#C37C00] rounded-2xl text-base pl-4 pr-4 font-medium  hover: transition-all duration-200"
                                                     />
                                                     <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
                                                         <div className="w-1 h-6 bg-gradient-to-b from-gray-400 to-gray-500 rounded-full"></div>
@@ -514,7 +514,7 @@ const EditShop = () => {
                                                     value={formData.workingHours}
                                                     onChange={handleInputChange}
                                                     placeholder="Example: Saturday - Thursday: 9:00 AM - 10:00 PM"
-                                                    className="h-14 border-2 border-gray-200 focus:border-[#C37C00] focus:ring-[#C37C00] rounded-2xl text-base pl-4 pr-4 font-medium shadow-sm hover:shadow-md transition-all duration-200"
+                                                    className="h-14 border-2 border-gray-200 focus:border-[#C37C00] focus:ring-[#C37C00] rounded-2xl text-base pl-4 pr-4 font-medium  hover: transition-all duration-200"
                                                 />
                                                 <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
                                                     <div className="w-1 h-6 bg-gradient-to-b from-[#C37C00] to-[#A66A00] rounded-full"></div>
@@ -543,7 +543,7 @@ const EditShop = () => {
                                                                 value={specialty}
                                                                 onChange={(e) => handleSpecialtyChange(index, e.target.value)}
                                                                 placeholder={`Specialty ${index + 1} (e.g., Gold Jewelry, Wedding Rings)`}
-                                                                className="h-14 border-2 border-gray-200 focus:border-[#C37C00] focus:ring-[#C37C00] rounded-2xl text-base pl-4 pr-4 font-medium shadow-sm hover:shadow-md transition-all duration-200"
+                                                                className="h-14 border-2 border-gray-200 focus:border-[#C37C00] focus:ring-[#C37C00] rounded-2xl text-base pl-4 pr-4 font-medium  hover: transition-all duration-200"
                                                             />
                                                             <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
                                                                 <div className="w-1 h-6 bg-gradient-to-b from-[#C37C00] to-[#A66A00] rounded-full"></div>
@@ -623,7 +623,7 @@ const EditShop = () => {
                                                 <div className="w-1.5 h-1.5 bg-[#C37C00] rounded-full"></div>
                                                 Interactive Map
                                             </label>
-                                            <div className="rounded-2xl overflow-hidden border-2 border-gray-200 shadow-lg">
+                                            <div className="rounded-2xl overflow-hidden border-2 border-gray-200 ">
                                                 <MapPicker
                                                     latitude={formData.latitude || 30.0444}
                                                     longitude={formData.longitude || 31.2357}
@@ -694,14 +694,14 @@ const EditShop = () => {
                                                             <img
                                                                 src={imagePreview}
                                                                 alt="Store Preview"
-                                                                className="w-full h-80 object-cover rounded-2xl shadow-xl group-hover:shadow-2xl transition-all duration-300"
+                                                                className="w-full h-80 object-cover rounded-2xl  group-hover: transition-all duration-300"
                                                             />
                                                             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 rounded-2xl transition-all duration-300"></div>
                                                             <Button
                                                                 type="button"
                                                                 variant="destructive"
                                                                 size="sm"
-                                                                className="absolute top-4 right-4 rounded-full w-10 h-10 p-0 shadow-xl opacity-0 group-hover:opacity-100 transition-all duration-300"
+                                                                className="absolute top-4 right-4 rounded-full w-10 h-10 p-0  opacity-0 group-hover:opacity-100 transition-all duration-300"
                                                                 onClick={() => {
                                                                     setImagePreview(null);
                                                                     setFormData(prev => ({ ...prev, image: null }));
@@ -712,7 +712,7 @@ const EditShop = () => {
                                                         </div>
                                                     ) : (
                                                         <div className="text-center py-12">
-                                                            <div className="w-24 h-24 bg-gradient-to-br from-[#C37C00]/20 to-[#A66A00]/20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                                                            <div className="w-24 h-24 bg-gradient-to-br from-[#C37C00]/20 to-[#A66A00]/20 rounded-full flex items-center justify-center mx-auto mb-6 ">
                                                                 <Upload className="w-12 h-12 text-[#C37C00]" />
                                                             </div>
                                                             <h3 className="text-xl font-bold text-gray-900 mb-2">Upload Main Store Image</h3>
@@ -734,7 +734,7 @@ const EditShop = () => {
                                                         type="button"
                                                         variant="outline"
                                                         onClick={() => document.getElementById('main-image-input').click()}
-                                                        className="w-full h-14 border-2 border-[#C37C00] text-[#C37C00] hover:bg-[#C37C00] hover:text-white rounded-2xl font-bold text-base shadow-lg hover:shadow-xl transition-all duration-300"
+                                                        className="w-full h-14 border-2 border-[#C37C00] text-[#C37C00] hover:bg-[#C37C00] hover:text-white rounded-2xl font-bold text-base  hover: transition-all duration-300"
                                                     >
                                                         <Upload className="w-5 h-5 mr-3" />
                                                         {imagePreview ? 'Change Main Image' : 'Choose Main Image'}
@@ -758,7 +758,7 @@ const EditShop = () => {
                                             <div className="relative">
                                                 <div className="border-2 border-dashed border-[#C37C00]/30 rounded-2xl p-8 bg-gradient-to-br from-[#FFF8E6] via-[#FFFBF0] to-[#FFF0CC] hover:from-[#FFF0CC] hover:to-[#FFE6B3] transition-all duration-300">
                                                     <div className="text-center py-8">
-                                                        <div className="w-20 h-20 bg-gradient-to-br from-[#C37C00]/20 to-[#A66A00]/20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                                                        <div className="w-20 h-20 bg-gradient-to-br from-[#C37C00]/20 to-[#A66A00]/20 rounded-full flex items-center justify-center mx-auto mb-6 ">
                                                             <Upload className="w-10 h-10 text-[#C37C00]" />
                                                         </div>
                                                         <h3 className="text-xl font-bold text-gray-900 mb-2">Add Gallery Images</h3>
@@ -780,7 +780,7 @@ const EditShop = () => {
                                                         type="button"
                                                         variant="outline"
                                                         onClick={() => document.getElementById('gallery-input').click()}
-                                                        className="w-full h-14 border-2 border-[#C37C00] text-[#C37C00] hover:bg-[#C37C00] hover:text-white rounded-2xl font-bold text-base shadow-lg hover:shadow-xl transition-all duration-300"
+                                                        className="w-full h-14 border-2 border-[#C37C00] text-[#C37C00] hover:bg-[#C37C00] hover:text-white rounded-2xl font-bold text-base  hover: transition-all duration-300"
                                                     >
                                                         <Upload className="w-5 h-5 mr-3" />
                                                         {galleryPreviews.length > 0 ? 'Add More Images' : 'Add Gallery Images'}
@@ -802,7 +802,7 @@ const EditShop = () => {
                                                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                                                         {galleryPreviews.map((preview, index) => (
                                                             <div key={index} className="relative group">
-                                                                <div className="relative overflow-hidden rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-300">
+                                                                <div className="relative overflow-hidden rounded-2xl  group-hover: transition-all duration-300">
                                                                     <img
                                                                         src={preview}
                                                                         alt={`Gallery ${index + 1}`}
@@ -813,7 +813,7 @@ const EditShop = () => {
                                                                         type="button"
                                                                         variant="destructive"
                                                                         size="sm"
-                                                                        className="absolute top-3 right-3 w-8 h-8 p-0 rounded-full shadow-xl opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110"
+                                                                        className="absolute top-3 right-3 w-8 h-8 p-0 rounded-full  opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110"
                                                                         onClick={() => removeGalleryImage(index)}
                                                                     >
                                                                         <X className="w-4 h-4" />
@@ -870,7 +870,7 @@ const EditShop = () => {
                                     <Button
                                         type="submit"
                                         disabled={isLoading}
-                                        className="flex-1 h-16 bg-gradient-to-r from-[#C37C00] via-[#D4860A] to-[#A66A00] hover:from-[#A66A00] hover:via-[#B8750A] hover:to-[#8A5700] text-white rounded-2xl font-bold text-lg shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                                        className="flex-1 h-16 bg-gradient-to-r from-[#C37C00] via-[#D4860A] to-[#A66A00] hover:from-[#A66A00] hover:via-[#B8750A] hover:to-[#8A5700] text-white rounded-2xl font-bold text-lg  hover: transition-all duration-500 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                                     >
                                         {isLoading ? (
                                             <>
@@ -891,7 +891,7 @@ const EditShop = () => {
                                         type="button"
                                         variant="outline"
                                         onClick={() => navigate(ROUTES.MANAGE_SHOP)}
-                                        className="h-16 border-2 border-gray-300 text-gray-700 hover:bg-white hover:border-gray-400 hover:shadow-lg rounded-2xl font-bold text-lg px-12 transition-all duration-300"
+                                        className="h-16 border-2 border-gray-300 text-gray-700 hover:bg-white hover:border-gray-400 hover: rounded-2xl font-bold text-lg px-12 transition-all duration-300"
                                     >
                                         Cancel Changes
                                     </Button>

@@ -173,7 +173,7 @@ const RatingDisplay = ({ shopId, shopName, onRatingsUpdate }) => {
           </Card>
         ) : (
           ratings.map((rating) => (
-            <Card key={rating._id} className="hover:shadow-md transition-shadow">
+            <Card key={rating._id} className="hover: transition-colors">
               <CardContent className="p-4">
                 <div className="flex items-start gap-4">
                   {/* User Avatar */}

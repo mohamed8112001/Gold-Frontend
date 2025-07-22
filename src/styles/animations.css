@@ -55,10 +55,10 @@
 
 @keyframes glow {
   0%, 100% {
-    box-shadow: 0 0 20px rgba(163, 127, 65, 0.3);
+    box-: 0 0 20px rgba(163, 127, 65, 0.3);
   }
   50% {
-    box-shadow: 0 0 40px rgba(163, 127, 65, 0.6);
+    box-: 0 0 40px rgba(163, 127, 65, 0.6);
   }
 }
 
@@ -220,11 +220,11 @@
 
 .hover-lift:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  box-: 0 10px 25px rgba(0, 0, 0, 0.15);
 }
 
 .hover-glow:hover {
-  box-shadow: 0 0 30px rgba(163, 127, 65, 0.5);
+  box-: 0 0 30px rgba(163, 127, 65, 0.5);
 }
 
 .hover-scale:hover {
@@ -259,11 +259,11 @@
 @keyframes cardHover {
   0% {
     transform: translateY(0) scale(1);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    box-: 0 10px 25px rgba(0, 0, 0, 0.1);
   }
   100% {
     transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+    box-: 0 25px 50px rgba(0, 0, 0, 0.15);
   }
 }
 
@@ -314,7 +314,7 @@
 /* Enhanced Hover Effects for Cards */
 .card-enhanced:hover {
   transform: translateY(-12px) scale(1.03);
-  box-shadow: 0 30px 60px rgba(163, 127, 65, 0.2);
+  box-: 0 30px 60px rgba(163, 127, 65, 0.2);
 }
 
 .card-enhanced:hover .card-image {

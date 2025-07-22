@@ -399,7 +399,7 @@ const ManageShop = () => {
                                     <Card key={product.id}>
                                         <CardContent className="p-6">
                                             {/* <p>{JSON.stringify(product)}</p> */}
-                                            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-200">
+                                            <div className="bg-white rounded-xl  border border-gray-100 overflow-hidden hover: transition-all duration-200">
                                                 {/* Top Section - Image with Status and Quick Actions */}
                                                 <div className="relative group">
                                                     <img
@@ -425,7 +425,7 @@ const ManageShop = () => {
                                                     <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
                                                         <Button
                                                             size="sm"
-                                                            className="bg-white text-gray-800 shadow-md hover:bg-gray-50"
+                                                            className="bg-white text-gray-800  hover:bg-gray-50"
                                                             onClick={() => navigate(ROUTES.PRODUCT_DETAILS(product.id))}
                                                         >
                                                             <Eye className="w-4 h-4 mr-1" />

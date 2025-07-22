@@ -455,7 +455,7 @@ const EditProduct = () => {
             <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] to-[#FFF0CC] pt-20">
                 <div className="w-full px-4 sm:px-6 lg:px-8 py-8">
                     <div className="text-center py-20">
-                        <div className="w-20 h-20 bg-gradient-to-r from-[#C37C00] to-[#A66A00] rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl">
+                        <div className="w-20 h-20 bg-gradient-to-r from-[#C37C00] to-[#A66A00] rounded-full flex items-center justify-center mx-auto mb-6 ">
                             <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-white"></div>
                         </div>
                         <h2 className="text-2xl font-bold text-gray-900 mb-2">Loading Product</h2>
@@ -470,7 +470,7 @@ const EditProduct = () => {
         <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] to-[#FFF0CC] pt-20">
             <div className="w-full px-4 sm:px-6 lg:px-8 py-8">
                 {/* Enhanced Header */}
-                <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 mb-8">
+                <div className="bg-white rounded-2xl  border border-gray-100 p-6 mb-8">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-6">
                             <Button
@@ -533,14 +533,14 @@ const EditProduct = () => {
                         </div>
 
                         {/* Product Content */}
-                        <div className="bg-white rounded-b-3xl shadow-2xl overflow-hidden">
+                        <div className="bg-white rounded-b-3xl  overflow-hidden">
                             <div className="p-8">
                                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                                     {/* Main Product Image */}
                                     <div className="lg:col-span-1">
                                         <div className="relative group">
                                             {product.logoUrl ? (
-                                                <div className="relative overflow-hidden rounded-2xl shadow-xl">
+                                                <div className="relative overflow-hidden rounded-2xl ">
                                                     <img
                                                         src={`${import.meta.env.VITE_API_BASE_URL}/product-image/${product.logoUrl}`}
                                                         alt={product.title}
@@ -552,7 +552,7 @@ const EditProduct = () => {
                                                     </div>
                                                 </div>
                                             ) : (
-                                                <div className="w-full h-80 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex flex-col items-center justify-center shadow-inner">
+                                                <div className="w-full h-80 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex flex-col items-center justify-center ">
                                                     <div className="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center mb-4">
                                                         <span className="text-2xl text-gray-500">📷</span>
                                                     </div>
@@ -572,7 +572,7 @@ const EditProduct = () => {
                                                 Product Information
                                             </h3>
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                <div className="bg-white rounded-xl p-4 shadow-sm">
+                                                <div className="bg-white rounded-xl p-4 ">
                                                     <p className="text-sm text-gray-500 mb-1">Price</p>
                                                     <p className="text-2xl font-bold text-[#C37C00]">
                                                         {typeof product.price === 'object' && product.price?.['$numberDecimal']
@@ -582,19 +582,19 @@ const EditProduct = () => {
                                                     </p>
                                                 </div>
                                                 {product.category && (
-                                                    <div className="bg-white rounded-xl p-4 shadow-sm">
+                                                    <div className="bg-white rounded-xl p-4 ">
                                                         <p className="text-sm text-gray-500 mb-1">Category</p>
                                                         <p className="text-lg font-semibold text-gray-800 capitalize">{String(product.category)}</p>
                                                     </div>
                                                 )}
                                                 {product.karat && (
-                                                    <div className="bg-white rounded-xl p-4 shadow-sm">
+                                                    <div className="bg-white rounded-xl p-4 ">
                                                         <p className="text-sm text-gray-500 mb-1">Karat</p>
                                                         <p className="text-lg font-semibold text-gray-800">{String(product.karat)}</p>
                                                     </div>
                                                 )}
                                                 {product.weight && (
-                                                    <div className="bg-white rounded-xl p-4 shadow-sm">
+                                                    <div className="bg-white rounded-xl p-4 ">
                                                         <p className="text-sm text-gray-500 mb-1">Weight</p>
                                                         <p className="text-lg font-semibold text-gray-800">
                                                             {typeof product.weight === 'object'
@@ -647,7 +647,7 @@ const EditProduct = () => {
                                                     <img
                                                         src={image}
                                                         alt={`Gallery ${index + 1}`}
-                                                        className="w-full h-24 object-cover rounded-xl shadow-md group-hover:shadow-lg transition-all duration-200 group-hover:scale-105"
+                                                        className="w-full h-24 object-cover rounded-xl  group-hover: transition-all duration-200 group-hover:scale-105"
                                                     />
                                                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 rounded-xl transition-all duration-200"></div>
                                                     <div className="absolute bottom-1 right-1 bg-white/90 backdrop-blur-sm rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -666,7 +666,7 @@ const EditProduct = () => {
                 {/* Divider */}
                 <div className="flex items-center gap-4 my-8">
                     <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
-                    <div className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] text-white px-6 py-2 rounded-full font-semibold shadow-lg">
+                    <div className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] text-white px-6 py-2 rounded-full font-semibold ">
                         ✏️ Edit Product Information
                     </div>
                     <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
@@ -674,7 +674,7 @@ const EditProduct = () => {
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Basic Information */}
-                    <Card className="shadow-xl border-0 bg-white rounded-2xl overflow-hidden">
+                    <Card className=" border-0 bg-white rounded-2xl overflow-hidden">
                         <CardHeader className="bg-gradient-to-r from-[#F8F4ED] to-[#F0E8DB] border-b border-[#E2D2B6]/30">
                             <CardTitle className="text-2xl font-bold text-gray-900">Product Information</CardTitle>
                             <CardDescription className="text-gray-600">
@@ -799,7 +799,7 @@ const EditProduct = () => {
                     </Card>
 
                     {/* Images Section */}
-                    <Card className="shadow-xl border-0 bg-white rounded-2xl overflow-hidden">
+                    <Card className=" border-0 bg-white rounded-2xl overflow-hidden">
                         <CardHeader className="bg-gradient-to-r from-[#F8F4ED] to-[#F0E8DB] border-b border-[#E2D2B6]/30">
                             <CardTitle className="text-2xl font-bold text-gray-900">Product Images</CardTitle>
                             <CardDescription className="text-gray-600">
@@ -820,7 +820,7 @@ const EditProduct = () => {
                                         <img
                                             src={`${import.meta.env.VITE_API_BASE_URL}/product-image/${product.logoUrl}`}
                                             alt="Current logo"
-                                            className="w-32 h-32 object-cover rounded-xl shadow-md"
+                                            className="w-32 h-32 object-cover rounded-xl "
                                         />
                                     </div>
                                 )}
@@ -833,7 +833,7 @@ const EditProduct = () => {
                                             <img
                                                 src={URL.createObjectURL(logo)}
                                                 alt="New logo preview"
-                                                className="w-32 h-32 object-cover rounded-xl shadow-md"
+                                                className="w-32 h-32 object-cover rounded-xl "
                                             />
                                             <Button
                                                 type="button"
@@ -887,13 +887,13 @@ const EditProduct = () => {
                                                 <img
                                                     src={image}
                                                     alt={`Current ${index + 1}`}
-                                                    className="w-full h-32 object-cover rounded-xl shadow-md group-hover:shadow-lg transition-shadow duration-200"
+                                                    className="w-full h-32 object-cover rounded-xl  group-hover: transition- duration-200"
                                                 />
                                                 <Button
                                                     type="button"
                                                     variant="destructive"
                                                     size="sm"
-                                                    className="absolute top-2 right-2 w-7 h-7 p-0 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                                                    className="absolute top-2 right-2 w-7 h-7 p-0 rounded-full  opacity-0 group-hover:opacity-100 transition-opacity duration-200"
                                                     onClick={() => removeExistingImage(index)}
                                                 >
                                                     <X className="w-3 h-3" />
@@ -946,13 +946,13 @@ const EditProduct = () => {
                                                     <img
                                                         src={URL.createObjectURL(image)}
                                                         alt={`New ${index + 1}`}
-                                                        className="w-full h-32 object-cover rounded-xl shadow-md group-hover:shadow-lg transition-shadow duration-200"
+                                                        className="w-full h-32 object-cover rounded-xl  group-hover: transition- duration-200"
                                                     />
                                                     <Button
                                                         type="button"
                                                         variant="destructive"
                                                         size="sm"
-                                                        className="absolute top-2 right-2 w-7 h-7 p-0 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                                                        className="absolute top-2 right-2 w-7 h-7 p-0 rounded-full  opacity-0 group-hover:opacity-100 transition-opacity duration-200"
                                                         onClick={() => removeImage(index)}
                                                     >
                                                         <X className="w-3 h-3" />
@@ -967,12 +967,12 @@ const EditProduct = () => {
                     </Card>
 
                     {/* Submit Buttons */}
-                    <div className="bg-white rounded-2xl shadow-xl border-0 p-8">
+                    <div className="bg-white rounded-2xl  border-0 p-8">
                         <div className="flex flex-col sm:flex-row gap-4">
                             <Button
                                 type="submit"
                                 disabled={isLoading}
-                                className="flex-1 h-14 bg-gradient-to-r from-[#C37C00] via-[#A66A00] to-[#8A5700] hover:from-[#A66A00] hover:via-[#8A5700] hover:to-[#6D4500] text-white rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+                                className="flex-1 h-14 bg-gradient-to-r from-[#C37C00] via-[#A66A00] to-[#8A5700] hover:from-[#A66A00] hover:via-[#8A5700] hover:to-[#6D4500] text-white rounded-xl font-bold text-lg  hover: transition-all duration-300 transform hover:scale-105"
                             >
                                 {isLoading ? (
                                     <>

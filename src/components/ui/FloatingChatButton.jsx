@@ -17,10 +17,10 @@ const FloatingChatButton = ({ isOpen, onClick, unreadCount }) => {
         <Button
           onClick={onClick}
           className={`
-            relative w-18 h-18 rounded-full shadow-2xl transition-all duration-300 transform hover:scale-110 active:scale-95 backdrop-blur-sm
+            relative w-18 h-18 rounded-full  transition-all duration-300 transform hover:scale-110 active:scale-95 backdrop-blur-sm
             ${isOpen
-              ? 'bg-gradient-to-r from-[#B54A35] to-[#8A3A2A] hover:from-[#8A3A2A] hover:to-[#6D2C20] shadow-[#B54A35]/20'
-              : 'bg-gradient-to-r from-[#A37F41] via-[#C5A56D] to-[#8A6C37] hover:from-[#8A6C37] hover:via-[#A37F41] hover:to-[#6D552C] shadow-[#A37F41]/20'
+              ? 'bg-gradient-to-r from-[#B54A35] to-[#8A3A2A] hover:from-[#8A3A2A] hover:to-[#6D2C20] [#B54A35]/20'
+              : 'bg-gradient-to-r from-[#A37F41] via-[#C5A56D] to-[#8A6C37] hover:from-[#8A6C37] hover:via-[#A37F41] hover:to-[#6D552C] [#A37F41]/20'
             }
             text-white border-2 border-white/20 flex items-center justify-center
             before:absolute before:inset-0 before:rounded-full before:bg-white before:opacity-0 before:transition-opacity before:duration-300 hover:before:opacity-15
@@ -29,24 +29,24 @@ const FloatingChatButton = ({ isOpen, onClick, unreadCount }) => {
         >
           <div className="relative z-10">
             {isOpen ? (
-              <X className="w-8 h-8 drop-shadow-lg" />
+              <X className="w-8 h-8 drop-" />
             ) : (
               <div className="flex items-center justify-center">
-                <Bot className="w-8 h-8 drop-shadow-lg" />
+                <Bot className="w-8 h-8 drop-" />
               </div>
             )}
           </div>
 
           {/* Notification badge for unread messages */}
           {!isOpen && unreadCount > 0 && (
-            <div className="absolute -top-2 -right-2 w-7 h-7 bg-gradient-to-r from-red-500 to-red-600 rounded-full border-3 border-white flex items-center justify-center shadow-lg">
+            <div className="absolute -top-2 -right-2 w-7 h-7 bg-gradient-to-r from-red-500 to-red-600 rounded-full border-3 border-white flex items-center justify-center ">
               <span className="text-white text-xs font-bold">{unreadCount > 99 ? '99+' : unreadCount}</span>
             </div>
           )}
 
           {/* Notification dot (legacy, if unreadCount not provided) */}
           {!isOpen && !unreadCount && (
-            <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-red-500 to-red-600 rounded-full border-3 border-white flex items-center justify-center shadow-lg">
+            <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-red-500 to-red-600 rounded-full border-3 border-white flex items-center justify-center ">
               <div className="w-2.5 h-2.5 bg-white rounded-full animate-pulse"></div>
             </div>
           )}

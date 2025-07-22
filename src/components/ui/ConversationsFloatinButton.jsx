@@ -45,7 +45,7 @@ const ConversationsModal = ({ isOpen, onClose, onSelectConversation, conversatio
 
   return (
     <div className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4" dir="rtl">
-      <Card className="w-full max-w-md h-[70vh] flex flex-col bg-white rounded-2xl shadow-2xl">
+      <Card className="w-full max-w-md h-[70vh] flex flex-col bg-white rounded-2xl ">
         <CardHeader className="flex-shrink-0 p-6 border-b bg-gradient-to-l from-blue-50 to-indigo-50 rounded-t-2xl">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -538,14 +538,14 @@ const ConversationsFloatinButton = ({ user, onOpenChat, onSelectConversation }) 
             onClick={handleClick}
             disabled={buttonStatus === 'connecting'}
             className={`
-              relative w-16 h-16 rounded-full shadow-2xl transition-all duration-300 transform hover:scale-110 active:scale-95 backdrop-blur-sm
+              relative w-16 h-16 rounded-full  transition-all duration-300 transform hover:scale-110 active:scale-95 backdrop-blur-sm
               ${buttonStatus === 'connected'
-                ? 'bg-gradient-to-r from-[#A37F41] via-[#C5A56D] to-[#8A6C37] hover:from-[#8A6C37] hover:via-[#A37F41] hover:to-[#6D552C] shadow-[#A37F41]/20'
+                ? 'bg-gradient-to-r from-[#A37F41] via-[#C5A56D] to-[#8A6C37] hover:from-[#8A6C37] hover:via-[#A37F41] hover:to-[#6D552C] [#A37F41]/20'
                 : buttonStatus === 'error'
-                  ? 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 shadow-red-500/20'
+                  ? 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 /20'
                   : buttonStatus === 'connecting'
-                    ? 'bg-gradient-to-r from-gray-400 to-gray-500 shadow-gray-400/20'
-                    : 'bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 shadow-gray-500/20'
+                    ? 'bg-gradient-to-r from-gray-400 to-gray-500 /20'
+                    : 'bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 /20'
               }
               text-white border-2 border-white/20 flex items-center justify-center
               before:absolute before:inset-0 before:rounded-full before:bg-white before:opacity-0 before:transition-opacity before:duration-300 hover:before:opacity-15
@@ -557,17 +557,17 @@ const ConversationsFloatinButton = ({ user, onOpenChat, onSelectConversation }) 
               {buttonStatus === 'connecting' ? (
                 <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               ) : buttonStatus === 'error' ? (
-                <AlertCircle className="w-7 h-7 drop-shadow-lg" />
+                <AlertCircle className="w-7 h-7 drop-" />
               ) : showConversations ? (
-                <X className="w-7 h-7 drop-shadow-lg" />
+                <X className="w-7 h-7 drop-" />
               ) : (
-                <MessageSquare className="w-7 h-7 drop-shadow-lg" />
+                <MessageSquare className="w-7 h-7 drop-" />
               )}
             </div>
 
             {/* Unread count badge */}
             {unreadCount > 0 && buttonStatus === 'connected' && !showConversations && (
-              <div className="absolute -top-2 -right-2 w-7 h-7 bg-gradient-to-r from-red-500 to-red-600 rounded-full border-3 border-white flex items-center justify-center shadow-lg">
+              <div className="absolute -top-2 -right-2 w-7 h-7 bg-gradient-to-r from-red-500 to-red-600 rounded-full border-3 border-white flex items-center justify-center ">
                 <span className="text-white text-xs font-bold">
                   {unreadCount > 99 ? '99+' : unreadCount}
                 </span>
@@ -595,7 +595,7 @@ const ConversationsFloatinButton = ({ user, onOpenChat, onSelectConversation }) 
 
         {/* Connection error tooltip */}
         {connectionError && !showConversations && (
-          <div className="absolute bottom-full right-0 mb-2 max-w-xs p-3 bg-red-900 text-white text-sm rounded-lg shadow-lg">
+          <div className="absolute bottom-full right-0 mb-2 max-w-xs p-3 bg-red-900 text-white text-sm rounded-lg ">
             <div className="flex items-center gap-2">
               <AlertCircle className="w-4 h-4" />
               <span>خطأ في الاتصال</span>
@@ -630,7 +630,7 @@ const ConversationsFloatinButton = ({ user, onOpenChat, onSelectConversation }) 
       {/* Loading overlay for product fetching */}
       {isLoadingProduct && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center">
-          <div className="bg-white rounded-2xl p-8 shadow-2xl">
+          <div className="bg-white rounded-2xl p-8 ">
             <div className="flex items-center gap-4">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
               <div className="text-right">

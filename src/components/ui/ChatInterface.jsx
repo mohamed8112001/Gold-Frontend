@@ -232,7 +232,7 @@ const ChatInterface = ({ isOpen, conversation, onClose }) => {
   if (isMinimized) {
     return (
       <div className="fixed bottom-24 right-6 z-40 animate-in slide-in-from-bottom-8 duration-300">
-        <Card className="w-80 shadow-2xl border-0 bg-white/95 backdrop-blur-xl overflow-hidden rounded-2xl">
+        <Card className="w-80  border-0 bg-white/95 backdrop-blur-xl overflow-hidden rounded-2xl">
           <CardHeader className="bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-white p-3 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-yellow-300/30 to-yellow-700/30"></div>
             <div className="absolute inset-0 opacity-20">
@@ -267,7 +267,7 @@ const ChatInterface = ({ isOpen, conversation, onClose }) => {
     const shop = conversation.shop || {};
     return (
       <div className="fixed bottom-24 right-6 z-40 w-96 h-[500px] animate-in slide-in-from-bottom-8 duration-300">
-        <Card className="w-full h-full shadow-2xl border-0 bg-white/98 backdrop-blur-xl overflow-hidden rounded-2xl ring-1 ring-yellow-200/50">
+        <Card className="w-full h-full  border-0 bg-white/98 backdrop-blur-xl overflow-hidden rounded-2xl ring-1 ring-yellow-200/50">
           <CardHeader className="bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-white p-4 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-yellow-300/30 to-yellow-700/30"></div>
             <div className="absolute inset-0 opacity-20">
@@ -336,13 +336,13 @@ const ChatInterface = ({ isOpen, conversation, onClose }) => {
                         >
                           <div className={`max-w-[85%] group ${isUser ? 'flex-row-reverse' : 'flex-row'} flex items-end gap-2`}>
                             {!isConsecutive && (
-                              <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${isUser ? 'bg-gradient-to-r from-yellow-500 to-yellow-600' : 'bg-gradient-to-r from-gray-400 to-gray-500'} shadow-lg ring-2 ring-white/30`}>
+                              <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${isUser ? 'bg-gradient-to-r from-yellow-500 to-yellow-600' : 'bg-gradient-to-r from-gray-400 to-gray-500'}  ring-2 ring-white/30`}>
                                 {isUser ? <User className="w-4 h-4 text-white" /> : <Bot className="w-4 h-4 text-white" />}
                               </div>
                             )}
                             {isConsecutive && <div className="w-8" />}
                             
-                            <div className={`p-3 rounded-2xl text-sm shadow-lg backdrop-blur-sm transition-all duration-200 hover:shadow-xl group-hover:scale-[1.02] ${isUser ? `bg-gradient-to-r from-yellow-500 to-yellow-600 text-white ${isConsecutive ? 'rounded-br-md' : 'rounded-br-md'} shadow-yellow-200/50 ring-1 ring-yellow-400/20` : `bg-white/95 text-gray-800 ${isConsecutive ? 'rounded-bl-md' : 'rounded-bl-md'} ring-1 ring-gray-100/50 shadow-gray-200/50`}`}>
+                            <div className={`p-3 rounded-2xl text-sm  backdrop-blur-sm transition-all duration-200 hover: group-hover:scale-[1.02] ${isUser ? `bg-gradient-to-r from-yellow-500 to-yellow-600 text-white ${isConsecutive ? 'rounded-br-md' : 'rounded-br-md'} /50 ring-1 ring-yellow-400/20` : `bg-white/95 text-gray-800 ${isConsecutive ? 'rounded-bl-md' : 'rounded-bl-md'} ring-1 ring-gray-100/50 /50`}`}>
                               <p className="leading-relaxed break-words font-medium">{msg.content}</p>
                               <div className="flex items-center justify-between mt-2">
                                 <p className={`text-xs font-medium ${isUser ? 'text-yellow-100/80' : 'text-gray-500'}`}>
@@ -364,9 +364,9 @@ const ChatInterface = ({ isOpen, conversation, onClose }) => {
                   
                   {chatTyping && (
                     <div className="flex justify-start animate-in fade-in-0 slide-in-from-bottom-2 duration-300">
-                      <div className="bg-white/95 text-gray-800 p-3 rounded-2xl rounded-bl-md max-w-[85%] shadow-lg ring-1 ring-gray-100/50 backdrop-blur-sm">
+                      <div className="bg-white/95 text-gray-800 p-3 rounded-2xl rounded-bl-md max-w-[85%]  ring-1 ring-gray-100/50 backdrop-blur-sm">
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center shadow-lg ring-2 ring-white/30">
+                          <div className="w-8 h-8 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center  ring-2 ring-white/30">
                             <Bot className="w-4 h-4 text-white" />
                           </div>
                           <div className="flex items-center gap-2">
@@ -395,7 +395,7 @@ const ChatInterface = ({ isOpen, conversation, onClose }) => {
                   onChange={(e) => setChatInput(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder="اكتب رسالتك هنا..."
-                  className="flex-1 text-right border-gray-200 focus:border-yellow-400 focus:ring-yellow-400 rounded-xl bg-white/90 backdrop-blur-sm h-12 px-4 font-medium shadow-sm ring-1 ring-gray-100/50 focus:ring-2"
+                  className="flex-1 text-right border-gray-200 focus:border-yellow-400 focus:ring-yellow-400 rounded-xl bg-white/90 backdrop-blur-sm h-12 px-4 font-medium  ring-1 ring-gray-100/50 focus:ring-2"
                   disabled={chatLoading}
                   dir="rtl"
                 />
@@ -403,7 +403,7 @@ const ChatInterface = ({ isOpen, conversation, onClose }) => {
                   onClick={handleSendChatMessage}
                   size="sm"
                   disabled={!chatInput.trim() || chatLoading}
-                  className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-6 rounded-xl h-12 transition-all duration-200 disabled:opacity-50 shadow-lg hover:shadow-xl font-semibold ring-1 ring-yellow-400/20 hover:ring-yellow-400/40"
+                  className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-6 rounded-xl h-12 transition-all duration-200 disabled:opacity-50  hover: font-semibold ring-1 ring-yellow-400/20 hover:ring-yellow-400/40"
                 >
                   {chatLoading ? (
                     <Loader2 className="w-5 h-5 animate-spin" />
@@ -422,7 +422,7 @@ const ChatInterface = ({ isOpen, conversation, onClose }) => {
   // Default chatbot mode
   return (
     <div className="fixed bottom-24 right-6 z-40 w-96 h-[500px] animate-in slide-in-from-bottom-8 duration-300">
-      <Card className="w-full h-full shadow-2xl border-0 bg-white/98 backdrop-blur-xl overflow-hidden rounded-2xl ring-1 ring-yellow-200/50">
+      <Card className="w-full h-full  border-0 bg-white/98 backdrop-blur-xl overflow-hidden rounded-2xl ring-1 ring-yellow-200/50">
         <CardHeader className="bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-white p-4 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-yellow-300/30 to-yellow-700/30"></div>
           <div className="absolute inset-0 opacity-20">
@@ -478,13 +478,13 @@ const ChatInterface = ({ isOpen, conversation, onClose }) => {
                     >
                       <div className={`max-w-[85%] group ${message.sender === 'user' ? 'flex-row-reverse' : 'flex-row'} flex items-end gap-2`}>
                         {!isConsecutive && (
-                          <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${message.sender === 'user' ? 'bg-gradient-to-r from-yellow-500 to-yellow-600' : 'bg-gradient-to-r from-yellow-400 to-yellow-500'} shadow-lg ring-2 ring-white/30`}>
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${message.sender === 'user' ? 'bg-gradient-to-r from-yellow-500 to-yellow-600' : 'bg-gradient-to-r from-yellow-400 to-yellow-500'}  ring-2 ring-white/30`}>
                             {message.sender === 'user' ? <User className="w-4 h-4 text-white" /> : <Bot className="w-4 h-4 text-white" />}
                           </div>
                         )}
                         {isConsecutive && <div className="w-8" />}
                         
-                        <div className={`p-3 rounded-2xl text-sm shadow-lg backdrop-blur-sm transition-all duration-200 hover:shadow-xl group-hover:scale-[1.02] ${message.sender === 'user' ? `bg-gradient-to-r from-yellow-500 to-yellow-600 text-white ${isConsecutive ? 'rounded-br-md' : 'rounded-br-md'} shadow-yellow-200/50 ring-1 ring-yellow-400/20` : `bg-white/95 text-gray-800 ${isConsecutive ? 'rounded-bl-md' : 'rounded-bl-md'} ring-1 ring-gray-100/50 shadow-gray-200/50`}`}>
+                        <div className={`p-3 rounded-2xl text-sm  backdrop-blur-sm transition-all duration-200 hover: group-hover:scale-[1.02] ${message.sender === 'user' ? `bg-gradient-to-r from-yellow-500 to-yellow-600 text-white ${isConsecutive ? 'rounded-br-md' : 'rounded-br-md'} /50 ring-1 ring-yellow-400/20` : `bg-white/95 text-gray-800 ${isConsecutive ? 'rounded-bl-md' : 'rounded-bl-md'} ring-1 ring-gray-100/50 /50`}`}>
                           <p className="leading-relaxed break-words font-medium">{message.text}</p>
                           <p className={`text-xs mt-2 font-medium ${message.sender === 'user' ? 'text-yellow-100/80' : 'text-gray-500'}`}>
                             {formatTime(message.timestamp)}
@@ -497,9 +497,9 @@ const ChatInterface = ({ isOpen, conversation, onClose }) => {
 
                 {isLoading && (
                   <div className="flex justify-start animate-in fade-in-0 slide-in-from-bottom-2 duration-300">
-                    <div className="bg-white/95 text-gray-800 p-3 rounded-2xl rounded-bl-md max-w-[85%] shadow-lg ring-1 ring-gray-100/50 backdrop-blur-sm">
+                    <div className="bg-white/95 text-gray-800 p-3 rounded-2xl rounded-bl-md max-w-[85%]  ring-1 ring-gray-100/50 backdrop-blur-sm">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center shadow-lg ring-2 ring-white/30">
+                        <div className="w-8 h-8 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center  ring-2 ring-white/30">
                           <Bot className="w-4 h-4 text-white" />
                         </div>
                         <div className="flex items-center gap-2">
@@ -534,7 +534,7 @@ const ChatInterface = ({ isOpen, conversation, onClose }) => {
                 </div>
                 <Button
                   onClick={() => navigate('/auth/login')}
-                  className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white w-full rounded-xl h-12 transition-all duration-200 shadow-lg hover:shadow-xl font-semibold ring-1 ring-yellow-400/20 hover:ring-yellow-400/40"
+                  className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white w-full rounded-xl h-12 transition-all duration-200  hover: font-semibold ring-1 ring-yellow-400/20 hover:ring-yellow-400/40"
                 >
                   <LogIn className="w-5 h-5 mr-2" />
                   تسجيل الدخول
@@ -560,7 +560,7 @@ const ChatInterface = ({ isOpen, conversation, onClose }) => {
                     onChange={(e) => setInputMessage(e.target.value)}
                     onKeyDown={handleKeyDown}
                     placeholder="اكتب رسالتك هنا..."
-                    className="flex-1 text-right border-gray-200 focus:border-yellow-400 focus:ring-yellow-400 rounded-xl bg-white/90 backdrop-blur-sm h-12 px-4 font-medium shadow-sm ring-1 ring-gray-100/50 focus:ring-2 transition-all duration-200"
+                    className="flex-1 text-right border-gray-200 focus:border-yellow-400 focus:ring-yellow-400 rounded-xl bg-white/90 backdrop-blur-sm h-12 px-4 font-medium  ring-1 ring-gray-100/50 focus:ring-2 transition-all duration-200"
                     disabled={isLoading}
                     dir="rtl"
                   />
@@ -568,7 +568,7 @@ const ChatInterface = ({ isOpen, conversation, onClose }) => {
                     onClick={handleSendMessage}
                     size="sm"
                     disabled={!inputMessage.trim() || isLoading}
-                    className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-6 rounded-xl h-12 transition-all duration-200 disabled:opacity-50 shadow-lg hover:shadow-xl font-semibold ring-1 ring-yellow-400/20 hover:ring-yellow-400/40 hover:scale-105"
+                    className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-6 rounded-xl h-12 transition-all duration-200 disabled:opacity-50  hover: font-semibold ring-1 ring-yellow-400/20 hover:ring-yellow-400/40 hover:scale-105"
                   >
                     {isLoading ? (
                       <Loader2 className="w-5 h-5 animate-spin" />

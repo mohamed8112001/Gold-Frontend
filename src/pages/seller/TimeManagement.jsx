@@ -460,7 +460,7 @@ const TimeManagement = () => {
                     {groupedTimes[date]
                       .sort((a, b) => a.time.localeCompare(b.time))
                       .map((time) => (
-                        <div key={time._id} className={`border rounded-lg p-4 hover:shadow-md transition-shadow ${time.isBooked ? 'border-[#FFDB99] bg-[#FFF8E6]' : 'border-[#FFE6B3] bg-[#FFF0CC]'
+                        <div key={time._id} className={`border rounded-lg p-4 hover: transition- ${time.isBooked ? 'border-[#FFDB99] bg-[#FFF8E6]' : 'border-[#FFE6B3] bg-[#FFF0CC]'
                           }`}>
                           <div className="flex justify-between items-start">
                             <div className="flex-1">

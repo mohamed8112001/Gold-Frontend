@@ -130,7 +130,7 @@ const Login = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 items-stretch h-full bg-white/80 backdrop-blur-sm">
 
           {/* Left Side - Enhanced Branding with Slider */}
-          <div className="relative flex flex-col items-center justify-center p-12 overflow-hidden" style={{ background: 'linear-gradient(135deg, #A37F41 0%, #B8904F 50%, #C9A05D 100%)' }}>
+          <div className="relative flex flex-col items-center justify-center p-12 overflow-hidden order-1 lg:order-2" style={{ background: 'linear-gradient(135deg, #A37F41 0%, #B8904F 50%, #C9A05D 100%)' }}>
             {/* Decorative elements */}
             <div className="absolute top-10 left-10 w-20 h-20 bg-white/20 rounded-full blur-xl"></div>
             <div className="absolute bottom-10 right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
@@ -138,9 +138,9 @@ const Login = () => {
             {/* Image Slider Container */}
             <div className="relative w-80 h-80 mb-12">
               {/* Main circular container */}
-              <div className="w-full h-full rounded-full flex items-center justify-center shadow-2xl relative overflow-hidden border-8 border-white/50" style={{ background: 'linear-gradient(135deg, #FEF7ED 0%, #FDF4E8 100%)' }}>
+              <div className="w-full h-full rounded-full flex items-center justify-center  relative overflow-hidden border-8 border-white/50" style={{ background: 'linear-gradient(135deg, #FEF7ED 0%, #FDF4E8 100%)' }}>
                 {/* Slider images */}
-                <div className="relative w-64 h-64 rounded-full overflow-hidden shadow-lg">
+                <div className="relative w-64 h-64 rounded-full overflow-hidden ">
                   {sliderImages.map((image, index) => (
                     <img
                       key={index}
@@ -194,10 +194,10 @@ const Login = () => {
           </div>
 
           {/* Right Side - Enhanced Form */}
-          <div className="w-full bg-gradient-to-br from-white to-[#FFF8E6] p-8 lg:p-12 flex flex-col justify-center relative">
+          <div className="w-full bg-gradient-to-br from-white to-[#FFF8E6] p-8 lg:p-12 flex flex-col justify-center relative order-2 lg:order-1">
             {/* Navigation Tabs with enhanced styling */}
             <div className="flex justify-end mb-8">
-              <div className="flex rounded-xl p-1 shadow-lg" style={{ backgroundColor: '#F5F1EB' }}>
+              <div className="flex rounded-xl p-1 " style={{ backgroundColor: '#F5F1EB' }}>
                 <Link
                   to={ROUTES.USER_TYPE_SELECTION}
                   className="px-8 py-3 rounded-lg font-medium transition-all duration-200 hover:bg-white/50"
@@ -205,7 +205,7 @@ const Login = () => {
                 >
                   إنشاء حساب
                 </Link>
-                <div className="px-8 py-3 bg-white rounded-lg font-medium shadow-md border transform scale-105" style={{ color: '#A37F41', borderColor: '#E5D5C3' }}>
+                <div className="px-8 py-3 bg-white rounded-lg font-medium  border transform scale-105" style={{ color: '#A37F41', borderColor: '#E5D5C3' }}>
                   تسجيل الدخول
                 </div>
               </div>
@@ -324,7 +324,7 @@ const Login = () => {
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full text-white py-5 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full text-white py-5 text-lg font-semibold rounded-xl  hover: transform hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{
                     background: 'linear-gradient(135deg, #A37F41 0%, #8A6C37 50%, #6D552C 100%)',
                     border: 'none'

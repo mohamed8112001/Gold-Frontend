@@ -204,7 +204,7 @@ const HelpCenter = () => {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Card className="h-full text-center hover:shadow-lg transition-all duration-300 border-0 bg-white/80 backdrop-blur-sm cursor-pointer hover:scale-105">
+                <Card className="h-full text-center hover: transition-all duration-300 border-0 bg-white/80 backdrop-blur-sm cursor-pointer hover:scale-105">
                   <CardHeader>
                     <div className={`w-16 h-16 ${action.color} rounded-full flex items-center justify-center mx-auto mb-4`}>
                       <action.icon className="w-8 h-8 text-white" />
@@ -292,7 +292,7 @@ const HelpCenter = () => {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-lg">
+                <Card className="border-0 bg-white/80 backdrop-blur-sm ">
                   <CardHeader
                     className="cursor-pointer hover:bg-gray-50/50 transition-colors duration-200"
                     onClick={() => toggleFaq(faq.id)}
@@ -352,7 +352,7 @@ const HelpCenter = () => {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Card className="h-full hover:shadow-lg transition-all duration-300 border-0 bg-white/80 backdrop-blur-sm cursor-pointer hover:scale-105">
+                <Card className="h-full hover: transition-all duration-300 border-0 bg-white/80 backdrop-blur-sm cursor-pointer hover:scale-105">
                   <CardHeader>
                     <div className="w-12 h-12 bg-gradient-to-r from-[#C37C00] to-[#E6A500] rounded-lg flex items-center justify-center mb-4">
                       <Book className="w-6 h-6 text-white" />

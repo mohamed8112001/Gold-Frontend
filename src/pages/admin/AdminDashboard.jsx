@@ -322,7 +322,7 @@ const AdminDashboard = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-yellow-50/30 to-amber-50/20 flex items-center justify-center pt-20">
-        <div className="bg-white rounded-2xl shadow-2xl border border-yellow-200/30 backdrop-blur-sm p-12 text-center">
+        <div className="bg-white rounded-2xl  border border-yellow-200/30 backdrop-blur-sm p-12 text-center">
           <div className="w-16 h-16 bg-gradient-to-br from-yellow-500 to-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-6 animate-pulse">
             <BarChart3 className="w-8 h-8 text-white" />
           </div>
@@ -337,11 +337,11 @@ const AdminDashboard = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-yellow-50/30 to-amber-50/20 flex pt-20">
       {/* Sidebar Navigation */}
-      <div className="w-80 bg-white shadow-2xl border-r border-gray-100 flex flex-col">
+      <div className="w-80 bg-white  border-r border-gray-100 flex flex-col">
         {/* Sidebar Header */}
         <div className="p-8 border-b border-gray-100">
           <div className="flex items-center space-x-4 space-x-reverse">
-            <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-amber-600 rounded-xl flex items-center justify-center shadow-lg">
+            <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-amber-600 rounded-xl flex items-center justify-center ">
               <BarChart3 className="w-6 h-6 text-white" />
             </div>
             <div>
@@ -359,7 +359,7 @@ const AdminDashboard = () => {
             <button
               onClick={() => setActiveTab('overview')}
               className={`w-full flex items-center px-4 py-3 rounded-xl text-left transition-all duration-200 ${activeTab === 'overview'
-                ? 'bg-gradient-to-r from-[#A37F41] to-[#8A6C37] text-white shadow-lg'
+                ? 'bg-gradient-to-r from-[#A37F41] to-[#8A6C37] text-white '
                 : 'text-gray-700 hover:bg-[#F8F4ED]'
                 }`}
             >
@@ -370,7 +370,7 @@ const AdminDashboard = () => {
             <button
               onClick={() => setActiveTab('pending')}
               className={`w-full flex items-center px-4 py-3 rounded-xl text-left transition-all duration-200 ${activeTab === 'pending'
-                ? 'bg-gradient-to-r from-[#C5A56D] to-[#A37F41] text-white shadow-lg'
+                ? 'bg-gradient-to-r from-[#C5A56D] to-[#A37F41] text-white '
                 : 'text-gray-700 hover:bg-[#F8F4ED]'
                 }`}
             >
@@ -389,7 +389,7 @@ const AdminDashboard = () => {
             <button
               onClick={() => setActiveTab('shops')}
               className={`w-full flex items-center px-4 py-3 rounded-xl text-left transition-all duration-200 ${activeTab === 'shops'
-                ? 'bg-gradient-to-r from-yellow-500 to-amber-500 text-white shadow-lg'
+                ? 'bg-gradient-to-r from-yellow-500 to-amber-500 text-white '
                 : 'text-gray-700 hover:bg-yellow-50'
                 }`}
             >
@@ -435,7 +435,7 @@ const AdminDashboard = () => {
           <Button
             onClick={loadAdminData}
             disabled={isLoading}
-            className="w-full bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white shadow-lg hover:shadow-xl transition-all duration-200 py-3 rounded-xl"
+            className="w-full bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white  hover: transition-all duration-200 py-3 rounded-xl"
           >
             <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
             {isLoading ? 'Refreshing...' : 'Refresh Data'}
@@ -452,7 +452,7 @@ const AdminDashboard = () => {
 
           {/* Enhanced Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-10">
-            <Card className="bg-gradient-to-br from-yellow-50 to-yellow-100 border-yellow-200 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+            <Card className="bg-gradient-to-br from-yellow-50 to-yellow-100 border-yellow-200 hover: transition-all duration-300 hover:-translate-y-1">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -460,14 +460,14 @@ const AdminDashboard = () => {
                     <p className="text-3xl font-bold text-yellow-900">{stats.totalShops}</p>
                     <p className="text-xs text-yellow-600 mt-1">Active in system</p>
                   </div>
-                  <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl flex items-center justify-center shadow-lg">
+                  <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl flex items-center justify-center ">
                     <Store className="w-6 h-6 text-white" />
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-gradient-to-br from-amber-50 to-amber-100 border-amber-200 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+            <Card className="bg-gradient-to-br from-amber-50 to-amber-100 border-amber-200 hover: transition-all duration-300 hover:-translate-y-1">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -475,14 +475,14 @@ const AdminDashboard = () => {
                     <p className="text-3xl font-bold text-amber-900">{stats.pendingShops}</p>
                     <p className="text-xs text-amber-600 mt-1">Awaiting approval</p>
                   </div>
-                  <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl flex items-center justify-center shadow-lg">
+                  <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl flex items-center justify-center ">
                     <Clock className="w-6 h-6 text-white" />
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+            <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200 hover: transition-all duration-300 hover:-translate-y-1">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -490,14 +490,14 @@ const AdminDashboard = () => {
                     <p className="text-3xl font-bold text-green-900">{stats.approvedShops}</p>
                     <p className="text-xs text-green-600 mt-1">Live stores</p>
                   </div>
-                  <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg">
+                  <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center ">
                     <CheckCircle className="w-6 h-6 text-white" />
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-gradient-to-br from-gray-50 to-gray-100 border-gray-200 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+            <Card className="bg-gradient-to-br from-gray-50 to-gray-100 border-gray-200 hover: transition-all duration-300 hover:-translate-y-1">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -505,14 +505,14 @@ const AdminDashboard = () => {
                     <p className="text-3xl font-bold text-gray-900">{stats.totalUsers}</p>
                     <p className="text-xs text-gray-600 mt-1">Registered users</p>
                   </div>
-                  <div className="w-12 h-12 bg-gradient-to-br from-gray-500 to-gray-600 rounded-xl flex items-center justify-center shadow-lg">
+                  <div className="w-12 h-12 bg-gradient-to-br from-gray-500 to-gray-600 rounded-xl flex items-center justify-center ">
                     <Users className="w-6 h-6 text-white" />
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-gradient-to-br from-amber-50 to-amber-100 border-amber-200 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+            <Card className="bg-gradient-to-br from-amber-50 to-amber-100 border-amber-200 hover: transition-all duration-300 hover:-translate-y-1">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -520,7 +520,7 @@ const AdminDashboard = () => {
                     <p className="text-3xl font-bold text-amber-900">{stats.totalProducts}</p>
                     <p className="text-xs text-amber-600 mt-1">Total products</p>
                   </div>
-                  <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl flex items-center justify-center shadow-lg">
+                  <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl flex items-center justify-center ">
                     <Package className="w-6 h-6 text-white" />
                   </div>
                 </div>
@@ -535,7 +535,7 @@ const AdminDashboard = () => {
               <div className="space-y-8">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                   {/* Enhanced Recent Activity */}
-                  <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
+                  <Card className="bg-white  border-0 rounded-2xl overflow-hidden">
                     <CardHeader className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-6">
                       <CardTitle className="flex items-center text-xl font-semibold">
                         <Calendar className="w-5 h-5 mr-3" />
@@ -600,7 +600,7 @@ const AdminDashboard = () => {
                   </Card>
 
                   {/* Enhanced Quick Actions */}
-                  <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
+                  <Card className="bg-white  border-0 rounded-2xl overflow-hidden">
                     <CardHeader className="bg-gradient-to-r from-[#A37F41] to-[#8A6C37] text-white p-6">
                       <CardTitle className="flex items-center text-xl font-semibold">
                         <TrendingUp className="w-5 h-5 mr-3" />
@@ -609,7 +609,7 @@ const AdminDashboard = () => {
                     </CardHeader>
                     <CardContent className="p-6 space-y-4">
                       <Button
-                        className="w-full justify-start bg-gradient-to-r from-[#C5A56D] to-[#A37F41] hover:from-[#A37F41] hover:to-[#8A6C37] text-white shadow-lg hover:shadow-xl transition-all duration-200 py-3 rounded-xl"
+                        className="w-full justify-start bg-gradient-to-r from-[#C5A56D] to-[#A37F41] hover:from-[#A37F41] hover:to-[#8A6C37] text-white  hover: transition-all duration-200 py-3 rounded-xl"
                         onClick={() => setActiveTab('pending')}
                         disabled={stats.pendingShops === 0}
                       >
@@ -617,21 +617,21 @@ const AdminDashboard = () => {
                         Review Pending Requests ({stats.pendingShops})
                       </Button>
                       <Button
-                        className="w-full justify-start bg-gradient-to-r from-[#8A6C37] to-[#6D552C] hover:from-[#6D552C] hover:to-[#49391D] text-white shadow-lg hover:shadow-xl transition-all duration-200 py-3 rounded-xl"
+                        className="w-full justify-start bg-gradient-to-r from-[#8A6C37] to-[#6D552C] hover:from-[#6D552C] hover:to-[#49391D] text-white  hover: transition-all duration-200 py-3 rounded-xl"
                         onClick={() => setActiveTab('shops')}
                       >
                         <Store className="w-5 h-5 mr-3" />
                         Manage All Stores ({stats.totalShops})
                       </Button>
                       <Button
-                        className="w-full justify-start bg-gradient-to-r from-[#D3BB92] to-[#C5A56D] hover:from-[#C5A56D] hover:to-[#A37F41] text-white shadow-lg hover:shadow-xl transition-all duration-200 py-3 rounded-xl"
+                        className="w-full justify-start bg-gradient-to-r from-[#D3BB92] to-[#C5A56D] hover:from-[#C5A56D] hover:to-[#A37F41] text-white  hover: transition-all duration-200 py-3 rounded-xl"
                         onClick={loadAdminData}
                       >
                         <RefreshCw className="w-5 h-5 mr-3" />
                         Refresh Data
                       </Button>
                       <Button
-                        className="w-full justify-start bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl transition-all duration-200 py-3 rounded-xl"
+                        className="w-full justify-start bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white  hover: transition-all duration-200 py-3 rounded-xl"
                         onClick={handleUpdateLegacyShops}
                         disabled={isLoading}
                       >
@@ -646,7 +646,7 @@ const AdminDashboard = () => {
 
             {activeTab === 'pending' && (
               <div className="space-y-8">
-                <div className="bg-white rounded-2xl shadow-lg border border-white/20 p-6">
+                <div className="bg-white rounded-2xl  border border-white/20 p-6">
                   <div className="flex items-center justify-between">
                     <h2 className="text-2xl font-bold bg-gradient-to-r from-[#A37F41] to-[#8A6C37] bg-clip-text text-transparent">
                       Pending Requests
@@ -660,7 +660,7 @@ const AdminDashboard = () => {
                 {pendingShops.length > 0 ? (
                   <div className="grid gap-6">
                     {pendingShops.map((shop) => (
-                      <Card key={shop.id} className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 border-l-4 border-l-amber-500">
+                      <Card key={shop.id} className="bg-white  border-0 rounded-2xl overflow-hidden hover: transition-all duration-300 border-l-4 border-l-amber-500">
                         <CardContent className="p-8">
                           <div className="flex items-start justify-between">
                             <div className="flex-1">
@@ -703,7 +703,7 @@ const AdminDashboard = () => {
                               </Button>
                               <Button
                                 size="sm"
-                                className="bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-4 py-2 rounded-xl"
+                                className="bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white  hover: transition-all duration-200 px-4 py-2 rounded-xl"
                                 onClick={() => handleApproveShop(shop._id || shop.id)}
                               >
                                 <CheckCircle className="w-4 h-4 mr-2" />
@@ -711,7 +711,7 @@ const AdminDashboard = () => {
                               </Button>
                               <Button
                                 size="sm"
-                                className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-4 py-2 rounded-xl"
+                                className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white  hover: transition-all duration-200 px-4 py-2 rounded-xl"
                                 onClick={() => handleRejectShop(shop._id || shop.id)}
                               >
                                 <XCircle className="w-4 h-4 mr-2" />
@@ -724,7 +724,7 @@ const AdminDashboard = () => {
                     ))}
                   </div>
                 ) : (
-                  <div className="bg-white rounded-2xl shadow-lg border border-white/20 p-12 text-center">
+                  <div className="bg-white rounded-2xl  border border-white/20 p-12 text-center">
                     <div className="w-24 h-24 bg-gradient-to-br from-emerald-100 to-emerald-200 rounded-full flex items-center justify-center mx-auto mb-6">
                       <CheckCircle className="w-12 h-12 text-emerald-600" />
                     </div>
@@ -741,7 +741,7 @@ const AdminDashboard = () => {
 
             {activeTab === 'shops' && (
               <div className="space-y-8">
-                <div className="bg-white rounded-2xl shadow-lg border border-white/20 p-6">
+                <div className="bg-white rounded-2xl  border border-white/20 p-6">
                   <div className="flex items-center justify-between">
                     <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                       All Stores
@@ -760,11 +760,11 @@ const AdminDashboard = () => {
                 {allShops.length > 0 ? (
                   <div className="grid gap-6">
                     {allShops.map((shop) => (
-                      <Card key={shop.id} className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300">
+                      <Card key={shop.id} className="bg-white  border-0 rounded-2xl overflow-hidden hover: transition-all duration-300">
                         <CardContent className="p-6">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-6">
-                              <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-indigo-200 rounded-2xl flex items-center justify-center shadow-lg">
+                              <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-indigo-200 rounded-2xl flex items-center justify-center ">
                                 <Store className="w-8 h-8 text-blue-600" />
                               </div>
                               <div>
@@ -791,7 +791,7 @@ const AdminDashboard = () => {
                                 <>
                                   <Button
                                     size="sm"
-                                    className="bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-4 py-2 rounded-xl"
+                                    className="bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white  hover: transition-all duration-200 px-4 py-2 rounded-xl"
                                     onClick={() => handleApproveShop(shop._id || shop.id)}
                                   >
                                     <CheckCircle className="w-4 h-4 mr-2" />
@@ -799,7 +799,7 @@ const AdminDashboard = () => {
                                   </Button>
                                   <Button
                                     size="sm"
-                                    className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-4 py-2 rounded-xl"
+                                    className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white  hover: transition-all duration-200 px-4 py-2 rounded-xl"
                                     onClick={() => handleRejectShop(shop._id || shop.id)}
                                   >
                                     <XCircle className="w-4 h-4 mr-2" />
@@ -809,7 +809,7 @@ const AdminDashboard = () => {
                               )}
                               <Button
                                 size="sm"
-                                className="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-4 py-2 rounded-xl"
+                                className="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white  hover: transition-all duration-200 px-4 py-2 rounded-xl"
                                 onClick={() => handleDeleteShop(shop._id || shop.id)}
                               >
                                 <Trash2 className="w-4 h-4 mr-2" />
@@ -822,7 +822,7 @@ const AdminDashboard = () => {
                     ))}
                   </div>
                 ) : (
-                  <div className="bg-white rounded-2xl shadow-lg border border-white/20 p-12 text-center">
+                  <div className="bg-white rounded-2xl  border border-white/20 p-12 text-center">
                     <div className="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mx-auto mb-6">
                       <Store className="w-12 h-12 text-gray-500" />
                     </div>

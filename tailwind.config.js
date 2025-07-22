@@ -147,17 +147,7 @@ export default {
         serif: ["Amiri", "serif"],
       },
 
-      // Box shadows with golden brown tints
-      boxShadow: {
-        "golden-sm": "0 1px 2px 0 rgba(163, 127, 65, 0.05)",
-        golden:
-          "0 4px 6px -1px rgba(163, 127, 65, 0.1), 0 2px 4px -1px rgba(163, 127, 65, 0.06)",
-        "golden-md":
-          "0 10px 15px -3px rgba(163, 127, 65, 0.1), 0 4px 6px -2px rgba(163, 127, 65, 0.05)",
-        "golden-lg":
-          "0 20px 25px -5px rgba(163, 127, 65, 0.1), 0 10px 10px -5px rgba(163, 127, 65, 0.04)",
-        "golden-xl": "0 25px 50px -12px rgba(163, 127, 65, 0.25)",
-      },
+
 
       // Animation and transitions
       animation: {
@@ -176,8 +166,8 @@ export default {
           "100%": { transform: "translateY(0)", opacity: "1" },
         },
         goldenGlow: {
-          "0%": { boxShadow: "0 0 5px rgba(163, 127, 65, 0.5)" },
-          "100%": { boxShadow: "0 0 20px rgba(163, 127, 65, 0.8)" },
+          "0%": { opacity: "0.8" },
+          "100%": { opacity: "1" },
         },
       },
 

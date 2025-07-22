@@ -61,19 +61,19 @@
 
 /* ===== CARD STYLES ===== */
 .card-primary {
-  @apply bg-secondary-100 border border-secondary-200 rounded-xl shadow-golden-sm;
+  @apply bg-secondary-100 border border-secondary-200 rounded-xl;
 }
 
 .card-secondary {
-  @apply bg-secondary-50 border border-secondary-200 rounded-lg shadow-sm;
+  @apply bg-secondary-50 border border-secondary-200 rounded-lg;
 }
 
 .card-elevated {
-  @apply bg-secondary-100 border border-secondary-300 rounded-xl shadow-golden-md hover:shadow-golden-lg transition-shadow duration-300;
+  @apply bg-secondary-100 border border-secondary-300 rounded-xl transition-colors duration-300;
 }
 
 .card-golden {
-  @apply bg-gradient-to-br from-primary-50 to-primary-100 border border-primary-200 rounded-xl shadow-golden;
+  @apply bg-gradient-to-br from-primary-50 to-primary-100 border border-primary-200 rounded-xl;
 }
 
 /* ===== INPUT STYLES ===== */
@@ -121,11 +121,11 @@
 
 /* ===== HOVER EFFECTS ===== */
 .hover-lift {
-  @apply transition-transform duration-300 hover:-translate-y-1 hover:shadow-golden-lg;
+  @apply transition-transform duration-300 hover:-translate-y-1;
 }
 
 .hover-glow {
-  @apply transition-all duration-300 hover:shadow-golden-xl;
+  @apply transition-all duration-300;
 }
 
 .hover-scale {
@@ -171,18 +171,7 @@
   @apply border-t border-primary-400;
 }
 
-/* ===== SHADOW UTILITIES ===== */
-.shadow-golden-soft {
-  box-shadow: 0 2px 8px rgba(163, 127, 65, 0.08);
-}
 
-.shadow-golden-medium {
-  box-shadow: 0 4px 16px rgba(163, 127, 65, 0.12);
-}
-
-.shadow-golden-strong {
-  box-shadow: 0 8px 32px rgba(163, 127, 65, 0.16);
-}
 
 /* ===== ANIMATION UTILITIES ===== */
 .animate-fade-in-up {

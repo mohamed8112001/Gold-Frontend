@@ -112,7 +112,7 @@ const Favorites = () => {
     ];
 
     const FavoriteCard = ({ product, isListView = false }) => (
-        <Card className={`group hover:shadow-lg hover:shadow-[#A37F41]/20 transition-all duration-300 border-[#E2D2B6]/30 hover:border-[#A37F41]/50 bg-gradient-to-br from-white to-[#F8F4ED]/30 ${isListView ? 'flex' : ''}`}>
+        <Card className={`group hover: hover:[#A37F41]/20 transition-all duration-300 border-[#E2D2B6]/30 hover:border-[#A37F41]/50 bg-gradient-to-br from-white to-[#F8F4ED]/30 ${isListView ? 'flex' : ''}`}>
             <div className={`relative ${isListView ? 'w-48 flex-shrink-0' : ''}`}>
                 <img
                     src={product.image}
@@ -183,7 +183,7 @@ const Favorites = () => {
                         </Button>
                         <Button
                             size="sm"
-                            className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white shadow-lg hover:shadow-[#C37C00]/30"
+                            className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white  hover:[#C37C00]/30"
                             onClick={(e) => {
                                 e.stopPropagation();
                                 navigate(ROUTES.SHOP_DETAILS(product.shopId));
@@ -270,7 +270,7 @@ const Favorites = () => {
                             <Button
                                 size="lg"
                                 onClick={() => navigate(ROUTES.PRODUCTS)}
-                                className="px-8 bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white shadow-lg hover:shadow-[#C37C00]/30"
+                                className="px-8 bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white  hover:[#C37C00]/30"
                             >
                                 تصفح المنتجات
                             </Button>

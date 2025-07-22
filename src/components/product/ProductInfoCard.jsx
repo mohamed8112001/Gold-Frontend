@@ -36,7 +36,7 @@ const ProductInfoCard = ({
   };
 
   return (
-    <div className="bg-white rounded-3xl p-8 shadow-xl border border-gray-100">
+    <div className="bg-white rounded-3xl p-8  border border-gray-100">
       {/* Header */}
       <div className="flex items-start justify-between mb-6">
         <div className="flex-1">
@@ -146,7 +146,7 @@ const ProductInfoCard = ({
           <Button
             size="lg"
             onClick={onBookAppointment}
-            className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white py-4 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300"
+            className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white py-4 rounded-2xl font-bold text-lg  hover: transition-all duration-300"
           >
             <Calendar className="w-5 h-5 mr-2" />
             حجز موعد
@@ -155,7 +155,7 @@ const ProductInfoCard = ({
             size="lg"
             variant="outline"
             onClick={onOpenChat}
-            className="border-2 border-blue-400 text-blue-700 hover:bg-blue-50 hover:border-blue-600 hover:text-blue-800 py-4 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300"
+            className="border-2 border-blue-400 text-blue-700 hover:bg-blue-50 hover:border-blue-600 hover:text-blue-800 py-4 rounded-2xl font-bold text-lg  hover: transition-all duration-300"
           >
             <MessageSquare className="w-5 h-5 mr-2" />
             دردشة الآن

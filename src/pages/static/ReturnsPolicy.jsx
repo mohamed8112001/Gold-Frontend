@@ -135,7 +135,7 @@ const ReturnsPolicy = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
-                    className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300"
+                    className="bg-white rounded-xl p-6  border border-gray-100 hover: transition-all duration-300"
                   >
                     <div className={`w-12 h-12 rounded-lg bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center mb-4`}>
                       <condition.icon className={`w-6 h-6 ${condition.color}`} />
@@ -165,7 +165,7 @@ const ReturnsPolicy = () => {
                     transition={{ duration: 0.6, delay: index * 0.1 }}
                     className="relative"
                   >
-                    <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
+                    <div className="bg-white rounded-xl p-6  border border-gray-100 hover: transition-all duration-300">
                       <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-yellow-600 rounded-full flex items-center justify-center mb-4 text-white font-bold text-lg">
                         {step.step}
                       </div>

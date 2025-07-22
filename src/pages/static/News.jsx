@@ -205,7 +205,7 @@ const News = () => {
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
-              <Card className="overflow-hidden border-0 bg-white/80 backdrop-blur-sm shadow-2xl">
+              <Card className="overflow-hidden border-0 bg-white/80 backdrop-blur-sm ">
                 <div className="grid grid-cols-1 lg:grid-cols-2">
                   <div className="relative h-64 lg:h-auto">
                     <img
@@ -278,7 +278,7 @@ const News = () => {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Card className="h-full overflow-hidden border-0 bg-white/80 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-105">
+                <Card className="h-full overflow-hidden border-0 bg-white/80 backdrop-blur-sm  hover: transition-all duration-300 cursor-pointer hover:scale-105">
                   <div className="relative h-48">
                     <img
                       src={article.image}

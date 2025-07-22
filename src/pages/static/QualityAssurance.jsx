@@ -170,7 +170,7 @@ const QualityAssurance = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
-                    className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300"
+                    className="bg-white rounded-xl p-6  border border-gray-100 hover: transition-all duration-300"
                   >
                     <div className={`w-12 h-12 rounded-lg bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center mb-4`}>
                       <standard.icon className={`w-6 h-6 ${standard.color}`} />
@@ -198,7 +198,7 @@ const QualityAssurance = () => {
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
-                    className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 text-center"
+                    className="bg-white rounded-xl p-6  border border-gray-100 text-center"
                   >
                     <div className="text-4xl font-bold text-yellow-600 mb-2">
                       {feature.percentage}
@@ -226,7 +226,7 @@ const QualityAssurance = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
-                    className="bg-white rounded-xl p-6 shadow-lg border border-gray-100"
+                    className="bg-white rounded-xl p-6  border border-gray-100"
                   >
                     <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-amber-600 rounded-full flex items-center justify-center mb-4 text-white font-bold text-lg">
                       {step.step}

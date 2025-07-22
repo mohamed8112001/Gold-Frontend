@@ -124,7 +124,7 @@ const ShopListSimple = () => {
 
     return (
       <Card
-        className={`group hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1 ${isListView ? 'flex flex-row' : ''}`}
+        className={`group hover: transition-all duration-300 cursor-pointer transform hover:-translate-y-1 ${isListView ? 'flex flex-row' : ''}`}
         onClick={() => {
           const shopId = shop._id || shop.id;
           console.log('Navigating to shop:', shopId, shop.name);
@@ -153,7 +153,7 @@ const ShopListSimple = () => {
             <Button
               size="sm"
               variant="ghost"
-              className="bg-white/80 hover:bg-white shadow-md"
+              className="bg-white/80 hover:bg-white "
               onClick={(e) => {
                 e.stopPropagation();
                 // Handle favorite functionality here
@@ -243,7 +243,7 @@ const ShopListSimple = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-yellow-50 to-white shadow-sm border-b">
+      <div className="bg-gradient-to-r from-yellow-50 to-white  border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div>

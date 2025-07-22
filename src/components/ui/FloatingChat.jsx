@@ -92,7 +92,7 @@ const FloatingChat = () => {
     <>
       <FloatingChatButton isOpen={isChatOpen} onClick={() => setIsChatOpen((open) => !open)} unreadCount={unreadCount} />
       {showConversationList && (
-        <div className="fixed bottom-28 right-6 z-40 w-96 bg-white rounded-2xl shadow-2xl overflow-y-auto animate-in slide-in-from-bottom-8 duration-300 border border-yellow-100">
+        <div className="fixed bottom-28 right-6 z-40 w-96 bg-white rounded-2xl  overflow-y-auto animate-in slide-in-from-bottom-8 duration-300 border border-yellow-100">
           <div className="p-4 border-b font-bold text-lg text-yellow-700">محادثاتك</div>
           <ul className="divide-y">
             {conversations.map((conv) => {

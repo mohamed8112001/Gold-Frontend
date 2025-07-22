@@ -76,14 +76,14 @@ const ShopChat = ({ isOpen, onClose, shopId, shopOwnerId, productId, user, token
   if (!isOpen) return null;
 
   return (
-    <div className="fixed bottom-24 right-6 z-50 w-96 h-[540px] bg-white rounded-2xl shadow-2xl flex flex-col animate-in slide-in-from-bottom-8 duration-300 border border-gray-200">
+    <div className="fixed bottom-24 right-6 z-50 w-96 h-[540px] bg-white rounded-2xl  flex flex-col animate-in slide-in-from-bottom-8 duration-300 border border-gray-200">
       {/* Header */}
       <div className="p-4 border-b flex items-center justify-between bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 rounded-t-2xl">
         <div className="flex items-center gap-3">
           {shopAvatar ? (
-            <img src={shopAvatar} alt="Shop" className="w-10 h-10 rounded-full border-2 border-white shadow" />
+            <img src={shopAvatar} alt="Shop" className="w-10 h-10 rounded-full border-2 border-white " />
           ) : (
-            <div className="w-10 h-10 rounded-full bg-yellow-200 flex items-center justify-center text-xl font-bold text-yellow-700 shadow">🏪</div>
+            <div className="w-10 h-10 rounded-full bg-yellow-200 flex items-center justify-center text-xl font-bold text-yellow-700 ">🏪</div>
           )}
           <div className="flex flex-col">
             <span className="text-white font-bold text-lg leading-tight">{shopName || 'Chat with Store'}</span>
@@ -111,7 +111,7 @@ const ShopChat = ({ isOpen, onClose, shopId, shopOwnerId, productId, user, token
               const isUser = msg.sender._id === user.id || msg.sender._id === user._id;
               return (
                 <div key={msg._id} className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`max-w-[75%] px-4 py-2 rounded-2xl shadow text-base ${isUser ? 'bg-yellow-100 text-right rounded-br-md' : 'bg-white border border-gray-200 text-left rounded-bl-md'}`}>
+                  <div className={`max-w-[75%] px-4 py-2 rounded-2xl  text-base ${isUser ? 'bg-yellow-100 text-right rounded-br-md' : 'bg-white border border-gray-200 text-left rounded-bl-md'}`}>
                     <div className="flex items-center gap-2 mb-1">
                       <span className={`text-xs font-semibold ${isUser ? 'text-yellow-700' : 'text-gray-700'}`}>{isUser ? 'You' : (msg.sender.name || 'Shop')}</span>
                       <span className="text-xs text-gray-400">{formatTime(msg.createdAt)}</span>
@@ -138,7 +138,7 @@ const ShopChat = ({ isOpen, onClose, shopId, shopOwnerId, productId, user, token
         <Button
           onClick={sendMessage}
           disabled={!input.trim() || connecting || loading}
-          className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-6 rounded-xl h-12 transition-all duration-200 disabled:opacity-50 shadow-lg hover:shadow-xl font-semibold"
+          className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-6 rounded-xl h-12 transition-all duration-200 disabled:opacity-50  hover: font-semibold"
         >
           Send
         </Button>

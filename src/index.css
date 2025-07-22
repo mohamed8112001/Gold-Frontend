@@ -101,10 +101,10 @@ p, span, div, label, input, textarea, select {
 
 @keyframes glow {
   0%, 100% {
-    box-shadow: 0 0 5px rgba(195, 124, 0, 0.3);
+    box-: 0 0 5px rgba(195, 124, 0, 0.3);
   }
   50% {
-    box-shadow: 0 0 20px rgba(195, 124, 0, 0.6), 0 0 30px rgba(195, 124, 0, 0.4);
+    box-: 0 0 20px rgba(195, 124, 0, 0.6), 0 0 30px rgba(195, 124, 0, 0.4);
   }
 }
 
@@ -382,6 +382,39 @@ input[type="email"], input[type="url"], input[type="tel"] {
   width: 100vw;
   margin-left: calc(-50vw + 50%);
   margin-right: calc(-50vw + 50%);
+}
+
+/* Header full width improvements */
+.header-full-width {
+  width: 100vw;
+  left: 0;
+  right: 0;
+}
+
+.header-content-spacing {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+@media (min-width: 640px) {
+  .header-content-spacing {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .header-content-spacing {
+    padding-left: 4rem;
+    padding-right: 4rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .header-content-spacing {
+    padding-left: 5rem;
+    padding-right: 5rem;
+  }
 }
 
 /* Compact card content */

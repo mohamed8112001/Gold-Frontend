@@ -142,7 +142,7 @@ const PrivacyPolicy = () => {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Card className="h-full border-0 bg-white/80 backdrop-blur-sm shadow-lg">
+                <Card className="h-full border-0 bg-white/80 backdrop-blur-sm ">
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-3 rtl:space-x-reverse">
@@ -198,7 +198,7 @@ const PrivacyPolicy = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {securityMeasures.map((measure, index) => (
-              <Card key={index} className="border-0 bg-white/80 backdrop-blur-sm shadow-lg">
+              <Card key={index} className="border-0 bg-white/80 backdrop-blur-sm ">
                 <CardContent className="p-4">
                   <div className="flex items-center space-x-3 rtl:space-x-reverse">
                     <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
@@ -234,7 +234,7 @@ const PrivacyPolicy = () => {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-lg">
+                <Card className="border-0 bg-white/80 backdrop-blur-sm ">
                   <CardContent className="p-6">
                     <div className="flex items-start space-x-4 rtl:space-x-reverse">
                       <div className="w-12 h-12 bg-gradient-to-r from-amber-400 to-yellow-500 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -269,7 +269,7 @@ const PrivacyPolicy = () => {
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
-              <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-lg">
+              <Card className="border-0 bg-white/80 backdrop-blur-sm ">
                 <CardHeader>
                   <div className="flex items-center space-x-3 rtl:space-x-reverse">
                     <Mail className="w-6 h-6 text-amber-500" />
@@ -286,7 +286,7 @@ const PrivacyPolicy = () => {
                 </CardContent>
               </Card>
 
-              <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-lg">
+              <Card className="border-0 bg-white/80 backdrop-blur-sm ">
                 <CardHeader>
                   <div className="flex items-center space-x-3 rtl:space-x-reverse">
                     <Shield className="w-6 h-6 text-amber-500" />

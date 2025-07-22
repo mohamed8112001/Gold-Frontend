@@ -231,7 +231,7 @@ const FAQ = () => {
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   viewport={{ once: true }}
                 >
-                  <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300">
+                  <Card className="border-0 bg-white/80 backdrop-blur-sm  hover: transition-all duration-300">
                     <CardHeader
                       className="cursor-pointer hover:bg-gray-50/50 transition-colors duration-200"
                       onClick={() => toggleFaq(faq.id)}

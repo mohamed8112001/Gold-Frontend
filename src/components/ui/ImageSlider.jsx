@@ -40,7 +40,7 @@ const ImageSlider = ({ images = [], autoSlide = true, slideInterval = 4000 }) =>
   ];
 
   return (
-    <div className="relative w-full h-48 sm:h-64 md:h-80 lg:h-96 overflow-hidden rounded-xl shadow-2xl">
+    <div className="relative w-full h-48 sm:h-64 md:h-80 lg:h-96 overflow-hidden rounded-xl ">
       {/* Images */}
       <div
         className="flex transition-transform duration-700 ease-in-out h-full"
@@ -74,19 +74,19 @@ const ImageSlider = ({ images = [], autoSlide = true, slideInterval = 4000 }) =>
                 <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/60 flex items-center justify-center">
                   <div className="text-center text-white px-4 max-w-4xl">
                     {image.content.title && (
-                      <h3 className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold mb-2 sm:mb-4 drop-shadow-lg">
+                      <h3 className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold mb-2 sm:mb-4 drop-">
                         {image.content.title}
                       </h3>
                     )}
                     {image.content.subtitle && (
-                      <p className="text-sm sm:text-lg md:text-xl lg:text-2xl mb-4 sm:mb-6 drop-shadow-md opacity-90 px-2">
+                      <p className="text-sm sm:text-lg md:text-xl lg:text-2xl mb-4 sm:mb-6 drop- opacity-90 px-2">
                         {image.content.subtitle}
                       </p>
                     )}
                     {image.content.button && (
                       <button
                         onClick={image.content.button.onClick}
-                        className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-4 sm:px-8 py-2 sm:py-4 rounded-full font-bold text-sm sm:text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                        className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-4 sm:px-8 py-2 sm:py-4 rounded-full font-bold text-sm sm:text-lg transition-all duration-300 transform hover:scale-105  hover:"
                       >
                         {image.content.button.text}
                       </button>
@@ -104,14 +104,14 @@ const ImageSlider = ({ images = [], autoSlide = true, slideInterval = 4000 }) =>
         <>
           <button
             onClick={goToPrevious}
-            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-3 transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-110 backdrop-blur-sm"
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-3 transition-all duration-300  hover: hover:scale-110 backdrop-blur-sm"
             aria-label="Previous slide"
           >
             <ChevronLeft className="w-6 h-6 text-gray-800" />
           </button>
           <button
             onClick={goToNext}
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-3 transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-110 backdrop-blur-sm"
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-3 transition-all duration-300  hover: hover:scale-110 backdrop-blur-sm"
             aria-label="Next slide"
           >
             <ChevronRight className="w-6 h-6 text-gray-800" />
@@ -127,7 +127,7 @@ const ImageSlider = ({ images = [], autoSlide = true, slideInterval = 4000 }) =>
               key={index}
               onClick={() => goToSlide(index)}
               className={`w-4 h-4 rounded-full transition-all duration-300 backdrop-blur-sm ${index === currentSlide
-                  ? 'bg-yellow-500 scale-125 shadow-lg'
+                  ? 'bg-yellow-500 scale-125 '
                   : 'bg-white/70 hover:bg-white/90 hover:scale-110'
                 }`}
               aria-label={`Go to slide ${index + 1}`}

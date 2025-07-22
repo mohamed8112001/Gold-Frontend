@@ -90,7 +90,7 @@ const ShopsTestPage = () => {
         {shops.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {shops.map((shop, index) => (
-              <Card key={shop.id || shop._id || index} className="hover:shadow-lg transition-shadow">
+              <Card key={shop.id || shop._id || index} className="hover: transition-">
                 <CardContent className="p-6">
                   <div className="flex items-center gap-4 mb-4">
                     <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">

@@ -84,7 +84,7 @@ const UserTypeSelection = () => {
 
         {/* Navigation Tabs */}
         <div className="flex justify-center mb-8">
-          <div className="flex bg-white rounded-lg p-1 shadow-sm border" style={{ borderColor: '#E5D5C3' }}>
+          <div className="flex bg-white rounded-lg p-1  border" style={{ borderColor: '#E5D5C3' }}>
             <div className="px-6 py-2 rounded-md font-medium" style={{ backgroundColor: '#F5F1EB', color: '#A37F41' }}>
               إنشاء حساب
             </div>
@@ -113,8 +113,8 @@ const UserTypeSelection = () => {
                 <Card
                   key={type.id}
                   className={`cursor-pointer transition-all duration-300 ${isSelected
-                    ? `${type.color} ring-2 ring-offset-2 shadow-md`
-                    : 'hover:shadow-sm border'
+                    ? `${type.color} ring-2 ring-offset-2 `
+                    : 'hover: border'
                     }`}
                   style={{
                     borderColor: isSelected ? '#A37F41' : '#E2D2B6',

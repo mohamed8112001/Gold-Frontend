@@ -116,7 +116,7 @@ const AboutUs = () => {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Card className="h-full text-center hover:shadow-lg transition-shadow duration-300 border-0 bg-white/80 backdrop-blur-sm">
+                <Card className="h-full text-center hover: transition- duration-300 border-0 bg-white/80 backdrop-blur-sm">
                   <CardHeader>
                     <div className="w-16 h-16 bg-gradient-to-r from-[#C37C00] to-[#E6A500] rounded-full flex items-center justify-center mx-auto mb-4">
                       <feature.icon className="w-8 h-8 text-white" />
@@ -201,7 +201,7 @@ const AboutUs = () => {
                 transition={{ duration: 0.6, delay: index * 0.2 }}
                 viewport={{ once: true }}
               >
-                <Card className="h-full text-center hover:shadow-lg transition-all duration-300 border-0 bg-white/80 backdrop-blur-sm hover:scale-105">
+                <Card className="h-full text-center hover: transition-all duration-300 border-0 bg-white/80 backdrop-blur-sm hover:scale-105">
                   <CardHeader>
                     <div className="w-20 h-20 bg-gradient-to-r from-[#C37C00] to-[#E6A500] rounded-full flex items-center justify-center mx-auto mb-6">
                       <value.icon className="w-10 h-10 text-white" />

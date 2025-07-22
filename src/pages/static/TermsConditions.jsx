@@ -166,7 +166,7 @@ const TermsConditions = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {services.map((category, index) => (
-              <Card key={index} className="border-0 bg-white/80 backdrop-blur-sm shadow-lg">
+              <Card key={index} className="border-0 bg-white/80 backdrop-blur-sm ">
                 <CardHeader>
                   <div className="flex items-center space-x-3 rtl:space-x-reverse">
                     <div className={`w-12 h-12 bg-gradient-to-r ${category.color} rounded-lg flex items-center justify-center`}>
@@ -220,7 +220,7 @@ const TermsConditions = () => {
 
           <div className="space-y-6">
             {accountRules.map((section, index) => (
-              <Card key={index} className="border-0 bg-white/80 backdrop-blur-sm shadow-lg">
+              <Card key={index} className="border-0 bg-white/80 backdrop-blur-sm ">
                 <CardHeader>
                   <CardTitle className="text-lg font-semibold text-gray-900">
                     {section.title}
@@ -276,7 +276,7 @@ const TermsConditions = () => {
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card className="border-0 bg-green-50 shadow-lg">
+            <Card className="border-0 bg-green-50 ">
               <CardHeader>
                 <div className="flex items-center space-x-3 rtl:space-x-reverse">
                   <CheckCircle className="w-6 h-6 text-green-600" />
@@ -294,7 +294,7 @@ const TermsConditions = () => {
               </CardContent>
             </Card>
 
-            <Card className="border-0 bg-red-50 shadow-lg">
+            <Card className="border-0 bg-red-50 ">
               <CardHeader>
                 <div className="flex items-center space-x-3 rtl:space-x-reverse">
                   <XCircle className="w-6 h-6 text-red-600" />
@@ -344,7 +344,7 @@ const TermsConditions = () => {
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
-              <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-lg">
+              <Card className="border-0 bg-white/80 backdrop-blur-sm ">
                 <CardHeader>
                   <div className="flex items-center space-x-3 rtl:space-x-reverse">
                     <Mail className="w-6 h-6 text-amber-500" />
@@ -361,7 +361,7 @@ const TermsConditions = () => {
                 </CardContent>
               </Card>
 
-              <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-lg">
+              <Card className="border-0 bg-white/80 backdrop-blur-sm ">
                 <CardHeader>
                   <div className="flex items-center space-x-3 rtl:space-x-reverse">
                     <Scale className="w-6 h-6 text-amber-500" />

@@ -438,7 +438,7 @@ const ProductList = () => {
 
         return (
             <Card
-                className={`group hover:shadow-2xl  transition-all duration-700 cursor-pointer border-0 shadow-xl hover:shadow-3xl transform hover:-translate-y-4 hover:scale-105 ${isListView ? 'flex h-64' : 'flex flex-col h-full'} bg-white rounded-3xl overflow-hidden backdrop-blur-sm`}
+                className={`group hover:  transition-all duration-700 cursor-pointer border-0  hover: transform hover:-translate-y-4 hover:scale-105 ${isListView ? 'flex h-64' : 'flex flex-col h-full'} bg-white rounded-3xl overflow-hidden backdrop-blur-sm`}
                 onClick={async () => {
                     try {
                         // Track product view locally
@@ -483,10 +483,10 @@ const ProductList = () => {
                         <div className="fallback-image absolute inset-0 bg-gradient-to-br from-[#FFF0CC] via-[#FFF8E6] to-[#FFE6B3] hidden items-center justify-center group-hover:from-[#FFE6B3] group-hover:via-[#FFF0CC] group-hover:to-[#FFDB99] transition-all duration-700">
                             <div className="text-center transform group-hover:scale-110 transition-transform duration-700">
                                 <div className="relative mb-4">
-                                    <div className="text-6xl mb-2 filter drop-shadow-2xl">💎</div>
+                                    <div className="text-6xl mb-2 filter drop-">💎</div>
                                     <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/30 to-orange-400/30 rounded-full blur-xl"></div>
                                 </div>
-                                <div className="text-sm text-gray-800 font-bold px-3 py-1 bg-white/90 rounded-xl backdrop-blur-md shadow-lg border border-[#C37C00]">
+                                <div className="text-sm text-gray-800 font-bold px-3 py-1 bg-white/90 rounded-xl backdrop-blur-md  border border-[#C37C00]">
                                     {safeProduct.name}
                                 </div>
                             </div>
@@ -501,7 +501,7 @@ const ProductList = () => {
                     <Button
                         size="sm"
                         variant="ghost"
-                        className="absolute top-3 right-3 bg-white/95 hover:bg-white shadow-lg backdrop-blur-md rounded-full w-8 h-8 p-0 opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 border border-white/70 z-20"
+                        className="absolute top-3 right-3 bg-white/95 hover:bg-white  backdrop-blur-md rounded-full w-8 h-8 p-0 opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 border border-white/70 z-20"
                         onClick={(e) => {
                             e.stopPropagation();
                             handleAddToFavorites(productId);
@@ -512,7 +512,7 @@ const ProductList = () => {
 
                     {/* Premium category badge */}
                     {safeProduct.category && (
-                        <Badge className="absolute top-3 left-3 bg-gradient-to-r from-[#C37C00] via-[#A66A00] to-[#8A5700] text-white shadow-lg px-3 py-1 text-xs font-bold border border-[#C37C00]/50 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-1 group-hover:translate-y-0 z-20">
+                        <Badge className="absolute top-3 left-3 bg-gradient-to-r from-[#C37C00] via-[#A66A00] to-[#8A5700] text-white  px-3 py-1 text-xs font-bold border border-[#C37C00]/50 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-1 group-hover:translate-y-0 z-20">
                             {PRODUCT_CATEGORIES[safeProduct.category.toUpperCase()] || safeProduct.category}
                         </Badge>
                     )}
@@ -556,7 +556,7 @@ const ProductList = () => {
                             {/* Main View Product Button */}
                             <Button
                                 size="md"
-                                className="w-full bg-gradient-to-r from-[#C37C00] via-[#A66A00] to-[#8A5700] hover:from-[#A66A00] hover:via-[#8A5700] hover:to-[#6D4500] text-white px-4 py-2.5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 font-semibold text-sm border border-[#C37C00]/50"
+                                className="w-full bg-gradient-to-r from-[#C37C00] via-[#A66A00] to-[#8A5700] hover:from-[#A66A00] hover:via-[#8A5700] hover:to-[#6D4500] text-white px-4 py-2.5 rounded-xl  hover: transition-all duration-300 transform hover:scale-105 font-semibold text-sm border border-[#C37C00]/50"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     navigate(ROUTES.PRODUCT_DETAILS(productId));
@@ -626,7 +626,7 @@ const ProductList = () => {
                     </div>
 
                     {/* Enhanced Search and Controls */}
-                    <div className="flex flex-col lg:flex-row gap-8 items-start lg:items-center justify-between bg-white rounded-3xl p-8 shadow-xl border border-gray-100">
+                    <div className="flex flex-col lg:flex-row gap-8 items-start lg:items-center justify-between bg-white rounded-3xl p-8  border border-gray-100">
                         <div className="flex-1 max-w-4xl">
                             <div className="flex gap-4 items-center">
                                 {/* Enhanced input container */}
@@ -635,7 +635,7 @@ const ProductList = () => {
                                     <div className="absolute inset-0 bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] rounded-full blur-lg opacity-20 group-hover:opacity-40 group-focus-within:opacity-50 transition-all duration-500"></div>
 
                                     {/* Main input container */}
-                                    <div className="relative bg-white rounded-full border-2 border-gray-300 focus-within:border-[#C37C00] hover:border-[#E6A500] transition-all duration-300 shadow-lg hover:shadow-xl focus-within:shadow-2xl">
+                                    <div className="relative bg-white rounded-full border-2 border-gray-300 focus-within:border-[#C37C00] hover:border-[#E6A500] transition-all duration-300  hover: focus-within:">
                                         {/* Enhanced search icon with loading state */}
                                         <div className="absolute left-5 top-1/2 transform -translate-y-1/2">
                                             {isLoading && searchQuery ? (
@@ -680,7 +680,7 @@ const ProductList = () => {
                                 <Button
                                     type="button"
                                     onClick={handleSearch}
-                                    className="bg-gradient-to-r from-[#C37C00] via-[#A66A00] to-[#8A5700] hover:from-[#A66A00] hover:via-[#8A5700] hover:to-[#6D4500] text-white px-8 py-5 rounded-full font-bold shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-105 border border-[#C37C00]/50"
+                                    className="bg-gradient-to-r from-[#C37C00] via-[#A66A00] to-[#8A5700] hover:from-[#A66A00] hover:via-[#8A5700] hover:to-[#6D4500] text-white px-8 py-5 rounded-full font-bold  hover: transition-all duration-500 transform hover:scale-105 border border-[#C37C00]/50"
                                 >
                                     <Search className="w-5 h-5 mr-2" />
                                     <span className="text-base">بحث</span>
@@ -707,7 +707,7 @@ const ProductList = () => {
                                             return prev;
                                         });
                                     }}
-                                    className="flex items-center gap-2 border-2 border-red-300 text-red-600 hover:bg-red-50 hover:border-red-500 hover:text-red-700 px-4 py-2.5 rounded-full font-semibold shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                                    className="flex items-center gap-2 border-2 border-red-300 text-red-600 hover:bg-red-50 hover:border-red-500 hover:text-red-700 px-4 py-2.5 rounded-full font-semibold  hover: transition-all duration-300 transform hover:scale-105"
                                 >
                                     <X className="w-4 h-4" />
                                     <span>مسح البحث</span>
@@ -718,7 +718,7 @@ const ProductList = () => {
                                 variant="outline"
                                 size="md"
                                 onClick={() => setShowFilters(!showFilters)}
-                                className="flex items-center gap-2 border-2 border-yellow-300 text-yellow-700 hover:bg-yellow-50 hover:border-yellow-500 hover:text-yellow-800 px-4 py-2.5 rounded-full font-semibold shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                                className="flex items-center gap-2 border-2 border-yellow-300 text-yellow-700 hover:bg-yellow-50 hover:border-yellow-500 hover:text-yellow-800 px-4 py-2.5 rounded-full font-semibold  hover: transition-all duration-300 transform hover:scale-105"
                             >
                                 <SlidersHorizontal className="w-4 h-4" />
                                 <span>فلاتر</span>
@@ -853,7 +853,7 @@ const ProductList = () => {
                     {/* Products Grid/List */}
                     <div className="flex-1">
                         {/* Results Info */}
-                        <div className="flex items-center justify-between mb-8 bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+                        <div className="flex items-center justify-between mb-8 bg-white rounded-xl p-4  border border-gray-100">
                             <div>
                                 <p className="text-lg font-semibold text-gray-900">
                                     {filteredProducts.length} منتج متاح
@@ -910,7 +910,7 @@ const ProductList = () => {
                                 : 'grid-cols-1 max-w-5xl mx-auto'
                                 }`}>
                                 {[...Array(8)].map((_, index) => (
-                                    <div key={index} className="animate-pulse bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col h-full">
+                                    <div key={index} className="animate-pulse bg-white rounded-2xl  overflow-hidden flex flex-col h-full">
                                         <div className="bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 h-48"></div>
                                         <div className="p-4 flex flex-col flex-1">
                                             <div className="h-5 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded mb-2"></div>
@@ -928,7 +928,7 @@ const ProductList = () => {
                                 ))}
                             </div>
                         ) : filteredProducts.length === 0 ? (
-                            <div className="text-center py-20 bg-white rounded-2xl shadow-lg">
+                            <div className="text-center py-20 bg-white rounded-2xl ">
                                 {(() => {
                                     const suggestion = getSuggestionMessage();
                                     return (
@@ -970,7 +970,7 @@ const ProductList = () => {
                         {/* Related Products Section */}
                         {relatedProducts.length > 0 && userBehavior.viewedProducts.length > 0 && (
                             <div className="mt-16">
-                                <div className="bg-gradient-to-r from-[#FFF8E6] to-[#FFF0CC] rounded-2xl p-8 shadow-lg mb-8">
+                                <div className="bg-gradient-to-r from-[#FFF8E6] to-[#FFF0CC] rounded-2xl p-8  mb-8">
                                     <h3 className="text-2xl font-bold text-gray-900 mb-4">
                                         موصى به بناءً على مشاهداتك
                                     </h3>
@@ -994,7 +994,7 @@ const ProductList = () => {
                                             return (
                                                 <Card
                                                     key={safeProduct.id}
-                                                    className="group hover:shadow-xl transition-all duration-300 cursor-pointer border-0 bg-white rounded-2xl shadow-md h-full flex flex-col"
+                                                    className="group hover: transition-all duration-300 cursor-pointer border-0 bg-white rounded-2xl  h-full flex flex-col"
                                                     onClick={async () => {
                                                         try {
                                                             trackProductView(safeProduct.id);

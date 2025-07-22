@@ -267,7 +267,7 @@ const Home = () => {
           >
             <div className="text-center transform group-hover:scale-110 transition-transform duration-700">
               <div className="relative mb-4">
-                <div className="text-7xl mb-2 filter drop-shadow-2xl">💍</div>
+                <div className="text-7xl mb-2 filter drop-">💍</div>
                 <div className="absolute inset-0 bg-gradient-to-r from-[#C37C00]/30 to-[#E6A500]/30 rounded-full blur-xl"></div>
               </div>
               <div className="text-lg text-gray-800 font-bold font-cairo px-4 py-2 bg-white/90 rounded-xl backdrop-blur-md border border-[#E2D2B6]">
@@ -427,19 +427,19 @@ const Home = () => {
                   {/* Main Title with Stagger Animation */}
                   <h1 className={`text-4xl md:text-6xl lg:text-7xl font-black font-cairo mb-8 leading-tight transition-all duration-1000 delay-200 ${index === currentSlide ? 'animate-fade-in translate-y-0' : 'translate-y-10 opacity-0'
                     }`}>
-                    <span className={`bg-gradient-to-r ${slide.gradient} bg-clip-text text-transparent drop-shadow-2xl`}>
+                    <span className={`bg-gradient-to-r ${slide.gradient} bg-clip-text text-transparent drop-`}>
                       {slide.title}
                     </span>
                   </h1>
 
                   {/* Subtitle with Animation */}
-                  <h2 className={`text-xl md:text-2xl lg:text-3xl text-white/90 font-medium font-tajawal mb-6 w-full drop-shadow-lg transition-all duration-1000 delay-400 ${index === currentSlide ? 'animate-fade-in translate-y-0' : 'translate-y-10 opacity-0'
+                  <h2 className={`text-xl md:text-2xl lg:text-3xl text-white/90 font-medium font-tajawal mb-6 w-full drop- transition-all duration-1000 delay-400 ${index === currentSlide ? 'animate-fade-in translate-y-0' : 'translate-y-10 opacity-0'
                     }`}>
                     {slide.subtitle}
                   </h2>
 
                   {/* Description with Animation */}
-                  {/* <p className={`text-base md:text-lg lg:text-xl text-white/80 mb-12 w-full leading-relaxed drop-shadow-md transition-all duration-1000 delay-600 ${index === currentSlide ? 'animate-fade-in translate-y-0' : 'translate-y-10 opacity-0'
+                  {/* <p className={`text-base md:text-lg lg:text-xl text-white/80 mb-12 w-full leading-relaxed drop- transition-all duration-1000 delay-600 ${index === currentSlide ? 'animate-fade-in translate-y-0' : 'translate-y-10 opacity-0'
                     }`}>
                     {slide.description}
                   </p> */}
@@ -480,7 +480,7 @@ const Home = () => {
                 key={index}
                 onClick={() => goToSlide(index)}
                 className={`transition-all duration-500 rounded-full border-2 ${index === currentSlide
-                  ? 'w-16 h-4 bg-white border-white shadow-2xl'
+                  ? 'w-16 h-4 bg-white border-white '
                   : 'w-4 h-4 bg-white/30 border-white/50 hover:bg-white/60 hover:scale-125 hover:border-white'
                   }`}
               />
@@ -726,7 +726,7 @@ const Home = () => {
             featuredShops.length > 0 && (
               <div className="mb-16">
                 <div className="flex items-center justify-center mb-6">
-                  <div className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] text-white px-6 py-2 rounded-full shadow-lg ">
+                  <div className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] text-white px-6 py-2 rounded-full  ">
                     <div className="flex items-center gap-2 ">
                       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />

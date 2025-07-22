@@ -157,7 +157,7 @@ const CustomerComplaints = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
-                    className="bg-white rounded-xl p-6 shadow-lg border border-gray-100"
+                    className="bg-white rounded-xl p-6  border border-gray-100"
                   >
                     <div className="flex items-center mb-4">
                       <Clock className={`w-6 h-6 ${time.color} ml-2`} />
@@ -188,7 +188,7 @@ const CustomerComplaints = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
-                    className="bg-white rounded-xl p-6 shadow-lg border border-gray-100"
+                    className="bg-white rounded-xl p-6  border border-gray-100"
                   >
                     <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-pink-600 rounded-full flex items-center justify-center mb-4 text-white font-bold text-lg">
                       {step.step}
@@ -205,7 +205,7 @@ const CustomerComplaints = () => {
             </div>
 
             {/* Complaint Form */}
-            <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-8">
+            <div className="bg-white rounded-xl  border border-gray-100 p-8">
               <div className="text-center mb-8">
                 <FileText className="w-12 h-12 text-red-600 mx-auto mb-4" />
                 <h2 className="text-2xl font-bold text-gray-900 mb-2">
@@ -338,7 +338,7 @@ const CustomerComplaints = () => {
                 <div className="text-center">
                   <button
                     type="submit"
-                    className="inline-flex items-center px-8 py-3 bg-gradient-to-r from-red-600 to-pink-600 text-white font-semibold rounded-lg hover:from-red-700 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+                    className="inline-flex items-center px-8 py-3 bg-gradient-to-r from-red-600 to-pink-600 text-white font-semibold rounded-lg hover:from-red-700 hover:to-pink-700 transition-all duration-300  hover:"
                   >
                     <Send className="w-5 h-5 ml-2" />
                     إرسال الشكوى
@@ -349,7 +349,7 @@ const CustomerComplaints = () => {
 
             {/* Contact Methods */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 text-center">
+              <div className="bg-white rounded-xl p-6  border border-gray-100 text-center">
                 <Phone className="w-12 h-12 text-red-600 mx-auto mb-4" />
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
                   الهاتف
@@ -358,7 +358,7 @@ const CustomerComplaints = () => {
                 <p className="text-red-600 font-semibold">+20 123 456 7890</p>
               </div>
 
-              <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 text-center">
+              <div className="bg-white rounded-xl p-6  border border-gray-100 text-center">
                 <Mail className="w-12 h-12 text-red-600 mx-auto mb-4" />
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
                   البريد الإلكتروني
@@ -367,7 +367,7 @@ const CustomerComplaints = () => {
                 <p className="text-red-600 font-semibold">complaints@dibla.com</p>
               </div>
 
-              <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 text-center">
+              <div className="bg-white rounded-xl p-6  border border-gray-100 text-center">
                 <Headphones className="w-12 h-12 text-red-600 mx-auto mb-4" />
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
                   الدردشة المباشرة

@@ -169,7 +169,7 @@ const ManageBookings = () => {
           ) : (
             <div className="grid gap-4">
               {bookings.map((booking) => (
-                <div key={booking._id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                <div key={booking._id} className="border border-gray-200 rounded-lg p-4 hover: transition-">
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
                       <div className="flex items-center gap-4 mb-3">

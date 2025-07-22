@@ -261,7 +261,7 @@ const ShopDetails = () => {
 
         return (
             <Card
-                className="group hover:shadow-2xl hover:-translate-y-3 transition-all duration-500 cursor-pointer overflow-hidden border-0 bg-white rounded-3xl shadow-lg h-[500px] flex flex-col"
+                className="group hover: hover:-translate-y-3 transition-all duration-500 cursor-pointer overflow-hidden border-0 bg-white rounded-3xl  h-[500px] flex flex-col"
                 onClick={() => {
                     if (productId) {
                         navigate(ROUTES.PRODUCT_DETAILS(productId));
@@ -282,7 +282,7 @@ const ShopDetails = () => {
                     <Button
                         size="sm"
                         variant="ghost"
-                        className="absolute top-3 right-3 bg-white/90 hover:bg-white backdrop-blur-sm rounded-full w-9 h-9 p-0 shadow-md opacity-0 group-hover:opacity-100 transition-all duration-300"
+                        className="absolute top-3 right-3 bg-white/90 hover:bg-white backdrop-blur-sm rounded-full w-9 h-9 p-0  opacity-0 group-hover:opacity-100 transition-all duration-300"
                         onClick={(e) => {
                             e.stopPropagation();
                             handleAddToFavorites(productId);
@@ -336,7 +336,7 @@ const ShopDetails = () => {
                     <div className="mt-auto pt-3 border-t border-gray-100">
                         <Button
                             size="sm"
-                            className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-full py-2.5 text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                            className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-full py-2.5 text-sm font-semibold  hover: transition-all duration-300"
                             onClick={(e) => {
                                 e.stopPropagation();
                                 if (productId) {
@@ -422,7 +422,7 @@ const ShopDetails = () => {
                     variant="ghost"
                     size="sm"
                     onClick={() => navigate(-1)}
-                    className="bg-white/90 hover:bg-white text-[#C37C00] border border-[#C37C00]/30 backdrop-blur-md transition-all duration-300 rounded-full px-6 py-2 shadow-lg hover:shadow-xl"
+                    className="bg-white/90 hover:bg-white text-[#C37C00] border border-[#C37C00]/30 backdrop-blur-md transition-all duration-300 rounded-full px-6 py-2  hover:"
                 >
                     <ArrowLeft className="w-4 h-4 mr-2" />
                     Back to Shops
@@ -507,11 +507,11 @@ const ShopDetails = () => {
             </div>
 
             {/* Shop Info Section */}
-            <div className="bg-white shadow-xl mb-8 overflow-hidden">
+            <div className="bg-white  mb-8 overflow-hidden">
                 <div className="p-8">
                     {/* Contact Information Cards */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-                        <Card className="border-0 bg-gradient-to-r from-[#F0E8DB] to-[#E2D2B6] hover:shadow-lg transition-shadow rounded-2xl">
+                        <Card className="border-0 bg-gradient-to-r from-[#F0E8DB] to-[#E2D2B6] hover: transition- rounded-2xl">
                             <CardContent className="p-6 flex items-center gap-4">
                                 <div className="p-3 bg-[#C37C00] rounded-full">
                                     <MapPin className="w-6 h-6 text-white" />
@@ -523,7 +523,7 @@ const ShopDetails = () => {
                             </CardContent>
                         </Card>
 
-                        <Card className="border-0 bg-gradient-to-r from-indigo-50 to-indigo-100 hover:shadow-lg transition-shadow rounded-2xl">
+                        <Card className="border-0 bg-gradient-to-r from-indigo-50 to-indigo-100 hover: transition- rounded-2xl">
                             <CardContent className="p-6 flex items-center gap-4">
                                 <div className="p-3 bg-indigo-500 rounded-full">
                                     <Phone className="w-6 h-6 text-white" />
@@ -542,7 +542,7 @@ const ShopDetails = () => {
                             </CardContent>
                         </Card>
 
-                        <Card className="border-0 bg-gradient-to-r from-green-50 to-green-100 hover:shadow-lg transition-shadow rounded-2xl">
+                        <Card className="border-0 bg-gradient-to-r from-green-50 to-green-100 hover: transition- rounded-2xl">
                             <CardContent className="p-6 flex items-center gap-4">
                                 <div className="p-3 bg-green-500 rounded-full">
                                     <WhatsAppIcon className="w-6 h-6 text-white" />
@@ -563,7 +563,7 @@ const ShopDetails = () => {
                             </CardContent>
                         </Card>
 
-                        <Card className="border-0 bg-gradient-to-r from-purple-50 to-purple-100 hover:shadow-lg transition-shadow rounded-2xl">
+                        <Card className="border-0 bg-gradient-to-r from-purple-50 to-purple-100 hover: transition- rounded-2xl">
                             <CardContent className="p-6 flex items-center gap-4">
                                 <div className="p-3 bg-purple-500 rounded-full">
                                     <Clock className="w-6 h-6 text-white" />
@@ -585,7 +585,7 @@ const ShopDetails = () => {
                             <Button
                                 size="lg"
                                 onClick={handleBookAppointment}
-                                className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-10 py-4 rounded-full font-bold text-lg shadow-xl hover:shadow-2xl transition-all"
+                                className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-10 py-4 rounded-full font-bold text-lg  hover: transition-all"
                             >
                                 <Calendar className="w-6 h-6 mr-3" />
                                 {t('shop_details.book_appointment')}
@@ -602,7 +602,7 @@ const ShopDetails = () => {
                                     size="lg"
                                     variant="outline"
                                     onClick={() => navigate(`/shops/${safeShop._id || safeShop.id}/chat`)}
-                                    className="border-2 border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] hover:border-[#A66A00] hover:text-[#A66A00] px-10 py-4 rounded-full font-bold text-lg shadow-xl hover:shadow-2xl transition-all"
+                                    className="border-2 border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] hover:border-[#A66A00] hover:text-[#A66A00] px-10 py-4 rounded-full font-bold text-lg  hover: transition-all"
                                 >
                                     <Bot className="w-6 h-6 mr-3" />
                                     {t('shop_details.chat_with_store')}
@@ -615,33 +615,33 @@ const ShopDetails = () => {
             </div>
 
             {/* Shop Content Tabs */}
-            <div className="bg-white shadow-xl overflow-hidden">
+            <div className="bg-white  overflow-hidden">
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                     <TabsList className="grid w-full grid-cols-4 bg-gradient-to-r from-[#F8F4ED] to-[#F0E8DB] p-3 rounded-none h-auto border-b border-[#E2D2B6]/30">
                         <TabsTrigger
                             value="products"
-                            className="data-[state=active]:bg-white data-[state=active]:shadow-lg rounded-2xl py-5 px-8 font-bold text-lg transition-all"
+                            className="data-[state=active]:bg-white data-[state=active]: rounded-2xl py-5 px-8 font-bold text-lg transition-all"
                         >
                             <ShoppingBag className="w-6 h-6 mr-3" />
                             {t('shop_details.products')} ({safeProducts.length})
                         </TabsTrigger>
                         <TabsTrigger
                             value="reviews"
-                            className="data-[state=active]:bg-white data-[state=active]:shadow-lg rounded-2xl py-5 px-8 font-bold text-lg transition-all"
+                            className="data-[state=active]:bg-white data-[state=active]: rounded-2xl py-5 px-8 font-bold text-lg transition-all"
                         >
                             <Star className="w-6 h-6 mr-3" />
                             {t('shop_details.reviews')} ({reviewsCount})
                         </TabsTrigger>
                         <TabsTrigger
                             value="location"
-                            className="data-[state=active]:bg-white data-[state=active]:shadow-lg rounded-2xl py-5 px-8 font-bold text-lg transition-all"
+                            className="data-[state=active]:bg-white data-[state=active]: rounded-2xl py-5 px-8 font-bold text-lg transition-all"
                         >
                             <ShoppingBag className="w-6 h-6 mr-3" />
                             {t('shop_details.location')}
                         </TabsTrigger>
                         <TabsTrigger
                             value="gallery"
-                            className="data-[state=active]:bg-white data-[state=active]:shadow-lg rounded-2xl py-5 px-8 font-bold text-lg transition-all"
+                            className="data-[state=active]:bg-white data-[state=active]: rounded-2xl py-5 px-8 font-bold text-lg transition-all"
                         >
                             <Eye className="w-6 h-6 mr-3" />
                             {t('shop_details.gallery')} {safeShop.gallery?.length ? `(${safeShop.gallery.length})` : ''}
@@ -660,7 +660,7 @@ const ShopDetails = () => {
                                         variant={viewMode === 'grid' ? 'default' : 'ghost'}
                                         size="lg"
                                         onClick={() => setViewMode('grid')}
-                                        className={`rounded-full px-6 py-3 font-semibold ${viewMode === 'grid' ? 'bg-white shadow-lg text-[#8A6C37]' : 'hover:bg-[#E2D2B6] text-gray-600'}`}
+                                        className={`rounded-full px-6 py-3 font-semibold ${viewMode === 'grid' ? 'bg-white  text-[#8A6C37]' : 'hover:bg-[#E2D2B6] text-gray-600'}`}
                                     >
                                         <Grid className="w-5 h-5 mr-2" />
                                         Grid
@@ -669,7 +669,7 @@ const ShopDetails = () => {
                                         variant={viewMode === 'list' ? 'default' : 'ghost'}
                                         size="lg"
                                         onClick={() => setViewMode('list')}
-                                        className={`rounded-full px-6 py-3 font-semibold ${viewMode === 'list' ? 'bg-white shadow-lg text-[#8A6C37]' : 'hover:bg-[#E2D2B6] text-gray-600'}`}
+                                        className={`rounded-full px-6 py-3 font-semibold ${viewMode === 'list' ? 'bg-white  text-[#8A6C37]' : 'hover:bg-[#E2D2B6] text-gray-600'}`}
                                     >
                                         <List className="w-5 h-5 mr-2" />
                                         List
@@ -781,7 +781,7 @@ const ShopDetails = () => {
 
                                     return (
                                         <div key={imageId} className="group relative">
-                                            <div className="relative aspect-square rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+                                            <div className="relative aspect-square rounded-3xl overflow-hidden  hover: transition-all duration-500 transform hover:-translate-y-2">
                                                 <img
                                                     src={imageUrl}
                                                     alt={`${safeShop.name} - ${imageName}`}
@@ -1175,7 +1175,7 @@ export default ShopDetails;
 
 //         return (
 //             <Card
-//                 className="group hover:shadow-2xl hover:-translate-y-3 transition-all duration-500 cursor-pointer overflow-hidden border-0 bg-white rounded-3xl shadow-lg h-[500px] flex flex-col"
+//                 className="group hover: hover:-translate-y-3 transition-all duration-500 cursor-pointer overflow-hidden border-0 bg-white rounded-3xl  h-[500px] flex flex-col"
 //                 onClick={() => {
 //                     if (productId) {
 //                         navigate(ROUTES.PRODUCT_DETAILS(productId));
@@ -1201,7 +1201,7 @@ export default ShopDetails;
 //                     <Button
 //                         size="sm"
 //                         variant="ghost"
-//                         className="absolute top-3 right-3 bg-white/90 hover:bg-white backdrop-blur-sm rounded-full w-9 h-9 p-0 shadow-md opacity-0 group-hover:opacity-100 transition-all duration-300"
+//                         className="absolute top-3 right-3 bg-white/90 hover:bg-white backdrop-blur-sm rounded-full w-9 h-9 p-0  opacity-0 group-hover:opacity-100 transition-all duration-300"
 //                         onClick={(e) => {
 //                             e.stopPropagation();
 //                             handleAddToFavorites(productId);
@@ -1258,7 +1258,7 @@ export default ShopDetails;
 //                     <div className="mt-auto pt-3 border-t border-gray-100">
 //                         <Button
 //                             size="sm"
-//                             className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-full py-2.5 text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+//                             className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-full py-2.5 text-sm font-semibold  hover: transition-all duration-300"
 //                             onClick={(e) => {
 //                                 e.stopPropagation();
 //                                 if (productId) {
@@ -1339,7 +1339,7 @@ export default ShopDetails;
 //                         variant="ghost"
 //                         size="sm"
 //                         onClick={() => navigate(-1)}
-//                         className="flex items-center gap-2 hover:bg-white hover:shadow-sm transition-all duration-200 rounded-full px-4 py-2"
+//                         className="flex items-center gap-2 hover:bg-white hover: transition-all duration-200 rounded-full px-4 py-2"
 //                     >
 //                         <ArrowLeft className="w-4 h-4" />
 //                         {t('buttons.back', 'Back')}
@@ -1353,7 +1353,7 @@ export default ShopDetails;
 //                 </div>
 
 //                 {/* Enhanced Shop Header */}
-//                 <div className="bg-white shadow-xl mb-8 overflow-hidden">
+//                 <div className="bg-white  mb-8 overflow-hidden">
 //                     {/* Enhanced Hero Section */}
 //                     <div className="relative h-80 md:h-[500px] overflow-hidden">
 //                         <img
@@ -1446,7 +1446,7 @@ export default ShopDetails;
 //                     <div className="p-8">
 //                         {/* Contact Information Cards */}
 //                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-//                             <Card className="border-0 bg-gradient-to-r from-[#F0E8DB] to-[#E2D2B6] hover:shadow-lg transition-shadow rounded-2xl">
+//                             <Card className="border-0 bg-gradient-to-r from-[#F0E8DB] to-[#E2D2B6] hover: transition- rounded-2xl">
 //                                 <CardContent className="p-6 flex items-center gap-4">
 //                                     <div className="p-3 bg-[#C37C00] rounded-full">
 //                                         <MapPin className="w-6 h-6 text-white" />
@@ -1458,7 +1458,7 @@ export default ShopDetails;
 //                                 </CardContent>
 //                             </Card>
 
-//                             <Card className="border-0 bg-gradient-to-r from-indigo-50 to-indigo-100 hover:shadow-lg transition-shadow rounded-2xl">
+//                             <Card className="border-0 bg-gradient-to-r from-indigo-50 to-indigo-100 hover: transition- rounded-2xl">
 //                                 <CardContent className="p-6 flex items-center gap-4">
 //                                     <div className="p-3 bg-indigo-500 rounded-full">
 //                                         <FaPhone className="w-6 h-6 text-white" />
@@ -1479,7 +1479,7 @@ export default ShopDetails;
 
 
 
-//                             <Card className="border-0 bg-gradient-to-r from-[#F8F4ED] to-[#F0E8DB] hover:shadow-lg transition-shadow rounded-2xl">
+//                             <Card className="border-0 bg-gradient-to-r from-[#F8F4ED] to-[#F0E8DB] hover: transition- rounded-2xl">
 //                                 <CardContent className="p-6 flex items-center gap-4">
 //                                     <div className="p-3 bg-[#C37C00] rounded-full">
 //                                         <FaWhatsapp className="w-6 h-6 text-white" />
@@ -1500,7 +1500,7 @@ export default ShopDetails;
 //                                 </CardContent>
 //                             </Card>
 //                             {/* {safeShop.whatsapp && (
-//                                 <Card className="border-0 bg-gradient-to-r from-[#F8F4ED] to-[#F0E8DB] hover:shadow-lg transition-shadow rounded-2xl">
+//                                 <Card className="border-0 bg-gradient-to-r from-[#F8F4ED] to-[#F0E8DB] hover: transition- rounded-2xl">
 //                                     <CardContent className="p-6 flex items-center gap-4">
 //                                         <div className="p-3 bg-[#A37F41] rounded-full">
 //                                             <WhatsAppIcon className="w-6 h-6 text-white" />
@@ -1524,7 +1524,7 @@ export default ShopDetails;
 
 
 
-//                             <Card className="border-0 bg-gradient-to-r from-purple-50 to-purple-100 hover:shadow-lg transition-shadow rounded-2xl">
+//                             <Card className="border-0 bg-gradient-to-r from-purple-50 to-purple-100 hover: transition- rounded-2xl">
 //                                 <CardContent className="p-6 flex items-center gap-4">
 //                                     <div className="p-3 bg-purple-500 rounded-full">
 //                                         <Clock className="w-6 h-6 text-white" />
@@ -1546,7 +1546,7 @@ export default ShopDetails;
 //                                 <Button
 //                                     size="lg"
 //                                     onClick={handleBookAppointment}
-//                                     className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-10 py-4 rounded-full font-bold text-lg shadow-xl hover:shadow-2xl transition-all"
+//                                     className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-10 py-4 rounded-full font-bold text-lg  hover: transition-all"
 //                                 >
 //                                     <Calendar className="w-6 h-6 mr-3" />
 //                                     {t('shop_details.book_appointment')}
@@ -1563,7 +1563,7 @@ export default ShopDetails;
 //                                         size="lg"
 //                                         variant="outline"
 //                                         onClick={() => navigate(`/shops/${safeShop._id || safeShop.id}/chat`)}
-//                                         className="border-2 border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] hover:border-[#A66A00] hover:text-[#A66A00] px-10 py-4 rounded-full font-bold text-lg shadow-xl hover:shadow-2xl transition-all"
+//                                         className="border-2 border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] hover:border-[#A66A00] hover:text-[#A66A00] px-10 py-4 rounded-full font-bold text-lg  hover: transition-all"
 //                                     >
 //                                         <Bot className="w-6 h-6 mr-3" />
 //                                         {t('shop_details.chat_with_store')}
@@ -1579,7 +1579,7 @@ export default ShopDetails;
 //                                 <Button
 //                                     size="lg"
 //                                     onClick={handleBookAppointment}
-//                                     className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-10 py-4 rounded-full font-bold text-lg shadow-xl hover:shadow-2xl transition-all"
+//                                     className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-10 py-4 rounded-full font-bold text-lg  hover: transition-all"
 //                                 >
 //                                     <Calendar className="w-6 h-6 mr-3" />
 //                                     {t('shop_details.book_appointment')}
@@ -1589,7 +1589,7 @@ export default ShopDetails;
 //                                         size="lg"
 //                                         variant="outline"
 //                                         onClick={() => navigate(`/shops/${safeShop._id || safeShop.id}/chat`)}
-//                                         className="border-2 border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] hover:border-[#A66A00] hover:text-[#A66A00] px-10 py-4 rounded-full font-bold text-lg shadow-xl hover:shadow-2xl transition-all"
+//                                         className="border-2 border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] hover:border-[#A66A00] hover:text-[#A66A00] px-10 py-4 rounded-full font-bold text-lg  hover: transition-all"
 //                                     >
 //                                         <Bot className="w-6 h-6 mr-3" />
 //                                         {t('shop_details.chat_with_store')}
@@ -1601,33 +1601,33 @@ export default ShopDetails;
 //                 </div>
 
 //                 {/* Enhanced Shop Content Tabs */}
-//                 <div className="bg-white shadow-xl overflow-hidden">
+//                 <div className="bg-white  overflow-hidden">
 //                     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
 //                         <TabsList className="grid w-full grid-cols-4 bg-gradient-to-r from-[#F8F4ED] to-[#F0E8DB] p-3 rounded-none h-auto border-b border-[#E2D2B6]/30">
 //                             <TabsTrigger
 //                                 value="products"
-//                                 className="data-[state=active]:bg-white data-[state=active]:shadow-lg rounded-2xl py-5 px-8 font-bold text-lg transition-all"
+//                                 className="data-[state=active]:bg-white data-[state=active]: rounded-2xl py-5 px-8 font-bold text-lg transition-all"
 //                             >
 //                                 <ShoppingBag className="w-6 h-6 mr-3" />
 //                                 {t('shop_details.products')} ({safeProducts.length})
 //                             </TabsTrigger>
 //                             <TabsTrigger
 //                                 value="reviews"
-//                                 className="data-[state=active]:bg-white data-[state=active]:shadow-lg rounded-2xl py-5 px-8 font-bold text-lg transition-all"
+//                                 className="data-[state=active]:bg-white data-[state=active]: rounded-2xl py-5 px-8 font-bold text-lg transition-all"
 //                             >
 //                                 <Star className="w-6 h-6 mr-3" />
 //                                 {t('shop_details.reviews')} ({safeReviews.length})
 //                             </TabsTrigger>
 //                             <TabsTrigger
 //                                 value="location"
-//                                 className="data-[state=active]:bg-white data-[state=active]:shadow-lg rounded-2xl py-5 px-8 font-bold text-lg transition-all"
+//                                 className="data-[state=active]:bg-white data-[state=active]: rounded-2xl py-5 px-8 font-bold text-lg transition-all"
 //                             >
 //                                 <MapPin className="w-6 h-6 mr-3" />
 //                                 {t('shop_details.location')}
 //                             </TabsTrigger>
 //                             <TabsTrigger
 //                                 value="gallery"
-//                                 className="data-[state=active]:bg-white data-[state=active]:shadow-lg rounded-2xl py-5 px-8 font-bold text-lg transition-all"
+//                                 className="data-[state=active]:bg-white data-[state=active]: rounded-2xl py-5 px-8 font-bold text-lg transition-all"
 //                             >
 //                                 <Eye className="w-6 h-6 mr-3" />
 //                                 {t('shop_details.gallery')} {safeShop.gallery?.length ? `(${safeShop.gallery.length})` : ''}
@@ -1646,7 +1646,7 @@ export default ShopDetails;
 //                                             variant={viewMode === 'grid' ? 'default' : 'ghost'}
 //                                             size="lg"
 //                                             onClick={() => setViewMode('grid')}
-//                                             className={`rounded-full px-6 py-3 font-semibold ${viewMode === 'grid' ? 'bg-white shadow-lg text-[#8A6C37]' : 'hover:bg-[#E2D2B6] text-gray-600'}`}
+//                                             className={`rounded-full px-6 py-3 font-semibold ${viewMode === 'grid' ? 'bg-white  text-[#8A6C37]' : 'hover:bg-[#E2D2B6] text-gray-600'}`}
 //                                         >
 //                                             <Grid className="w-5 h-5 mr-2" />
 //                                             Grid
@@ -1655,7 +1655,7 @@ export default ShopDetails;
 //                                             variant={viewMode === 'list' ? 'default' : 'ghost'}
 //                                             size="lg"
 //                                             onClick={() => setViewMode('list')}
-//                                             className={`rounded-full px-6 py-3 font-semibold ${viewMode === 'list' ? 'bg-white shadow-lg text-[#8A6C37]' : 'hover:bg-[#E2D2B6] text-gray-600'}`}
+//                                             className={`rounded-full px-6 py-3 font-semibold ${viewMode === 'list' ? 'bg-white  text-[#8A6C37]' : 'hover:bg-[#E2D2B6] text-gray-600'}`}
 //                                         >
 //                                             <List className="w-5 h-5 mr-2" />
 //                                             List
@@ -1715,7 +1715,7 @@ export default ShopDetails;
 //                             {safeReviews.length > 0 ? (
 //                                 <div className="space-y-6">
 //                                     {safeReviews.map((review) => (
-//                                         <Card key={review.id} className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-2xl overflow-hidden">
+//                                         <Card key={review.id} className="border-0  hover: transition- duration-300 rounded-2xl overflow-hidden">
 //                                             <CardContent className="p-8">
 //                                                 <div className="flex items-start gap-4">
 //                                                     <Avatar className="w-12 h-12 border-2 border-gray-200">
@@ -1837,7 +1837,7 @@ export default ShopDetails;
 //                                         return (
 //                                             <div key={imageId} className="group relative">
 //                                                 {/* Enhanced image container */}
-//                                                 <div className="relative aspect-square rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+//                                                 <div className="relative aspect-square rounded-3xl overflow-hidden  hover: transition-all duration-500 transform hover:-translate-y-2">
 //                                                     <img
 //                                                         src={imageUrl}
 //                                                         alt={`${safeShop.name} - ${imageName}`}

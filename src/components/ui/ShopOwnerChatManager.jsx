@@ -667,7 +667,7 @@ const ShopOwnerChatManager = ({ user, shop }) => {
                   <div key={date}>
                     {/* Date Separator */}
                     <div className="flex items-center justify-center mb-4">
-                      <div className="bg-white px-3 py-1 rounded-full shadow-sm">
+                      <div className="bg-white px-3 py-1 rounded-full ">
                         <span className="text-xs text-gray-600 font-medium">
                           {formatDate(dateMessages[0].createdAt)}
                         </span>
@@ -694,7 +694,7 @@ const ShopOwnerChatManager = ({ user, shop }) => {
                             <div
                               className={`px-4 py-3 rounded-2xl ${isOwnMessage
                                 ? 'bg-gradient-to-l from-blue-500 to-blue-600 text-white rounded-br-md'
-                                : 'bg-white text-gray-900 rounded-bl-md shadow-sm'
+                                : 'bg-white text-gray-900 rounded-bl-md '
                                 } ${message.optimistic ? 'opacity-70' : ''}`}
                             >
                               <p className="text-sm leading-relaxed text-right">{message.content}</p>

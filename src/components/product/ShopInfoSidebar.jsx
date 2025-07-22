@@ -20,7 +20,7 @@ const ShopInfoSidebar = ({ shop, onVisitShop, onOpenChat }) => {
   if (!shop) {
     return (
       <div className="space-y-6">
-        <Card className="border-0 shadow-xl rounded-3xl">
+        <Card className="border-0  rounded-3xl">
           <CardContent className="p-8 text-center">
             <div className="text-gray-400 mb-4">
               <ShoppingBag className="w-16 h-16 mx-auto" />
@@ -35,10 +35,10 @@ const ShopInfoSidebar = ({ shop, onVisitShop, onOpenChat }) => {
   return (
     <div className="space-y-6">
       {/* Shop Info Card */}
-      <Card className="border-0 shadow-xl rounded-3xl overflow-hidden">
+      <Card className="border-0  rounded-3xl overflow-hidden">
         <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 p-6">
           <div className="flex items-center gap-4 mb-4">
-            <Avatar className="w-16 h-16 border-4 border-white shadow-lg">
+            <Avatar className="w-16 h-16 border-4 border-white ">
               <AvatarImage src={shop.image} />
               <AvatarFallback>
                 <ShoppingBag className="w-8 h-8" />
@@ -190,7 +190,7 @@ const ShopInfoSidebar = ({ shop, onVisitShop, onOpenChat }) => {
       </Card>
 
       {/* Related Products Preview */}
-      <Card className="border-0 shadow-xl rounded-3xl">
+      <Card className="border-0  rounded-3xl">
         <CardHeader>
           <CardTitle className="text-xl font-bold">You Might Also Like</CardTitle>
         </CardHeader>

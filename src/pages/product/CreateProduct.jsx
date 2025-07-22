@@ -229,10 +229,8 @@ const CreateProduct = () => {
                         descriptionField.focus();
                         descriptionField.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         descriptionField.style.borderColor = '#A37F41';
-                        descriptionField.style.boxShadow = '0 0 0 3px rgba(163, 127, 65, 0.1)';
                         setTimeout(() => {
                             descriptionField.style.borderColor = '';
-                            descriptionField.style.boxShadow = '';
                         }, 3000);
                     }
                     alert('يرجى إضافة وصف للمنتج في الحقل المميز أعلاه ثم المحاولة مرة أخرى.');
