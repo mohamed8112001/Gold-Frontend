@@ -74,7 +74,7 @@ const Dashboard = () => {
 
 
       } catch (err) {
-        setError(err.message || 'Error loading data');
+        setError(err.message || 'خطأ في تحميل البيانات');
       } finally {
         setLoading(false);
       }
@@ -90,9 +90,9 @@ const Dashboard = () => {
       await dashboardService.cancelBooking(bookingId);
       const bookingsData = await dashboardService.getBookings();
       setBookings(bookingsData.data || []);
-      alert('Booking cancelled successfully');
+      alert('تم إلغاء الحجز بنجاح');
     } catch (err) {
-      setError(err.message || 'Error cancelling booking');
+      setError(err.message || 'خطأ في إلغاء الحجز');
     }
   };
 
@@ -101,9 +101,9 @@ const Dashboard = () => {
       await dashboardService.removeFromFavorites(favoriteId);
       const favoritesData = await dashboardService.getFavorites();
       setFavorites(favoritesData.data || []);
-      alert('Item removed from favorites');
+      alert('تم حذف العنصر من المفضلة');
     } catch (err) {
-      setError(err.message || 'Error removing item from favorites');
+      setError(err.message || 'خطأ في حذف العنصر من المفضلة');
     }
   };
 
@@ -211,14 +211,14 @@ const Dashboard = () => {
       <CardContent className="p-4">
         <div className="flex items-center justify-between">
           <div>
-            <h4 className="font-semibold text-[#6D552C]">{booking.shop?.name || booking.shopName || 'Unknown Shop'}</h4>
+            <h4 className="font-semibold text-[#6D552C]">{booking.shop?.name || booking.shopName || 'متجر غير معروف'}</h4>
             <div className="flex items-center space-x-2 text-sm text-[#8A6C37] mt-1">
               <Calendar className="w-4 h-4" />
-              <span>{booking.date || booking.appointmentDate || 'Unknown Date'}</span>
+              <span>{booking.date || booking.appointmentDate || 'تاريخ غير معروف'}</span>
               <Clock className="w-4 h-4" />
-              <span>{booking.time || booking.appointmentTime || 'Unknown Time'}</span>
+              <span>{booking.time || booking.appointmentTime || 'وقت غير معروف'}</span>
             </div>
-            <p className="text-xs text-[#92723A] mt-1">{booking.type || booking.serviceType || 'General Service'}</p>
+            <p className="text-xs text-[#92723A] mt-1">{booking.type || booking.serviceType || 'خدمة عامة'}</p>
           </div>
           <div className="flex flex-col items-end space-y-2">
             <span
@@ -232,14 +232,14 @@ const Dashboard = () => {
                 }`}
             >
               {booking.status === 'confirmed'
-                ? 'Confirmed'
+                ? 'مؤكد'
                 : booking.status === 'approved'
-                  ? 'Approved'
+                  ? 'موافق عليه'
                   : booking.status === 'pending'
-                    ? 'Pending'
+                    ? 'في الانتظار'
                     : booking.status === 'cancelled'
-                      ? 'Cancelled'
-                      : booking.status || 'Unknown'}
+                      ? 'ملغي'
+                      : booking.status || 'غير معروف'}
             </span>
             {booking.status !== 'cancelled' && booking.status !== 'completed' && (
               <div className="flex space-x-1">
@@ -272,19 +272,19 @@ const Dashboard = () => {
   const OverviewTab = () => (
     <div className="space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard icon={Calendar} title="Bookings" value={stats.bookings} description={`${stats.activeBookings || 0} active bookings`} color="blue" />
-        <StatCard icon={Star} title="Reviews" value={stats.reviews} description="Reviews written" color="green" />
+        <StatCard icon={Calendar} title="الحجوزات" value={stats.bookings} description={`${stats.activeBookings || 0} حجز نشط`} color="blue" />
+        <StatCard icon={Star} title="التقييمات" value={stats.reviews} description="التقييمات المكتوبة" color="green" />
         {isShopOwner && (
           <>
-            <StatCard icon={Store} title="Shops" value={stats.shops} description="Registered shops" color="purple" />
-            <StatCard icon={Package} title="Products" value={stats.products} description="Displayed products" color="yellow" />
+            <StatCard icon={Store} title="المتاجر" value={stats.shops} description="المتاجر المسجلة" color="purple" />
+            <StatCard icon={Package} title="المنتجات" value={stats.products} description="المنتجات المعروضة" color="yellow" />
           </>
         )}
       </div>
       <Card className="bg-white/90 backdrop-blur-md rounded-lg">
         <CardHeader>
-          <CardTitle>Recent Activity</CardTitle>
-          <CardDescription>Latest activities and updates</CardDescription>
+          <CardTitle className="font-cairo">النشاط الأخير</CardTitle>
+          <CardDescription className="font-tajawal">آخر الأنشطة والتحديثات</CardDescription>
         </CardHeader>
         <CardContent>
           {recentActivity.length > 0 ? (
@@ -296,8 +296,8 @@ const Dashboard = () => {
           ) : (
             <div className="text-center py-8 text-[#92723A] bg-white/80 rounded-lg">
               <Calendar className="w-12 h-12 mx-auto mb-4 text-[#D3BB92]" />
-              <p>No recent activities</p>
-              <p className="text-sm">Start browsing shops or booking appointments</p>
+              <p>لا توجد أنشطة حديثة</p>
+              <p className="text-sm">ابدأ بتصفح المتاجر أو حجز المواعيد</p>
             </div>
           )}
         </CardContent>
@@ -315,7 +315,7 @@ const Dashboard = () => {
               aria-label="Browse shops"
             >
               <ShoppingBag className="w-6 h-6 mb-2" />
-              <span className="text-sm">Browse Shops</span>
+              <span className="text-sm">تصفح المتاجر</span>
             </Button>
             <Button
               variant="outline"
@@ -324,7 +324,7 @@ const Dashboard = () => {
               aria-label="Book an appointment"
             >
               <Calendar className="w-6 h-6 mb-2" />
-              <span className="text-sm">Book Appointment</span>
+              <span className="text-sm">حجز موعد</span>
             </Button>
             <Button
               variant="outline"
@@ -333,7 +333,7 @@ const Dashboard = () => {
               aria-label="View profile"
             >
               <User className="w-6 h-6 mb-2" />
-              <span className="text-sm">Profile</span>
+              <span className="text-sm">حسابك</span>
             </Button>
           </div>
         </CardContent>
@@ -353,7 +353,7 @@ const Dashboard = () => {
                 aria-label="Manage time"
               >
                 <Clock className="w-4 h-4 mr-2" />
-                Manage Time
+                إدارة الوقت
               </Button>
               <Button
                 variant="outline"
@@ -362,7 +362,7 @@ const Dashboard = () => {
                 aria-label="View bookings only"
               >
                 <Calendar className="w-4 h-4 mr-2" />
-                View Bookings Only
+                عرض الحجوزات فقط
               </Button>
             </>
           ) : (
@@ -372,7 +372,7 @@ const Dashboard = () => {
               aria-label="Book new appointment"
             >
               <Plus className="w-4 h-4 mr-2" />
-              Book New Appointment
+              حجز موعد جديد
             </Button>
           )}
         </div>
@@ -383,15 +383,15 @@ const Dashboard = () => {
         ) : (
           <div className="text-center py-12 text-[#92723A] bg-white/90 backdrop-blur-md rounded-lg">
             <Calendar className="w-16 h-16 mx-auto mb-4 text-[#D3BB92]" />
-            <h3 className="text-lg font-medium mb-2">No Bookings Found</h3>
-            <p className="mb-4">Start by booking an appointment at a shop</p>
+            <h3 className="text-lg font-medium font-cairo mb-2">لم يتم العثور على حجوزات</h3>
+            <p className="mb-4 font-tajawal">ابدأ بحجز موعد في أحد المتاجر</p>
             <Button
               onClick={() => navigate(ROUTES.SHOPS)}
               className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
               aria-label="Browse shops"
             >
               <ShoppingBag className="w-4 h-4 mr-2" />
-              Browse Shops
+              تصفح المتاجر
             </Button>
           </div>
         )}
@@ -410,14 +410,14 @@ const Dashboard = () => {
               <Store className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-[#8A5700]">Shop Management</h3>
-              <p className="text-sm text-[#A66A00]">Create and manage shops</p>
+              <h3 className="text-xl font-bold font-cairo text-[#8A5700]">إدارة المتاجر</h3>
+              <p className="text-sm font-tajawal text-[#A66A00]">إنشاء وإدارة المتاجر</p>
             </div>
           </div>
           <div className="space-y-4">
             <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
               <div className="flex items-center justify-between mb-3">
-                <span className="text-sm font-medium text-[#A66A00]">Active Shops</span>
+                <span className="text-sm font-medium text-[#A66A00]">المتاجر النشطة</span>
                 <span className="text-2xl font-bold text-[#8A5700]">{stats.shops || 0}</span>
               </div>
               <div className="space-y-3">
@@ -427,7 +427,7 @@ const Dashboard = () => {
                   aria-label="Add new shop"
                 >
                   <Plus className="w-4 h-4 mr-2" />
-                  Add New Shop
+                  إضافة متجر جديد
                 </Button>
                 <Button
                   variant="outline"
@@ -436,7 +436,7 @@ const Dashboard = () => {
                   aria-label="Manage existing shops"
                 >
                   <Edit className="w-4 h-4 mr-2" />
-                  Manage Existing Shops
+                  إدارة المتاجر الموجودة
                 </Button>
               </div>
             </div>
@@ -450,14 +450,14 @@ const Dashboard = () => {
               <Package className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-[#8A5700]">Product Management</h3>
-              <p className="text-sm text-[#A66A00]">Manage product catalog</p>
+              <h3 className="text-xl font-bold font-cairo text-[#8A5700]">إدارة المنتجات</h3>
+              <p className="text-sm font-tajawal text-[#A66A00]">إدارة كتالوج المنتجات</p>
             </div>
           </div>
           <div className="space-y-4">
             <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
               <div className="flex items-center justify-between mb-3">
-                <span className="text-sm font-medium text-[#A66A00]">Total Products</span>
+                <span className="text-sm font-medium text-[#A66A00]">إجمالي المنتجات</span>
                 <span className="text-2xl font-bold text-[#8A5700]">{stats.products || 0}</span>
               </div>
               <div className="space-y-3">
@@ -467,7 +467,7 @@ const Dashboard = () => {
                   aria-label="Add new product"
                 >
                   <Plus className="w-4 h-4 mr-2" />
-                  Add New Product
+                  إضافة منتج جديد
                 </Button>
                 <Button
                   variant="outline"
@@ -476,7 +476,7 @@ const Dashboard = () => {
                   aria-label="Manage products"
                 >
                   <Package className="w-4 h-4 mr-2" />
-                  Manage Products
+                  إدارة المنتجات
                 </Button>
               </div>
             </div>
@@ -490,14 +490,14 @@ const Dashboard = () => {
               <Clock className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-[#8A5700]">Appointment Management</h3>
-              <p className="text-sm text-[#A66A00]">Manage appointments</p>
+              <h3 className="text-xl font-bold font-cairo text-[#8A5700]">إدارة المواعيد</h3>
+              <p className="text-sm font-tajawal text-[#A66A00]">إدارة المواعيد</p>
             </div>
           </div>
           <div className="space-y-4">
             <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
               <div className="flex items-center justify-between mb-3">
-                <span className="text-sm font-medium text-[#A66A00]">Active Bookings</span>
+                <span className="text-sm font-medium text-[#A66A00]">الحجوزات النشطة</span>
                 <span className="text-2xl font-bold text-[#8A5700]">{stats.bookings || 0}</span>
               </div>
               <div className="space-y-3">
@@ -507,7 +507,7 @@ const Dashboard = () => {
                   aria-label="Manage all appointments"
                 >
                   <Clock className="w-4 h-4 mr-2" />
-                  Manage All Appointments
+                  إدارة جميع المواعيد
                 </Button>
                 <Button
                   variant="outline"
@@ -516,7 +516,7 @@ const Dashboard = () => {
                   aria-label="View time management"
                 >
                   <Calendar className="w-4 h-4 mr-2" />
-                  View Time Management
+                  عرض إدارة الوقت
                 </Button>
               </div>
             </div>
@@ -531,18 +531,18 @@ const Dashboard = () => {
             <BarChart3 className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h3 className="text-2xl font-bold text-[#8A5700]">Appointment Statistics</h3>
-            <p className="text-[#A66A00]">Track your appointment performance and metrics</p>
+            <h3 className="text-2xl font-bold font-cairo text-[#8A5700]">إحصائيات المواعيد</h3>
+            <p className="font-tajawal text-[#A66A00]">تتبع أداء المواعيد والمقاييس الخاصة بك</p>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 text-center">
             <div className="flex items-center justify-center mb-3">
               <CheckCircle className="w-8 h-8 text-green-600 mr-2" />
-              <span className="text-sm font-medium text-[#A66A00]">Booked</span>
+              <span className="text-sm font-medium text-[#A66A00]">محجوز</span>
             </div>
             <span className="text-3xl font-bold text-[#8A5700]">{stats.bookings || 0}</span>
-            <p className="text-xs text-[#A66A00] mt-1">Confirmed appointments</p>
+            <p className="text-xs text-[#A66A00] mt-1">المواعيد المؤكدة</p>
           </div>
           <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 text-center">
             <div className="flex items-center justify-center mb-3">
@@ -555,10 +555,10 @@ const Dashboard = () => {
           <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 text-center">
             <div className="flex items-center justify-center mb-3">
               <Calendar className="w-8 h-8 text-purple-600 mr-2" />
-              <span className="text-sm font-medium text-[#A66A00]">Total</span>
+              <span className="text-sm font-medium text-[#A66A00]">الإجمالي</span>
             </div>
             <span className="text-3xl font-bold text-[#8A5700]">{(stats.bookings || 0) + (stats.availableTimes || 0)}</span>
-            <p className="text-xs text-[#A66A00] mt-1">All appointments</p>
+            <p className="text-xs text-[#A66A00] mt-1">جميع المواعيد</p>
           </div>
         </div>
       </div>
@@ -575,14 +575,14 @@ const Dashboard = () => {
 
     const handleAddTimeSlot = async () => {
       if (!newTimeSlot.date || !newTimeSlot.time) {
-        alert('Please fill all fields');
+        alert('يرجى ملء جميع الحقول');
         return;
       }
 
       try {
         setIsAdding(true);
         if (!user || user.role !== 'seller') {
-          alert('You must be a shop owner to add time slots');
+          alert('يجب أن تكون صاحب متجر لإضافة فترات زمنية');
           return;
         }
 
@@ -597,26 +597,26 @@ const Dashboard = () => {
           };
           setAvailableTimes(prev => [...prev, newTime]);
           setNewTimeSlot({ date: '', time: '', duration: 60 });
-          alert('Time slot added successfully');
+          alert('تم إضافة الفترة الزمنية بنجاح');
         } else {
-          throw new Error('Failed to save time slot');
+          throw new Error('فشل في حفظ الفترة الزمنية');
         }
       } catch (error) {
-        alert(error.message || 'Error adding time slot');
+        alert(error.message || 'خطأ في إضافة الفترة الزمنية');
       } finally {
         setIsAdding(false);
       }
     };
 
     const handleDeleteTimeSlot = async (timeId) => {
-      if (!confirm('Are you sure you want to delete this time slot?')) return;
+      if (!confirm('هل أنت متأكد من حذف هذه الفترة الزمنية؟')) return;
 
       try {
         await dashboardService.deleteAvailableTime(timeId);
         setAvailableTimes(prev => prev.filter(time => time._id !== timeId));
-        alert('Time slot deleted successfully');
+        alert('تم حذف الفترة الزمنية بنجاح');
       } catch (error) {
-        alert(error.message || 'Error deleting time slot');
+        alert(error.message || 'خطأ في حذف الفترة الزمنية');
       }
     };
 
@@ -631,12 +631,12 @@ const Dashboard = () => {
         {isShopOwner && (
           <Card className="bg-white/90 backdrop-blur-md rounded-lg">
             <CardHeader>
-              <CardTitle>Add Available Time</CardTitle>
+              <CardTitle className="font-cairo">إضافة وقت متاح</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-[#6D552C] mb-2">Date</label>
+                  <label className="block text-sm font-medium text-[#6D552C] mb-2">التاريخ</label>
                   <input
                     type="date"
                     min={getTomorrowDate()}
@@ -647,7 +647,7 @@ const Dashboard = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-[#6D552C] mb-2">Time</label>
+                  <label className="block text-sm font-medium text-[#6D552C] mb-2">الوقت</label>
                   <input
                     type="time"
                     value={newTimeSlot.time}
@@ -657,17 +657,17 @@ const Dashboard = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-[#6D552C] mb-2">Duration (minutes)</label>
+                  <label className="block text-sm font-medium text-[#6D552C] mb-2">المدة (بالدقائق)</label>
                   <select
                     value={newTimeSlot.duration}
                     onChange={e => setNewTimeSlot(prev => ({ ...prev, duration: parseInt(e.target.value) }))}
                     className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C37C00] bg-white/80"
                     aria-label="Select duration"
                   >
-                    <option value={30}>30 minutes</option>
-                    <option value={60}>60 minutes</option>
-                    <option value={90}>90 minutes</option>
-                    <option value={120}>120 minutes</option>
+                    <option value={30}>30 دقيقة</option>
+                    <option value={60}>60 دقيقة</option>
+                    <option value={90}>90 دقيقة</option>
+                    <option value={120}>120 دقيقة</option>
                   </select>
                 </div>
                 <div className="flex items-end">
@@ -678,7 +678,7 @@ const Dashboard = () => {
                     aria-label="Add time slot"
                   >
                     {isAdding ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Plus className="w-4 h-4 mr-2" />}
-                    {isAdding ? 'Adding...' : 'Add Time Slot'}
+                    {isAdding ? 'جاري الإضافة...' : 'إضافة فترة زمنية'}
                   </Button>
                 </div>
               </div>
@@ -687,7 +687,7 @@ const Dashboard = () => {
         )}
         <Card className="bg-white/90 backdrop-blur-md rounded-lg">
           <CardHeader>
-            <CardTitle>{isShopOwner ? `Available Times (${availableTimes.length})` : `My Booked Appointments (${availableTimes.length})`}</CardTitle>
+            <CardTitle className="font-cairo">{isShopOwner ? `الأوقات المتاحة (${availableTimes.length})` : `مواعيدي المحجوزة (${availableTimes.length})`}</CardTitle>
           </CardHeader>
           <CardContent>
             {availableTimes.length > 0 ? (
@@ -720,11 +720,11 @@ const Dashboard = () => {
                       >
                         {isShopOwner
                           ? timeSlot.isBooked
-                            ? 'Booked'
-                            : 'Available'
+                            ? 'محجوز'
+                            : 'متاح'
                           : timeSlot.status === 'confirmed'
-                            ? 'Confirmed'
-                            : timeSlot.status || 'Booked'}
+                            ? 'مؤكد'
+                            : timeSlot.status || 'محجوز'}
                       </span>
                     </div>
                     <div className="flex space-x-2">
@@ -747,7 +747,7 @@ const Dashboard = () => {
                           className="border-red-400 text-red-600 hover:bg-red-500 hover:text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
                           aria-label="Cancel booking"
                         >
-                          Cancel Booking
+                          إلغاء الحجز
                         </Button>
                       )}
                     </div>
@@ -757,8 +757,8 @@ const Dashboard = () => {
             ) : (
               <div className="text-center py-8 text-[#92723A] bg-white/80 rounded-lg">
                 <Clock className="w-12 h-12 mx-auto mb-4 text-[#D3BB92]" />
-                <p>{isShopOwner ? 'No available times' : 'No booked appointments'}</p>
-                <p className="text-sm">{isShopOwner ? 'Add available times for customers to book' : 'Start booking appointments at shops'}</p>
+                <p>{isShopOwner ? 'لا توجد أوقات متاحة' : 'لا توجد مواعيد محجوزة'}</p>
+                <p className="text-sm">{isShopOwner ? 'أضف أوقات متاحة للعملاء للحجز' : 'ابدأ بحجز المواعيد في المتاجر'}</p>
               </div>
             )}
           </CardContent>
@@ -768,12 +768,12 @@ const Dashboard = () => {
   };
 
   const tabs = [
-    { id: 'overview', label: 'Overview', icon: BarChart3 },
-    { id: 'bookings', label: isShopOwner ? 'Bookings' : 'My Bookings', icon: Calendar },
-    { id: 'available-times', label: isShopOwner ? 'Available Times' : 'My Appointments', icon: Clock },
+    { id: 'overview', label: 'نظرة عامة', icon: BarChart3 },
+    { id: 'bookings', label: isShopOwner ? 'الحجوزات' : 'حجوزاتي', icon: Calendar },
+    { id: 'available-times', label: isShopOwner ? 'الأوقات المتاحة' : 'مواعيدي', icon: Clock },
     ...(isShopOwner ? [
-      { id: 'shop', label: 'Manage Shop', icon: Store },
-      { id: 'ratings', label: 'Ratings', icon: Star }
+      { id: 'shop', label: 'إدارة المتجر', icon: Store },
+      { id: 'ratings', label: 'التقييمات', icon: Star }
     ] : []),
   ];
 
@@ -782,7 +782,7 @@ const Dashboard = () => {
       <div className="min-h-screen bg-white flex items-center justify-center pt-20">
         <div className="text-center">
           <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-[#C37C00]" />
-          <p className="text-[#A66A00]">Loading data...</p>
+          <p className="text-[#A66A00]">جاري تحميل البيانات...</p>
         </div>
       </div>
     );
@@ -813,8 +813,8 @@ const Dashboard = () => {
           <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <span className="text-4xl">🚫</span>
           </div>
-          <h1 className="text-3xl font-bold text-[#8A5700] mb-4">Access Denied</h1>
-          <p className="text-lg text-[#A66A00] mb-8">Dashboard access is restricted to shop owners and administrators only.</p>
+          <h1 className="text-3xl font-bold font-cairo text-[#8A5700] mb-4">تم رفض الوصول</h1>
+          <p className="text-lg font-tajawal text-[#A66A00] mb-8">الوصول إلى لوحة التحكم مقتصر على أصحاب المتاجر والمديرين فقط.</p>
           <Button
             onClick={() => navigate('/')}
             className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-8 py-3 rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
@@ -828,39 +828,71 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] to-[#FFF0CC] pt-20 w-full">
-      <div className="w-full px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-[#8A5700]">Welcome, {user?.firstName || 'User'}</h1>
-          <p className="text-[#A66A00] mt-1">Manage your account and track your activities</p>
+    <div className="min-h-screen bg-white pt-20 w-full">
+      <div className="flex w-full">
+        {/* Main Content Area */}
+        <div className="flex-1 px-4 sm:px-6 lg:px-8 py-8 lg:pr-80">
+          <div className="mb-6">
+            <h1 className="text-3xl font-bold font-cairo text-[#8A5700]">اهلا, {user?.name || 'User'}</h1>
+            <p className="text-[#A66A00] mt-1 font-tajawal">إدارة حسابك وتتبع أنشطتك</p>
+          </div>
+
+          {/* Mobile Navigation - Horizontal tabs for mobile */}
+          <div className="lg:hidden sticky top-0 z-10 bg-white/90 backdrop-blur-md rounded-lg shadow-lg mb-6">
+            <nav className="flex space-x-2 p-4 border-b border-gray-200 overflow-x-auto">
+              {tabs.map(tab => {
+                const Icon = tab.icon;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`flex items-center space-x-2 px-3 py-2 rounded-lg font-medium text-xs whitespace-nowrap transition-all duration-300 ${activeTab === tab.id
+                      ? 'bg-gradient-to-r from-[#C37C00] to-[#A66A00] text-white shadow-md'
+                      : 'text-[#A66A00] hover:bg-[#FFF8E6] hover:text-[#8A5700] hover:shadow-sm'
+                      }`}
+                    aria-label={`Switch to ${tab.label}`}
+                  >
+                    <Icon className="w-4 h-4" />
+                    <span>{tab.label}</span>
+                  </button>
+                );
+              })}
+            </nav>
+          </div>
+
+          <div className="pt-4">
+            {activeTab === 'overview' && <OverviewTab />}
+            {activeTab === 'bookings' && <BookingsTab />}
+            {activeTab === 'shop' && isShopOwner && <ShopOwnerTab />}
+            {activeTab === 'ratings' && isShopOwner && <ManageRatings />}
+            {activeTab === 'available-times' && <AvailableTimesTab />}
+          </div>
         </div>
-        <div className="sticky top-0 z-10 bg-white/90 backdrop-blur-md rounded-lg shadow-lg mb-6">
-          <nav className="flex space-x-4 p-4 border-b border-gray-200">
-            {tabs.map(tab => {
-              const Icon = tab.icon;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 ${activeTab === tab.id
-                    ? 'bg-gradient-to-r from-[#C37C00] to-[#A66A00] text-white shadow-md'
-                    : 'text-[#A66A00] hover:bg-[#FFF8E6] hover:text-[#8A5700] hover:shadow-sm'
-                    }`}
-                  aria-label={`Switch to ${tab.label}`}
-                >
-                  <Icon className="w-4 h-4" />
-                  <span>{tab.label}</span>
-                </button>
-              );
-            })}
-          </nav>
-        </div>
-        <div className="pt-4">
-          {activeTab === 'overview' && <OverviewTab />}
-          {activeTab === 'bookings' && <BookingsTab />}
-          {activeTab === 'shop' && isShopOwner && <ShopOwnerTab />}
-          {activeTab === 'ratings' && isShopOwner && <ManageRatings />}
-          {activeTab === 'available-times' && <AvailableTimesTab />}
+
+        {/* Right Sidebar - Desktop only */}
+        <div className="hidden lg:block fixed right-0 top-20 h-[calc(100vh-5rem)] w-72 bg-white/90 backdrop-blur-md shadow-lg border-l border-gray-200">
+          <div className="p-6">
+            <h2 className="text-xl font-bold font-cairo text-[#8A5700] mb-6">قائمة لوحة التحكم</h2>
+            <nav className="space-y-2">
+              {tabs.map(tab => {
+                const Icon = tab.icon;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg font-medium text-sm transition-all duration-300 text-left ${activeTab === tab.id
+                      ? 'bg-gradient-to-r from-[#C37C00] to-[#A66A00] text-white shadow-md'
+                      : 'text-[#A66A00] hover:bg-[#FFF8E6] hover:text-[#8A5700] hover:shadow-sm'
+                      }`}
+                    aria-label={`Switch to ${tab.label}`}
+                  >
+                    <Icon className="w-5 h-5" />
+                    <span>{tab.label}</span>
+                  </button>
+                );
+              })}
+            </nav>
+          </div>
         </div>
       </div>
     </div>

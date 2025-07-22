@@ -64,68 +64,116 @@ const Header = () => {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 bg-gradient-to-r from-white/98 via-[#FFF8E6]/95 to-white/98 backdrop-blur-2xl shadow-2xl border-b-2 border-gradient-to-r from-[#C37C00]/20 via-[#E6A500]/30 to-[#C37C00]/20 z-50 transition-all duration-500 ${isVisible ? 'translate-y-0' : '-translate-y-full'
+        className={`fixed top-0 left-0 right-0 bg-gradient-to-br from-white/98 via-[#FFF8E6]/95 via-[#FFFBF0]/90 to-white/98 backdrop-blur-3xl shadow-2xl border-b-2 border-gradient-to-r from-[#C37C00]/30 via-[#E6A500]/40 to-[#C37C00]/30 z-50 transition-all duration-700 ${isVisible ? 'translate-y-0' : '-translate-y-full'
           }`}
         dir="rtl"
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-[#FFF8E6]/30 via-[#FFFBF0]/50 to-[#FFF8E6]/30"></div>
-        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] opacity-60"></div>
+        {/* Enhanced Background Layers */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#FFF8E6]/40 via-[#FFFBF0]/60 to-[#FFF8E6]/40 animate-pulse"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-[#F4D03F]/10 to-transparent"></div>
+
+        {/* Floating Particles */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-2 left-10 w-1 h-1 bg-[#C37C00]/60 rounded-full animate-bounce" style={{ animationDelay: '0s' }}></div>
+          <div className="absolute top-4 right-20 w-1.5 h-1.5 bg-[#E6A500]/50 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
+          <div className="absolute top-3 left-1/3 w-1 h-1 bg-[#A66A00]/40 rounded-full animate-ping" style={{ animationDelay: '2s' }}></div>
+          <div className="absolute top-5 right-1/4 w-0.5 h-0.5 bg-[#C37C00]/70 rounded-full animate-bounce" style={{ animationDelay: '1.5s' }}></div>
+          <div className="absolute top-1 right-1/3 w-1 h-1 bg-[#F4D03F]/60 rounded-full animate-ping" style={{ animationDelay: '0.5s' }}></div>
+        </div>
+
+        {/* Enhanced Top Border */}
+        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#C37C00] via-[#E6A500] via-[#F4D03F] to-[#A66A00]">
+          <div className="h-full bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse"></div>
+        </div>
+
+        {/* Enhanced Bottom Border */}
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] opacity-80">
+          <div className="h-full bg-gradient-to-r from-transparent via-[#F4D03F]/50 to-transparent animate-pulse"></div>
+        </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-hidden">
           <div className="flex justify-between items-center h-20 min-w-0">
             {/* Enhanced Logo */}
             <Link to="/" className="flex items-center group relative">
               <div className="flex items-center space-x-reverse space-x-4">
                 <div className="relative">
-                  <img
-                    src="/logo.webp"
-                    alt="Dibla Logo"
-                    className="w-12 h-12 rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-300 transform group-hover:scale-105 group-hover:rotate-3 object-cover"
-                    onError={(e) => {
-                      e.target.style.display = 'none';
-                      e.target.nextSibling.style.display = 'block';
-                    }}
-                  />
-                  <div className="w-12 h-12 bg-gradient-to-br from-[#A37F41] via-[#C5A56D] to-[#8A6C37] rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-300 transform group-hover:scale-105 group-hover:rotate-3 hidden">
-                    <div className="absolute inset-0 rounded-2xl border-2 border-white/30"></div>
-                    <div className="absolute inset-2 bg-white/20 rounded-xl"></div>
+                  {/* Enhanced Logo Container */}
+                  <div className="relative w-14 h-14 group-hover:scale-110 transition-all duration-500">
+                    {/* Rotating Border */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] rounded-2xl opacity-0 group-hover:opacity-100 transition-all duration-500 animate-spin-slow"></div>
+
+                    {/* Logo Image */}
+                    <img
+                      src="/logo.webp"
+                      alt="متجر الذهب"
+                      className="relative w-12 h-12 m-1 rounded-xl shadow-xl group-hover:shadow-2xl transition-all duration-500 transform group-hover:rotate-6 object-cover z-10"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'flex';
+                      }}
+                    />
+
+                    {/* Fallback Logo */}
+                    <div className="absolute inset-1 bg-gradient-to-br from-[#C37C00] via-[#E6A500] to-[#A66A00] rounded-xl shadow-xl group-hover:shadow-2xl transition-all duration-500 transform group-hover:rotate-6 hidden items-center justify-center">
+                      <div className="text-white text-xl font-bold">💍</div>
+                      <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-xl"></div>
+                    </div>
+
+                    {/* Floating Sparkles */}
+                    <div className="absolute -top-1 -right-1 w-2 h-2 bg-[#F4D03F] rounded-full opacity-0 group-hover:opacity-100 animate-ping transition-all duration-300"></div>
+                    <div className="absolute -bottom-1 -left-1 w-1.5 h-1.5 bg-[#E6A500] rounded-full opacity-0 group-hover:opacity-100 animate-pulse transition-all duration-500"></div>
                   </div>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-3xl font-black bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] bg-clip-text text-transparent tracking-wide group-hover:tracking-wider transition-all duration-300">
+                  {/* Main Title with Enhanced Effects */}
+                  <span className="text-3xl font-black font-cairo bg-gradient-to-r from-[#C37C00] via-[#E6A500] via-[#F4D03F] to-[#A66A00] bg-clip-text text-transparent tracking-wide group-hover:tracking-wider transition-all duration-500 group-hover:scale-105 transform-gpu">
                     متجر الذهب
                   </span>
-                  <span className="text-xs text-[#8A5700] font-semibold tracking-widest uppercase group-hover:text-[#C37C00] transition-all duration-300">
-                    ذهب فاخر
+
+                  {/* Subtitle with Animation */}
+                  <span className="text-xs text-[#8A5700] font-bold font-amiri tracking-widest group-hover:text-[#C37C00] transition-all duration-500 group-hover:scale-110 transform origin-right">
+                    <span className="inline-block group-hover:animate-bounce">✨</span>
+                    <span className="mx-1">ذهب فاخر</span>
+                    <span className="inline-block group-hover:animate-bounce" style={{ animationDelay: '0.1s' }}>✨</span>
                   </span>
                 </div>
               </div>
               <div className="absolute -inset-2 bg-gradient-to-r from-[#C37C00]/0 via-[#C37C00]/5 to-[#C37C00]/0 rounded-2xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
             </Link>
 
-            {/* Clean Desktop Navigation */}
-            <nav className="hidden lg:flex items-center space-x-reverse space-x-8" dir="rtl">
+            {/* Enhanced Interactive Navigation */}
+            <nav className="hidden lg:flex items-center space-x-reverse space-x-2" dir="rtl">
               <Link
                 to="/home"
-                className="relative text-[#8A5700] hover:text-[#C37C00] font-medium text-lg transition-all duration-300 group px-3 py-2"
+                className="relative text-[#8A5700] hover:text-white font-bold font-tajawal text-lg transition-all duration-500 group px-6 py-3 rounded-2xl overflow-hidden"
               >
-                <span className="relative z-10">الرئيسية</span>
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-[#C37C00] to-[#A66A00] group-hover:w-full transition-all duration-300"></span>
+                <span className="relative z-10 transition-all duration-300 group-hover:scale-105">الرئيسية</span>
+                {/* Background Animation */}
+                <div className="absolute inset-0 bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] opacity-0 group-hover:opacity-100 transition-all duration-500 scale-x-0 group-hover:scale-x-100 origin-right"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-[#FFF8E6]/50 to-[#FFF0CC]/50 opacity-100 group-hover:opacity-0 transition-opacity duration-300 rounded-2xl"></div>
+                {/* Sparkle Effect */}
+                <div className="absolute top-1 right-1 w-1 h-1 bg-[#F4D03F] rounded-full opacity-0 group-hover:opacity-100 animate-ping transition-all duration-300"></div>
               </Link>
+
               <Link
                 to="/shops"
-                className="relative text-[#8A5700] hover:text-[#C37C00] font-medium text-lg transition-all duration-300 group px-3 py-2"
+                className="relative text-[#8A5700] hover:text-white font-bold font-tajawal text-lg transition-all duration-500 group px-6 py-3 rounded-2xl overflow-hidden"
               >
-                <span className="relative z-10">المتاجر</span>
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-[#C37C00] to-[#A66A00] group-hover:w-full transition-all duration-300"></span>
+                <span className="relative z-10 transition-all duration-300 group-hover:scale-105">المتاجر</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] opacity-0 group-hover:opacity-100 transition-all duration-500 scale-x-0 group-hover:scale-x-100 origin-right"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-[#FFF8E6]/50 to-[#FFF0CC]/50 opacity-100 group-hover:opacity-0 transition-opacity duration-300 rounded-2xl"></div>
+                <div className="absolute top-1 right-1 w-1 h-1 bg-[#F4D03F] rounded-full opacity-0 group-hover:opacity-100 animate-ping transition-all duration-300"></div>
               </Link>
+
               <Link
                 to="/products"
-                className="relative text-[#8A5700] hover:text-[#C37C00] font-medium text-lg transition-all duration-300 group px-3 py-2"
+                className="relative text-[#8A5700] hover:text-white font-bold font-tajawal text-lg transition-all duration-500 group px-6 py-3 rounded-2xl overflow-hidden"
               >
-                <span className="relative z-10">المنتجات</span>
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-[#C37C00] to-[#A66A00] group-hover:w-full transition-all duration-300"></span>
+                <span className="relative z-10 transition-all duration-300 group-hover:scale-105">المنتجات</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] opacity-0 group-hover:opacity-100 transition-all duration-500 scale-x-0 group-hover:scale-x-100 origin-right"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-[#FFF8E6]/50 to-[#FFF0CC]/50 opacity-100 group-hover:opacity-0 transition-opacity duration-300 rounded-2xl"></div>
+                <div className="absolute top-1 right-1 w-1 h-1 bg-[#F4D03F] rounded-full opacity-0 group-hover:opacity-100 animate-ping transition-all duration-300"></div>
               </Link>
-              
+
               {(isAuthenticated && user && (isShopOwner)) && (
                 <Link
                   to="/dashboard"
@@ -178,7 +226,7 @@ const Header = () => {
                         </span>
                         <span className="text-[#C37C00] text-xs font-medium truncate">
                           {user?.role === 'admin' ? '👑 مدير' :
-                                user?.role === 'seller' ? '🏪 صاحب متجر' :  user?.role === 'customer'?'👤 عضو ':""}
+                            user?.role === 'seller' ? '🏪 صاحب متجر' : user?.role === 'customer' ? '👤 عضو ' : ""}
                         </span>
                       </div>
                       <ChevronDown className="w-3 h-3 text-[#8A5700] group-hover:text-[#C37C00] transition-all duration-300 group-hover:rotate-180 flex-shrink-0" />
@@ -209,7 +257,7 @@ const Header = () => {
                           <div>
                             <span className="inline-flex items-center text-xs font-semibold bg-gradient-to-r from-[#C37C00]/10 to-[#E6A500]/10 text-[#8A5700] px-3 py-1 rounded-full border border-[#C37C00]/20">
                               {user?.role === 'admin' ? '👑 مدير النظام' :
-                                user?.role === 'seller' ? '🏪 صاحب متجر' :  user?.role === 'customer'?'👤 عضو ':""}
+                                user?.role === 'seller' ? '🏪 صاحب متجر' : user?.role === 'customer' ? '👤 عضو ' : ""}
                             </span>
                           </div>
                         </div>
@@ -244,20 +292,40 @@ const Header = () => {
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <div className="flex items-center space-x-reverse space-x-3">
+                <div className="flex items-center space-x-reverse space-x-4">
+                  {/* Enhanced Login Button */}
                   <Button
                     variant="outline"
                     onClick={() => navigate('/login')}
-                    className="border-2 border-[#C37C00]/40 text-[#8A5700] hover:text-white hover:bg-gradient-to-r hover:from-[#C37C00] hover:to-[#A66A00] transition-all duration-500 px-8 py-3 rounded-2xl font-bold shadow-lg hover:shadow-xl hover:scale-105 bg-gradient-to-r from-[#FFF8E6] to-[#FFF0CC] hover:border-transparent"
+                    className="relative border-2 border-[#C37C00]/50 text-[#8A5700] hover:text-white font-bold font-tajawal px-8 py-3 rounded-2xl transition-all duration-500 hover:scale-110 hover:-translate-y-1 shadow-lg hover:shadow-2xl overflow-hidden group"
                   >
-                    تسجيل الدخول
+                    <span className="relative z-10 flex items-center gap-2">
+                      <span className="text-lg">🔑</span>
+                      تسجيل الدخول
+                    </span>
+                    {/* Background Animation */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] opacity-0 group-hover:opacity-100 transition-all duration-500 scale-x-0 group-hover:scale-x-100 origin-center"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#FFF8E6] to-[#FFF0CC] opacity-100 group-hover:opacity-0 transition-opacity duration-300"></div>
+                    {/* Sparkle Effects */}
+                    <div className="absolute top-1 right-2 w-1 h-1 bg-[#F4D03F] rounded-full opacity-0 group-hover:opacity-100 animate-ping transition-all duration-300"></div>
+                    <div className="absolute bottom-1 left-2 w-0.5 h-0.5 bg-[#E6A500] rounded-full opacity-0 group-hover:opacity-100 animate-pulse transition-all duration-500"></div>
                   </Button>
+
+                  {/* Enhanced Register Button */}
                   <Button
                     onClick={() => navigate('/register')}
-                    className="bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] hover:from-[#E6A500] hover:via-[#C37C00] hover:to-[#8A5700] text-white transition-all duration-500 px-8 py-3 rounded-2xl shadow-xl hover:shadow-2xl font-bold hover:scale-105 relative overflow-hidden group"
+                    className="relative bg-gradient-to-r from-[#C37C00] via-[#E6A500] via-[#F4D03F] to-[#A66A00] hover:from-[#E6A500] hover:via-[#F4D03F] hover:to-[#C37C00] text-white font-bold font-tajawal px-8 py-3 rounded-2xl transition-all duration-500 hover:scale-110 hover:-translate-y-1 shadow-xl hover:shadow-2xl overflow-hidden group"
                   >
-                    <span className="relative z-10">إنشاء حساب</span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <span className="relative z-10 flex items-center gap-2">
+                      <span className="text-lg group-hover:animate-spin">✨</span>
+                      إنشاء حساب
+                      <span className="text-lg group-hover:animate-bounce">🎯</span>
+                    </span>
+                    {/* Shimmer Effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-700 -skew-x-12 group-hover:translate-x-full"></div>
+                    {/* Floating Particles */}
+                    <div className="absolute top-0 left-1/4 w-1 h-1 bg-white/60 rounded-full opacity-0 group-hover:opacity-100 animate-ping transition-all duration-300"></div>
+                    <div className="absolute bottom-0 right-1/3 w-0.5 h-0.5 bg-white/80 rounded-full opacity-0 group-hover:opacity-100 animate-pulse transition-all duration-500"></div>
                   </Button>
                 </div>
               )}
@@ -286,7 +354,7 @@ const Header = () => {
                 >
                   🏠 الرئيسية
                 </Link>
-                
+
                 <Link
                   to="/shops"
                   className="text-[#8A5700] hover:text-white font-bold text-lg px-6 py-3 rounded-2xl transition-all duration-300 hover:bg-gradient-to-r hover:from-[#C37C00] hover:to-[#A66A00] hover:shadow-lg hover:scale-105"

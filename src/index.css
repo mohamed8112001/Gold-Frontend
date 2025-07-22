@@ -3,13 +3,14 @@
 
 /* Arabic Font Configuration */
 * {
-  font-family: 'Cairo', 'Tajawal', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family: 'Tajawal', 'Cairo', 'Amiri', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 /* Arabic Text Direction and Spacing */
 body {
+  font-family: 'Tajawal', 'Cairo', 'Amiri', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   direction: rtl;
   text-align: right;
   line-height: 1.7;
@@ -27,6 +28,100 @@ h1, h2, h3, h4, h5, h6 {
 p, span, div, label, input, textarea, select {
   font-family: 'Tajawal', sans-serif;
   line-height: 1.8;
+}
+
+/* Special Typography Classes */
+.font-cairo {
+  font-family: 'Cairo', sans-serif !important;
+}
+
+.font-tajawal {
+  font-family: 'Tajawal', sans-serif !important;
+}
+
+.font-amiri {
+  font-family: 'Amiri', serif !important;
+}
+
+/* Enhanced Arabic Typography */
+.text-arabic {
+  font-family: 'Tajawal', sans-serif;
+  direction: rtl;
+  text-align: right;
+}
+
+.heading-arabic {
+  font-family: 'Cairo', sans-serif;
+  font-weight: 700;
+  direction: rtl;
+  text-align: right;
+}
+
+.body-arabic {
+  font-family: 'Tajawal', sans-serif;
+  direction: rtl;
+  text-align: right;
+  line-height: 1.8;
+}
+
+.decorative-arabic {
+  font-family: 'Amiri', serif;
+  direction: rtl;
+  text-align: right;
+  font-weight: 400;
+}
+
+/* Custom Animations for Header */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) skewX(-12deg);
+  }
+  100% {
+    transform: translateX(200%) skewX(-12deg);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(195, 124, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(195, 124, 0, 0.6), 0 0 30px rgba(195, 124, 0, 0.4);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 3s linear infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
 }
 
 /* Button and Interactive Elements */

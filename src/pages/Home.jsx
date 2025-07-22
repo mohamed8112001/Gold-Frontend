@@ -270,10 +270,10 @@ const Home = () => {
                 <div className="text-7xl mb-2 filter drop-shadow-2xl">💍</div>
                 <div className="absolute inset-0 bg-gradient-to-r from-[#C37C00]/30 to-[#E6A500]/30 rounded-full blur-xl"></div>
               </div>
-              <div className="text-lg text-gray-800 font-bold px-4 py-2 bg-white/90 rounded-xl backdrop-blur-md border border-[#E2D2B6]">
+              <div className="text-lg text-gray-800 font-bold font-cairo px-4 py-2 bg-white/90 rounded-xl backdrop-blur-md border border-[#E2D2B6]">
                 {shop.name}
               </div>
-              <div className="mt-2 text-sm text-gray-600 font-semibold bg-[#F0E8DB] px-3 py-1 rounded-full">متجر مجوهرات</div>
+              <div className="mt-2 text-sm text-gray-600 font-semibold font-tajawal bg-[#F0E8DB] px-3 py-1 rounded-full">متجر مجوهرات</div>
             </div>
             {/* Decorative elements */}
             <div className="absolute top-4 left-4 w-3 h-3 bg-[#C37C00] rounded-full opacity-60 animate-ping"></div>
@@ -296,7 +296,7 @@ const Home = () => {
         {/* Enhanced Content Section */}
         <CardContent className="p-8 relative z-10">
           {/* Store Name */}
-          <h3 className="font-bold text-2xl text-gray-900 mb-4 line-clamp-1 group-hover:text-[#C37C00] transition-colors duration-300">
+          <h3 className="font-bold font-cairo text-2xl text-gray-900 mb-4 line-clamp-1 group-hover:text-[#C37C00] transition-colors duration-300">
             {shop.name || 'متجر مجوهرات'}
           </h3>
 
@@ -305,7 +305,7 @@ const Home = () => {
             <div className="w-6 h-6 bg-gradient-to-r from-[#F0E8DB] to-[#E2D2B6] rounded-full flex items-center justify-center mr-3">
               <MapPin className="w-4 h-4 text-[#8A6C37]" />
             </div>
-            <span className="text-base font-semibold line-clamp-1 text-gray-700">{shop.address || shop.area || shop.city || 'الموقع غير محدد'}</span>
+            <span className="text-base font-semibold font-tajawal line-clamp-1 text-gray-700">{shop.address || shop.area || shop.city || 'الموقع غير محدد'}</span>
           </div>
 
 
@@ -325,7 +325,7 @@ const Home = () => {
                   }
                 }}
               >
-                <span className="flex items-center justify-center gap-3">
+                <span className="flex items-center justify-center gap-3 font-tajawal">
                   <Eye className="w-5 h-5" />
                   زيارة المتجر
                 </span>
@@ -425,7 +425,7 @@ const Home = () => {
                   {/* Premium Badge with Animation */}
 
                   {/* Main Title with Stagger Animation */}
-                  <h1 className={`text-4xl md:text-6xl lg:text-7xl font-black mb-8 leading-tight transition-all duration-1000 delay-200 ${index === currentSlide ? 'animate-fade-in translate-y-0' : 'translate-y-10 opacity-0'
+                  <h1 className={`text-4xl md:text-6xl lg:text-7xl font-black font-cairo mb-8 leading-tight transition-all duration-1000 delay-200 ${index === currentSlide ? 'animate-fade-in translate-y-0' : 'translate-y-10 opacity-0'
                     }`}>
                     <span className={`bg-gradient-to-r ${slide.gradient} bg-clip-text text-transparent drop-shadow-2xl`}>
                       {slide.title}
@@ -433,7 +433,7 @@ const Home = () => {
                   </h1>
 
                   {/* Subtitle with Animation */}
-                  <h2 className={`text-xl md:text-2xl lg:text-3xl text-white/90 font-medium mb-6 w-full drop-shadow-lg transition-all duration-1000 delay-400 ${index === currentSlide ? 'animate-fade-in translate-y-0' : 'translate-y-10 opacity-0'
+                  <h2 className={`text-xl md:text-2xl lg:text-3xl text-white/90 font-medium font-tajawal mb-6 w-full drop-shadow-lg transition-all duration-1000 delay-400 ${index === currentSlide ? 'animate-fade-in translate-y-0' : 'translate-y-10 opacity-0'
                     }`}>
                     {slide.subtitle}
                   </h2>
@@ -522,10 +522,10 @@ const Home = () => {
       <section className="py-24 bg-gradient-to-br from-white to-[#F8F4ED]">
         <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold font-cairo text-gray-900 mb-6">
               اعثر على أحلامك
             </h2>
-            <p className="text-lg md:text-xl text-gray-600 w-full text-center">
+            <p className="text-lg md:text-xl text-gray-600 w-full text-center font-tajawal">
               اكتشف أجمل قطع المجوهرات والذهب من أفضل المتاجر في مصر
             </p>
           </div>
@@ -558,10 +558,10 @@ const Home = () => {
           {/* Simple Categories */}
           <div className="w-full">
             <div className="text-center mb-12">
-              <h3 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
+              <h3 className="text-2xl md:text-3xl font-bold font-cairo text-gray-800 mb-4">
                 الفئات الشائعة
               </h3>
-              <p className="text-base text-gray-600">وصول سريع إلى مجموعاتنا</p>
+              <p className="text-base font-tajawal text-gray-600">وصول سريع إلى مجموعاتنا</p>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -574,7 +574,7 @@ const Home = () => {
                   <div className="w-16 h-16 bg-gradient-to-br from-[#F8F4ED] to-[#E2D2B6] rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
                     <span className="text-2xl">💍</span>
                   </div>
-                  <div className="font-semibold text-sm">خواتم ذهبية</div>
+                  <div className="font-semibold font-tajawal text-sm">خواتم ذهبية</div>
                 </div>
               </Button>
 
@@ -587,7 +587,7 @@ const Home = () => {
                   <div className="w-16 h-16 bg-gradient-to-br from-[#F0E8DB] to-[#D3BB92] rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
                     <span className="text-2xl">📿</span>
                   </div>
-                  <div className="font-semibold text-sm">قلائد</div>
+                  <div className="font-semibold font-tajawal text-sm">قلائد</div>
                 </div>
               </Button>
 
@@ -600,7 +600,7 @@ const Home = () => {
                   <div className="w-16 h-16 bg-gradient-to-br from-[#E2D2B6] to-[#D3BB92] rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
                     <span className="text-2xl">💎</span>
                   </div>
-                  <div className="font-semibold text-sm">أساور</div>
+                  <div className="font-semibold font-tajawal text-sm">أساور</div>
                 </div>
               </Button>
 
@@ -613,7 +613,7 @@ const Home = () => {
                   <div className="w-16 h-16 bg-gradient-to-br from-[#F0E8DB] to-[#E2D2B6] rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
                     <span className="text-2xl">✨</span>
                   </div>
-                  <div className="font-semibold text-sm">أقراط</div>
+                  <div className="font-semibold font-tajawal text-sm">أقراط</div>
                 </div>
               </Button>
             </div>
@@ -633,7 +633,7 @@ const Home = () => {
             </div>
 
             {/* Clean Title */}
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold font-cairo text-gray-900 mb-6">
               <span className="bg-gradient-to-r from-[#C37C00] to-[#E6A500] bg-clip-text text-transparent">
                 اكتشف أفضل
               </span>
@@ -644,7 +644,7 @@ const Home = () => {
             </h2>
 
             {/* Simple Subtitle */}
-            <p className="text-xl text-gray-600 w-full text-center leading-relaxed mb-12">
+            <p className="text-xl font-tajawal text-gray-600 w-full text-center leading-relaxed mb-12">
               مجموعة مختارة من أرقى متاجر المجوهرات التي تقدم أعلى جودة من الذهب والمعادن الثمينة
             </p>
 
@@ -658,7 +658,7 @@ const Home = () => {
                     `${stats.totalShops}+`
                   )}
                 </div>
-                <div className="text-gray-600 font-medium">متجر</div>
+                <div className="text-gray-600 font-medium font-tajawal">متجر</div>
               </div>
               <div className="bg-white rounded-2xl p-6 text-center">
                 <div className="text-3xl font-bold text-[#C37C00] mb-2">
@@ -668,7 +668,7 @@ const Home = () => {
                     `${stats.totalProducts.toLocaleString()}+`
                   )}
                 </div>
-                <div className="text-gray-600 font-medium">منتج</div>
+                <div className="text-gray-600 font-medium font-tajawal">منتج</div>
               </div>
               <div className="bg-white rounded-2xl p-6 text-center">
                 <div className="text-3xl font-bold text-[#C37C00] mb-2">
@@ -678,7 +678,7 @@ const Home = () => {
                     `${stats.averageRating.toFixed(1)}`
                   )}
                 </div>
-                <div className="text-gray-600 font-medium">تقييم</div>
+                <div className="text-gray-600 font-medium font-tajawal">تقييم</div>
               </div>
             </div>
           </div>
@@ -731,7 +731,7 @@ const Home = () => {
                       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                       </svg>
-                      <span className="font-bold text-sm ">المتاجر المميزة المدفوعة</span>
+                      <span className="font-bold font-tajawal text-sm ">المتاجر المميزة المدفوعة</span>
                     </div>
                   </div>
                 </div>
@@ -783,7 +783,7 @@ const Home = () => {
                 onClick={() => navigate('/shops')}
                 className="relative bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] hover:from-[#A66A00] hover:via-[#C37C00] hover:to-[#8A5700] text-white px-12 py-4 text-xl font-bold rounded-full transition-all duration-500 transform hover:scale-110 hover:-translate-y-1 border-2 border-[#D3BB92]/50"
               >
-                <span className="flex items-center gap-3">
+                <span className="flex items-center gap-3 font-tajawal">
                   <span>استكشف جميع المتاجر</span>
                   <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center">
                     <span className="text-lg">←</span>
@@ -793,7 +793,7 @@ const Home = () => {
             </div>
 
             {/* Subtitle */}
-            <p className="text-gray-600 mt-4 text-lg">
+            <p className="text-gray-600 font-tajawal mt-4 text-lg">
               اكتشف أكثر من <span className="font-bold text-[#C37C00]">{stats.totalShops || '50'}+</span> متجر مجوهرات معتمد
             </p>
           </div>
@@ -806,12 +806,12 @@ const Home = () => {
       <section className="py-24 bg-gradient-to-br from-white to-[#F8F4ED]">
         <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-5xl font-bold font-cairo text-gray-900 mb-6">
               <span className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] bg-clip-text text-transparent">
                 لماذا تختارنا؟
               </span>
             </h2>
-            <p className="text-xl text-gray-600 w-full text-center">
+            <p className="text-xl font-tajawal text-gray-600 w-full text-center">
               نوفر لك تجربة تسوق استثنائية مع أفضل الخدمات والضمانات
             </p>
           </div>
@@ -823,10 +823,10 @@ const Home = () => {
                 <Shield className="w-10 h-10 text-white
                 " />
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-gray-900 ">
+              <h3 className="text-2xl font-bold font-cairo mb-4 text-gray-900 ">
                 ضمان الجودة
               </h3>
-              <p className="text-gray-600 leading-relaxed">
+              <p className="text-gray-600 font-tajawal leading-relaxed">
                 جميع المنتجات معتمدة ومضمونة الجودة مع شهادات أصالة للذهب والمجوهرات
               </p>
             </div>
@@ -836,10 +836,10 @@ const Home = () => {
               <div className="w-20 h-20  bg-gradient-to-br from-[#A66A00] to-[#A66A00] rounded-2xl flex items-center justify-center mx-auto mb-6">
                 <Award className="w-10 h-10 text-white" />
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-gray-900">
+              <h3 className="text-2xl font-bold font-cairo mb-4 text-gray-900">
                 متاجر موثوقة
               </h3>
-              <p className="text-gray-600 leading-relaxed">
+              <p className="text-gray-600 font-tajawal leading-relaxed">
                 جميع المتاجر مفحوصة ومعتمدة من خبراء المجوهرات لضمان أفضل تجربة تسوق
               </p>
             </div>
@@ -849,10 +849,10 @@ const Home = () => {
               <div className="w-20 h-20 bg-gradient-to-br from-[#A66A00] to-[#A66A00] rounded-2xl flex items-center justify-center mx-auto mb-6">
                 <Star className="w-10 h-10 text-white " />
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-gray-900">
+              <h3 className="text-2xl font-bold font-cairo mb-4 text-gray-900">
                 أفضل الأسعار
               </h3>
-              <p className="text-gray-600 leading-relaxed">
+              <p className="text-gray-600 font-tajawal leading-relaxed">
                 أفضل الأسعار في السوق مع عروض وخصومات حصرية لعملائنا الكرام
               </p>
             </div>
@@ -864,11 +864,11 @@ const Home = () => {
         <div className="absolute inset-0 bg-[url('/gold-pattern.svg')] opacity-5 bg-center bg-cover pointer-events-none" />
 
         <div className="relative w-full text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-5xl font-bold  mb-6 bg-gradient-to-r from-[#C37C00] to-[#A66A00] bg-clip-text text-transparent">
+          <h2 className="text-5xl font-bold font-cairo mb-6 bg-gradient-to-r from-[#C37C00] to-[#A66A00] bg-clip-text text-transparent">
             هل أنت مستعد لاكتشاف مجوهراتك المثالية؟
           </h2>
 
-          <p className="text-xl text-[#5C4A1C] mb-8 max-w-2xl mx-auto">
+          <p className="text-xl font-tajawal text-[#5C4A1C] mb-8 max-w-2xl mx-auto">
             انضم إلى آلاف العملاء الراضين الذين وجدوا مجوهرات أحلامهم من خلال ديبلا
           </p>
 
@@ -892,7 +892,7 @@ const Home = () => {
           </div>
 
           <div className="mt-10 text-[#5C4A1C]">
-            <p className="text-lg font-medium">
+            <p className="text-lg font-medium font-tajawal">
               أكثر من {stats.totalReviews || '1000'} عميل راضٍ يثق بنا
             </p>
           </div>
