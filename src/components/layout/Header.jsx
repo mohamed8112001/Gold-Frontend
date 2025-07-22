@@ -160,18 +160,18 @@ const Header = () => {
             {/* Clean Auth Buttons */}
             <div className="hidden lg:flex items-center space-x-4">
               {/* Enhanced Language Toggle Button */}
-              <Button
+              {/* <Button
                 variant="outline"
                 onClick={toggleLanguage}
                 className="border-2 border-[#C37C00] bg-[#FFF8E6] text-[#A66A00] hover:bg-[#FFF0CC] hover:border-[#A66A00] hover:text-[#8A5700] px-6 py-2.5 rounded-full font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 flex items-center gap-3 relative"
-              >
+              > */}
                 <Globe className="w-5 h-5" />
-                <span className="text-base font-extrabold">
+                {/* <span className="text-base font-extrabold">
                   {i18n.language === 'ar' ? 'English' : 'عربي'}
-                </span>
+                </span> */}
                 {/* Current language indicator */}
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-[#C37C00] rounded-full border-2 border-white"></div>
-              </Button>
+              {/* </Button> */}
 
               {isAuthenticated ? (
                 <div className="flex items-center space-x-4">
@@ -244,7 +244,7 @@ const Header = () => {
                 </Link>
 
                 {/* Enhanced Mobile Language Toggle */}
-                <Button
+                {/* <Button
                   variant="outline"
                   onClick={() => {
                     console.log('🌐 Mobile language toggle clicked');
@@ -257,7 +257,7 @@ const Header = () => {
                   <span className="text-lg">
                     {i18n.language === 'ar' ? '🇺🇸 Switch to English' : '🇸🇦 ' + t('switch_to_arabic')}
                   </span>
-                </Button>
+                </Button> */}
                 {(isAuthenticated && user) ? (
                   <>
                     <div className="flex items-center gap-2 py-2 border-b border-[#FFE6B3] mb-2">
