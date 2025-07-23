@@ -32,7 +32,7 @@ const Layout = ({ children = true, className = '' }) => {
   }, [i18n.language]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-white font-cairo">
       {!shouldHideHeader && <Header />}
 
       <main className={`flex-1 ${!shouldHideHeader ? 'pt-20' : ''} ${className}`}>

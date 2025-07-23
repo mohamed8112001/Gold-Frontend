@@ -9,6 +9,9 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        primary: "text-white transition-all duration-300",
+        success: "text-white transition-all duration-300",
+        error: "text-white transition-all duration-300",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
@@ -34,9 +37,20 @@ const buttonVariants = cva(
 
 const Button = React.forwardRef(({ className, variant, size, asChild = false, ...props }, ref) => {
   const Comp = asChild ? Slot : "button"
+
+  // Apply custom styles for new design system variants
+  let customStyles = ""
+  if (variant === "primary") {
+    customStyles = "bg-[#D4AF37] hover:bg-[#A88924]" // Button Primary 500 & Hover
+  } else if (variant === "success") {
+    customStyles = "bg-[#21CF61] hover:bg-[#1CA651]" // Success 500 & Hover 600
+  } else if (variant === "error") {
+    customStyles = "bg-[#FD0D0D] hover:bg-[#D80604]" // Error 500 & Hover 600
+  }
+
   return (
     <Comp
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={cn(buttonVariants({ variant, size }), customStyles, className)}
       ref={ref}
       {...props}
     />

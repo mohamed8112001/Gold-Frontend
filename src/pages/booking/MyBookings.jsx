@@ -246,18 +246,18 @@ const MyBookings = () => {
     const cancelledBookings = filterBookings('cancelled');
 
     return (
-        <div className="min-h-screen bg-gray-50 pt-20">
+        <div className="min-h-screen bg-gradient-to-br from-primary-1 to-primary-2 pt-20 font-cairo">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {/* Header */}
                 <div className="mb-8">
                     <div className="flex items-center justify-between mb-4">
-                        <h1 className="text-3xl font-bold text-gray-900">مواعيدي</h1>
-                        <Button onClick={() => navigate(ROUTES.SHOPS)}>
+                        <h1 className="text-3xl font-bold text-primary-900 font-cairo">مواعيدي</h1>
+                        <Button variant="primary" onClick={() => navigate(ROUTES.SHOPS)}>
                             <Plus className="w-4 h-4 mr-2" />
                             حجز موعد جديد
                         </Button>
                     </div>
-                    <p className="text-gray-600">إدارة جميع مواعيدك المحجوزة</p>
+                    <p className="text-secondary-800 font-cairo">إدارة جميع مواعيدك المحجوزة</p>
                 </div>
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
                     <TabsList className="grid w-full grid-cols-3">

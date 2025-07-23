@@ -148,37 +148,50 @@ export const ROUTES = {
   NOT_FOUND: "/404",
 };
 
-// Colors (Golden Brown & Beige Theme)
+// Colors (New Design System)
 export const COLORS = {
-  // Primary Colors (Golden Brown)
-  PRIMARY: "#A37F41", // Main brand color
-  PRIMARY_LIGHT: "#C5A56D",
-  PRIMARY_DARK: "#8A6C37",
-  PRIMARY_DARKER: "#6D552C",
-  PRIMARY_DARKEST: "#49391D",
+  // Primary Colors
+  PRIMARY_1: "#FAF7EA", // Primary 1
+  PRIMARY_2: "#F6EED5", // Primary 2
+  PRIMARY: "#D4AF37", // Button Primary 500 (main brand color)
+  PRIMARY_HOVER: "#A88924", // Button Primary Hover
 
-  // Secondary Colors (Beige & Earthy)
-  SECONDARY: "#E2D2B6", // Secondary color
-  SECONDARY_LIGHT: "#F0E8DB",
-  SECONDARY_LIGHTER: "#F8F4ED",
-  SECONDARY_DARK: "#D3BB92",
-  SECONDARY_DARKER: "#92723A",
+  // Secondary Colors
+  SECONDARY_1: "#F2F2F2", // Secondary 1
+  SECONDARY_2: "#E6E6E6", // Secondary 2
+
+  // Button Colors
+  BUTTON_PRIMARY: "#D4AF37", // Button Primary 500
+  BUTTON_PRIMARY_HOVER: "#A88924", // Button Primary Hover
+  BUTTON_SUCCESS: "#21CF61", // Success 500
+  BUTTON_SUCCESS_HOVER: "#1CA651", // Success Hover 600
+  BUTTON_ERROR: "#FD0D0D", // Error 500
+  BUTTON_ERROR_HOVER: "#D80604", // Error Hover 600
 
   // Background Colors
-  BACKGROUND: "#F8F4ED", // Light beige background
-  SURFACE: "#FFFFFF", // White surface
-  SURFACE_ALT: "#F0E8DB", // Alternative surface
+  BACKGROUND: "#FFFFFF", // Background
+  BACKGROUND_SECONDARY: "#FAF7EA", // Primary 1
+  BACKGROUND_TERTIARY: "#F6EED5", // Primary 2
+  BACKGROUND_NEUTRAL: "#F2F2F2", // Secondary 1
 
   // Text Colors
-  TEXT: "#241C0F", // Primary text
-  TEXT_SECONDARY: "#49391D", // Secondary text
-  TEXT_TERTIARY: "#6D552C", // Less important text
+  TEXT_PRIMARY: "#2A2209", // Text Primary 900
+  TEXT_SECONDARY: "#4D4D4D", // Secondary text
+  TEXT_MUTED: "#737373", // Muted text
+  TEXT_INVERSE: "#FFFFFF", // White text for dark backgrounds
 
   // Status Colors
-  SUCCESS: "#5C8A3C", // Green
-  WARNING: "#D4A546", // Amber
-  ERROR: "#B54A35", // Reddish-brown
-  INFO: "#4A7997", // Blue-gray
+  SUCCESS: "#21CF61", // Success 500
+  SUCCESS_HOVER: "#1CA651", // Success Hover 600
+  ERROR: "#FD0D0D", // Error 500
+  ERROR_HOVER: "#D80604", // Error Hover 600
+  WARNING: "#F59E0B", // Warning (maintained for compatibility)
+  INFO: "#3B82F6", // Info (maintained for compatibility)
+
+  // Border Colors
+  BORDER_LIGHT: "#E6E6E6", // Secondary 2
+  BORDER_MEDIUM: "#D9D9D9",
+  BORDER_DARK: "#CCCCCC",
 
   // Basic Colors
   WHITE: "#FFFFFF",
@@ -186,9 +199,11 @@ export const COLORS = {
 
   // Dark Mode Colors
   DARK: {
-    BACKGROUND: "#120E07",
-    SURFACE: "#241C0F",
-    TEXT: "#F0E8DB",
+    BACKGROUND: "#0D0D0D",
+    SURFACE: "#262626",
+    TEXT: "#FFFFFF",
+    TEXT_MUTED: "#BFBFBF",
+    BORDER: "#4D4D4D",
   },
 };
 

@@ -235,7 +235,7 @@ const BookAppointment = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 pt-20">
+    <div className="min-h-screen bg-gradient-to-br from-primary-1 to-primary-2 py-8 pt-20 font-cairo">
       <div className="max-w-4xl mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
@@ -248,14 +248,14 @@ const BookAppointment = () => {
             Back
           </Button>
 
-          <div className="bg-white rounded-lg p-6 ">
+          <div className="bg-white rounded-lg p-6 border border-secondary-2 shadow-sm">
             <div className="flex items-center space-x-4 rtl:space-x-reverse">
-              <Store className="w-8 h-8 text-[#C37C00]" />
+              <Store className="w-8 h-8 text-primary-500" />
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">
+                <h1 className="text-2xl font-bold text-primary-900 font-cairo">
                   Book Appointment at {shop?.name || 'Shop'}
                 </h1>
-                <p className="text-gray-600">
+                <p className="text-secondary-800 font-cairo">
                   Choose a suitable appointment time from available slots
                 </p>
               </div>

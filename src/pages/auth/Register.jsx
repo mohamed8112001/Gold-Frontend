@@ -260,7 +260,7 @@ const Register = () => {
                 {/* Name Fields */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="group">
-                    <label className="block text-sm font-semibold mb-2" style={{ color: '#6B5B47' }}>
+                    <label className="block text-sm font-semibold mb-2 text-primary-900 font-cairo">
                       الاسم الأول *
                     </label>
                     <Input
@@ -269,11 +269,7 @@ const Register = () => {
                       placeholder="الاسم الأول"
                       value={formData.firstName}
                       onChange={handleInputChange}
-                      className={`py-3 border-2 rounded-xl transition-all duration-200 ${errors.firstName ? 'border-red-500' : ''}`}
-                      style={{
-                        borderColor: errors.firstName ? '#ef4444' : '#E5D5C3',
-                        color: '#6B5B47'
-                      }}
+                      className={`py-3 border-2 rounded-xl transition-all duration-200 text-primary-900 font-cairo ${errors.firstName ? 'border-error-500' : 'border-secondary-2'}`}
                       onFocus={(e) => e.target.style.borderColor = '#A37F41'}
                       onBlur={(e) => e.target.style.borderColor = '#E5D5C3'}
                     />

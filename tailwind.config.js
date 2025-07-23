@@ -4,65 +4,85 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Golden Brown Primary Palette (based on #A37F41)
+        // Primary Colors (New Design System)
         primary: {
-          50: "#FDF8F0",
-          100: "#FAF0E1",
-          200: "#F4E0C3",
-          300: "#EDCFA4",
-          400: "#E6BE86",
-          500: "#D4A574", // Your existing primary
-          600: "#A37F41", // Your base color
-          700: "#8B6B35",
-          800: "#6D552C",
-          900: "#49391D",
-          950: "#241C0F",
+          1: "#FAF7EA", // Primary 1
+          2: "#F6EED5", // Primary 2
+          50: "#FAF7EA",
+          100: "#F6EED5",
+          200: "#F0E5C0",
+          300: "#E8D8A0",
+          400: "#DFC980",
+          500: "#D4AF37", // Button Primary 500
+          600: "#A88924", // Button Primary Hover
+          700: "#8A6F1E",
+          800: "#6B5518",
+          900: "#2A2209", // Text Primary 900
+          950: "#1A1506",
         },
 
-        // Secondary/Background Palette (Beige & Earthy Tones)
+        // Secondary Colors (New Design System)
         secondary: {
-          50: "#F8F4ED", // Your lightest beige
-          100: "#F0E8DB", // Your second lightest
-          200: "#E2D2B6", // Your third
-          300: "#D3BB92", // Your fourth
-          400: "#C5A56D", // Your fifth
-          500: "#B8956A", // Interpolated
-          600: "#92723A", // Your sixth
-          700: "#6D552C", // Your seventh
-          800: "#49391D", // Your eighth
-          900: "#241C0F", // Your ninth
-          950: "#120E07", // Your darkest
+          1: "#F2F2F2", // Secondary 1
+          2: "#E6E6E6", // Secondary 2
+          50: "#F9F9F9",
+          100: "#F2F2F2",
+          200: "#E6E6E6",
+          300: "#D9D9D9",
+          400: "#CCCCCC",
+          500: "#BFBFBF",
+          600: "#999999",
+          700: "#737373",
+          800: "#4D4D4D",
+          900: "#262626",
+          950: "#0D0D0D",
         },
 
-        // Neutral palette for backgrounds and surfaces
-        neutral: {
-          50: "#FAFAF9",
-          100: "#F5F5F4",
-          200: "#E7E5E4",
-          300: "#D6D3D1",
-          400: "#A8A29E",
-          500: "#78716C",
-          600: "#57534E",
-          700: "#44403C",
-          800: "#292524",
-          900: "#1C1917",
-          950: "#0C0A09",
+        // Button Colors (New Design System)
+        button: {
+          primary: {
+            500: "#D4AF37", // Button Primary 500
+            hover: "#A88924", // Button Primary Hover
+          },
+          success: {
+            500: "#21CF61", // Success 500
+            600: "#1CA651", // Success Hover 600
+          },
+          error: {
+            500: "#FD0D0D", // Error 500
+            600: "#D80604", // Error Hover 600
+          },
         },
 
-        // Semantic colors with golden brown influence
+        // Success Colors (New Design System)
         success: {
           50: "#F0FDF4",
           100: "#DCFCE7",
           200: "#BBF7D0",
           300: "#86EFAC",
           400: "#4ADE80",
-          500: "#22C55E",
-          600: "#16A34A",
+          500: "#21CF61", // Success 500
+          600: "#1CA651", // Success Hover 600
           700: "#15803D",
           800: "#166534",
           900: "#14532D",
         },
 
+        // Error Colors (New Design System)
+        error: {
+          50: "#FEF2F2",
+          100: "#FEE2E2",
+          200: "#FECACA",
+          300: "#FCA5A5",
+          400: "#F87171",
+          500: "#FD0D0D", // Error 500
+          600: "#D80604", // Error Hover 600
+          700: "#B91C1C",
+          800: "#991B1B",
+          900: "#7F1D1D",
+        },
+
+        // Warning Colors (maintained for compatibility)
         warning: {
           50: "#FFFBEB",
           100: "#FEF3C7",
@@ -76,53 +96,42 @@ export default {
           900: "#78350F",
         },
 
-        error: {
-          50: "#FEF2F2",
-          100: "#FEE2E2",
-          200: "#FECACA",
-          300: "#FCA5A5",
-          400: "#F87171",
-          500: "#EF4444",
-          600: "#DC2626",
-          700: "#B91C1C",
-          800: "#991B1B",
-          900: "#7F1D1D",
-        },
-
-        // Custom golden brown variations for special use cases
-        golden: {
-          50: "#FDF8F0",
-          100: "#FAF0E1",
-          200: "#F4E0C3",
-          300: "#EDCFA4",
-          400: "#E6BE86",
-          500: "#D4A574",
-          600: "#A37F41",
-          700: "#8B6B35",
-          800: "#6D552C",
-          900: "#49391D",
-        },
-
-        // Background variations
+        // Background Colors (New Design System)
         background: {
-          primary: "#F8F4ED", // Lightest beige for main backgrounds
-          secondary: "#F0E8DB", // Slightly darker for cards
-          tertiary: "#E2D2B6", // For sections and dividers
+          primary: "#FFFFFF", // Background
+          secondary: "#FAF7EA", // Primary 1
+          tertiary: "#F6EED5", // Primary 2
+          neutral: "#F2F2F2", // Secondary 1
         },
 
-        // Text colors optimized for contrast
+        // Text Colors (New Design System)
         text: {
-          primary: "#241C0F", // Darkest brown for main text
-          secondary: "#49391D", // Medium brown for secondary text
-          muted: "#6D552C", // Lighter brown for muted text
-          inverse: "#F8F4ED", // Light text for dark backgrounds
+          primary: "#2A2209", // Text Primary 900
+          secondary: "#4D4D4D", // Darker gray for secondary text
+          muted: "#737373", // Medium gray for muted text
+          inverse: "#FFFFFF", // White text for dark backgrounds
         },
 
-        // Border colors
+        // Border Colors (New Design System)
         border: {
-          light: "#E2D2B6",
-          medium: "#D3BB92",
-          dark: "#C5A56D",
+          light: "#E6E6E6", // Secondary 2
+          medium: "#D9D9D9",
+          dark: "#CCCCCC",
+        },
+
+        // Neutral palette for general use
+        neutral: {
+          50: "#F9F9F9",
+          100: "#F2F2F2",
+          200: "#E6E6E6",
+          300: "#D9D9D9",
+          400: "#CCCCCC",
+          500: "#BFBFBF",
+          600: "#999999",
+          700: "#737373",
+          800: "#4D4D4D",
+          900: "#262626",
+          950: "#0D0D0D",
         },
       },
 
@@ -133,18 +142,17 @@ export default {
         128: "32rem",
       },
 
-      // Typography enhancements - Arabic Fonts
+      // Typography enhancements - Cairo Font Primary
       fontFamily: {
         cairo: ["Cairo", "system-ui", "sans-serif"],
-        tajawal: ["Tajawal", "system-ui", "sans-serif"],
-        amiri: ["Amiri", "serif"],
         primary: ["Cairo", "system-ui", "sans-serif"],
-        secondary: ["Tajawal", "system-ui", "sans-serif"],
-        decorative: ["Amiri", "serif"],
+        secondary: ["Cairo", "system-ui", "sans-serif"],
+        decorative: ["Cairo", "system-ui", "sans-serif"],
         display: ["Cairo", "system-ui", "sans-serif"],
-        body: ["Tajawal", "system-ui", "sans-serif"],
-        sans: ["Tajawal", "Cairo", "system-ui", "sans-serif"],
-        serif: ["Amiri", "serif"],
+        body: ["Cairo", "system-ui", "sans-serif"],
+        sans: ["Cairo", "system-ui", "sans-serif"],
+        serif: ["Cairo", "system-ui", "sans-serif"],
+        DEFAULT: ["Cairo", "system-ui", "sans-serif"],
       },
 
 

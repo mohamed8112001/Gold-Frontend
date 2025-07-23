@@ -138,12 +138,12 @@ const Profile = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 pt-20">
+        <div className="min-h-screen bg-gradient-to-br from-primary-1 to-primary-2 pt-20 font-cairo">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {/* Header */}
                 <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900 mb-4">الملف الشخصي</h1>
-                    <p className="text-gray-600">إدارة معلوماتك الشخصية وإعداداتك</p>
+                    <h1 className="text-3xl font-bold text-primary-900 mb-4 font-cairo">الملف الشخصي</h1>
+                    <p className="text-secondary-800 font-cairo">إدارة معلوماتك الشخصية وإعداداتك</p>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

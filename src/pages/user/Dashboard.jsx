@@ -117,16 +117,16 @@ const Dashboard = () => {
   const StatCard = ({ icon: IconComponent, title, value, description, color = 'yellow' }) => {
     const colorClasses = colorMap[color] || colorMap.yellow;
     return (
-      <Card className="hover:shadow-lg transition-all duration-300 bg-white/90 backdrop-blur-md rounded-lg">
+      <Card className="hover:shadow-lg transition-all duration-300 bg-white border-secondary-2 rounded-lg font-cairo">
         <CardContent className="p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-semibold text-[#8A5700]">{title}</p>
-              <p className="text-2xl font-bold text-[#C37C00]">{value}</p>
-              {description && <p className="text-xs text-[#A66A00] mt-1">{description}</p>}
+              <p className="text-sm font-semibold text-primary-900">{title}</p>
+              <p className="text-2xl font-bold text-primary-500">{value}</p>
+              {description && <p className="text-xs text-secondary-800 mt-1">{description}</p>}
             </div>
-            <div className={`w-10 h-10 ${colorClasses.bg} rounded-full flex items-center justify-center shadow-md`}>
-              <IconComponent className={`w-5 h-5 ${colorClasses.text}`} />
+            <div className={`w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center shadow-md`}>
+              <IconComponent className={`w-5 h-5 text-white`} />
             </div>
           </div>
         </CardContent>
@@ -319,7 +319,7 @@ const Dashboard = () => {
             </Button>
             <Button
               variant="outline"
-              className="h-20 flex flex-col items-center justify-center border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+              className="h-20 flex flex-col items-center justify-center border-primary-500 text-primary-500 hover:bg-primary-1 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 font-cairo"
               onClick={() => setActiveTab('bookings')}
               aria-label="Book an appointment"
             >
@@ -328,7 +328,7 @@ const Dashboard = () => {
             </Button>
             <Button
               variant="outline"
-              className="h-20 flex flex-col items-center justify-center border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+              className="h-20 flex flex-col items-center justify-center border-primary-500 text-primary-500 hover:bg-primary-1 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 font-cairo"
               onClick={() => navigate(ROUTES.PROFILE)}
               aria-label="View profile"
             >
@@ -828,13 +828,13 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white pt-20 w-full">
+    <div className="min-h-screen bg-white pt-20 w-full font-cairo">
       <div className="flex w-full">
         {/* Main Content Area */}
         <div className="flex-1 px-4 sm:px-6 lg:px-8 py-8 lg:pr-80">
           <div className="mb-6">
-            <h1 className="text-3xl font-bold font-cairo text-[#8A5700]">اهلا, {user?.name || 'User'}</h1>
-            <p className="text-[#A66A00] mt-1 font-tajawal">إدارة حسابك وتتبع أنشطتك</p>
+            <h1 className="text-3xl font-bold font-cairo text-primary-900">اهلا, {user?.name || 'User'}</h1>
+            <p className="text-secondary-800 mt-1 font-cairo">إدارة حسابك وتتبع أنشطتك</p>
           </div>
 
           {/* Mobile Navigation - Horizontal tabs for mobile */}

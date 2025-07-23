@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from
 import { AnimatePresence } from 'framer-motion';
 import { AuthProvider } from './context/AuthContext.jsx';
 import Layout from './components/layout/Layout.jsx';
+import NewColorShowcase from './components/NewColorShowcase.jsx';
 import Home from './pages/Home.jsx';
 import Login from './pages/auth/Login.jsx';
 import UserTypeSelection from './pages/auth/UserTypeSelection.jsx';
@@ -93,6 +94,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/home" element={<Home />} />
               <Route path="/test" element={<TestPage />} />
+              <Route path="/colors" element={<NewColorShowcase />} />
 
               {/* Auth Routes */}
               <Route path="/auth/login" element={<Login />} />

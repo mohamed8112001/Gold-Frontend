@@ -438,7 +438,7 @@ const ProductList = () => {
 
         return (
             <Card
-                className={`group hover:  transition-all duration-700 cursor-pointer border-0  hover: transform hover:-translate-y-4 hover:scale-105 ${isListView ? 'flex h-64' : 'flex flex-col h-full'} bg-white rounded-3xl overflow-hidden backdrop-blur-sm`}
+                className={`group hover:shadow-lg transition-all duration-700 cursor-pointer border-2 border-secondary-2 hover:border-primary-500 hover:shadow-primary-500/25 transform hover:-translate-y-4 hover:scale-105 ${isListView ? 'flex h-64' : 'flex flex-col h-full'} bg-white rounded-3xl overflow-hidden backdrop-blur-sm font-cairo`}
                 onClick={async () => {
                     try {
                         // Track product view locally
@@ -1032,10 +1032,10 @@ const ProductList = () => {
                                                         </div>
                                                     </div>
                                                     <CardContent className="p-4 flex-1 flex flex-col">
-                                                        <h3 className="font-bold text-lg text-gray-900 mb-2 line-clamp-2">
+                                                        <h3 className="font-bold text-lg text-primary-900 mb-2 line-clamp-2 font-cairo">
                                                             {safeProduct.name}
                                                         </h3>
-                                                        <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                                                        <p className="text-sm text-secondary-800 mb-3 line-clamp-2 font-cairo">
                                                             {safeProduct.description}
                                                         </p>
                                                         <div className="flex items-center justify-between mt-auto">

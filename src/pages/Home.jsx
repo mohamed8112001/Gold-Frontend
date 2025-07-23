@@ -384,7 +384,7 @@ const Home = () => {
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -100 }}
       transition={{ duration: 0.5 }}
-      className="min-h-screen bg-gradient-to-br from-[#F8F4ED] to-[#F0E8DB]"
+      className="min-h-screen bg-gradient-to-br from-primary-1 to-primary-2 font-cairo"
       dir="ltr"
     >
 
@@ -394,9 +394,9 @@ const Home = () => {
         <div className="absolute inset-0 bg-black/30 z-10"></div>
 
         {/* Floating Decorative Elements */}
-        <div className="absolute top-20 left-20 w-4 h-4 bg-[#C37C00]/60 rounded-full animate-pulse z-20"></div>
+        <div className="absolute top-20 left-20 w-4 h-4 bg-primary-500/60 rounded-full animate-pulse z-20"></div>
         <div className="absolute top-40 right-32 w-6 h-6 bg-white/40 rounded-full animate-bounce z-20"></div>
-        <div className="absolute bottom-32 left-32 w-3 h-3 bg-[#C5A56D]/50 rounded-full animate-ping z-20"></div>
+        <div className="absolute bottom-32 left-32 w-3 h-3 bg-primary-600/50 rounded-full animate-ping z-20"></div>
 
         {/* Slider Container */}
         <div className="relative w-full h-full">
@@ -568,13 +568,13 @@ const Home = () => {
               <Button
                 variant="outline"
                 onClick={() => navigate('/shops?category=gold')}
-                className="group bg-white border-2 border-gray-200 hover:border-[#C37C00] text-gray-700 hover:text-[#C37C00] transition-all duration-300 p-6 h-auto rounded-2xl"
+                className="group bg-white border-2 border-secondary-2 hover:border-primary-500 text-primary-900 hover:text-primary-500 transition-all duration-300 p-6 h-auto rounded-2xl"
               >
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-[#F8F4ED] to-[#E2D2B6] rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-16 h-16 bg-gradient-to-br from-primary-1 to-primary-2 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
                     <span className="text-2xl">💍</span>
                   </div>
-                  <div className="font-semibold font-tajawal text-sm">خواتم ذهبية</div>
+                  <div className="font-semibold font-cairo text-sm">خواتم ذهبية</div>
                 </div>
               </Button>
 
@@ -793,8 +793,8 @@ const Home = () => {
             </div>
 
             {/* Subtitle */}
-            <p className="text-gray-600 font-tajawal mt-4 text-lg">
-              اكتشف أكثر من <span className="font-bold text-[#C37C00]">{stats.totalShops || '50'}+</span> متجر مجوهرات معتمد
+            <p className="text-secondary-800 font-cairo mt-4 text-lg">
+              اكتشف أكثر من <span className="font-bold text-primary-500">{stats.totalShops || '50'}+</span> متجر مجوهرات معتمد
             </p>
           </div>
 
@@ -803,30 +803,29 @@ const Home = () => {
       </section>
 
       {/* Clean Services Section */}
-      <section className="py-24 bg-gradient-to-br from-white to-[#F8F4ED]">
+      <section className="py-24 bg-gradient-to-br from-white to-primary-1">
         <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-5xl font-bold font-cairo text-gray-900 mb-6">
-              <span className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] bg-clip-text text-transparent">
+            <h2 className="text-5xl font-bold font-cairo text-primary-900 mb-6">
+              <span className="bg-gradient-to-r from-primary-500 to-primary-600 bg-clip-text text-transparent">
                 لماذا تختارنا؟
               </span>
             </h2>
-            <p className="text-xl font-tajawal text-gray-600 w-full text-center">
+            <p className="text-xl font-cairo text-secondary-800 w-full text-center">
               نوفر لك تجربة تسوق استثنائية مع أفضل الخدمات والضمانات
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Service 1 */}
-            <div className="text-center p-6 bg-[#F8F4ED] rounded-2xl hover:bg-white transition-all duration-300">
-              <div className="w-20 h-20  bg-gradient-to-br from-[#A66A00] to-[#A66A00] rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <Shield className="w-10 h-10 text-white
-                " />
+            <div className="text-center p-6 bg-primary-1 rounded-2xl hover:bg-white transition-all duration-300">
+              <div className="w-20 h-20 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <Shield className="w-10 h-10 text-white" />
               </div>
-              <h3 className="text-2xl font-bold font-cairo mb-4 text-gray-900 ">
+              <h3 className="text-2xl font-bold font-cairo mb-4 text-primary-900">
                 ضمان الجودة
               </h3>
-              <p className="text-gray-600 font-tajawal leading-relaxed">
+              <p className="text-secondary-800 font-cairo leading-relaxed">
                 جميع المنتجات معتمدة ومضمونة الجودة مع شهادات أصالة للذهب والمجوهرات
               </p>
             </div>
@@ -910,3 +909,6 @@ const Home = () => {
 };
 
 export default Home;
+
+
+

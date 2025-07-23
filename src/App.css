@@ -43,73 +43,75 @@
 
 :root {
   --radius: 0.625rem;
-  /* Golden Brown & Beige Theme - Light Mode */
-  --background: #F8F4ED;  /* Light beige background */
-  --foreground: #241C0F;  /* Dark brown text */
+  /* New Design System - Light Mode */
+  --background: #FFFFFF;  /* Background */
+  --foreground: #2A2209;  /* Text Primary 900 */
   --card: #FFFFFF;        /* White cards */
-  --card-foreground: #241C0F;  /* Dark brown text on cards */
+  --card-foreground: #2A2209;  /* Text Primary 900 on cards */
   --popover: #FFFFFF;     /* White popover */
-  --popover-foreground: #241C0F;  /* Dark brown text on popover */
-  --primary: #A37F41;     /* Golden brown primary */
+  --popover-foreground: #2A2209;  /* Text Primary 900 on popover */
+  --primary: #D4AF37;     /* Button Primary 500 */
   --primary-foreground: #FFFFFF;  /* White text on primary */
-  --secondary: #E2D2B6;   /* Light beige secondary */
-  --secondary-foreground: #241C0F;  /* Dark brown text on secondary */
-  --muted: #F0E8DB;       /* Muted beige */
-  --muted-foreground: #6D552C;  /* Medium brown for muted text */
-  --accent: #D3BB92;      /* Accent beige */
-  --accent-foreground: #241C0F;  /* Dark brown text on accent */
-  --destructive: #B54A35; /* Reddish-brown for errors */
-  --border: #E2D2B6;      /* Light border */
-  --input: #E2D2B6;       /* Input border */
-  --ring: #A37F41;        /* Focus ring */
-  --chart-1: #A37F41;     /* Chart colors in golden brown theme */
-  --chart-2: #C5A56D;
-  --chart-3: #8A6C37;
-  --chart-4: #D3BB92;
-  --chart-5: #6D552C;
-  --sidebar: #F8F4ED;     /* Sidebar background */
-  --sidebar-foreground: #241C0F;  /* Sidebar text */
-  --sidebar-primary: #A37F41;     /* Sidebar primary */
+  --secondary: #F2F2F2;   /* Secondary 1 */
+  --secondary-foreground: #2A2209;  /* Text Primary 900 on secondary */
+  --muted: #F6EED5;       /* Primary 2 */
+  --muted-foreground: #4D4D4D;  /* Secondary text color */
+  --accent: #FAF7EA;      /* Primary 1 */
+  --accent-foreground: #2A2209;  /* Text Primary 900 on accent */
+  --destructive: #FD0D0D; /* Error 500 */
+  --destructive-foreground: #FFFFFF;  /* White text on destructive */
+  --border: #E6E6E6;      /* Secondary 2 */
+  --input: #E6E6E6;       /* Secondary 2 for input borders */
+  --ring: #D4AF37;        /* Button Primary 500 for focus ring */
+  --chart-1: #D4AF37;     /* Chart colors in new theme */
+  --chart-2: #21CF61;
+  --chart-3: #FD0D0D;
+  --chart-4: #F2F2F2;
+  --chart-5: #2A2209;
+  --sidebar: #FFFFFF;     /* Sidebar background */
+  --sidebar-foreground: #2A2209;  /* Sidebar text */
+  --sidebar-primary: #D4AF37;     /* Sidebar primary */
   --sidebar-primary-foreground: #FFFFFF;  /* Sidebar primary text */
-  --sidebar-accent: #E2D2B6;      /* Sidebar accent */
-  --sidebar-accent-foreground: #241C0F;   /* Sidebar accent text */
-  --sidebar-border: #E2D2B6;      /* Sidebar border */
-  --sidebar-ring: #A37F41;        /* Sidebar focus ring */
+  --sidebar-accent: #FAF7EA;      /* Sidebar accent */
+  --sidebar-accent-foreground: #2A2209;   /* Sidebar accent text */
+  --sidebar-border: #E6E6E6;      /* Sidebar border */
+  --sidebar-ring: #D4AF37;        /* Sidebar focus ring */
 }
 
 .dark {
-  /* Golden Brown & Beige Theme - Dark Mode */
-  --background: #120E07;     /* Very dark brown background */
-  --foreground: #F0E8DB;     /* Light beige text */
-  --card: #241C0F;           /* Dark surface for cards */
-  --card-foreground: #F0E8DB; /* Light beige text on cards */
-  --popover: #241C0F;        /* Dark popover */
-  --popover-foreground: #F0E8DB; /* Light beige text on popover */
-  --primary: #A37F41;        /* Same golden brown primary */
-  --primary-foreground: #120E07; /* Dark text on primary */
-  --secondary: #6D552C;      /* Darker secondary for dark mode */
-  --secondary-foreground: #F0E8DB; /* Light text on secondary */
-  --muted: #241C0F;          /* Muted dark */
-  --muted-foreground: #C5A56D; /* Golden for muted text */
-  --accent: #49391D;         /* Accent dark */
-  --accent-foreground: #F0E8DB; /* Light text on accent */
-  --destructive: #B54A35;    /* Same error color */
-  --border: #49391D;         /* Dark border */
-  --input: #49391D;          /* Input border */
-  --ring: #A37F41;           /* Focus ring */
-  --chart-1: #A37F41;        /* Chart colors for dark mode */
-  --chart-2: #C5A56D;
-  --chart-3: #8A6C37;
-  --chart-4: #D3BB92;
-  --chart-5: #6D552C;
-  --sidebar: #120E07;        /* Sidebar background */
-  --sidebar-foreground: #F0E8DB; /* Sidebar text */
-  --sidebar-primary: #A37F41;    /* Sidebar primary */
-  --sidebar-primary-foreground: #120E07; /* Sidebar primary text */
-  --sidebar-accent: #49391D;     /* Sidebar accent */
-  --sidebar-accent-foreground: #F0E8DB;  /* Sidebar accent text */
-  --sidebar-border: #49391D;     /* Sidebar border */
-  --sidebar-ring: #A37F41;       /* Sidebar focus ring */
+  /* New Design System - Dark Mode */
+  --background: #0D0D0D;     /* Very dark background */
+  --foreground: #FFFFFF;     /* White text */
+  --card: #262626;           /* Dark surface for cards */
+  --card-foreground: #FFFFFF; /* White text on cards */
+  --popover: #262626;        /* Dark popover */
+  --popover-foreground: #FFFFFF; /* White text on popover */
+  --primary: #D4AF37;        /* Button Primary 500 */
+  --primary-foreground: #2A2209; /* Text Primary 900 on primary */
+  --secondary: #4D4D4D;      /* Darker secondary for dark mode */
+  --secondary-foreground: #FFFFFF; /* White text on secondary */
+  --muted: #262626;          /* Muted dark */
+  --muted-foreground: #BFBFBF; /* Light gray for muted text */
+  --accent: #1A1506;         /* Accent dark */
+  --accent-foreground: #FFFFFF; /* White text on accent */
+  --destructive: #FD0D0D;    /* Error 500 */
+  --destructive-foreground: #FFFFFF; /* White text on destructive */
+  --border: #4D4D4D;         /* Dark border */
+  --input: #4D4D4D;          /* Input border */
+  --ring: #D4AF37;           /* Button Primary 500 for focus ring */
+  --chart-1: #D4AF37;        /* Chart colors for dark mode */
+  --chart-2: #21CF61;
+  --chart-3: #FD0D0D;
+  --chart-4: #F2F2F2;
+  --chart-5: #2A2209;
+  --sidebar: #0D0D0D;        /* Sidebar background */
+  --sidebar-foreground: #FFFFFF; /* Sidebar text */
+  --sidebar-primary: #D4AF37;    /* Sidebar primary */
+  --sidebar-primary-foreground: #2A2209; /* Sidebar primary text */
+  --sidebar-accent: #262626;     /* Sidebar accent */
+  --sidebar-accent-foreground: #FFFFFF;  /* Sidebar accent text */
+  --sidebar-border: #4D4D4D;     /* Sidebar border */
+  --sidebar-ring: #D4AF37;       /* Sidebar focus ring */
 }
 
 @layer base {

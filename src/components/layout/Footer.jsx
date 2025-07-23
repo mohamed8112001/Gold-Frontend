@@ -58,17 +58,17 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-black text-white relative">
+    <footer className="bg-black text-white relative font-cairo">
       {/* Main Footer Content */}
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
           {/* Company Info */}
           <div className="lg:col-span-1">
             <div className="flex items-center space-x-3 rtl:space-x-reverse mb-4">
-              <div className="w-10 h-10 bg-gray-800 rounded-xl flex items-center justify-center border border-gray-700">
+              <div className="w-10 h-10 bg-primary-900 rounded-xl flex items-center justify-center border border-primary-600">
                 <span className="text-white font-bold text-lg">D</span>
               </div>
-              <span className="text-2xl font-bold text-white" style={{ fontFamily: 'serif' }}>
+              <span className="text-2xl font-bold text-white font-cairo">
                 Dibla
               </span>
             </div>
@@ -117,7 +117,7 @@ const Footer = () => {
                     >
                       <span className="relative">
                         {link.name}
-                        <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-amber-400 to-yellow-500 transition-all duration-300 group-hover:w-full"></span>
+                        <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-500 transition-all duration-300 group-hover:w-full"></span>
                       </span>
                     </Link>
                   </li>

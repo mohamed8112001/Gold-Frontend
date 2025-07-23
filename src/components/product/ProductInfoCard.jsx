@@ -36,23 +36,23 @@ const ProductInfoCard = ({
   };
 
   return (
-    <div className="bg-white rounded-3xl p-8  border border-gray-100">
+    <div className="bg-white rounded-3xl p-8 border border-secondary-2 shadow-sm font-cairo">
       {/* Header */}
       <div className="flex items-start justify-between mb-6">
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
-            <Badge className="bg-green-100 text-green-700 border-green-200">
+            <Badge className="bg-success-500 text-white border-success-500">
               {product.availability || 'Available'}
             </Badge>
-            <span className="text-sm text-gray-500">SKU: {product.sku}</span>
+            <span className="text-sm text-secondary-700 font-cairo">SKU: {product.sku}</span>
           </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-2 leading-tight">
+          <h1 className="text-4xl font-bold text-primary-900 mb-2 leading-tight font-cairo">
             {product.name}
           </h1>
-          <div className="flex items-center gap-2 text-sm text-gray-600">
+          <div className="flex items-center gap-2 text-sm text-secondary-800 font-cairo">
             <span>by</span>
             <span
-              className="font-semibold text-yellow-600 cursor-pointer hover:underline"
+              className="font-semibold text-primary-500 cursor-pointer hover:underline"
               onClick={onVisitShop}
             >
               {product.shopName || 'Unknown Shop'}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button.jsx';
 import { Menu, X, ChevronDown, User, LogOut } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.jsx';
@@ -12,15 +12,12 @@ import {
 
 const Header = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const { user, isAuthenticated, isAdmin, isShopOwner, logout, isRegularUser } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
-  // Define pages where dashboard hover effect should be active
-  const dashboardHoverPages = ['/home', '/shops', '/products'];
-  const shouldShowDashboardHover = dashboardHoverPages.includes(location.pathname);
+
 
   // Enhanced scroll detection effect
   useEffect(() => {
@@ -69,7 +66,7 @@ const Header = () => {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 w-full bg-white z-50 ${isVisible ? 'translate-y-0' : '-translate-y-full'
+        className={`fixed top-0 left-0 right-0 w-full bg-white border-b border-secondary-2 shadow-sm z-50 font-cairo ${isVisible ? 'translate-y-0' : '-translate-y-full'
           }`}
         dir="rtl"
       >
@@ -120,21 +117,21 @@ const Header = () => {
             <nav className="hidden lg:flex items-center space-x-reverse space-x-4" dir="rtl">
               <Link
                 to="/home"
-                className="relative text-[#8A5700] hover:text-[#C37C00] font-bold font-tajawal text-lg px-8 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-[#C37C00] hover:to-[#E6A500] hover:text-white transition-all duration-300"
+                className="relative text-primary-900 hover:text-[#C37C00] font-bold font-cairo text-lg px-8 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-[#FFF8E6] hover:to-[#FFF0CC] hover:shadow-lg hover:scale-105 transition-all duration-300"
               >
                 <span className="relative z-10">الرئيسية</span>
               </Link>
 
               <Link
                 to="/shops"
-                className="relative text-[#8A5700] hover:text-[#C37C00] font-bold font-tajawal text-lg px-8 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-[#C37C00] hover:to-[#E6A500] hover:text-white transition-all duration-300"
+                className="relative text-primary-900 hover:text-[#C37C00] font-bold font-cairo text-lg px-8 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-[#FFF8E6] hover:to-[#FFF0CC] hover:shadow-lg hover:scale-105 transition-all duration-300"
               >
                 <span className="relative z-10">المتاجر</span>
               </Link>
 
               <Link
                 to="/products"
-                className="relative text-[#8A5700] hover:text-[#C37C00] font-bold font-tajawal text-lg px-8 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-[#C37C00] hover:to-[#E6A500] hover:text-white transition-all duration-300"
+                className="relative text-primary-900 hover:text-[#C37C00] font-bold font-cairo text-lg px-8 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-[#FFF8E6] hover:to-[#FFF0CC] hover:shadow-lg hover:scale-105 transition-all duration-300"
               >
                 <span className="relative z-10">المنتجات</span>
               </Link>
@@ -142,11 +139,7 @@ const Header = () => {
               {(isAuthenticated && user && (isShopOwner)) && (
                 <Link
                   to="/dashboard"
-                  className={`relative font-medium text-lg px-8 py-4 rounded-2xl transition-all duration-300 ${
-                    shouldShowDashboardHover
-                      ? 'text-[#8A5700] hover:text-white hover:bg-gradient-to-r hover:from-[#C37C00] hover:to-[#E6A500]'
-                      : 'text-[#8A5700]'
-                  }`}
+                  className="relative text-primary-900 hover:text-[#C37C00] font-bold text-lg px-8 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-[#FFF8E6] hover:to-[#FFF0CC] hover:shadow-lg hover:scale-105 transition-all duration-300"
                 >
                   <span className="relative z-10">لوحة التحكم</span>
                 </Link>
@@ -154,7 +147,7 @@ const Header = () => {
               {(isAuthenticated && user && (isRegularUser)) && (
                 <Link
                   to="/favorites"
-                  className="relative text-[#8A5700] hover:text-[#C37C00] font-medium text-lg px-6 py-3 rounded-xl border-b-2 border-[#C37C00]/30 hover:border-[#C37C00]"
+                  className="relative text-primary-900 hover:text-[#C37C00] font-bold text-lg px-8 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-[#FFF8E6] hover:to-[#FFF0CC] hover:shadow-lg hover:scale-105 transition-all duration-300"
                 >
                   <span className="relative z-10">المفضلة</span>
                 </Link>
@@ -162,7 +155,7 @@ const Header = () => {
               {isAdmin && (
                 <Link
                   to="/admin"
-                  className="relative text-[#8A5700] hover:text-red-600 font-medium text-lg px-6 py-3 rounded-xl border-b-2 border-red-300 hover:border-red-600"
+                  className="relative text-primary-900 hover:text-red-600 font-bold text-lg px-8 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 hover:shadow-lg hover:scale-105 transition-all duration-300"
                 >
                   <span className="relative z-10">الإدارة</span>
                 </Link>
@@ -174,30 +167,31 @@ const Header = () => {
               {isAuthenticated ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className="flex items-center gap-3 bg-white px-6 py-10 rounded-xl border-2 border-[#C37C00]/40 hover:bg-gradient-to-r hover:from-[#FFF8E6] hover:to-[#FFF0CC] hover:border-[#C37C00]/70 group backdrop-blur-sm w-full"
-                    >
-                      <div className="relative flex-shrink-0">
-                        <div className="w-10 h-10 bg-gradient-to-br from-[#C37C00] via-[#E6A500] to-[#A66A00] rounded-lg flex items-center justify-center ring-1 ring-white/60">
-                          <span className="text-white font-bold text-sm">
-                            {user?.firstName?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'U'}
-                          </span>
-                        </div>
-                        <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border border-white"></div>
-                      </div>
-                      <div className="flex flex-col justify-center min-w-0 flex-1 overflow-hidden">
-                        <span className="text-[#8A5700] font-bold text-sm leading-tight truncate" title={user?.firstName || user?.email?.split('@')[0] || 'مستخدم'}>
-                          {user?.firstName || user?.email?.split('@')[0] || 'مستخدم'}
-                        </span>
-                        <span className="text-[#C37C00] text-xs font-medium truncate mt-1">
-                          {user?.role === 'admin' ? '👑 مدير' :
-                            user?.role === 'seller' ? '🏪 صاحب متجر' : user?.role === 'customer' ? '👤 عضو ' : ""}
-                        </span>
-                      </div>
-                      <ChevronDown className="w-4 h-4 text-[#8A5700] group-hover:text-[#C37C00] flex-shrink-0" />
-                    </Button>
-                  </DropdownMenuTrigger>
+  <Button
+    variant="outline"
+    className="flex items-center gap-3 bg-white px-4 py-6 rounded-xl border-2 border-[#C37C00]/40 hover:bg-gradient-to-r hover:from-[#FFF8E6] hover:to-[#FFF0CC] hover:border-[#C37C00]/70 group backdrop-blur-sm w-full"
+  >
+    <div className="relative flex-shrink-0">
+      <div className="w-10 h-10 bg-gradient-to-br from-[#C37C00] via-[#E6A500] to-[#A66A00] rounded-lg flex items-center justify-center ring-1 ring-white/60">
+        <span className="text-white font-bold text-sm">
+          {user?.firstName?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'U'}
+        </span>
+      </div>
+      <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border border-white"></div>
+    </div>
+    <div className="flex flex-col justify-center min-w-0 flex-1 overflow-hidden">
+      <span className="text-[#8A5700] font-bold text-sm leading-tight truncate" title={user?.firstName || user?.email?.split('@')[0] || 'مستخدم'}>
+        {user?.firstName || user?.email?.split('@')[0] || 'مستخدم'}
+      </span>
+      <span className="text-[#C37C00] text-xs font-medium truncate mt-1">
+        {user?.role === 'admin' ? '👑 مدير' :
+          user?.role === 'seller' ? '🏪 صاحب متجر' : user?.role === 'customer' ? '👤 عضو ' : ""}
+      </span>
+    </div>
+    <ChevronDown className="w-4 h-4 text-[#8A5700] group-hover:text-[#C37C00] flex-shrink-0" />
+  </Button>
+</DropdownMenuTrigger>
+
                   <DropdownMenuContent align="end" className="w-80 bg-white border-2 border-[#C37C00]/30 rounded-2xl p-4 mt-2 backdrop-blur-sm">
                     <div className="px-6 py-6 border-b border-[#C37C00]/20 mb-4 bg-gray-50 rounded-xl">
                       <div className="flex items-center gap-5">
@@ -304,7 +298,7 @@ const Header = () => {
               <div className="flex flex-col space-y-4 px-4">
                 <Link
                   to="/home"
-                  className="text-[#8A5700] hover:text-white font-bold text-lg px-8 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-[#C37C00] hover:to-[#A66A00]"
+                  className="text-[#8A5700] hover:text-[#C37C00] font-bold text-lg px-8 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-[#FFF8E6] hover:to-[#FFF0CC] hover:shadow-lg hover:scale-105 transition-all duration-300"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   🏠 الرئيسية
@@ -312,7 +306,7 @@ const Header = () => {
 
                 <Link
                   to="/shops"
-                  className="text-[#8A5700] hover:text-white font-bold text-lg px-8 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-[#C37C00] hover:to-[#A66A00]"
+                  className="text-[#8A5700] hover:text-[#C37C00] font-bold text-lg px-8 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-[#FFF8E6] hover:to-[#FFF0CC] hover:shadow-lg hover:scale-105 transition-all duration-300"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   🏪 المتاجر
@@ -320,7 +314,7 @@ const Header = () => {
 
                 <Link
                   to="/products"
-                  className="text-[#8A5700] hover:text-white font-bold text-lg px-8 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-[#C37C00] hover:to-[#A66A00]"
+                  className="text-[#8A5700] hover:text-[#C37C00] font-bold text-lg px-8 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-[#FFF8E6] hover:to-[#FFF0CC] hover:shadow-lg hover:scale-105 transition-all duration-300"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   💎 المنتجات
@@ -359,11 +353,7 @@ const Header = () => {
                     {(isAdmin || isShopOwner) && (
                       <Link
                         to="/dashboard"
-                        className={`font-bold text-lg px-8 py-4 rounded-2xl ${
-                          shouldShowDashboardHover
-                            ? 'text-[#8A5700] hover:text-white hover:bg-gradient-to-r hover:from-[#C37C00] hover:to-[#A66A00]'
-                            : 'text-[#8A5700]'
-                        }`}
+                        className="text-[#8A5700] hover:text-[#C37C00] font-bold text-lg px-8 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-[#FFF8E6] hover:to-[#FFF0CC] hover:shadow-lg hover:scale-105 transition-all duration-300"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         📊 لوحة التحكم
@@ -372,7 +362,7 @@ const Header = () => {
                     {isAuthenticated && isRegularUser && (
                       <Link
                         to="/favorites"
-                        className="text-[#8A5700] hover:text-white font-bold text-lg px-6 py-3 rounded-2xl transition-all duration-300 hover:bg-gradient-to-r hover:from-[#C37C00] hover:to-[#A66A00] hover:scale-105"
+                        className="text-[#8A5700] hover:text-[#C37C00] font-bold text-lg px-8 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-[#FFF8E6] hover:to-[#FFF0CC] hover:shadow-lg hover:scale-105 transition-all duration-300"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         ❤️ المفضلة
@@ -381,7 +371,7 @@ const Header = () => {
                     {isAdmin && (
                       <Link
                         to="/admin"
-                        className="text-red-600 hover:text-white font-bold text-lg px-6 py-3 rounded-2xl transition-all duration-300 hover:bg-gradient-to-r hover:from-red-500 hover:to-red-700 hover:scale-105"
+                        className="text-red-600 hover:text-red-700 font-bold text-lg px-8 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 hover:shadow-lg hover:scale-105 transition-all duration-300"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         ⚙️ لوحة الإدارة
@@ -389,7 +379,7 @@ const Header = () => {
                     )}
                     <Link
                       to="/profile"
-                      className="text-[#8A5700] hover:text-white font-bold text-lg px-6 py-3 rounded-2xl transition-all duration-300 hover:bg-gradient-to-r hover:from-[#C37C00] hover:to-[#A66A00] hover:scale-105"
+                      className="text-[#8A5700] hover:text-[#C37C00] font-bold text-lg px-8 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-[#FFF8E6] hover:to-[#FFF0CC] hover:shadow-lg hover:scale-105 transition-all duration-300"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       👤 الملف الشخصي

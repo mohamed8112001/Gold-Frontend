@@ -202,18 +202,19 @@ const TimeManagement = () => {
   const sortedDates = Object.keys(groupedTimes).sort((a, b) => new Date(a) - new Date(b));
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 pt-20">
+    <div className="min-h-screen bg-gradient-to-br from-primary-1 to-primary-2 py-8 pt-20 font-cairo">
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">إدارة المواعيد الشاملة</h1>
-              <p className="text-gray-600 mt-2">إضافة وإدارة جميع المواعيد المتاحة والمحجوزة</p>
+              <h1 className="text-3xl font-bold text-primary-900 font-cairo">إدارة المواعيد الشاملة</h1>
+              <p className="text-secondary-800 mt-2 font-cairo">إضافة وإدارة جميع المواعيد المتاحة والمحجوزة</p>
             </div>
             <Button
+              variant="primary"
               onClick={() => setShowAddForm(!showAddForm)}
-              className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-6 py-3 rounded-lg flex items-center gap-2 transition-all duration-300 transform hover:scale-105"
+              className="px-6 py-3 rounded-lg flex items-center gap-2 transition-all duration-300 transform hover:scale-105"
             >
               <Plus size={20} />
               إضافة موعد جديد

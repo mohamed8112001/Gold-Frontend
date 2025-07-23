@@ -255,25 +255,25 @@ const ManageShop = () => {
 
                 {/* Stats Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                    <Card>
+                    <Card className="bg-white border-secondary-2">
                         <CardContent className="p-6">
                             <div className="flex items-center">
-                                <Package className="w-8 h-8 text-blue-600" />
+                                <Package className="w-8 h-8 text-primary-500" />
                                 <div className="ml-4">
-                                    <p className="text-sm font-medium text-gray-600">Products</p>
-                                    <p className="text-2xl font-bold text-gray-900">{stats.totalProducts}</p>
+                                    <p className="text-sm font-medium text-secondary-800 font-cairo">Products</p>
+                                    <p className="text-2xl font-bold text-primary-900 font-cairo">{stats.totalProducts}</p>
                                 </div>
                             </div>
                         </CardContent>
                     </Card>
 
-                    <Card>
+                    <Card className="bg-white border-secondary-2">
                         <CardContent className="p-6">
                             <div className="flex items-center">
-                                <Calendar className="w-8 h-8 text-green-600" />
+                                <Calendar className="w-8 h-8 text-success-500" />
                                 <div className="ml-4">
-                                    <p className="text-sm font-medium text-gray-600">Appointments</p>
-                                    <p className="text-2xl font-bold text-gray-900">{stats.totalBookings}</p>
+                                    <p className="text-sm font-medium text-secondary-800 font-cairo">Appointments</p>
+                                    <p className="text-2xl font-bold text-primary-900 font-cairo">{stats.totalBookings}</p>
                                 </div>
                             </div>
                         </CardContent>

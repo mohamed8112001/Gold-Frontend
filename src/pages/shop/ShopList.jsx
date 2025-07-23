@@ -270,7 +270,7 @@ const ShopList = () => {
 
     return (
       <Card
-        className={`group relative overflow-hidden hover: hover:-translate-y-3 transition-all duration-700 cursor-pointer border-2 border-[#E2D2B6]/40 hover:border-[#C37C00]/60 bg-gradient-to-br from-white via-[#FFF8E6]/20 to-[#F0E8DB]/30 rounded-3xl  hover:[#C37C00]/25 h-full flex flex-col transform hover:scale-[1.02] ${isListView ? 'lg:flex-row lg:h-auto' : ''}`}
+        className={`group relative overflow-hidden hover:shadow-lg hover:-translate-y-3 transition-all duration-700 cursor-pointer border-2 border-secondary-2/40 hover:border-primary-500/60 bg-gradient-to-br from-white via-primary-1/20 to-primary-2/30 rounded-3xl hover:shadow-primary-500/25 h-full flex flex-col transform hover:scale-[1.02] font-cairo ${isListView ? 'lg:flex-row lg:h-auto' : ''}`}
         onClick={() => {
           const shopId = shop._id || shop.id;
           console.log('Navigating to shop:', shopId, shop.name);
@@ -367,17 +367,10 @@ const ShopList = () => {
           </div>
 
           {/* Enhanced Action Button */}
-          <div className="mt-6 pt-4 border-t border-gradient-to-r from-transparent via-[#E2D2B6]/50 to-transparent ">
+          <div className="mt-6 pt-4 border-t border-gradient-to-r from-transparent via-secondary-2/50 to-transparent">
             <Button
-              className="
-  w-full 
-  bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] 
-  hover:from-[#A66A00] hover:via-[#C37C00] hover:to-[#8A5700]
-  text-white py-3.5 
-  rounded-xl font-bold 
-  transition-all duration-300 transform hover:scale-[1.02] 
-   hover: hover:[#C37C00]/30
-"              onClick={(e) => {
+              className="w-full bg-gradient-to-r from-primary-500 via-primary-500 to-primary-600 hover:from-primary-600 hover:via-primary-600 hover:to-primary-600 text-white py-3.5 rounded-xl font-bold transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:shadow-primary-500/30"
+              onClick={(e) => {
                 e.stopPropagation();
                 const shopId = shop._id || shop.id;
                 if (shopId) {
@@ -652,7 +645,7 @@ const ShopList = () => {
                 <Button
                   onClick={loadMore}
                   disabled={isLoading}
-                  className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-8 py-3 rounded-xl font-semibold  hover:[#C37C00]/30 disabled:opacity-50"
+                  className="bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-600 text-white px-8 py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-primary-500/30 disabled:opacity-50"
                 >
                   {isLoading ? 'جاري التحميل...' : 'تحميل المزيد من المتاجر'}
                 </Button>

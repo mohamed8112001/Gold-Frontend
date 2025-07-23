@@ -310,17 +310,17 @@ const CreateProduct = () => {
 
                 <form onSubmit={handleSubmit} encType="multipart/form-data" className="space-y-8">
                     {/* Basic Information */}
-                    <Card>
+                    <Card className="bg-white border-secondary-2">
                         <CardHeader>
-                            <CardTitle>المعلومات الأساسية</CardTitle>
-                            <CardDescription>
+                            <CardTitle className="text-primary-900 font-cairo">المعلومات الأساسية</CardTitle>
+                            <CardDescription className="text-secondary-800 font-cairo">
                                 أدخل المعلومات الأساسية للمنتج
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block text-sm font-medium text-primary-900 mb-2 font-cairo">
                                         اسم المنتج *
                                     </label>
                                     <Input
@@ -329,10 +329,11 @@ const CreateProduct = () => {
                                         onChange={handleInputChange}
                                         placeholder="أدخل اسم المنتج"
                                         required
+                                        className="font-cairo"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block text-sm font-medium text-primary-900 mb-2 font-cairo">
                                         نوع التصميم *
                                     </label>
                                     <select
