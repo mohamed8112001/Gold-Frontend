@@ -155,6 +155,43 @@ export default {
         DEFAULT: ["Cairo", "system-ui", "sans-serif"],
       },
 
+      // Enhanced font sizes for better readability
+      fontSize: {
+        'xs': ['0.75rem', { lineHeight: '1rem' }],
+        'sm': ['0.875rem', { lineHeight: '1.25rem' }],
+        'base': ['1.125rem', { lineHeight: '1.75rem' }], // تكبير الحجم الأساسي من 1rem إلى 1.125rem
+        'lg': ['1.25rem', { lineHeight: '1.75rem' }], // تكبير من 1.125rem إلى 1.25rem
+        'xl': ['1.375rem', { lineHeight: '1.75rem' }], // تكبير من 1.25rem إلى 1.375rem
+        '2xl': ['1.625rem', { lineHeight: '2rem' }], // تكبير من 1.5rem إلى 1.625rem
+        '3xl': ['2rem', { lineHeight: '2.25rem' }], // تكبير من 1.875rem إلى 2rem
+        '4xl': ['2.5rem', { lineHeight: '2.5rem' }], // تكبير من 2.25rem إلى 2.5rem
+        '5xl': ['3.25rem', { lineHeight: '1' }], // تكبير من 3rem إلى 3.25rem
+        '6xl': ['4rem', { lineHeight: '1' }], // تكبير من 3.75rem إلى 4rem
+        '7xl': ['5rem', { lineHeight: '1' }], // تكبير من 4.5rem إلى 5rem
+        '8xl': ['6.5rem', { lineHeight: '1' }], // تكبير من 6rem إلى 6.5rem
+        '9xl': ['8.5rem', { lineHeight: '1' }], // تكبير من 8rem إلى 8.5rem
+        // أحجام مخصصة للنصوص العربية
+        'arabic-sm': ['1rem', { lineHeight: '1.5rem' }],
+        'arabic-base': ['1.25rem', { lineHeight: '1.875rem' }],
+        'arabic-lg': ['1.5rem', { lineHeight: '2rem' }],
+        'arabic-xl': ['1.75rem', { lineHeight: '2.25rem' }],
+        'arabic-2xl': ['2rem', { lineHeight: '2.5rem' }],
+        'arabic-3xl': ['2.5rem', { lineHeight: '3rem' }],
+        // أحجام للعناوين
+        'heading-sm': ['1.375rem', { lineHeight: '1.75rem' }],
+        'heading-md': ['1.625rem', { lineHeight: '2rem' }],
+        'heading-lg': ['2rem', { lineHeight: '2.5rem' }],
+        'heading-xl': ['2.5rem', { lineHeight: '3rem' }],
+        'heading-2xl': ['3rem', { lineHeight: '3.5rem' }],
+        // أحجام للأزرار والتسميات
+        'button-sm': ['1rem', { lineHeight: '1.25rem' }],
+        'button-md': ['1.125rem', { lineHeight: '1.5rem' }],
+        'button-lg': ['1.25rem', { lineHeight: '1.75rem' }],
+        'label-sm': ['1rem', { lineHeight: '1.25rem' }],
+        'label-md': ['1.125rem', { lineHeight: '1.5rem' }],
+        'label-lg': ['1.25rem', { lineHeight: '1.75rem' }],
+      },
+
 
 
       // Animation and transitions

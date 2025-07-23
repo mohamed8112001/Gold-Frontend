@@ -163,15 +163,15 @@ const Login = () => {
             </div>
 
             {/* Enhanced Dibla text with animation */}
-            <h1 className="text-7xl font-bold mb-8 relative" style={{ fontFamily: 'serif', color: '#2D1810' }}>
+            <h1 className="text-9xl font-bold mb-8 relative" style={{ fontFamily: 'serif', color: '#2D1810' }}>
               <span className="relative z-10">
                 ديبلا
               </span>
               <div className="absolute inset-0 blur-lg opacity-30 animate-pulse" style={{ background: 'linear-gradient(90deg, #D4AF37 0%, #F4E4BC 100%)' }}></div>
-            </h1>
+            </h1> 
 
             {/* Enhanced subtitle */}
-            <p className="text-xl text-center mb-12 max-w-sm leading-relaxed font-medium" style={{ color: '#2D1810' }}>
+            <p className="text-3xl text-center mb-12 max-w-sm leading-relaxed font-medium" style={{ color: '#2D1810' }}>
               اختر أقرب متجر بنقرة واحدة
             </p>
 
@@ -213,10 +213,10 @@ const Login = () => {
             <div className="max-w-md mx-auto w-full">
               {/* Enhanced Header */}
               <div className="text-center mb-10">
-                <h2 className="text-4xl font-bold mb-3" style={{ color: '#A37F41' }}>
+                <h2 className="text-heading-2xl font-bold mb-3" style={{ color: '#A37F41' }}>
                   أهلاً بك
                 </h2>
-                <p className="text-base" style={{ color: '#6B5B47' }}>
+                <p className="text-arabic-lg" style={{ color: '#6B5B47' }}>
                   يرجى إدخال بياناتك للوصول إلى حسابك
                 </p>
               </div>
@@ -224,7 +224,7 @@ const Login = () => {
               <form onSubmit={handleSubmit} className="space-y-8">
                 {/* Enhanced Email Field */}
                 <div className="group">
-                  <label className="block text-sm font-semibold mb-3 text-primary-900">
+                  <label className="block text-label-lg font-semibold mb-3 text-primary-900">
                     أدخل بريدك الإلكتروني
                   </label>
                   <div className="relative">
@@ -235,17 +235,17 @@ const Login = () => {
                       placeholder="البريد الإلكتروني *"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className={`pl-14 py-4 border-2 rounded-xl transition-all duration-200 text-primary-900 ${errors.email ? 'border-error-500' : 'border-secondary-2'}`}
+                      className={`pl-14 py-4 border-2 rounded-xl transition-all duration-200 text-arabic-base text-primary-900 ${errors.email ? 'border-error-500' : 'border-secondary-2'}`}
                     />
                   </div>
                   {errors.email && (
-                    <p className="text-error-500 text-sm mt-2 animate-pulse">{errors.email}</p>
+                    <p className="text-error-500 text-arabic-sm mt-2 animate-pulse">{errors.email}</p>
                   )}
                 </div>
 
                 {/* Enhanced Password Field */}
                 <div className="group">
-                  <label className="block text-sm font-semibold mb-3 text-primary-900">
+                  <label className="block text-label-lg font-semibold mb-3 text-primary-900">
                     أدخل كلمة المرور
                   </label>
                   <div className="relative">
@@ -256,7 +256,7 @@ const Login = () => {
                       placeholder="كلمة المرور *"
                       value={formData.password}
                       onChange={handleInputChange}
-                      className={`pl-14 pr-14 py-4 border-2 rounded-xl transition-all duration-200 ${errors.password ? 'border-red-500' : ''}`}
+                      className={`pl-14 pr-14 py-4 border-2 rounded-xl transition-all duration-200 text-arabic-base ${errors.password ? 'border-red-500' : ''}`}
                       style={{
                         borderColor: errors.password ? '#B54A35' : '#E2D2B6',
                         color: '#241C0F'
@@ -274,7 +274,7 @@ const Login = () => {
                     </button>
                   </div>
                   {errors.password && (
-                    <p className="text-red-500 text-sm mt-2 animate-pulse">{errors.password}</p>
+                    <p className="text-red-500 text-arabic-sm mt-2 animate-pulse">{errors.password}</p>
                   )}
                 </div>
 
@@ -292,14 +292,14 @@ const Login = () => {
                         borderColor: '#E2D2B6'
                       }}
                     />
-                    <label className="text-sm font-medium" style={{ color: '#241C0F' }}>
+                    <label className="text-arabic-base font-medium" style={{ color: '#241C0F' }}>
                       تذكرني
                     </label>
                   </div>
 
                   <Link
                     to={ROUTES.FORGOT_PASSWORD}
-                    className="text-sm font-medium transition-colors duration-200 hover:opacity-80"
+                    className="text-arabic-base font-medium transition-colors duration-200 hover:opacity-80"
                     style={{ color: '#A37F41' }}
                   >
                     نسيت كلمة المرور؟
@@ -309,7 +309,7 @@ const Login = () => {
                 {/* Submit Error */}
                 {errors.submit && (
                   <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4 animate-shake">
-                    <p className="text-red-600 text-sm font-medium">{errors.submit}</p>
+                    <p className="text-red-600 text-arabic-base font-medium">{errors.submit}</p>
                   </div>
                 )}
 
@@ -317,7 +317,7 @@ const Login = () => {
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full text-white py-5 text-lg font-semibold rounded-xl  hover: transform hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full text-white py-5 text-button-lg font-semibold rounded-xl  hover: transform hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{
                     background: 'linear-gradient(135deg, #A37F41 0%, #8A6C37 50%, #6D552C 100%)',
                     border: 'none'
@@ -332,10 +332,10 @@ const Login = () => {
                   {isLoading ? (
                     <div className="flex items-center justify-center space-x-2">
                       <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      <span>جاري تسجيل الدخول...</span>
+                      <span className="text-button-lg">جاري تسجيل الدخول...</span>
                     </div>
                   ) : (
-                    'تسجيل الدخول'
+                    <span className="text-button-lg">تسجيل الدخول</span>
                   )}
                 </Button>
 
