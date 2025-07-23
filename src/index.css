@@ -15,6 +15,7 @@ body {
   text-align: right;
   line-height: 1.7;
   letter-spacing: 0.02em;
+  font-size: 18px; /* تكبير الخط الأساسي من 16px إلى 18px */
 }
 
 /* Improved Typography for Arabic */
@@ -25,9 +26,35 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: 0.01em;
 }
 
+/* تحديث أحجام العناوين */
+h1 {
+  font-size: 2.75rem; /* 44px بدلاً من 36px */
+}
+
+h2 {
+  font-size: 2.25rem; /* 36px بدلاً من 30px */
+}
+
+h3 {
+  font-size: 1.875rem; /* 30px بدلاً من 24px */
+}
+
+h4 {
+  font-size: 1.5rem; /* 24px بدلاً من 20px */
+}
+
+h5 {
+  font-size: 1.25rem; /* 20px بدلاً من 16px */
+}
+
+h6 {
+  font-size: 1.125rem; /* 18px بدلاً من 14px */
+}
+
 p, span, div, label, input, textarea, select {
-  font-family: 'Tajawal', sans-serif;
+  font-family: 'Cairo', sans-serif; /* تغيير إلى Cairo بدلاً من Tajawal */
   line-height: 1.8;
+  font-size: 1.125rem; /* 18px بدلاً من الحجم الافتراضي */
 }
 
 /* Special Typography Classes */
@@ -45,9 +72,10 @@ p, span, div, label, input, textarea, select {
 
 /* Enhanced Arabic Typography */
 .text-arabic {
-  font-family: 'Tajawal', sans-serif;
+  font-family: 'Cairo', sans-serif; /* تغيير إلى Cairo */
   direction: rtl;
   text-align: right;
+  font-size: 1.125rem; /* 18px */
 }
 
 .heading-arabic {
@@ -129,6 +157,7 @@ button, .btn, a {
   font-family: 'Cairo', sans-serif;
   font-weight: 600;
   letter-spacing: 0.01em;
+  font-size: 1.125rem; /* 18px للأزرار والروابط */
 }
 
 /* Form Elements */
@@ -136,6 +165,7 @@ input, textarea, select {
   font-family: 'Cairo', sans-serif;
   text-align: right;
   direction: rtl;
+  font-size: 1.125rem; /* 18px لعناصر النماذج */
 }
 
 /* Card and Component Styling */

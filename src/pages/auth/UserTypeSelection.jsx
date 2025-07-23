@@ -70,14 +70,14 @@ const UserTypeSelection = () => {
         {/* Header */}
         <div className="text-center mb-12">
           <div className="flex justify-center mb-6">
-            <div className="w-20 h-20 rounded-full flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #A37F41 0%, #B8904F 100%)' }}>
-              <span className="text-2xl font-bold text-white">ديبلا</span>
+            <div className="w-32 h-32 rounded-full flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #A37F41 0%, #B8904F 100%)' }}>
+              <span className="text-5xl font-bold text-white">ديبلا</span>
             </div>
           </div>
-          <h1 className="text-4xl font-bold mb-4" style={{ color: '#A37F41' }}>
+          <h1 className="text-heading-2xl font-bold mb-4" style={{ color: '#A37F41' }}>
             إنشاء حسابك
           </h1>
-          <p className="text-lg max-w-2xl mx-auto" style={{ color: '#6B5B47' }}>
+          <p className="text-arabic-lg max-w-2xl mx-auto" style={{ color: '#6B5B47' }}>
             انضم إلى مجتمع ديبلا واكتشف المجوهرات الرائعة
           </p>
         </div>
@@ -100,7 +100,7 @@ const UserTypeSelection = () => {
 
         {/* Account Type Selection */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-center mb-8" style={{ color: '#A37F41' }}>
+          <h2 className="text-heading-xl font-bold text-center mb-8" style={{ color: '#A37F41' }}>
             اختر نوع حسابك
           </h2>
 
@@ -132,7 +132,7 @@ const UserTypeSelection = () => {
                           }`}
                       />
                     </div>
-                    <CardTitle className="text-xl font-bold" style={{ color: isSelected ? '#A37F41' : '#241C0F' }}>
+                    <CardTitle className="text-heading-lg font-bold" style={{ color: isSelected ? '#A37F41' : '#241C0F' }}>
                       {type.title}
                     </CardTitle>
                     <CardDescription style={{ color: isSelected ? '#6D552C' : '#49391D' }}>
@@ -156,7 +156,7 @@ const UserTypeSelection = () => {
                                 }`}
                             />
                             <span
-                              className="text-sm"
+                              className="text-arabic-base"
                               style={{ color: isSelected ? '#6B5B47' : '#9CA3AF' }}
                             >
                               {feature.text}
@@ -178,7 +178,7 @@ const UserTypeSelection = () => {
             onClick={handleContinue}
             disabled={!selectedType}
             size="lg"
-            className="px-12 py-3 text-lg font-medium rounded-md text-white transition-all duration-200"
+            className="px-12 py-3 text-button-lg font-medium rounded-md text-white transition-all duration-200"
             style={{
               background: selectedType
                 ? 'linear-gradient(135deg, #A37F41 0%, #B8904F 100%)'

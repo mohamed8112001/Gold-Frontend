@@ -180,7 +180,7 @@ const Register = () => {
             </div>
 
             {/* Enhanced Dibla text with animation */}
-            <h1 className="text-7xl font-bold mb-8 relative" style={{ fontFamily: 'serif', color: '#2D1810' }}>
+            <h1 className="text-9xl font-bold mb-8 relative" style={{ fontFamily: 'serif', color: '#2D1810' }}>
               <span className="relative z-10">
                 ديبلا
               </span>
@@ -188,7 +188,7 @@ const Register = () => {
             </h1>
 
             {/* Enhanced subtitle */}
-            <p className="text-xl text-center mb-12 max-w-sm leading-relaxed font-medium" style={{ color: '#2D1810' }}>
+            <p className="text-3xl text-center mb-12 max-w-sm leading-relaxed font-medium" style={{ color: '#2D1810' }}>
               اختر أقرب متجر بنقرة واحدة
             </p>
 
@@ -225,7 +225,7 @@ const Register = () => {
 
               <div className="flex items-center space-x-2 rtl:space-x-reverse px-4 py-2 rounded-full " style={{ backgroundColor: '#F5F1EB' }}>
                 <User className="w-4 h-4" style={{ color: '#A37F41' }} />
-                <span className="text-sm font-medium" style={{ color: '#6B5B47' }}>{typeInfo.titleAr}</span>
+                <span className="text-arabic-base font-medium" style={{ color: '#6B5B47' }}>{typeInfo.titleAr}</span>
               </div>
             </div>
 
@@ -248,10 +248,10 @@ const Register = () => {
             <div className="max-w-md mx-auto w-full">
               {/* Enhanced Header */}
               <div className="text-center mb-8">
-                <h2 className="text-4xl font-bold mb-3" style={{ color: '#A37F41' }}>
+                <h2 className="text-heading-2xl font-bold mb-3" style={{ color: '#A37F41' }}>
                   إنشاء حساب
                 </h2>
-                <p className="text-lg" style={{ color: '#6B5B47' }}>
+                <p className="text-arabic-lg" style={{ color: '#6B5B47' }}>
                   انضم إلى مجتمع ديبلا واكتشف المجوهرات الرائعة
                 </p>
               </div>
@@ -260,7 +260,7 @@ const Register = () => {
                 {/* Name Fields */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="group">
-                    <label className="block text-sm font-semibold mb-2 text-primary-900 font-cairo">
+                    <label className="block text-label-lg font-semibold mb-2 text-primary-900 font-cairo">
                       الاسم الأول *
                     </label>
                     <Input
@@ -269,17 +269,17 @@ const Register = () => {
                       placeholder="الاسم الأول"
                       value={formData.firstName}
                       onChange={handleInputChange}
-                      className={`py-3 border-2 rounded-xl transition-all duration-200 text-primary-900 font-cairo ${errors.firstName ? 'border-error-500' : 'border-secondary-2'}`}
+                      className={`py-3 border-2 rounded-xl transition-all duration-200 text-arabic-base text-primary-900 font-cairo ${errors.firstName ? 'border-error-500' : 'border-secondary-2'}`}
                       onFocus={(e) => e.target.style.borderColor = '#A37F41'}
                       onBlur={(e) => e.target.style.borderColor = '#E5D5C3'}
                     />
                     {errors.firstName && (
-                      <p className="text-red-500 text-xs mt-1 animate-pulse">{errors.firstName}</p>
+                      <p className="text-red-500 text-arabic-sm mt-1 animate-pulse">{errors.firstName}</p>
                     )}
                   </div>
 
                   <div className="group">
-                    <label className="block text-sm font-semibold mb-2" style={{ color: '#6B5B47' }}>
+                    <label className="block text-label-lg font-semibold mb-2" style={{ color: '#6B5B47' }}>
                       الاسم الأخير *
                     </label>
                     <Input
@@ -288,7 +288,7 @@ const Register = () => {
                       placeholder="الاسم الأخير"
                       value={formData.lastName}
                       onChange={handleInputChange}
-                      className={`py-3 border-2 rounded-xl transition-all duration-200 ${errors.lastName ? 'border-red-500' : ''}`}
+                      className={`py-3 border-2 rounded-xl transition-all duration-200 text-arabic-base ${errors.lastName ? 'border-red-500' : ''}`}
                       style={{
                         borderColor: errors.lastName ? '#ef4444' : '#E5D5C3',
                         color: '#6B5B47'
@@ -297,14 +297,14 @@ const Register = () => {
                       onBlur={(e) => e.target.style.borderColor = '#E5D5C3'}
                     />
                     {errors.lastName && (
-                      <p className="text-red-500 text-xs mt-1 animate-pulse">{errors.lastName}</p>
+                      <p className="text-red-500 text-arabic-sm mt-1 animate-pulse">{errors.lastName}</p>
                     )}
                   </div>
                 </div>
 
                 {/* Enhanced Email Field */}
                 <div className="group">
-                  <label className="block text-sm font-semibold mb-2" style={{ color: '#6B5B47' }}>
+                  <label className="block text-label-lg font-semibold mb-2" style={{ color: '#6B5B47' }}>
                     البريد الإلكتروني *
                   </label>
                   <div className="relative">
@@ -315,7 +315,7 @@ const Register = () => {
                       placeholder="أدخل بريدك الإلكتروني"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className={`pl-14 py-4 border-2 rounded-xl transition-all duration-200 ${errors.email ? 'border-red-500' : ''}`}
+                      className={`pl-14 py-4 border-2 rounded-xl transition-all duration-200 text-arabic-base ${errors.email ? 'border-red-500' : ''}`}
                       style={{
                         borderColor: errors.email ? '#ef4444' : '#E5D5C3',
                         color: '#6B5B47'
@@ -325,13 +325,13 @@ const Register = () => {
                     />
                   </div>
                   {errors.email && (
-                    <p className="text-red-500 text-sm mt-2 animate-pulse">{errors.email}</p>
+                    <p className="text-red-500 text-arabic-sm mt-2 animate-pulse">{errors.email}</p>
                   )}
                 </div>
 
                 {/* Enhanced Phone Field */}
                 <div className="group">
-                  <label className="block text-sm font-semibold mb-2" style={{ color: '#6B5B47' }}>
+                  <label className="block text-label-lg font-semibold mb-2" style={{ color: '#6B5B47' }}>
                     رقم الهاتف *
                   </label>
                   <div className="relative">
@@ -352,14 +352,14 @@ const Register = () => {
                     />
                   </div>
                   {errors.phone && (
-                    <p className="text-red-500 text-sm mt-2 animate-pulse">{errors.phone}</p>
+                    <p className="text-red-500 text-arabic-sm mt-2 animate-pulse">{errors.phone}</p>
                   )}
                 </div>
 
                 {/* Enhanced Password Fields */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="group">
-                    <label className="block text-sm font-semibold mb-2" style={{ color: '#6B5B47' }}>
+                    <label className="block text-label-lg font-semibold mb-2" style={{ color: '#6B5B47' }}>
                       كلمة المرور *
                     </label>
                     <div className="relative">
@@ -388,12 +388,12 @@ const Register = () => {
                       </button>
                     </div>
                     {errors.password && (
-                      <p className="text-red-500 text-xs mt-1 animate-pulse">{errors.password}</p>
+                      <p className="text-red-500 text-arabic-sm mt-1 animate-pulse">{errors.password}</p>
                     )}
                   </div>
 
                   <div className="group">
-                    <label className="block text-sm font-semibold mb-2" style={{ color: '#241C0F' }}>
+                    <label className="block text-label-lg font-semibold mb-2" style={{ color: '#241C0F' }}>
                       تأكيد كلمة المرور *
                     </label>
                     <div className="relative">
@@ -422,7 +422,7 @@ const Register = () => {
                       </button>
                     </div>
                     {errors.confirmPassword && (
-                      <p className="text-red-500 text-xs mt-1 animate-pulse">{errors.confirmPassword}</p>
+                      <p className="text-red-500 text-arabic-sm mt-1 animate-pulse">{errors.confirmPassword}</p>
                     )}
                   </div>
                 </div>
@@ -440,21 +440,21 @@ const Register = () => {
                       borderColor: '#E5D5C3'
                     }}
                   />
-                  <label className="text-sm font-medium" style={{ color: '#6B5B47' }}>
+                  <label className="text-arabic-base font-medium" style={{ color: '#6B5B47' }}>
                     أوافق على{' '}
-                    <Link to="/terms" className="underline decoration-2 underline-offset-2 hover:opacity-80" style={{ color: '#A37F41' }}>
+                    <Link to="/terms" className="underline decoration-2 underline-offset-2 hover:opacity-80 text-arabic-base" style={{ color: '#A37F41' }}>
                       الشروط والأحكام
                     </Link>
                   </label>
                 </div>
                 {errors.agreeToTerms && (
-                  <p className="text-red-500 text-sm animate-pulse">{errors.agreeToTerms}</p>
+                  <p className="text-red-500 text-arabic-sm animate-pulse">{errors.agreeToTerms}</p>
                 )}
 
                 {/* Submit Error */}
                 {errors.submit && (
                   <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4 animate-shake">
-                    <p className="text-red-600 text-sm font-medium">{errors.submit}</p>
+                    <p className="text-red-600 text-arabic-base font-medium">{errors.submit}</p>
                   </div>
                 )}
 
@@ -462,7 +462,7 @@ const Register = () => {
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full text-white py-5 text-lg font-semibold rounded-xl  hover: transform hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full text-white py-5 text-button-lg font-semibold rounded-xl  hover: transform hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{
                     background: 'linear-gradient(135deg, #A37F41 0%, #B8904F 50%, #C9A05D 100%)',
                     border: 'none'
@@ -489,8 +489,8 @@ const Register = () => {
                   <div className="absolute inset-0 flex items-center">
                     <div className="w-full border-t-2" style={{ borderColor: '#E5D5C3' }}></div>
                   </div>
-                  <div className="relative flex justify-center text-sm">
-                    <span className="px-6 bg-gradient-to-r from-[#FFF8E6] to-white font-medium" style={{ color: '#8A5700' }}>أو إنشاء حساب بـ</span>
+                  <div className="relative flex justify-center text-arabic-base">
+                    <span className="px-6 bg-gradient-to-r from-[#FFF8E6] to-white font-medium text-arabic-base" style={{ color: '#8A5700' }}>أو إنشاء حساب بـ</span>
                   </div>
                 </div>
 
