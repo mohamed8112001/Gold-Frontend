@@ -212,16 +212,32 @@ const CreateShop = () => {
                 });
             }
 
-            alert('تم إرسال طلب إنشاء المتجر بنجاح! سيتم مراجعته من قبل الإدارة قبل ظهوره للعملاء.');
+            alert(
+                'تم إرسال طلب إنشاء المتجر بنجاح!\n\n' +
+                '📋 سيتم مراجعة طلبك من قبل الإدارة خلال 24-48 ساعة\n' +
+                '📄 تم رفع السجل التجاري والمستندات المطلوبة\n' +
+                '🔔 ستتلقى إشعاراً عند الموافقة على المتجر\n\n' +
+                'يمكنك متابعة حالة الطلب من لوحة التحكم'
+            );
             navigate(ROUTES.DASHBOARD);
         } catch (error) {
             console.error('Error creating shop:', error);
-            alert(    "لديك محل بالفعل، لا يمكنك إنشاء محل آخر")
+
+            // Extract error message from response
+            let errorMessage = 'حدث خطأ أثناء إنشاء المتجر';
+
+            if (error.response?.data?.message) {
+                errorMessage = error.response.data.message;
+            } else if (error.message) {
+                errorMessage = error.message;
+            }
+
+            alert(errorMessage);
         } finally {
             setIsLoading(false);
         }
     };
-    
+
 
 
     return (

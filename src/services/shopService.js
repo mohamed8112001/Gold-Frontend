@@ -173,7 +173,7 @@ export const shopService = {
       const config = {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
-        }
+        },
       };
 
       // If it's FormData, set multipart content type
@@ -288,6 +288,18 @@ export const shopService = {
       console.error("Error fetching admin shops:", error);
       throw new Error(
         error.response?.data?.message || "Failed to fetch admin shops"
+      );
+    }
+  },
+
+  // Mark shop as paid (shop owner only)
+  payForShop: async (shopId) => {
+    try {
+      const response = await api.patch(`/shop/${shopId}/pay`);
+      return response.data;
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.message || "Failed to process payment"
       );
     }
   },

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button.jsx';
 import { Input } from '@/components/ui/input.jsx';
@@ -42,6 +42,18 @@ const Profile = () => {
         reviews: 0
     });
 
+    const typeLabels = useMemo(() => ({
+        [USER_TYPES.CUSTOMER]: 'عميل',
+        [USER_TYPES.SELLER]: 'صاحب متجر',
+        [USER_TYPES.ADMIN]: 'مدير'
+    }), []);
+
+    const badgeVariants = useMemo(() => ({
+        [USER_TYPES.CUSTOMER]: 'secondary',
+        [USER_TYPES.SELLER]: 'default',
+        [USER_TYPES.ADMIN]: 'destructive'
+    }), []);
+
     useEffect(() => {
         if (!user) {
             navigate(ROUTES.LOGIN);
@@ -61,11 +73,6 @@ const Profile = () => {
 
     const loadUserStats = async () => {
         try {
-            // This would load user statistics from the backend
-            // const response = await userService.getUserStats();
-            // setStats(response.data);
-
-            // Using mock data for demo
             setStats({
                 favorites: 12,
                 bookings: 5,
@@ -108,53 +115,43 @@ const Profile = () => {
         setIsEditing(false);
     };
 
-    const getUserTypeLabel = (type) => {
-        const typeLabels = {
-            [USER_TYPES.CUSTOMER]: 'عميل',
-            [USER_TYPES.SELLER]: 'صاحب متجر',
-            [USER_TYPES.ADMIN]: 'مدير'
-        };
-        return typeLabels[type] || 'غير محدد';
-    };
-
-    const getUserTypeBadgeVariant = (type) => {
-        const variants = {
-            [USER_TYPES.CUSTOMER]: 'secondary',
-            [USER_TYPES.SELLER]: 'default',
-            [USER_TYPES.ADMIN]: 'destructive'
-        };
-        return variants[type] || 'secondary';
-    };
+    const getUserTypeLabel = (type) => typeLabels[type] || 'غير محدد';
+    const getUserTypeBadgeVariant = (type) => badgeVariants[type] || 'secondary';
 
     if (!user) {
         return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+            <div className="min-h-screen bg-[#F8F8F8] flex items-center justify-center">
                 <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600 mx-auto mb-4"></div>
-                    <p className="text-gray-600">جاري تحميل الملف الشخصي...</p>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#D4AF37] mx-auto mb-4"></div>
+                    <p className="text-[#666666] font-medium" style={{ fontFamily: 'Noto Sans Arabic, sans-serif' }}>
+                        جاري تحميل الملف الشخصي...
+                    </p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-primary-1 to-primary-2 pt-20 font-cairo">
+        <div className="min-h-screen bg-[#F8F8F8] pt-20" style={{ fontFamily: 'Noto Sans Arabic, sans-serif' }}>
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                {/* Header */}
-                <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-primary-900 mb-4 font-cairo">الملف الشخصي</h1>
-                    <p className="text-secondary-800 font-cairo">إدارة معلوماتك الشخصية وإعداداتك</p>
+                <div className="mb-8 animate-fadeIn">
+                    <h1 className="text-3xl font-bold mb-4" style={{ color: '#222222' }}>
+                        الملف الشخصي
+                    </h1>
+                    <p className="text-[#666666] font-medium">
+                        إدارة معلوماتك الشخصية وإعداداتك
+                    </p>
+                    <div className="w-20 h-0.5 bg-gradient-to-r from-[#E0C36F] to-[#D4AF37] rounded-full"></div>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {/* Profile Card */}
                     <div className="lg:col-span-2">
-                        <Card>
-                            <CardHeader>
+                        <Card className="bg-[#F8F8F8] border-[#D4AF37]/30 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 animate-fadeIn">
+                            <CardHeader className="bg-gradient-to-r from-[#E0C36F]/10 to-[#D4AF37]/10">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <CardTitle>المعلومات الشخصية</CardTitle>
-                                        <CardDescription>
+                                        <CardTitle className="text-[#222222] font-bold">المعلومات الشخصية</CardTitle>
+                                        <CardDescription className="text-[#666666]">
                                             قم بتحديث معلوماتك الشخصية هنا
                                         </CardDescription>
                                     </div>
@@ -162,6 +159,7 @@ const Profile = () => {
                                         <Button
                                             variant="outline"
                                             onClick={() => setIsEditing(true)}
+                                            className="border-[#1A237E] text-[#1A237E] hover:bg-[#1A237E]/10 hover:text-[#1A237E] rounded-lg transition-all duration-300 hover:scale-105"
                                         >
                                             <Edit className="w-4 h-4 mr-2" />
                                             تعديل
@@ -172,6 +170,7 @@ const Profile = () => {
                                                 size="sm"
                                                 onClick={handleSave}
                                                 disabled={isLoading}
+                                                className="bg-gradient-to-r from-[#E0C36F] to-[#D4AF37] hover:from-[#D4AF37] hover:to-[#E0C36F] text-white rounded-lg transition-all duration-300 hover:scale-105"
                                             >
                                                 <Save className="w-4 h-4 mr-2" />
                                                 حفظ
@@ -180,6 +179,7 @@ const Profile = () => {
                                                 size="sm"
                                                 variant="outline"
                                                 onClick={handleCancel}
+                                                className="border-red-300 text-red-600 hover:bg-red-50 hover:text-red-700 rounded-lg transition-all duration-300 hover:scale-105"
                                             >
                                                 <X className="w-4 h-4 mr-2" />
                                                 إلغاء
@@ -189,29 +189,48 @@ const Profile = () => {
                                 </div>
                             </CardHeader>
                             <CardContent className="space-y-6">
-                                {/* Profile Picture */}
                                 <div className="flex items-center gap-6">
                                     <div className="relative">
-                                        <div className="w-24 h-24 bg-yellow-100 rounded-full flex items-center justify-center">
-                                            <User className="w-12 h-12 text-yellow-600" />
+                                        <div className="w-24 h-24 bg-gradient-to-br from-[#E0C36F] to-[#D4AF37] rounded-full flex items-center justify-center ring-2 ring-white/50">
+                                            {user.profilePicture ? (
+                                                <img
+                                                    src={`${import.meta.env.VITE_API_BASE_URL}/profile-image/${user.profilePicture}`}
+                                                    alt={user.name}
+                                                    className="w-full h-full object-cover rounded-full"
+                                                    onError={(e) => (e.target.style.display = 'none', e.target.nextSibling.style.display = 'flex')}
+                                                />
+                                            ) : (
+                                                <div className="flex items-center justify-center w-full h-full">
+                                                    <span className="text-white text-3xl">💎</span>
+                                                </div>
+                                            )}
                                         </div>
                                         {isEditing && (
                                             <Button
                                                 size="sm"
-                                                className="absolute -bottom-2 -right-2 rounded-full w-8 h-8 p-0"
+                                                className="absolute -bottom-2 -right-2 rounded-full w-8 h-8 p-0 bg-[#D4AF37] hover:bg-[#E0C36F] text-white"
                                             >
                                                 <Camera className="w-4 h-4" />
                                             </Button>
                                         )}
                                     </div>
                                     <div>
-                                        <h3 className="text-lg font-semibold">{user.name}</h3>
+                                        <h3 className="text-lg font-semibold" style={{ color: '#222222' }}>
+                                            {user.name}
+                                        </h3>
                                         <div className="flex items-center gap-2 mt-1">
-                                            <Badge variant={getUserTypeBadgeVariant(user.role)}>
+                                            <Badge
+                                                variant={getUserTypeBadgeVariant(user.role)}
+                                                className={`${
+                                                    user.role === USER_TYPES.ADMIN ? 'bg-red-600 hover:bg-red-700' :
+                                                    user.role === USER_TYPES.SELLER ? 'bg-[#D4AF37] hover:bg-[#E0C36F]' :
+                                                    'bg-[#1A237E] hover:bg-[#1A237E]/80'
+                                                } text-white px-3 py-1 text-xs font-medium rounded-full transition-all duration-300`}
+                                            >
                                                 {getUserTypeLabel(user.role)}
                                             </Badge>
                                             {user.verified && (
-                                                <Badge variant="success" className="flex items-center gap-1">
+                                                <Badge className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-1 px-3 py-1 text-xs font-medium rounded-full transition-all duration-300">
                                                     <Shield className="w-3 h-3" />
                                                     موثق
                                                 </Badge>
@@ -219,13 +238,10 @@ const Profile = () => {
                                         </div>
                                     </div>
                                 </div>
-
-                                <Separator />
-
-                                {/* Form Fields */}
+                                <Separator className="bg-[#D4AF37]/30" />
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        <label className="block text-sm font-medium mb-2" style={{ color: '#666666' }}>
                                             الاسم الكامل
                                         </label>
                                         {isEditing ? (
@@ -234,14 +250,14 @@ const Profile = () => {
                                                 value={formData.name}
                                                 onChange={handleInputChange}
                                                 placeholder="أدخل اسمك الكامل"
+                                                className="border-[#D4AF37]/50 focus:border-[#D4AF37] focus:ring-[#D4AF37]/30 rounded-lg"
                                             />
                                         ) : (
-                                            <p className="text-gray-900">{user.name || 'غير محدد'}</p>
+                                            <p className="text-[#222222]">{user.name || 'غير محدد'}</p>
                                         )}
                                     </div>
-
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        <label className="block text-sm font-medium mb-2" style={{ color: '#666666' }}>
                                             البريد الإلكتروني
                                         </label>
                                         {isEditing ? (
@@ -251,14 +267,14 @@ const Profile = () => {
                                                 value={formData.email}
                                                 onChange={handleInputChange}
                                                 placeholder="أدخل بريدك الإلكتروني"
+                                                className="border-[#D4AF37]/50 focus:border-[#D4AF37] focus:ring-[#D4AF37]/30 rounded-lg"
                                             />
                                         ) : (
-                                            <p className="text-gray-900">{user.email || 'غير محدد'}</p>
+                                            <p className="text-[#222222]">{user.email || 'غير محدد'}</p>
                                         )}
                                     </div>
-
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        <label className="block text-sm font-medium mb-2" style={{ color: '#666666' }}>
                                             رقم الهاتف
                                         </label>
                                         {isEditing ? (
@@ -267,14 +283,14 @@ const Profile = () => {
                                                 value={formData.phone}
                                                 onChange={handleInputChange}
                                                 placeholder="أدخل رقم هاتفك"
+                                                className="border-[#D4AF37]/50 focus:border-[#D4AF37] focus:ring-[#D4AF37]/30 rounded-lg"
                                             />
                                         ) : (
-                                            <p className="text-gray-900">{user.phone || 'غير محدد'}</p>
+                                            <p className="text-[#222222]">{user.phone || 'غير محدد'}</p>
                                         )}
                                     </div>
-
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        <label className="block text-sm font-medium mb-2" style={{ color: '#666666' }}>
                                             العنوان
                                         </label>
                                         {isEditing ? (
@@ -283,15 +299,15 @@ const Profile = () => {
                                                 value={formData.address}
                                                 onChange={handleInputChange}
                                                 placeholder="أدخل عنوانك"
+                                                className="border-[#D4AF37]/50 focus:border-[#D4AF37] focus:ring-[#D4AF37]/30 rounded-lg"
                                             />
                                         ) : (
-                                            <p className="text-gray-900">{user.address || 'غير محدد'}</p>
+                                            <p className="text-[#222222]">{user.address || 'غير محدد'}</p>
                                         )}
                                     </div>
                                 </div>
-
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <label className="block text-sm font-medium mb-2" style={{ color: '#666666' }}>
                                         نبذة شخصية
                                     </label>
                                     {isEditing ? (
@@ -300,83 +316,78 @@ const Profile = () => {
                                             value={formData.bio}
                                             onChange={handleInputChange}
                                             placeholder="اكتب نبذة عن نفسك"
-                                            className="w-full p-3 border border-gray-300 rounded-md resize-none h-24"
+                                            className="w-full p-3 border border-[#D4AF37]/50 rounded-lg resize-none h-24 focus:border-[#D4AF37] focus:ring-[#D4AF37]/30"
+                                            style={{ backgroundColor: '#F8F8F8', color: '#222222' }}
                                         />
                                     ) : (
-                                        <p className="text-gray-900">{user.bio || 'لم يتم إضافة نبذة شخصية'}</p>
+                                        <p className="text-[#222222]">{user.bio || 'لم يتم إضافة نبذة شخصية'}</p>
                                     )}
                                 </div>
-
-                                <div className="flex items-center gap-4 text-sm text-gray-600">
+                                <div className="flex items-center gap-4 text-sm" style={{ color: '#666666' }}>
                                     <div className="flex items-center gap-1">
-                                        <Calendar className="w-4 h-4" />
+                                        <Calendar className="w-4 h-4 text-[#D4AF37]" />
                                         انضم في {new Date(user.createdAt || Date.now()).toLocaleDateString('ar-EG')}
                                     </div>
                                 </div>
                             </CardContent>
                         </Card>
                     </div>
-
-                    {/* Stats Sidebar */}
                     <div className="space-y-6">
-                        {/* Quick Stats */}
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>إحصائياتي</CardTitle>
+                        <Card className="bg-[#F8F8F8] border-[#D4AF37]/30 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 animate-fadeIn">
+                            <CardHeader className="bg-gradient-to-r from-[#E0C36F]/10 to-[#D4AF37]/10">
+                                <CardTitle className="text-[#222222] font-bold">إحصائياتي</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-2">
                                         <Heart className="w-4 h-4 text-red-500" />
-                                        <span className="text-sm">المفضلة</span>
+                                        <span className="text-sm" style={{ color: '#666666' }}>المفضلة</span>
                                     </div>
-                                    <span className="font-semibold">{stats.favorites}</span>
+                                    <span className="font-semibold" style={{ color: '#222222' }}>{stats.favorites}</span>
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-2">
-                                        <Calendar className="w-4 h-4 text-blue-500" />
-                                        <span className="text-sm">المواعيد</span>
+                                        <Calendar className="w-4 h-4 text-[#1A237E]" />
+                                        <span className="text-sm" style={{ color: '#666666' }}>المواعيد</span>
                                     </div>
-                                    <span className="font-semibold">{stats.bookings}</span>
+                                    <span className="font-semibold" style={{ color: '#222222' }}>{stats.bookings}</span>
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-2">
-                                        <Star className="w-4 h-4 text-yellow-500" />
-                                        <span className="text-sm">التقييمات</span>
+                                        <Star className="w-4 h-4 text-[#D4AF37]" />
+                                        <span className="text-sm" style={{ color: '#666666' }}>التقييمات</span>
                                     </div>
-                                    <span className="font-semibold">{stats.reviews}</span>
+                                    <span className="font-semibold" style={{ color: '#222222' }}>{stats.reviews}</span>
                                 </div>
                             </CardContent>
                         </Card>
-
-                        {/* Quick Actions */}
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>إجراءات سريعة</CardTitle>
+                        <Card className="bg-[#F8F8F8] border-[#D4AF37]/30 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 animate-fadeIn">
+                            <CardHeader className="bg-gradient-to-r from-[#E0C36F]/10 to-[#D4AF37]/10">
+                                <CardTitle className="text-[#222222] font-bold">إجراءات سريعة</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-3">
                                 <Button
                                     variant="outline"
-                                    className="w-full justify-start"
+                                    className="w-full justify-start border-[#D4AF37]/50 text-[#222222] hover:bg-[#D4AF37]/10 hover:text-[#D4AF37] rounded-lg transition-all duration-300 hover:scale-105"
                                     onClick={() => navigate(ROUTES.FAVORITES)}
                                 >
-                                    <Heart className="w-4 h-4 mr-2" />
+                                    <Heart className="w-4 h-4 mr-2 text-red-500" />
                                     عرض المفضلة
                                 </Button>
                                 <Button
                                     variant="outline"
-                                    className="w-full justify-start"
+                                    className="w-full justify-start border-[#D4AF37]/50 text-[#222222] hover:bg-[#D4AF37]/10 hover:text-[#D4AF37] rounded-lg transition-all duration-300 hover:scale-105"
                                     onClick={() => navigate(ROUTES.MY_BOOKINGS)}
                                 >
-                                    <Calendar className="w-4 h-4 mr-2" />
+                                    <Calendar className="w-4 h-4 mr-2 text-[#1A237E]" />
                                     مواعيدي
                                 </Button>
                                 <Button
                                     variant="outline"
-                                    className="w-full justify-start"
+                                    className="w-full justify-start border-[#D4AF37]/50 text-[#222222] hover:bg-[#D4AF37]/10 hover:text-[#D4AF37] rounded-lg transition-all duration-300 hover:scale-105"
                                     onClick={() => navigate(ROUTES.SETTINGS)}
                                 >
-                                    <Edit className="w-4 h-4 mr-2" />
+                                    <Edit className="w-4 h-4 mr-2 text-[#D4AF37]" />
                                     الإعدادات
                                 </Button>
                             </CardContent>
@@ -384,6 +395,28 @@ const Profile = () => {
                     </div>
                 </div>
             </div>
+            <footer className="bg-[#1C1C1C] py-8 mt-16">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <p className="text-sm" style={{ color: '#D4AF37' }}>
+                        اكتشف أجود المجوهرات مع ديبلا
+                    </p>
+                    <p className="text-xs mt-2" style={{ color: '#666666' }}>
+                        © 2025 ديبلا. جميع الحقوق محفوظة.
+                    </p>
+                </div>
+            </footer>
+            <style jsx>{`
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(10px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                .animate-fadeIn {
+                    animation: fadeIn 0.5s ease-in-out;
+                }
+                button:hover {
+                    transform: scale(1.05);
+                }
+            `}</style>
         </div>
     );
 };

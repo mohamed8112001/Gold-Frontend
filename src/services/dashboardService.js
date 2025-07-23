@@ -77,6 +77,22 @@ export const dashboardService = {
     }
   },
 
+  // Get shop owner's shop information
+  getShopOwnerShop: async () => {
+    try {
+      const response = await api.get("/shop");
+      // Return the first shop (since shop owners can only have one shop)
+      const shops = Array.isArray(response.data)
+        ? response.data
+        : response.data.data || [];
+      return { data: shops[0] || null };
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.message || "Failed to fetch shop information"
+      );
+    }
+  },
+
   // Add item to favorites
   addToFavorites: async (itemId, itemType = "product") => {
     try {

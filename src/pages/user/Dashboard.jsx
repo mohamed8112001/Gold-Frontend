@@ -22,6 +22,7 @@ import {
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES } from '../../utils/constants.js';
 import dashboardService from '../../services/dashboardService.js';
+import { shopService } from '../../services/shopService.js';
 import ManageRatings from '../seller/ManageRatings.jsx';
 
 const Dashboard = () => {
@@ -43,6 +44,7 @@ const Dashboard = () => {
   const [favorites, setFavorites] = useState([]);
   const [bookings, setBookings] = useState([]);
   const [availableTimes, setAvailableTimes] = useState([]);
+  const [shopInfo, setShopInfo] = useState(null);
 
   useEffect(() => {
     if (isRegularUser) {
@@ -60,8 +62,10 @@ const Dashboard = () => {
         if (isShopOwner) {
           const shopStats = await dashboardService.getShopOwnerStats();
           const shopActivity = await dashboardService.getShopOwnerActivity();
+          const shopData = await dashboardService.getShopOwnerShop();
           setStats(prev => ({ ...prev, ...shopStats.data }));
           setRecentActivity(shopActivity.data || []);
+          setShopInfo(shopData.data);
         } else {
           const userStats = await dashboardService.getUserStats();
           const userActivity = await dashboardService.getUserActivity();
@@ -93,6 +97,32 @@ const Dashboard = () => {
       alert('تم إلغاء الحجز بنجاح');
     } catch (err) {
       setError(err.message || 'خطأ في إلغاء الحجز');
+    }
+  };
+
+  const handlePayment = async (shopId) => {
+    const confirmed = window.confirm(
+      'هل تريد المتابعة لدفع رسوم تفعيل المتجر؟\n\n' +
+      '💰 المبلغ: 100 جنيه\n' +
+      '🔒 الدفع آمن ومشفر\n' +
+      '✅ سيتم تفعيل المتجر فوراً بعد الدفع'
+    );
+
+    if (confirmed) {
+      try {
+        setLoading(true);
+        await shopService.payForShop(shopId);
+
+        // Reload shop info
+        const shopData = await dashboardService.getShopOwnerShop();
+        setShopInfo(shopData.data);
+
+        alert('🎉 تم الدفع بنجاح! متجرك الآن نشط ومرئي للعملاء');
+      } catch (err) {
+        alert('خطأ في عملية الدفع: ' + (err.message || 'حاول مرة أخرى'));
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -271,6 +301,19 @@ const Dashboard = () => {
 
   const OverviewTab = () => (
     <div className="space-y-6">
+      {/* Shop Status Alert for Overview */}
+      {isShopOwner && shopInfo && !shopInfo.isApproved && (
+        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+          <div className="flex items-center">
+            <Clock className="w-5 h-5 text-amber-600 mr-3" />
+            <div>
+              <p className="text-amber-800 font-medium">متجرك في انتظار الموافقة</p>
+              <p className="text-amber-700 text-sm">سيتم مراجعة طلبك من قبل الإدارة خلال 24-48 ساعة</p>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard icon={Calendar} title="الحجوزات" value={stats.bookings} description={`${stats.activeBookings || 0} حجز نشط`} color="blue" />
         <StatCard icon={Star} title="التقييمات" value={stats.reviews} description="التقييمات المكتوبة" color="green" />
@@ -401,6 +444,77 @@ const Dashboard = () => {
 
   const ShopOwnerTab = () => (
     <div className="space-y-8">
+      {/* Shop Status Alert */}
+      {shopInfo && (
+        <div className={`rounded-xl p-6 border-l-4 ${shopInfo.isApproved && shopInfo.isPaid
+          ? 'bg-green-50 border-green-500'
+          : shopInfo.isApproved && !shopInfo.isPaid
+            ? 'bg-blue-50 border-blue-500'
+            : 'bg-amber-50 border-amber-500'
+          }`}>
+          <div className="flex items-center">
+            <div className={`w-12 h-12 rounded-full flex items-center justify-center mr-4 ${shopInfo.isApproved && shopInfo.isPaid
+              ? 'bg-green-100'
+              : shopInfo.isApproved && !shopInfo.isPaid
+                ? 'bg-blue-100'
+                : 'bg-amber-100'
+              }`}>
+              {shopInfo.isApproved && shopInfo.isPaid ? (
+                <CheckCircle className="w-6 h-6 text-green-600" />
+              ) : shopInfo.isApproved && !shopInfo.isPaid ? (
+                <Clock className="w-6 h-6 text-blue-600" />
+              ) : (
+                <Clock className="w-6 h-6 text-amber-600" />
+              )}
+            </div>
+            <div className="flex-1">
+              <h3 className={`text-lg font-bold mb-1 ${shopInfo.isApproved && shopInfo.isPaid
+                ? 'text-green-800'
+                : shopInfo.isApproved && !shopInfo.isPaid
+                  ? 'text-blue-800'
+                  : 'text-amber-800'
+                }`}>
+                {shopInfo.isApproved && shopInfo.isPaid
+                  ? 'متجرك نشط ومرئي للعملاء'
+                  : shopInfo.isApproved && !shopInfo.isPaid
+                    ? 'متجرك معتمد - يتطلب الدفع'
+                    : 'متجرك في انتظار الموافقة'}
+              </h3>
+              <p className={`text-sm ${shopInfo.isApproved && shopInfo.isPaid
+                ? 'text-green-700'
+                : shopInfo.isApproved && !shopInfo.isPaid
+                  ? 'text-blue-700'
+                  : 'text-amber-700'
+                }`}>
+                {shopInfo.isApproved && shopInfo.isPaid
+                  ? 'متجرك معتمد ومدفوع ومرئي للعملاء. يمكنك الآن إدارة المنتجات والحجوزات.'
+                  : shopInfo.isApproved && !shopInfo.isPaid
+                    ? 'تم اعتماد متجرك من قبل الإدارة. يرجى إكمال عملية الدفع لتفعيل المتجر.'
+                    : 'تم إرسال طلبك بنجاح. سيتم مراجعته من قبل الإدارة خلال 24-48 ساعة.'}
+              </p>
+              {!shopInfo.isApproved && (
+                <p className="text-xs text-amber-600 mt-2">
+                  📄 تم رفع السجل التجاري والمستندات المطلوبة • 🔔 ستتلقى إشعاراً عند الموافقة
+                </p>
+              )}
+              {shopInfo.isApproved && !shopInfo.isPaid && (
+                <div className="mt-4">
+                  <Button
+                    className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-2 rounded-lg"
+                    onClick={() => handlePayment(shopInfo._id || shopInfo.id)}
+                  >
+                    💳 ادفع الآن لتفعيل المتجر
+                  </Button>
+                  <p className="text-xs text-blue-600 mt-2">
+                    💰 رسوم التفعيل: 100 جنيه • 🔒 دفع آمن ومشفر
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Main Management Sections - Side by Side Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Section 1: Shop Management */}
