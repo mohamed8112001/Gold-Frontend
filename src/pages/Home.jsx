@@ -15,6 +15,7 @@ import {
 import { ROUTES } from '../utils/constants.js';
 import { shopService } from '../services/shopService.js';
 import FloatingChat from '../components/ui/FloatingChat.jsx';
+import StarRating from '../components/ui/StarRating.jsx';
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 
@@ -301,14 +302,32 @@ const Home = () => {
           </h3>
 
           {/* Location */}
-          <div className="flex items-center text-gray-600 mb-5">
+          <div className="flex items-center text-gray-600 mb-4">
             <div className="w-6 h-6 bg-gradient-to-r from-[#F0E8DB] to-[#E2D2B6] rounded-full flex items-center justify-center mr-3">
               <MapPin className="w-4 h-4 text-[#8A6C37]" />
             </div>
             <span className="text-base font-semibold font-tajawal line-clamp-1 text-gray-700">{shop.address || shop.area || shop.city || 'الموقع غير محدد'}</span>
           </div>
 
-
+          {/* Dynamic Rating Section */}
+          <div className="flex items-center justify-between mb-5 p-3 bg-gradient-to-r from-[#FFF8E6] to-[#FFF0CC] rounded-xl border border-[#E2D2B6]/50">
+            <StarRating
+              rating={shop.averageRating || shop.rating || 0}
+              reviewCount={shop.reviewCount || 0}
+              size="md"
+              showText={true}
+              showCount={true}
+              className="flex-1"
+              starClassName="drop-shadow-sm"
+              textClassName="text-[#8A6C37] font-bold"
+              countClassName="text-[#6D552C]"
+            />
+            {(shop.averageRating || shop.rating) > 4.5 && (
+              <div className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] text-white px-2 py-1 rounded-full text-xs font-bold">
+                ⭐ ممتاز
+              </div>
+            )}
+          </div>
 
           {/* Enhanced Action Section */}
           <div className="pt-6">

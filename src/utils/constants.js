@@ -1,6 +1,6 @@
 // API Base URL
 export const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:5006";
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:5010";
 
 // API Endpoints
 export const API_ENDPOINTS = {
@@ -68,6 +68,14 @@ export const API_ENDPOINTS = {
   // Chatbot endpoints
   CHATBOT: {
     SEND_MESSAGE: "/chatbot",
+  },
+
+  // Gold Price endpoints
+  PRICE: {
+    GRAM_18: "/price/price-gram/18",
+    GRAM_21: "/price/price-gram/21",
+    GRAM_24: "/price/price-gram/24",
+    CALCULATE_PRODUCT: "/price/calculate-product-price",
   },
 };
 

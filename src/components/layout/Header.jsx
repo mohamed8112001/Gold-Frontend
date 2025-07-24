@@ -9,6 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu.jsx';
+import GoldPriceDisplay from '../common/GoldPriceDisplay.jsx';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -71,7 +72,18 @@ const Header = () => {
         dir="rtl"
       >
         <div className="relative w-full px-8 sm:px-12 lg:px-16 xl:px-20 overflow-hidden">
-          <div className="flex justify-between items-center h-24 min-w-0 py-4">
+          {/* Gold Price Display Bar - Hidden on mobile, compact on medium screens */}
+          <div className="hidden md:block w-full py-2 border-b border-[#E6A500]/10">
+            <div className="flex justify-center">
+              <GoldPriceDisplay
+                className="max-w-5xl lg:max-w-6xl"
+                updateInterval={300000} // Update every 5 minutes
+                compact={false}
+              />
+            </div>
+          </div>
+
+          <div className="flex justify-between items-center h-20 min-w-0 py-3">
             {/* Enhanced Logo */}
             <Link to="/" className="flex items-center group relative mr-8">
               <div className="flex items-center space-x-reverse space-x-6">
@@ -295,6 +307,14 @@ const Header = () => {
           {/* Enhanced Mobile Navigation */}
           {isMobileMenuOpen && (
             <div className="lg:hidden py-8 border-t border-gray-200 bg-white">
+              {/* Mobile Gold Price Display */}
+              <div className="px-4 mb-6">
+                <GoldPriceDisplay
+                  compact={true}
+                  className="w-full"
+                />
+              </div>
+
               <div className="flex flex-col space-y-4 px-4">
                 <Link
                   to="/home"
