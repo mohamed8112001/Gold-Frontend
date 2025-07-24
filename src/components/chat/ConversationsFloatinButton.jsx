@@ -153,6 +153,8 @@ const ConversationsModal = ({
                 const otherParticipant = conversation.participants.find(p => p._id !== user?._id);
                 const isShopChat = conversation.type === 'shop_chat';
 
+                console.log(`conversation: ${JSON.stringify(conversation.product)}`);
+                
                 return (
                   <div
                     key={conversation._id}
