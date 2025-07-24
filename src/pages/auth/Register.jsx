@@ -302,59 +302,60 @@ const Register = () => {
                   </div>
                 </div>
 
-                {/* Enhanced Email Field */}
-                <div className="group">
-                  <label className="block text-label-lg font-semibold mb-2" style={{ color: '#6B5B47' }}>
-                    البريد الإلكتروني *
-                  </label>
-                  <div className="relative">
-                    <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors" style={{ color: '#A37F41' }} />
-                    <Input
-                      name="email"
-                      type="email"
-                      placeholder="أدخل بريدك الإلكتروني"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      className={`pl-14 py-4 border-2 rounded-xl transition-all duration-200 text-arabic-base ${errors.email ? 'border-red-500' : ''}`}
-                      style={{
-                        borderColor: errors.email ? '#ef4444' : '#E5D5C3',
-                        color: '#6B5B47'
-                      }}
-                      onFocus={(e) => e.target.style.borderColor = '#A37F41'}
-                      onBlur={(e) => e.target.style.borderColor = '#E2D2B6'}
-                    />
-                  </div>
-                  {errors.email && (
-                    <p className="text-red-500 text-arabic-sm mt-2 animate-pulse">{errors.email}</p>
-                  )}
-                </div>
+              {/* Enhanced Email Field */}
+<div className="group" dir="rtl">
+  <label className="block text-label-lg font-semibold mb-2 text-right" style={{ color: '#6B5B47' }}>
+    البريد الإلكتروني *
+  </label>
+  <div className="relative">
+    <Mail className="absolute right-4 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors" style={{ color: '#A37F41' }} />
+    <Input
+      name="email"
+      type="email"
+      placeholder="أدخل بريدك الإلكتروني"
+      value={formData.email}
+      onChange={handleInputChange}
+      className={`pr-14 py-4 border-2 rounded-xl transition-all duration-200 text-arabic-base text-right placeholder:text-right ${errors.email ? 'border-red-500' : ''}`}
+      style={{
+        borderColor: errors.email ? '#ef4444' : '#E5D5C3',
+        color: '#6B5B47'
+      }}
+      onFocus={(e) => e.target.style.borderColor = '#A37F41'}
+      onBlur={(e) => e.target.style.borderColor = '#E2D2B6'}
+    />
+  </div>
+  {errors.email && (
+    <p className="text-red-500 text-arabic-sm mt-2 animate-pulse text-right">{errors.email}</p>
+  )}
+</div>
 
-                {/* Enhanced Phone Field */}
-                <div className="group">
-                  <label className="block text-label-lg font-semibold mb-2" style={{ color: '#6B5B47' }}>
-                    رقم الهاتف *
-                  </label>
-                  <div className="relative">
-                    <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors" style={{ color: '#A37F41' }} />
-                    <Input
-                      name="phone"
-                      type="tel"
-                      placeholder="01xxxxxxxxx"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      className={`pl-14 py-4 border-2 rounded-xl transition-all duration-200 ${errors.phone ? 'border-red-500' : ''}`}
-                      style={{
-                        borderColor: errors.phone ? '#ef4444' : '#E5D5C3',
-                        color: '#6B5B47'
-                      }}
-                      onFocus={(e) => e.target.style.borderColor = '#A37F41'}
-                      onBlur={(e) => e.target.style.borderColor = '#E2D2B6'}
-                    />
-                  </div>
-                  {errors.phone && (
-                    <p className="text-red-500 text-arabic-sm mt-2 animate-pulse">{errors.phone}</p>
-                  )}
-                </div>
+{/* Enhanced Phone Field */}
+<div className="group" dir="rtl">
+  <label className="block text-label-lg font-semibold mb-2 text-right" style={{ color: '#6B5B47' }}>
+    رقم الهاتف *
+  </label>
+  <div className="relative">
+    <Phone className="absolute right-4 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors" style={{ color: '#A37F41' }} />
+    <Input
+      name="phone"
+      type="tel"
+      placeholder="01xxxxxxxxx"
+      value={formData.phone}
+      onChange={handleInputChange}
+      className={`pr-14 py-4 border-2 rounded-xl transition-all duration-200 text-right placeholder:text-right ${errors.phone ? 'border-red-500' : ''}`}
+      style={{
+        borderColor: errors.phone ? '#ef4444' : '#E5D5C3',
+        color: '#6B5B47'
+      }}
+      onFocus={(e) => e.target.style.borderColor = '#A37F41'}
+      onBlur={(e) => e.target.style.borderColor = '#E2D2B6'}
+    />
+  </div>
+  {errors.phone && (
+    <p className="text-red-500 text-arabic-sm mt-2 animate-pulse text-right">{errors.phone}</p>
+  )}
+</div>
+
 
                 {/* Enhanced Password Fields */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

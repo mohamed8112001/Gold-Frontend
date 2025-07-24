@@ -169,7 +169,7 @@ const Header = () => {
                   <DropdownMenuTrigger asChild>
   <Button
     variant="outline"
-    className="flex items-center gap-3 bg-white px-4 py-6 rounded-xl border-2 border-[#C37C00]/40 hover:bg-gradient-to-r hover:from-[#FFF8E6] hover:to-[#FFF0CC] hover:border-[#C37C00]/70 group backdrop-blur-sm w-full"
+    className="flex items-center gap-3 bg-white px-4 py-10 rounded-xl border-2 border-[#C37C00]/40 hover:bg-gradient-to-r hover:from-[#FFF8E6] hover:to-[#FFF0CC] hover:border-[#C37C00]/70 group backdrop-blur-sm w-full"
   >
     <div className="relative flex-shrink-0">
       <div className="w-10 h-10 bg-gradient-to-br from-[#C37C00] via-[#E6A500] to-[#A66A00] rounded-lg flex items-center justify-center ring-1 ring-white/60">

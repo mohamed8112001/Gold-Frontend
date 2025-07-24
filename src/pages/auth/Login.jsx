@@ -196,19 +196,20 @@ const Login = () => {
           {/* Right Side - Enhanced Form */}
           <div className="w-full bg-gradient-to-br from-white to-primary-1 p-8 lg:p-12 flex flex-col justify-center relative order-2 lg:order-1 font-cairo">
             {/* Navigation Tabs with enhanced styling */}
-            <div className="flex justify-end mb-8">
-              <div className="flex rounded-xl p-1 bg-secondary-1">
-                <Link
-                  to={ROUTES.USER_TYPE_SELECTION}
-                  className="px-8 py-3 rounded-lg font-medium transition-all duration-200 hover:bg-white/50 text-primary-900"
-                >
-                  إنشاء حساب
-                </Link>
-                <div className="px-8 py-3 bg-white rounded-lg font-medium border transform scale-105 text-primary-500 border-secondary-2">
-                  تسجيل الدخول
-                </div>
-              </div>
-            </div>
+            <div className="flex justify-center mb-8 font-cairo text-lg" dir="rtl">
+  <div className="flex rounded-xl p-1 bg-secondary-1">
+    <Link
+      to={ROUTES.USER_TYPE_SELECTION}
+      className="px-8 py-3 rounded-lg font-medium transition-all duration-200 hover:bg-white/50 text-primary-900"
+    >
+      إنشاء حساب
+    </Link>
+    <div className="px-8 py-3 bg-white rounded-lg font-medium border transform scale-105 text-primary-500 border-secondary-2">
+      تسجيل الدخول
+    </div>
+  </div>
+</div>
+
 
             <div className="max-w-md mx-auto w-full">
               {/* Enhanced Header */}
@@ -223,25 +224,26 @@ const Login = () => {
 
               <form onSubmit={handleSubmit} className="space-y-8">
                 {/* Enhanced Email Field */}
-                <div className="group">
-                  <label className="block text-label-lg font-semibold mb-3 text-primary-900">
-                    أدخل بريدك الإلكتروني
-                  </label>
-                  <div className="relative">
-                    <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors text-primary-500" />
-                    <Input
-                      name="email"
-                      type="email"
-                      placeholder="البريد الإلكتروني *"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      className={`pl-14 py-4 border-2 rounded-xl transition-all duration-200 text-arabic-base text-primary-900 ${errors.email ? 'border-error-500' : 'border-secondary-2'}`}
-                    />
-                  </div>
-                  {errors.email && (
-                    <p className="text-error-500 text-arabic-sm mt-2 animate-pulse">{errors.email}</p>
-                  )}
-                </div>
+               <div className="group" dir="rtl">
+  <label className="block text-label-lg font-semibold mb-3 text-primary-900 text-right">
+    أدخل بريدك الإلكتروني
+  </label>
+  <div className="relative">
+    <Mail className="absolute right-4 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors text-primary-500" />
+    <Input
+      name="email"
+      type="email"
+      placeholder="البريد الإلكتروني *"
+      value={formData.email}
+      onChange={handleInputChange}
+      className={`pr-14 py-4 border-2 rounded-xl transition-all duration-200 text-arabic-base text-primary-900 text-right placeholder:text-right placeholder:text-primary-400 ${errors.email ? 'border-error-500' : 'border-secondary-2'}`}
+    />
+  </div>
+  {errors.email && (
+    <p className="text-error-500 text-arabic-sm mt-2 animate-pulse text-right">{errors.email}</p>
+  )}
+</div>
+
 
                 {/* Enhanced Password Field */}
                 <div className="group">
