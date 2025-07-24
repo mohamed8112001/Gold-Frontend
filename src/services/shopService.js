@@ -572,4 +572,42 @@ export const shopService = {
       }
     }
   },
+
+  // Get commercial record PDF URL (admin only)
+  getCommercialRecordUrl: (shopId) => {
+    const baseURL =
+      import.meta.env.VITE_API_BASE_URL || "http://localhost:5006";
+    return `${baseURL}/shop/${shopId}/commercial-record`;
+  },
+
+  // Download commercial record PDF (admin only)
+  downloadCommercialRecord: async (shopId) => {
+    try {
+      console.log("📤 Downloading PDF for shop:", shopId);
+      const response = await api.get(`/shop/${shopId}/commercial-record`, {
+        responseType: "blob", // مهم للـ PDF
+      });
+
+      console.log("📥 PDF response received:", response.status);
+
+      // إنشاء URL للـ blob
+      const blob = new Blob([response.data], { type: "application/pdf" });
+      const url = window.URL.createObjectURL(blob);
+
+      // فتح الـ PDF في تبويب جديد
+      window.open(url, "_blank");
+
+      // تنظيف الـ URL بعد فترة
+      setTimeout(() => {
+        window.URL.revokeObjectURL(url);
+      }, 1000);
+
+      return { success: true };
+    } catch (error) {
+      console.error("❌ PDF download error:", error);
+      throw new Error(
+        error.response?.data?.message || "Failed to download commercial record"
+      );
+    }
+  },
 };
