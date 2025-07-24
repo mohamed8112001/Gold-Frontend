@@ -446,7 +446,7 @@ const SellerChatInterface = ({
                          <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
                            {product.images && product.images[0] ? (
                              <img 
-                               src={product.images[0]} 
+                               src={`${import.meta.env.VITE_API_BASE_URL}/product-image/${product.images[0]}`} 
                                alt={product.title}
                                className="w-full h-full object-cover"
                              />
