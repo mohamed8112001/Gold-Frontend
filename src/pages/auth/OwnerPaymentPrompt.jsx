@@ -1,66 +1,55 @@
-import React, { useEffect, useState } from 'react';
-import './OwnerPaymentPrompt.css';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
+import React, { useEffect, useState } from 'react';
 
-const Logo = () => (
+const GoldIcon = () => (
   <svg
+    width="48"
+    height="48"
+    viewBox="0 0 48 48"
+    fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    xmlnsXlink="http://www.w3.org/1999/xlink"
-    width="14px"
-    height="16px"
-    viewBox="0 0 14 16"
-    version="1.1"
+    className="mx-auto mb-4"
   >
-    <defs />
-    <g id="Flow" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-      <g
-        id="0-Default"
-        transform="translate(-121.000000, -40.000000)"
-        fill="#E184DF"
-      >
-        <path
-          d="M127,50 L126,50 C123.238576,50 121,47.7614237 121,45 C121,42.2385763 123,43.3431458 123,45 C123,46.6568542 124.343146,48 126,48 L127,48 Z"
-          id="Pilcrow"
-        />
-      </g>
-    </g>
+    <circle cx="24" cy="24" r="20" fill="url(#goldGradient)" />
+    <path
+      d="M24 8L28 16H32L26 20L28 28L24 24L20 28L22 20L16 16H20L24 8Z"
+      fill="#fff"
+      opacity="0.9"
+    />
+    <defs>
+      <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#FFD700" />
+        <stop offset="50%" stopColor="#FFA500" />
+        <stop offset="100%" stopColor="#FF8C00" />
+      </linearGradient>
+    </defs>
   </svg>
 );
 
-export default function OwnerPaymentPrompt() {
-  const { user, setUser, isLoading } = useAuth();
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-  const [error, setError] = useState('');
-  const [hasCheckedPayment, setHasCheckedPayment] = useState(false);
+const CheckIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+    <path
+      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+      fill="currentColor"
+    />
+  </svg>
+);
 
-  useEffect(() => {
-    // Don't redirect during auth loading
-    if (isLoading) return;
-    
-    // Don't check multiple times
-    if (hasCheckedPayment) return;
-    
-    // Mark as checked
-    setHasCheckedPayment(true);
-    
-    // If user is paid or not a seller, redirect to home
-    if (user && (user.paid || user.role !== 'seller')) {
-      console.log('User is paid or not a seller, redirecting to home');
-      navigate('/home', { replace: true });
-    }
-  }, [user, isLoading, navigate, hasCheckedPayment]);
+export default function GoldStorePaymentPrompt() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const {user, updateUser} = useAuth()
 
   const handlePayment = async () => {
     setLoading(true);
     setError('');
     
-    if (!user){
+    if (!user) {
       setLoading(false);
-      setError('user is not exist');
+      setError('مطلوب تسجيل الدخول أولاً');
       return;
     }
+    
     try {
       const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/create-portal-session`, {
         method: 'POST',
@@ -86,112 +75,165 @@ export default function OwnerPaymentPrompt() {
           window.location.href = data;
         }, 500);
       } else {
-        setError('Invalid payment session URL received.');
+        setError('رابط جلسة الدفع غير صحيح.');
       }
     } catch (error) {
       console.error('Payment error:', error);
-      setError('Error starting payment session. Please try again.');
+      setError('خطأ في بدء جلسة الدفع. يرجى المحاولة مرة أخرى.');
     } finally {
       setLoading(false);
     }
   };
 
-  // Show loading during auth check
-  if (isLoading || !hasCheckedPayment) {
-    return (
-      <section>
-        <div className="product Box-root" style={{ maxWidth: 420, width: '100%', margin: '2rem auto', textAlign: 'center' }}>
-          <div style={{ marginTop: 24 }}>
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#A37F41] mx-auto mb-4"></div>
-            <p style={{ color: '#6b7280' }}>Loading...</p>
-          </div>
-        </div>
-      </section>
-    );
-  }
+  const handleNavigateHome = () => {
+    console.log('Navigating to dashboard...');
+  };
+
+  const features = [
+    "إدارة متقدمة للمخزون والمعروضات",
+    "تتبع أسعار الذهب في الوقت الفعلي",
+    "أدوات إدارة علاقات العملاء",
+    "تقارير وتحليلات المبيعات التفصيلية",
+    "معالجة آمنة للمدفوعات",
+    "دعم فني على مدار الساعة"
+  ];
 
   return (
-    <section>
-      <div className="product Box-root" style={{ maxWidth: 420, width: '100%', margin: '2rem auto', textAlign: 'center' }}>
-        <Logo />
-        <div className="description Box-root" style={{ marginTop: 24 }}>
-          <h2 style={{ fontSize: '2rem', color: '#2d3748', marginBottom: 8 }}>
-            Activate Your Seller Account
-          </h2>
-          <p style={{ color: '#6b7280', fontSize: '1.1rem', marginBottom: 24 }}>
-            To access all seller features, you must complete your account activation by paying the subscription fee.
-          </p>
-          <div style={{ 
-            background: '#f9fafb', 
-            borderRadius: 12, 
-            padding: 20, 
-            marginBottom: 24, 
-            border: '1px solid #e5e7eb' 
-          }}>
-            <h3 style={{ fontSize: '1.3rem', color: '#4f46e5', margin: 0 }}>
-              Seller Subscription
-            </h3>
-            <div style={{ fontSize: '1.1rem', color: '#6b7280', margin: '8px 0 0 0' }}>
-              $5.00 / month
+    <div 
+      className="min-h-screen bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50 flex items-center justify-center p-4"
+      style={{ fontFamily: "'Noto Sans Arabic', 'Cairo', 'Amiri', 'Tajawal', sans-serif" }}
+      dir="rtl"
+    >
+      <div className="max-w-4xl w-full">
+        {/* Main Card */}
+        <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
+          <div className="grid lg:grid-cols-2 gap-0">
+            
+            {/* Right Side - Hero Section (RTL) */}
+            <div className="bg-gradient-to-br from-amber-600 via-yellow-500 to-orange-600 p-8 lg:p-12 text-white relative overflow-hidden order-2 lg:order-1">
+              <div className="absolute inset-0 bg-black bg-opacity-10"></div>
+              <div className="relative z-10">
+                <GoldIcon />
+                <h1 className="text-3xl lg:text-4xl font-bold mb-4 leading-tight">
+                  حوّل متجر الذهب الخاص بك
+                </h1>
+                <p className="text-xl mb-8 text-amber-100 leading-relaxed">
+                  انضم إلى آلاف أصحاب متاجر الذهب الناجحين الذين طوروا أعمالهم مع منصتنا الشاملة والمتطورة.
+                </p>
+                
+                <div className="space-y-4">
+                  {features.map((feature, index) => (
+                    <div key={index} className="flex items-center space-x-3 space-x-reverse">
+                      <div className="bg-white bg-opacity-20 rounded-full p-1">
+                        <CheckIcon />
+                      </div>
+                      <span className="text-amber-100 text-right">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Decorative elements */}
+              <div className="absolute top-0 left-0 w-32 h-32 bg-white bg-opacity-10 rounded-full -translate-y-16 -translate-x-16"></div>
+              <div className="absolute bottom-0 right-0 w-24 h-24 bg-white bg-opacity-10 rounded-full translate-y-12 translate-x-12"></div>
             </div>
-          </div>
-          <button
-            id="checkout-and-portal-button"
-            type="button"
-            onClick={handlePayment}
-            disabled={loading}
-            style={{ 
-              minWidth: 200,
-              padding: '12px 24px',
-              backgroundColor: loading ? '#9ca3af' : '#4f46e5',
-              color: 'white',
-              border: 'none',
-              borderRadius: 8,
-              fontSize: '1rem',
-              cursor: loading ? 'not-allowed' : 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px',
-              margin: '0 auto'
-            }}
-          >
-            {loading && (
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-            )}
-            {loading ? 'Processing...' : 'Pay & Activate Account'}
-          </button>
-          
-          {error && (
-            <div style={{ 
-              color: '#dc2626', 
-              marginTop: 16, 
-              padding: 12, 
-              backgroundColor: '#fef2f2', 
-              borderRadius: 8,
-              border: '1px solid #fecaca'
-            }}>
-              {error}
+
+            {/* Left Side - Payment Form (RTL) */}
+            <div className="p-8 lg:p-12 order-1 lg:order-2">
+              <div className="text-center mb-8">
+                <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                  فعّل متجرك الآن
+                </h2>
+                <p className="text-gray-600 text-lg">
+                  ابدأ رحلتك نحو زيادة الأرباح وتبسيط العمليات التجارية
+                </p>
+              </div>
+
+              {/* Pricing Card */}
+              <div className="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-2xl p-6 mb-8 border border-amber-200">
+                <div className="text-center">
+                  <div className="text-amber-600 font-semibold text-sm uppercase tracking-wide mb-2">
+                    الباقة الاحترافية
+                  </div>
+                  <div className="flex items-center justify-center mb-4">
+                    <span className="text-4xl font-bold text-gray-900">30$</span>
+                    <span className="text-gray-600 mr-2">/شهرياً</span>
+                  </div>
+                  <div className="bg-amber-100 text-amber-800 text-sm font-medium px-4 py-2 rounded-full inline-block">
+                    الأكثر شعبية
+                  </div>
+                </div>
+              </div>
+
+              {/* Payment Button */}
+              <button
+                onClick={handlePayment}
+                disabled={loading}
+                className={`w-full py-4 px-6 rounded-xl font-semibold text-lg transition-all duration-300 ${
+                  loading 
+                    ? 'bg-gray-400 cursor-not-allowed text-white' 
+                    : 'bg-gradient-to-r from-amber-600 to-yellow-600 hover:from-amber-700 hover:to-yellow-700 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-1'
+                }`}
+              >
+                {loading ? (
+                  <div className="flex items-center justify-center space-x-2 space-x-reverse">
+                    <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+                    <span>جارٍ المعالجة...</span>
+                  </div>
+                ) : (
+                  'فعّل متجري الآن'
+                )}
+              </button>
+
+              {error && (
+                <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-xl">
+                  <div className="flex items-center space-x-2 space-x-reverse">
+                    <div className="w-5 h-5 text-red-500">⚠️</div>
+                    <p className="text-red-700 font-medium text-right">{error}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Security & Trust */}
+              <div className="mt-8 pt-6 border-t border-gray-200">
+                <div className="text-center text-sm text-gray-500 space-y-2">
+                  <p>🔒 دفع آمن مدعوم بواسطة Stripe</p>
+                  <p>💳 جميع طرق الدفع الرئيسية مقبولة</p>
+                  <p>📞 إلغاء في أي وقت مع دعم على مدار الساعة</p>
+                </div>
+              </div>
+
+              {/* Back to Home */}
+              <div className="mt-6 text-center">
+                <button
+                  onClick={handleNavigateHome}
+                  className="text-gray-500 hover:text-gray-700 text-sm underline transition-colors"
+                >
+                  العودة إلى لوحة التحكم
+                </button>
+              </div>
             </div>
-          )}
-          
-          <div style={{ marginTop: 16 }}>
-            <button
-              onClick={() => navigate('/home')}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: '#6b7280',
-                textDecoration: 'underline',
-                cursor: 'pointer',
-                fontSize: '0.9rem'
-              }}
-            >
-              Continue browsing (limited access)
-            </button>
           </div>
         </div>
+
+        {/* Bottom Trust Indicators */}
+        <div className="mt-8 text-center">
+          <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-8 sm:space-x-reverse text-gray-600 text-sm">
+            <div className="flex items-center space-x-2 space-x-reverse">
+              <span>⭐⭐⭐⭐⭐</span>
+              <span>4.9/5 من أكثر من 1,200 متجر</span>
+            </div>
+            <div className="hidden sm:block w-px h-6 bg-gray-300"></div>
+            <div>ضمان استرداد الأموال لمدة 30 يوماً</div>
+          </div>
+        </div>
+
+        {/* Load Arabic fonts */}
+        <link 
+          href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700&family=Cairo:wght@400;500;600;700&family=Tajawal:wght@400;500;600;700&display=swap" 
+          rel="stylesheet" 
+        />
       </div>
-    </section>
+    </div>
   );
 }

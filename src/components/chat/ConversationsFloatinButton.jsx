@@ -8,10 +8,17 @@ import { toast } from 'sonner';
 import chatService from '@/services/chatService';
 import { productService } from '@/services/productService'; 
 import { STORAGE_KEYS } from '@/utils/constants';
-import ShopChatInterface from './shop_chat_interface';
+import SellerChatInterface from './SellerChatInterface'; // Import the new component
 
-// Conversations Modal Component
-const ConversationsModal = ({ isOpen, onClose, onSelectConversation, conversations, isConnected, isLoading, user }) => {
+const ConversationsModal = ({ 
+  isOpen = true, 
+  onClose = () => {}, 
+  onSelectConversation = () => {}, 
+  conversations = [], 
+  isConnected = true, 
+  isLoading = false, 
+  user = { _id: '1', name: 'المستخدم' } 
+}) => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const filteredConversations = conversations.filter(conv =>
@@ -44,62 +51,105 @@ const ConversationsModal = ({ isOpen, onClose, onSelectConversation, conversatio
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4" dir="rtl">
-      <Card className="w-full max-w-md h-[70vh] flex flex-col bg-white rounded-2xl ">
-        <CardHeader className="flex-shrink-0 p-6 border-b bg-gradient-to-l from-blue-50 to-indigo-50 rounded-t-2xl">
-          <div className="flex items-center justify-between">
+    <div 
+      className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn"
+      dir="rtl"
+      style={{ fontFamily: "'Noto Sans Arabic', 'Cairo', 'Amiri', 'Tajawal', sans-serif" }}
+    >
+      <Card className="w-full max-w-lg h-[80vh] flex flex-col bg-white rounded-3xl shadow-2xl border-0 overflow-hidden animate-scaleIn">
+        
+        {/* Header */}
+        <CardHeader className="flex-shrink-0 p-6 border-b bg-gradient-to-l from-amber-50 via-yellow-50 to-orange-50 rounded-t-3xl">
+          <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <h2 className="text-xl font-bold text-gray-900">المحادثات</h2>
-              <Badge className={`${isConnected ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'} text-xs`}>
+              <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full">
+                <MessageSquare className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-gray-900">المحادثات</h2>
+                <p className="text-sm text-gray-600">{conversations.length} محادثة</p>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-3">
+              <Badge className={`${isConnected ? 'bg-green-100 text-green-700 border border-green-200' : 'bg-red-100 text-red-700 border border-red-200'} text-xs font-medium`}>
+                <div className={`w-2 h-2 rounded-full ml-1 ${isConnected ? 'bg-green-500' : 'bg-red-500'} animate-pulse`}></div>
                 {isConnected ? 'متصل' : 'غير متصل'}
               </Badge>
+              
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onClose}
+                className="text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-full w-8 h-8 p-0 transition-all duration-200"
+              >
+                <X className="w-5 h-5" />
+              </Button>
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onClose}
-              className="text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-full"
-            >
-              <X className="w-5 h-5" />
-            </Button>
           </div>
 
-          <div className="mt-4 relative">
-            <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+          {/* Search */}
+          <div className="relative">
+            <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
               type="text"
               placeholder="البحث في المحادثات..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pr-10 pl-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-right"
+              className="w-full pr-12 pl-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent text-right bg-white/80 backdrop-blur-sm transition-all duration-200"
             />
+            {searchTerm && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSearchTerm('')}
+                className="absolute left-2 top-1/2 transform -translate-y-1/2 w-6 h-6 p-0 text-gray-400 hover:text-gray-600"
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            )}
           </div>
         </CardHeader>
 
-        <CardContent className="flex-1 p-0 overflow-hidden">
+        {/* Content */}
+        <CardContent className="flex-1 p-0 overflow-hidden bg-gray-50/30">
           {isLoading ? (
             <div className="flex-1 flex items-center justify-center h-full">
-              <div className="text-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                <p className="text-gray-600">جاري تحميل المحادثات...</p>
+              <div className="text-center py-12">
+                <div className="relative">
+                  <div className="animate-spin rounded-full h-12 w-12 border-4 border-amber-200 border-t-amber-600 mx-auto mb-4"></div>
+                  <div className="absolute inset-0 rounded-full border-4 border-amber-100 animate-ping"></div>
+                </div>
+                <p className="text-gray-600 font-medium">جاري تحميل المحادثات...</p>
+                <p className="text-gray-400 text-sm mt-1">يرجى الانتظار قليلاً</p>
               </div>
             </div>
           ) : filteredConversations.length === 0 ? (
             <div className="flex-1 flex items-center justify-center h-full">
-              <div className="text-center py-8">
-                <MessageSquare className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <div className="text-center py-12 px-6">
+                <div className="mb-6">
+                  <MessageSquare className="w-20 h-20 text-gray-300 mx-auto mb-4" />
+                  <div className="w-16 h-1 bg-gradient-to-r from-amber-300 to-yellow-300 rounded-full mx-auto"></div>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">
                   {searchTerm ? 'لم يتم العثور على محادثات' : 'لا توجد محادثات'}
                 </h3>
-                <p className="text-gray-600">
-                  {searchTerm ? 'جرب البحث بكلمات أخرى' : 'ابدأ محادثة جديدة مع أحد المتاجر'}
+                <p className="text-gray-600 leading-relaxed">
+                  {searchTerm ? 'جرب البحث بكلمات أخرى أو تحقق من الإملاء' : 'ابدأ محادثة جديدة مع أحد المتاجر لتظهر هنا'}
                 </p>
+                {searchTerm && (
+                  <Button
+                    onClick={() => setSearchTerm('')}
+                    className="mt-4 bg-amber-600 hover:bg-amber-700 text-white"
+                  >
+                    مسح البحث
+                  </Button>
+                )}
               </div>
             </div>
           ) : (
             <div className="overflow-y-auto max-h-full">
-              {filteredConversations.map((conversation) => {
-                
+              {filteredConversations.map((conversation, index) => {
                 const otherParticipant = conversation.participants.find(p => p._id !== user?._id);
                 const isShopChat = conversation.type === 'shop_chat';
 
@@ -107,38 +157,61 @@ const ConversationsModal = ({ isOpen, onClose, onSelectConversation, conversatio
                   <div
                     key={conversation._id}
                     onClick={() => onSelectConversation(conversation)}
-                    className="flex items-center gap-4 p-4 hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100 last:border-b-0"
+                    className="flex items-center gap-4 p-4 hover:bg-white/80 cursor-pointer transition-all duration-200 border-b border-gray-100 last:border-b-0 group"
+                    style={{ animationDelay: `${index * 100}ms` }}
                   >
-                    <div className="relative">
-                      <Avatar className="w-12 h-12">
+                    {/* Avatar */}
+                    <div className="relative flex-shrink-0">
+                      <Avatar className="w-14 h-14 rounded-full border-2 border-white shadow-md group-hover:shadow-lg transition-shadow duration-200">
                         <AvatarImage src={otherParticipant?.avatar} />
-                        <AvatarFallback className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white">
-                          {isShopChat ? <Store className="w-6 h-6" /> : <User className="w-6 h-6" />}
+                        <AvatarFallback className={`${isShopChat ? 'bg-gradient-to-r from-amber-500 to-yellow-500' : 'bg-gradient-to-r from-blue-500 to-indigo-500'} text-white`}>
+                          {isShopChat ? <Store className="w-7 h-7" /> : <User className="w-7 h-7" />}
                         </AvatarFallback>
                       </Avatar>
+                      
                       {conversation.unreadCount > 0 && (
-                        <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
-                          <span className="text-white text-xs font-bold">
+                        <div className="absolute -top-2 -right-2 min-w-[20px] h-5 bg-gradient-to-r from-red-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg animate-bounce">
+                          <span className="text-white text-xs font-bold px-1">
                             {conversation.unreadCount > 9 ? '9+' : conversation.unreadCount}
                           </span>
                         </div>
                       )}
+                      
+                      {isConnected && (
+                        <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+                      )}
                     </div>
 
+                    {/* Content */}
                     <div className="flex-1 min-w-0 text-right">
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between mb-1">
                         <div className="flex items-center gap-2">
-                          <span className="text-xs text-gray-500">{formatTime(conversation.updatedAt)}</span>
+                          <span className="text-xs text-gray-500 font-medium">
+                            {formatTime(conversation.updatedAt)}
+                          </span>
                           {isShopChat && (
-                            <Badge variant="secondary" className="text-xs">متجر</Badge>
+                            <Badge variant="secondary" className="text-xs bg-amber-100 text-amber-800 border border-amber-200">
+                              <Store className="w-3 h-3 ml-1" />
+                              متجر
+                            </Badge>
                           )}
                         </div>
-                        <h3 className="font-semibold text-gray-900 truncate">{otherParticipant?.name}</h3>
+                        <h3 className="font-bold text-gray-900 text-right truncate max-w-[150px] group-hover:text-amber-600 transition-colors">
+                          {otherParticipant?.name}
+                        </h3>
                       </div>
 
-                      <p className="text-sm text-gray-600 truncate text-right mt-1">
+                      <p className="text-sm text-gray-600 text-right leading-relaxed line-clamp-2">
                         {formatLastMessage(conversation.lastMessage, conversation.lastMessage?.sender?._id)}
                       </p>
+                      
+                      {conversation.unreadCount > 0 && (
+                        <div className="flex justify-end mt-2">
+                          <div className="text-xs text-amber-600 font-medium">
+                            {conversation.unreadCount} رسالة جديدة
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 );
@@ -147,6 +220,56 @@ const ConversationsModal = ({ isOpen, onClose, onSelectConversation, conversatio
           )}
         </CardContent>
       </Card>
+
+      {/* Styles */}
+      <style jsx>{`
+        .animate-fadeIn {
+          animation: fadeIn 0.3s ease-out;
+        }
+        
+        .animate-scaleIn {
+          animation: scaleIn 0.3s ease-out;
+        }
+        
+        .line-clamp-2 {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+        
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        
+        @keyframes scaleIn {
+          from {
+            opacity: 0;
+            transform: scale(0.9);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+        
+        @media (max-width: 640px) {
+          .max-w-lg {
+            max-width: 95vw;
+          }
+        }
+      `}</style>
+
+      {/* Load Arabic fonts */}
+      <link 
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700&family=Cairo:wght@400;500;600;700&family=Tajawal:wght@400;500;600;700&display=swap" 
+        rel="stylesheet" 
+      />
     </div>
   );
 };
@@ -158,9 +281,8 @@ const ConversationsFloatinButton = ({ user, onOpenChat, onSelectConversation }) 
   const [connectionError, setConnectionError] = useState(null);
   const [conversations, setConversations] = useState([]);
   const [showConversations, setShowConversations] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [isLoadingProduct, setIsLoadingProduct] = useState(false);
-  const [showChatInterface, setShowChatInterface] = useState(false);
+  const [showSellerChatInterface, setShowSellerChatInterface] = useState(false);
+  const [selectedConversation, setSelectedConversation] = useState(null);
 
   // Initialize socket connection
   const initializeSocket = useCallback(async () => {
@@ -443,7 +565,6 @@ const ConversationsFloatinButton = ({ user, onOpenChat, onSelectConversation }) 
   const handleSelectConversation = async (conversation) => {
     console.log('Conversation selected:', conversation);
     setShowConversations(false);
-    setIsLoadingProduct(true);
 
     try {
       // Mark conversation as read
@@ -458,46 +579,27 @@ const ConversationsFloatinButton = ({ user, onOpenChat, onSelectConversation }) 
       // Update total unread count
       setUnreadCount(prev => prev - (conversation.unreadCount || 0));
 
-      // Check if user is a seller (has shop)
-      const isSeller = user?.role === 'seller';
-      console.log('User role:', user?.role);
-      console.log('Is seller:', isSeller);
-      console.log('Conversation product:', conversation.product);
+      // Check if user is a seller (has role 'seller' or 'admin')
+      const isSeller = user?.role === 'seller' || user?.role === 'admin';
       
-      if (isSeller && conversation.product) {
-        // Fetch product details first
-        console.log('Fetching product details for:', conversation.product);
-        const productData = await productService.getProduct(conversation.product);
-        console.log('Product fetched:', productData);
-        
-        
-        setSelectedProduct(productData);
-        setShowChatInterface(true);
+      if (isSeller) {
+        // For sellers, open the seller chat interface
+        setSelectedConversation(conversation);
+        setShowSellerChatInterface(true);
       } else {
-        console.log(`prod id: ${JSON.stringify(conversation.product)}`);
-        
-        // For non-sellers or if no product, use the original callback
+        // For customers, use the original callback
         if (onSelectConversation) {
-          onSelectConversation(conversation.product);
+          onSelectConversation(conversation);
         } else if (onOpenChat) {
           onOpenChat(conversation);
         }
       }
     } catch (error) {
-      console.error('Error fetching product:', error);
-      toast.error('خطأ في تحميل تفاصيل المنتج', {
-        description: error.message || 'فشل في تحميل تفاصيل المنتج',
+      console.error('Error handling conversation selection:', error);
+      toast.error('خطأ في فتح المحادثة', {
+        description: error.message || 'فشل في فتح المحادثة',
         duration: 5000,
       });
-      
-      // Fallback to original behavior
-      if (onSelectConversation) {
-        onSelectConversation(conversation);
-      } else if (onOpenChat) {
-        onOpenChat(conversation);
-      }
-    } finally {
-      setIsLoadingProduct(false);
     }
   };
 
@@ -506,10 +608,10 @@ const ConversationsFloatinButton = ({ user, onOpenChat, onSelectConversation }) 
     setShowConversations(false);
   };
 
-  // Handle close chat interface
-  const handleCloseChatInterface = () => {
-    setShowChatInterface(false);
-    setSelectedProduct(null);
+  // Handle close seller chat interface
+  const handleCloseSellerChatInterface = () => {
+    setShowSellerChatInterface(false);
+    setSelectedConversation(null);
   };
 
   // Get button status
@@ -538,14 +640,14 @@ const ConversationsFloatinButton = ({ user, onOpenChat, onSelectConversation }) 
             onClick={handleClick}
             disabled={buttonStatus === 'connecting'}
             className={`
-              relative w-16 h-16 rounded-full  transition-all duration-300 transform hover:scale-110 active:scale-95 backdrop-blur-sm
+              relative w-16 h-16 rounded-full transition-all duration-300 transform hover:scale-110 active:scale-95 backdrop-blur-sm
               ${buttonStatus === 'connected'
-                ? 'bg-gradient-to-r from-[#A37F41] via-[#C5A56D] to-[#8A6C37] hover:from-[#8A6C37] hover:via-[#A37F41] hover:to-[#6D552C] [#A37F41]/20'
+                ? 'bg-gradient-to-r from-[#A37F41] via-[#C5A56D] to-[#8A6C37] hover:from-[#8A6C37] hover:via-[#A37F41] hover:to-[#6D552C]'
                 : buttonStatus === 'error'
-                  ? 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 /20'
+                  ? 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700'
                   : buttonStatus === 'connecting'
-                    ? 'bg-gradient-to-r from-gray-400 to-gray-500 /20'
-                    : 'bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 /20'
+                    ? 'bg-gradient-to-r from-gray-400 to-gray-500'
+                    : 'bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700'
               }
               text-white border-2 border-white/20 flex items-center justify-center
               before:absolute before:inset-0 before:rounded-full before:bg-white before:opacity-0 before:transition-opacity before:duration-300 hover:before:opacity-15
@@ -557,17 +659,17 @@ const ConversationsFloatinButton = ({ user, onOpenChat, onSelectConversation }) 
               {buttonStatus === 'connecting' ? (
                 <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               ) : buttonStatus === 'error' ? (
-                <AlertCircle className="w-7 h-7 drop-" />
+                <AlertCircle className="w-7 h-7" />
               ) : showConversations ? (
-                <X className="w-7 h-7 drop-" />
+                <X className="w-7 h-7" />
               ) : (
-                <MessageSquare className="w-7 h-7 drop-" />
+                <MessageSquare className="w-7 h-7" />
               )}
             </div>
 
             {/* Unread count badge */}
             {unreadCount > 0 && buttonStatus === 'connected' && !showConversations && (
-              <div className="absolute -top-2 -right-2 w-7 h-7 bg-gradient-to-r from-red-500 to-red-600 rounded-full border-3 border-white flex items-center justify-center ">
+              <div className="absolute -top-2 -right-2 w-7 h-7 bg-gradient-to-r from-red-500 to-red-600 rounded-full border-3 border-white flex items-center justify-center">
                 <span className="text-white text-xs font-bold">
                   {unreadCount > 99 ? '99+' : unreadCount}
                 </span>
@@ -579,23 +681,12 @@ const ConversationsFloatinButton = ({ user, onOpenChat, onSelectConversation }) 
                 buttonStatus === 'connecting' ? 'bg-yellow-500' :
                   'bg-red-500'
               }`} />
-
-            {/* Tooltip */}
-            {!showConversations && (
-              <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg opacity-0 hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none">
-                {buttonStatus === 'connected' ? 'الدردشة المباشرة' :
-                  buttonStatus === 'connecting' ? 'جاري الاتصال...' :
-                    buttonStatus === 'error' ? 'خطأ في الاتصال' :
-                      'غير متصل'}
-                <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
-              </div>
-            )}
           </Button>
         </div>
 
         {/* Connection error tooltip */}
         {connectionError && !showConversations && (
-          <div className="absolute bottom-full right-0 mb-2 max-w-xs p-3 bg-red-900 text-white text-sm rounded-lg ">
+          <div className="absolute bottom-full right-0 mb-2 max-w-xs p-3 bg-red-900 text-white text-sm rounded-lg">
             <div className="flex items-center gap-2">
               <AlertCircle className="w-4 h-4" />
               <span>خطأ في الاتصال</span>
@@ -606,6 +697,7 @@ const ConversationsFloatinButton = ({ user, onOpenChat, onSelectConversation }) 
         )}
       </div>
 
+      {/* Conversations Modal */}
       <ConversationsModal
         isOpen={showConversations}
         onClose={handleCloseConversations}
@@ -616,32 +708,17 @@ const ConversationsFloatinButton = ({ user, onOpenChat, onSelectConversation }) 
         user={user}
       />
 
-      {/* Shop Chat Interface */}
-      {showChatInterface && selectedProduct &&  (
-        <ShopChatInterface
-          isOpen={showChatInterface}
-          onClose={handleCloseChatInterface}
-          shop={selectedProduct.data.shop}
+      {/* Seller Chat Interface */}
+      {showSellerChatInterface && selectedConversation && (
+        <SellerChatInterface
+          isOpen={showSellerChatInterface}
+          onClose={handleCloseSellerChatInterface}
+          conversation={selectedConversation}
           user={user}
-          product={selectedProduct.data}
+          chatService={chatService}
+          productService={productService}
         />
       )}
-
-      {/* Loading overlay for product fetching */}
-      {isLoadingProduct && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center">
-          <div className="bg-white rounded-2xl p-8 ">
-            <div className="flex items-center gap-4">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-              <div className="text-right">
-                <h3 className="text-lg font-semibold text-gray-900">جاري تحميل تفاصيل المنتج...</h3>
-                <p className="text-gray-600">يرجى الانتظار</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
     </>
   );
 };

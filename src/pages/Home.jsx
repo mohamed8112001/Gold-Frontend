@@ -21,7 +21,7 @@ import { motion } from "framer-motion";
 // import api from '@/services/api.js';
 import.meta.env.VITE_API_BASE_URL
 
-import ConversationsFloatinButton from '@/components/ui/ConversationsFloatinButton.jsx';
+import ConversationsFloatinButton from '@/components/chat/ConversationsFloatinButton.jsx';
 import { useAuth } from '@/context/AuthContext.jsx';
 
 const Home = () => {
