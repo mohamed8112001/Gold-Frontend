@@ -25,6 +25,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { shopService } from '@/services/shopService';
 
+
 const SellerChatInterface = ({ 
   isOpen = true, 
   onClose = () => {}, 
@@ -109,28 +110,36 @@ const SellerChatInterface = ({
       let shopId = null;
       
       console.log(`shop: ${JSON.stringify(user)}`);
-      const shop = await shopService.getAllShops();
-      console.log(`shop: ${JSON.stringify(shop)}`);
+      const shops = await shopService.getAllShops();
+      const myShop = shops.data.filter((shop)=> {
+        return shop.owner._id === user._id
+      })
+      console.log(`shop: ${JSON.stringify(shops)}`);
+      console.log(`myshop: ${JSON.stringify(myShop[0])}`);
+
+      shopId = myShop[0]._id;
       
       
-      // Try to get shop ID from different possible locations in user data
-      if (user.shop && user.shop._id) {
-        shopId = user.shop._id;
-      } else if (user.shop && typeof user.shop === 'string') {
-        shopId = user.shop;
-      } else if (user.shopId) {
-        shopId = user.shopId;
-      } else {
-        // If no shop found, throw specific error
-        throw new Error('لا يوجد متجر مرتبط بهذا المستخدم');
-      }
+      
+      // // Try to get shop ID from different possible locations in user data
+      // if (user.shop && user.shop._id) {
+      //   shopId = user.shop._id;
+      // } else if (user.shop && typeof user.shop === 'string') {
+      //   shopId = user.shop;
+      // } else if (user.shopId) {
+      //   shopId = user.shopId;
+      // } else {
+      //   // If no shop found, throw specific error
+      //   throw new Error('لا يوجد متجر مرتبط بهذا المستخدم');
+      // }
 
       console.log('Loading products for shop:', shopId);
       const response = await productService.getProductsByShop(shopId);
       
       console.log('Products response:', response);
+      console.log(`successs: ${response.status}`);
       
-      if (response.success) {
+      if (response.status === "success") {
         setSellerProducts(response.data || []);
       } else {
         throw new Error(response.message || 'Failed to load products');
@@ -278,6 +287,29 @@ const SellerChatInterface = ({
     });
   };
 
+  // Format price helper function
+  const formatPrice = (price) => {
+    if (!price) return '0';
+    
+    // Handle MongoDB Decimal128 format
+    if (typeof price === 'object' && price.$numberDecimal) {
+      return parseFloat(price.$numberDecimal).toLocaleString('ar-EG');
+    }
+    
+    // Handle regular number
+    if (typeof price === 'number') {
+      return price.toLocaleString('ar-EG');
+    }
+    
+    // Handle string number
+    if (typeof price === 'string') {
+      const numPrice = parseFloat(price);
+      return isNaN(numPrice) ? '0' : numPrice.toLocaleString('ar-EG');
+    }
+    
+    return '0';
+  };
+
   // Format message content
   const formatMessageContent = (content) => {
     // Handle product messages with formatting
@@ -366,73 +398,73 @@ const SellerChatInterface = ({
             ) : (
               <div className={viewMode === 'grid' ? 'grid grid-cols-1 gap-3' : 'space-y-2'}>
                 {sellerProducts.map((product) => (
-                  <Card 
-                    key={product._id} 
-                    className="cursor-pointer hover:shadow-md transition-shadow duration-200 group"
-                    onClick={() => handleSendProduct(product)}
-                  >
-                    <CardContent className="p-3">
-                      {viewMode === 'grid' ? (
-                        <div>
-                          <div className="aspect-square rounded-lg overflow-hidden mb-2 bg-gray-100">
-                            {product.images && product.images[0] ? (
-                              <img 
-                                src={product.images[0]} 
-                                alt={product.title}
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
-                              />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center">
-                                <Image className="w-8 h-8 text-gray-400" />
-                              </div>
-                            )}
-                          </div>
-                          <h4 className="font-semibold text-sm text-gray-900 mb-1 line-clamp-2">
-                            {product.title}
-                          </h4>
-                          <p className="text-amber-600 font-bold text-sm mb-2">
-                            {product.price} ج.م
-                          </p>
-                          <div className="flex items-center justify-between text-xs text-gray-500">
-                            <div className="flex items-center gap-1">
-                              <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                              <span>{product.rating}</span>
-                            </div>
-                            <Badge 
-                              variant={product.inStock ? "secondary" : "destructive"}
-                              className="text-xs"
-                            >
-                              {product.inStock ? 'متوفر' : 'غير متوفر'}
-                            </Badge>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="flex gap-3">
-                          <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
-                            {product.images && product.images[0] ? (
-                              <img 
-                                src={product.images[0]} 
-                                alt={product.title}
-                                className="w-full h-full object-cover"
-                              />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center">
-                                <Image className="w-4 h-4 text-gray-400" />
-                              </div>
-                            )}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <h4 className="font-semibold text-sm text-gray-900 mb-1 truncate">
-                              {product.title}
-                            </h4>
-                            <p className="text-amber-600 font-bold text-xs">
-                              {product.price} ج.م
-                            </p>
-                          </div>
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
+                   <Card 
+                   key={product._id} 
+                   className="cursor-pointer hover:shadow-md transition-shadow duration-200 group"
+                   onClick={() => handleSendProduct(product)}
+                 >
+                   <CardContent className="p-3">
+                     {viewMode === 'grid' ? (
+                       <div>
+                         <div className="aspect-square rounded-lg overflow-hidden mb-2 bg-gray-100">
+                           {product.images && product.images[0] ? (
+                             <img 
+                               src={`${import.meta.env.VITE_API_BASE_URL}/product-image/${product.images[0]}`} 
+                               alt={product.title}
+                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                             />
+                           ) : (
+                             <div className="w-full h-full flex items-center justify-center">
+                               <Image className="w-8 h-8 text-gray-400" />
+                             </div>
+                           )}
+                         </div>
+                         <h4 className="font-semibold text-sm text-gray-900 mb-1 line-clamp-2">
+                           {product.title}
+                         </h4>
+                         <p className="text-amber-600 font-bold text-sm mb-2">
+                           {formatPrice(product.price)} ج.م
+                         </p>
+                         <div className="flex items-center justify-between text-xs text-gray-500">
+                           <div className="flex items-center gap-1">
+                             <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                             <span>{product.rating}</span>
+                           </div>
+                           <Badge 
+                             variant={product.inStock ? "secondary" : "destructive"}
+                             className="text-xs"
+                           >
+                             {product.inStock ? 'متوفر' : 'غير متوفر'}
+                           </Badge>
+                         </div>
+                       </div>
+                     ) : (
+                       <div className="flex gap-3">
+                         <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                           {product.images && product.images[0] ? (
+                             <img 
+                               src={product.images[0]} 
+                               alt={product.title}
+                               className="w-full h-full object-cover"
+                             />
+                           ) : (
+                             <div className="w-full h-full flex items-center justify-center">
+                               <Image className="w-4 h-4 text-gray-400" />
+                             </div>
+                           )}
+                         </div>
+                         <div className="flex-1 min-w-0">
+                           <h4 className="font-semibold text-sm text-gray-900 mb-1 truncate">
+                             {product.title}
+                           </h4>
+                           <p className="text-amber-600 font-bold text-xs">
+                             {formatPrice(product.price)} ج.م
+                           </p>
+                         </div>
+                       </div>
+                     )}
+                   </CardContent>
+                 </Card>
                 ))}
               </div>
             )}
