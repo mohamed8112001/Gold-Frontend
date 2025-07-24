@@ -320,6 +320,45 @@ const AdminDashboard = () => {
     }
   };
 
+  // دالة لفتح الـ PDF باستخدام API مع الـ token
+  const viewCommercialRecord = async (shop) => {
+    const shopId = shop._id || shop.id;
+
+    // التحقق من الـ token
+    const token = localStorage.getItem('token');
+    console.log('🔍 Token check:', {
+      hasToken: !!token,
+      tokenLength: token?.length,
+      tokenStart: token?.substring(0, 20) + '...',
+      shopId: shopId
+    });
+
+    if (!token) {
+      alert('❌ لا يوجد token. يرجى تسجيل الدخول مرة أخرى.');
+      return;
+    }
+
+    try {
+      console.log('📤 Attempting to download PDF for shop:', shopId);
+      await shopService.downloadCommercialRecord(shopId);
+      console.log('✅ PDF download successful');
+    } catch (error) {
+      console.error('❌ خطأ في عرض السجل التجاري:', error);
+      console.error('Error details:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status
+      });
+
+      if (error.response?.status === 401) {
+        alert('❌ انتهت صلاحية تسجيل الدخول. يرجى تسجيل الدخول مرة أخرى.');
+        // يمكن إضافة redirect للـ login هنا
+      } else {
+        alert('حدث خطأ في عرض السجل التجاري: ' + (error.message || 'خطأ غير معروف'));
+      }
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-yellow-50/30 to-amber-50/20 flex items-center justify-center pt-20">
@@ -719,10 +758,10 @@ const AdminDashboard = () => {
                                       size="sm"
                                       variant="outline"
                                       className="bg-blue-100 border-blue-300 text-blue-700 hover:bg-blue-200 px-3 py-2 rounded-lg"
-                                      onClick={() => window.open(`http://localhost:5005/commercial-record/${shop.commercialRecord}`, '_blank')}
+                                      onClick={() => viewCommercialRecord(shop)}
                                     >
                                       <FileText className="w-4 h-4 mr-2" />
-                                      عرض PDF
+                                      📄 عرض السجل التجاري
                                     </Button>
                                   </div>
                                 </div>
@@ -829,10 +868,10 @@ const AdminDashboard = () => {
                                   size="sm"
                                   variant="outline"
                                   className="bg-purple-50 border-purple-200 text-purple-700 hover:bg-purple-100 px-3 py-2 rounded-xl"
-                                  onClick={() => window.open(`http://localhost:5005/commercial-record/${shop.commercialRecord}`, '_blank')}
+                                  onClick={() => viewCommercialRecord(shop)}
                                 >
                                   <FileText className="w-4 h-4 mr-2" />
-                                  PDF
+                                  📄 السجل
                                 </Button>
                               )}
                               {!shop.isApproved && (
