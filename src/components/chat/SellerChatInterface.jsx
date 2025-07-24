@@ -135,12 +135,15 @@ const SellerChatInterface = ({
 
       console.log('Loading products for shop:', shopId);
       const response = await productService.getProductsByShop(shopId);
+      const selectedProduct = response.data.filter(product=>{
+        return product._id = conversation.product;
+      })
       
       console.log('Products response:', response);
       console.log(`successs: ${response.status}`);
       
       if (response.status === "success") {
-        setSellerProducts(response.data || []);
+        setSellerProducts(selectedProduct || []);
       } else {
         throw new Error(response.message || 'Failed to load products');
       }
