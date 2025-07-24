@@ -164,12 +164,16 @@ const AdminDashboard = () => {
 
     try {
       setIsLoading(true);
-      console.log('استدعاء shopService.approveShop بمعرف:', actualShopId);
+      console.log('استدعاء shopService.approveShopActivation بمعرف:', actualShopId);
 
-      const result = await shopService.approveShop(actualShopId);
+      const result = await shopService.approveShopActivation(actualShopId);
       console.log('نتيجة الموافقة:', result);
 
-      alert(`تم قبول متجر "${shopName}" بنجاح! سيظهر الآن للعملاء.`);
+      alert(
+        `✅ تم الموافقة على طلب تفعيل متجر "${shopName}" بنجاح!\n\n` +
+        '📧 تم إرسال إشعار فوري لصاحب المتجر\n' +
+        '💳 يمكن لصاحب المتجر الآن المتابعة لعملية الدفع'
+      );
 
       // إعادة تحميل البيانات لتعكس التغييرات
       console.log('جارٍ إعادة تحميل بيانات الإدارة...');
@@ -241,7 +245,7 @@ const AdminDashboard = () => {
         // تحديث كل متجر قديم
         for (const shop of legacyShops) {
           try {
-            await shopService.approveShop(shop._id || shop.id);
+            await shopService.approveShopActivation(shop._id || shop.id);
             console.log(`تم تحديث المتجر القديم: ${shop.name}`);
           } catch (error) {
             console.error(`فشل تحديث المتجر ${shop.name}:`, error);

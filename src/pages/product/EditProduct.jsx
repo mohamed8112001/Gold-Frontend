@@ -41,6 +41,13 @@ const EditProduct = () => {
             return;
         }
 
+        // Check if user has paid
+        if (!user.paid) {
+            alert('يجب إتمام عملية الدفع أولاً لتعديل المنتجات');
+            navigate('/owner-payment');
+            return;
+        }
+
         // Validate product ID
         if (!id) {
             console.error('❌ Product ID is missing from URL');
@@ -75,10 +82,29 @@ const EditProduct = () => {
 
             if (userShopData) {
                 console.log('✅ User shop found:', userShopData);
+
+                // Check shop approval status
+                if (userShopData.requestStatus !== 'approved') {
+                    let message = 'لا يمكن تعديل المنتجات حتى يتم اعتماد المتجر من قبل الإدارة.';
+
+                    if (userShopData.requestStatus === 'pending') {
+                        message += '\n\nحالة المتجر: في انتظار المراجعة';
+                    } else if (userShopData.requestStatus === 'rejected') {
+                        message += '\n\nحالة المتجر: مرفوض';
+                        if (userShopData.rejectionReason) {
+                            message += `\nالسبب: ${userShopData.rejectionReason}`;
+                        }
+                    }
+
+                    alert(message);
+                    navigate('/dashboard');
+                    return;
+                }
+
                 setUserShop(userShopData);
             } else {
                 console.log('❌ No shop found for user');
-                alert('You need to create a shop first before editing products');
+                alert('يجب إنشاء متجر أولاً قبل تعديل المنتجات');
                 navigate(ROUTES.CREATE_SHOP);
             }
         } catch (error) {

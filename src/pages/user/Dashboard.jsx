@@ -18,12 +18,14 @@ import {
   Package,
   Loader2,
   CheckCircle,
+  XCircle,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES } from '../../utils/constants.js';
 import dashboardService from '../../services/dashboardService.js';
 import { shopService } from '../../services/shopService.js';
 import ManageRatings from '../seller/ManageRatings.jsx';
+import { useShopNotifications } from '../../hooks/useShopNotifications.js';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -100,6 +102,44 @@ const Dashboard = () => {
     }
   };
 
+  // Function to refresh shop data
+  const refreshShopData = async () => {
+    try {
+      if (isShopOwner) {
+        const shopData = await dashboardService.getShopOwnerShop();
+        setShopInfo(shopData.data);
+        console.log('Shop data refreshed:', shopData.data);
+      }
+    } catch (err) {
+      console.error('Error refreshing shop data:', err);
+    }
+  };
+
+  // Auto-refresh shop data every 30 seconds to catch status updates
+  useEffect(() => {
+    if (!isShopOwner || !shopInfo) return;
+
+    const interval = setInterval(() => {
+      refreshShopData();
+    }, 30000); // Refresh every 30 seconds
+
+    return () => clearInterval(interval);
+  }, [isShopOwner, shopInfo]);
+
+  // استخدام hook الإشعارات
+  useShopNotifications(
+    // عند الموافقة
+    (data) => {
+      console.log('Shop approved, refreshing data...');
+      refreshShopData();
+    },
+    // عند الرفض
+    (data) => {
+      console.log('Shop rejected, refreshing data...');
+      refreshShopData();
+    }
+  );
+
   const handlePayment = async (shopId) => {
     const confirmed = window.confirm(
       'هل تريد المتابعة لدفع رسوم تفعيل المتجر؟\n\n' +
@@ -114,8 +154,7 @@ const Dashboard = () => {
         await shopService.payForShop(shopId);
 
         // Reload shop info
-        const shopData = await dashboardService.getShopOwnerShop();
-        setShopInfo(shopData.data);
+        await refreshShopData();
 
         alert('🎉 تم الدفع بنجاح! متجرك الآن نشط ومرئي للعملاء');
       } catch (err) {
@@ -302,12 +341,34 @@ const Dashboard = () => {
   const OverviewTab = () => (
     <div className="space-y-6">
       {/* Shop Status Alert for Overview */}
-      {isShopOwner && shopInfo && !shopInfo.isApproved && (
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+      {isShopOwner && shopInfo && shopInfo.requestStatus !== 'approved' && (
+        <div className={`border rounded-xl p-4 ${
+          shopInfo.requestStatus === 'pending'
+            ? 'bg-amber-50 border-amber-200'
+            : shopInfo.requestStatus === 'rejected'
+            ? 'bg-red-50 border-red-200'
+            : 'bg-gray-50 border-gray-200'
+        }`}>
           <div className="flex items-center">
-            <Clock className="w-5 h-5 text-amber-600 mr-3" />
+            <Clock className={`w-5 h-5 mr-3 ${
+              shopInfo.requestStatus === 'pending'
+                ? 'text-amber-600'
+                : shopInfo.requestStatus === 'rejected'
+                ? 'text-red-600'
+                : 'text-gray-600'
+            }`} />
             <div>
-              <p className="text-amber-800 font-medium">متجرك في انتظار الموافقة</p>
+              <p className={`font-medium ${
+                shopInfo.requestStatus === 'pending'
+                  ? 'text-amber-800'
+                  : shopInfo.requestStatus === 'rejected'
+                  ? 'text-red-800'
+                  : 'text-gray-800'
+              }`}>
+                {shopInfo.requestStatus === 'pending' && 'متجرك في انتظار الموافقة'}
+                {shopInfo.requestStatus === 'rejected' && 'تم رفض طلب تفعيل المتجر'}
+                {!shopInfo.requestStatus && 'يمكنك طلب تفعيل المتجر'}
+              </p>
               <p className="text-amber-700 text-sm">سيتم مراجعة طلبك من قبل الإدارة خلال 24-48 ساعة</p>
             </div>
           </div>
@@ -446,70 +507,143 @@ const Dashboard = () => {
     <div className="space-y-8">
       {/* Shop Status Alert */}
       {shopInfo && (
-        <div className={`rounded-xl p-6 border-l-4 ${shopInfo.isApproved && shopInfo.isPaid
-          ? 'bg-green-50 border-green-500'
-          : shopInfo.isApproved && !shopInfo.isPaid
-            ? 'bg-blue-50 border-blue-500'
-            : 'bg-amber-50 border-amber-500'
+        <div className={`rounded-xl p-6 border-l-4 ${
+          shopInfo.requestStatus === 'approved' && user?.paid
+            ? 'bg-green-50 border-green-500'
+            : shopInfo.requestStatus === 'approved' && !user?.paid
+              ? 'bg-blue-50 border-blue-500'
+              : shopInfo.requestStatus === 'rejected'
+                ? 'bg-red-50 border-red-500'
+                : 'bg-amber-50 border-amber-500'
           }`}>
           <div className="flex items-center">
-            <div className={`w-12 h-12 rounded-full flex items-center justify-center mr-4 ${shopInfo.isApproved && shopInfo.isPaid
-              ? 'bg-green-100'
-              : shopInfo.isApproved && !shopInfo.isPaid
-                ? 'bg-blue-100'
-                : 'bg-amber-100'
+            <div className={`w-12 h-12 rounded-full flex items-center justify-center mr-4 ${
+              shopInfo.requestStatus === 'approved' && user?.paid
+                ? 'bg-green-100'
+                : shopInfo.requestStatus === 'approved' && !user?.paid
+                  ? 'bg-blue-100'
+                  : shopInfo.requestStatus === 'rejected'
+                    ? 'bg-red-100'
+                    : 'bg-amber-100'
               }`}>
-              {shopInfo.isApproved && shopInfo.isPaid ? (
+              {shopInfo.requestStatus === 'approved' && user?.paid ? (
                 <CheckCircle className="w-6 h-6 text-green-600" />
-              ) : shopInfo.isApproved && !shopInfo.isPaid ? (
+              ) : shopInfo.requestStatus === 'approved' && !user?.paid ? (
                 <Clock className="w-6 h-6 text-blue-600" />
+              ) : shopInfo.requestStatus === 'rejected' ? (
+                <XCircle className="w-6 h-6 text-red-600" />
               ) : (
                 <Clock className="w-6 h-6 text-amber-600" />
               )}
             </div>
             <div className="flex-1">
-              <h3 className={`text-lg font-bold mb-1 ${shopInfo.isApproved && shopInfo.isPaid
-                ? 'text-green-800'
-                : shopInfo.isApproved && !shopInfo.isPaid
-                  ? 'text-blue-800'
-                  : 'text-amber-800'
+              <h3 className={`text-lg font-bold mb-1 ${
+                shopInfo.requestStatus === 'approved' && user?.paid
+                  ? 'text-green-800'
+                  : shopInfo.requestStatus === 'approved' && !user?.paid
+                    ? 'text-blue-800'
+                    : shopInfo.requestStatus === 'rejected'
+                      ? 'text-red-800'
+                      : 'text-amber-800'
                 }`}>
-                {shopInfo.isApproved && shopInfo.isPaid
+                {shopInfo.requestStatus === 'approved' && user?.paid
                   ? 'متجرك نشط ومرئي للعملاء'
-                  : shopInfo.isApproved && !shopInfo.isPaid
+                  : shopInfo.requestStatus === 'approved' && !user?.paid
                     ? 'متجرك معتمد - يتطلب الدفع'
-                    : 'متجرك في انتظار الموافقة'}
+                    : shopInfo.requestStatus === 'rejected'
+                      ? 'تم رفض طلب التفعيل'
+                      : shopInfo.requestStatus === 'pending'
+                        ? 'متجرك في انتظار الموافقة'
+                        : 'يمكنك طلب تفعيل المتجر'}
               </h3>
-              <p className={`text-sm ${shopInfo.isApproved && shopInfo.isPaid
-                ? 'text-green-700'
-                : shopInfo.isApproved && !shopInfo.isPaid
-                  ? 'text-blue-700'
-                  : 'text-amber-700'
+              <p className={`text-sm ${
+                shopInfo.requestStatus === 'approved' && user?.paid
+                  ? 'text-green-700'
+                  : shopInfo.requestStatus === 'approved' && !user?.paid
+                    ? 'text-blue-700'
+                    : shopInfo.requestStatus === 'rejected'
+                      ? 'text-red-700'
+                      : 'text-amber-700'
                 }`}>
-                {shopInfo.isApproved && shopInfo.isPaid
+                {shopInfo.requestStatus === 'approved' && user?.paid
                   ? 'متجرك معتمد ومدفوع ومرئي للعملاء. يمكنك الآن إدارة المنتجات والحجوزات.'
-                  : shopInfo.isApproved && !shopInfo.isPaid
+                  : shopInfo.requestStatus === 'approved' && !user?.paid
                     ? 'تم اعتماد متجرك من قبل الإدارة. يرجى إكمال عملية الدفع لتفعيل المتجر.'
-                    : 'تم إرسال طلبك بنجاح. سيتم مراجعته من قبل الإدارة خلال 24-48 ساعة.'}
+                    : shopInfo.requestStatus === 'rejected'
+                      ? `تم رفض طلب التفعيل. ${shopInfo.rejectionReason ? `السبب: ${shopInfo.rejectionReason}` : ''}`
+                      : shopInfo.requestStatus === 'pending'
+                        ? 'تم إرسال طلبك بنجاح. سيتم مراجعته من قبل الإدارة خلال 24-48 ساعة.'
+                        : 'يمكنك تقديم طلب تفعيل المتجر للمراجعة من قبل الإدارة.'}
               </p>
-              {!shopInfo.isApproved && (
-                <p className="text-xs text-amber-600 mt-2">
-                  📄 تم رفع السجل التجاري والمستندات المطلوبة • 🔔 ستتلقى إشعاراً عند الموافقة
-                </p>
-              )}
-              {shopInfo.isApproved && !shopInfo.isPaid && (
-                <div className="mt-4">
-                  <Button
-                    className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-2 rounded-lg"
-                    onClick={() => handlePayment(shopInfo._id || shopInfo.id)}
-                  >
-                    💳 ادفع الآن لتفعيل المتجر
-                  </Button>
-                  <p className="text-xs text-blue-600 mt-2">
-                    💰 رسوم التفعيل: 100 جنيه • 🔒 دفع آمن ومشفر
-                  </p>
-                </div>
-              )}
+              {/* Action buttons based on shop status */}
+              <div className="mt-4">
+                {shopInfo.requestStatus === 'pending' && (
+                  <div>
+                    <p className="text-xs text-amber-600 mb-2">
+                      📄 تم رفع السجل التجاري والمستندات المطلوبة • 🔔 ستتلقى إشعاراً عند الموافقة
+                    </p>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        onClick={() => navigate(`/shop/activation-request/${shopInfo._id}`)}
+                        className="text-amber-600 border-amber-300 hover:bg-amber-50"
+                      >
+                        عرض حالة الطلب
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={refreshShopData}
+                        className="text-blue-600 border-blue-300 hover:bg-blue-50"
+                        size="sm"
+                      >
+                        🔄 تحديث
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                {shopInfo.requestStatus === 'approved' && !user?.paid && (
+                  <div>
+                    <Button
+                      className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-2 rounded-lg mb-2"
+                      onClick={() => navigate('/owner-payment')}
+                    >
+                      💳 ادفع الآن لتفعيل المتجر
+                    </Button>
+                    <p className="text-xs text-blue-600">
+                      💰 رسوم التفعيل: 100 جنيه • 🔒 دفع آمن ومشفر
+                    </p>
+                  </div>
+                )}
+
+                {shopInfo.requestStatus === 'rejected' && (
+                  <div>
+                    <Button
+                      className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg mb-2"
+                      onClick={() => navigate(`/shop/activation-request/${shopInfo._id}`)}
+                    >
+                      إعادة تقديم الطلب
+                    </Button>
+                    <p className="text-xs text-red-600">
+                      يمكنك تعديل المتجر وإعادة تقديم طلب التفعيل
+                    </p>
+                  </div>
+                )}
+
+                {(!shopInfo.requestStatus || shopInfo.requestStatus === '') && (
+                  <div>
+                    <Button
+                      className="bg-[#A37F41] hover:bg-[#8B6A35] text-white px-6 py-2 rounded-lg mb-2"
+                      onClick={() => navigate(`/shop/activation-request/${shopInfo._id}`)}
+                    >
+                      طلب تفعيل المتجر
+                    </Button>
+                    <p className="text-xs text-gray-600">
+                      قدم طلب تفعيل المتجر للمراجعة من قبل الإدارة
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -523,7 +657,7 @@ const Dashboard = () => {
             <div className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] p-3 rounded-lg mr-4">
               <Store className="w-6 h-6 text-white" />
             </div>
-            <div>
+            <div className='mr-5'>
               <h3 className="text-xl font-bold font-cairo text-[#8A5700]">إدارة المتاجر</h3>
               <p className="text-sm font-tajawal text-[#A66A00]">إنشاء وإدارة المتاجر</p>
             </div>
@@ -563,7 +697,7 @@ const Dashboard = () => {
             <div className="bg-gradient-to-r from-[#A66A00] to-[#8A5700] p-3 rounded-lg mr-4">
               <Package className="w-6 h-6 text-white" />
             </div>
-            <div>
+            <div className='mr-5'>
               <h3 className="text-xl font-bold font-cairo text-[#8A5700]">إدارة المنتجات</h3>
               <p className="text-sm font-tajawal text-[#A66A00]">إدارة كتالوج المنتجات</p>
             </div>
@@ -574,10 +708,49 @@ const Dashboard = () => {
                 <span className="text-sm font-medium text-[#A66A00]">إجمالي المنتجات</span>
                 <span className="text-2xl font-bold text-[#8A5700]">{stats.products || 0}</span>
               </div>
+
+              {/* Product Management Requirements Alert */}
+              {shopInfo && (shopInfo.requestStatus !== 'approved' || !user?.paid) && (
+                <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                  <div className="flex items-start">
+                    <div className="flex-shrink-0">
+                      <svg className="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <div className="mr-3">
+                      <h4 className="text-sm font-medium text-amber-800">متطلبات إدارة المنتجات</h4>
+                      <div className="mt-1 text-sm text-amber-700">
+                        <p>لإضافة وإدارة المنتجات، يجب:</p>
+                        <ul className="list-disc list-inside mt-1 space-y-1">
+                          <li className={shopInfo.requestStatus === 'approved' ? 'text-green-600' : 'text-amber-700'}>
+                            {shopInfo.requestStatus === 'approved' ? '✅' : '⏳'} موافقة الأدمن على المتجر
+                          </li>
+                          <li className={user?.paid ? 'text-green-600' : 'text-amber-700'}>
+                            {user?.paid ? '✅' : '💳'} إتمام عملية الدفع
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="space-y-3">
                 <Button
-                  className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
-                  onClick={() => navigate(ROUTES.CREATE_PRODUCT)}
+                  className={`w-full rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ${
+                    shopInfo?.requestStatus === 'approved' && user?.paid
+                      ? 'bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white'
+                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  }`}
+                  onClick={() => {
+                    if (shopInfo?.requestStatus === 'approved' && user?.paid) {
+                      navigate(ROUTES.CREATE_PRODUCT);
+                    } else {
+                      alert('يجب موافقة الأدمن على المتجر وإتمام الدفع أولاً لإضافة المنتجات');
+                    }
+                  }}
+                  disabled={shopInfo?.requestStatus !== 'approved' || !user?.paid}
                   aria-label="Add new product"
                 >
                   <Plus className="w-4 h-4 mr-2" />
@@ -585,8 +758,19 @@ const Dashboard = () => {
                 </Button>
                 <Button
                   variant="outline"
-                  className="w-full border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
-                  onClick={() => navigate(ROUTES.MANAGE_SHOP)}
+                  className={`w-full rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ${
+                    shopInfo?.requestStatus === 'approved' && user?.paid
+                      ? 'border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6]'
+                      : 'border-gray-300 text-gray-500 cursor-not-allowed'
+                  }`}
+                  onClick={() => {
+                    if (shopInfo?.requestStatus === 'approved' && user?.paid) {
+                      navigate(ROUTES.MANAGE_SHOP);
+                    } else {
+                      alert('يجب موافقة الأدمن على المتجر وإتمام الدفع أولاً لإدارة المنتجات');
+                    }
+                  }}
+                  disabled={shopInfo?.requestStatus !== 'approved' || !user?.paid}
                   aria-label="Manage products"
                 >
                   <Package className="w-4 h-4 mr-2" />
@@ -603,7 +787,7 @@ const Dashboard = () => {
             <div className="bg-gradient-to-r from-[#8A5700] to-[#6D552C] p-3 rounded-lg mr-4">
               <Clock className="w-6 h-6 text-white" />
             </div>
-            <div>
+            <div className='mr-5'>
               <h3 className="text-xl font-bold font-cairo text-[#8A5700]">إدارة المواعيد</h3>
               <p className="text-sm font-tajawal text-[#A66A00]">إدارة المواعيد</p>
             </div>
@@ -644,14 +828,14 @@ const Dashboard = () => {
           <div className="bg-gradient-to-r from-[#6D552C] to-[#49391D] p-3 rounded-lg mr-4">
             <BarChart3 className="w-6 h-6 text-white" />
           </div>
-          <div>
+            <div className='mr-5'>
             <h3 className="text-2xl font-bold font-cairo text-[#8A5700]">إحصائيات المواعيد</h3>
             <p className="font-tajawal text-[#A66A00]">تتبع أداء المواعيد والمقاييس الخاصة بك</p>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 text-center">
-            <div className="flex items-center justify-center mb-3">
+            <div className="flex items-center justify-center mb-3 space-x-2">
               <CheckCircle className="w-8 h-8 text-green-600 mr-2" />
               <span className="text-sm font-medium text-[#A66A00]">محجوز</span>
             </div>
@@ -659,15 +843,15 @@ const Dashboard = () => {
             <p className="text-xs text-[#A66A00] mt-1">المواعيد المؤكدة</p>
           </div>
           <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 text-center">
-            <div className="flex items-center justify-center mb-3">
-              <Clock className="w-8 h-8 text-blue-600 mr-2" />
+            <div className="flex items-center justify-center mb-3 space-x-2">
+              <Clock className="w-8 h-8 text-blue-600 mr-2 " />
               <span className="text-sm font-medium text-[#A66A00]">Available</span>
             </div>
             <span className="text-3xl font-bold text-[#8A5700]">{stats.availableTimes || 0}</span>
             <p className="text-xs text-[#A66A00] mt-1">Open time slots</p>
           </div>
           <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 text-center">
-            <div className="flex items-center justify-center mb-3">
+            <div className="flex items-center justify-center mb-3 space-x-2">
               <Calendar className="w-8 h-8 text-purple-600 mr-2" />
               <span className="text-sm font-medium text-[#A66A00]">الإجمالي</span>
             </div>

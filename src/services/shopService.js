@@ -610,4 +610,54 @@ export const shopService = {
       );
     }
   },
+
+  // طلب تفعيل المتجر
+  requestShopActivation: async (shopId) => {
+    try {
+      const response = await api.patch(`/shop/${shopId}/request-activation`);
+      return response.data;
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.message || "Failed to request shop activation"
+      );
+    }
+  },
+
+  // موافقة الأدمن على طلب تفعيل المتجر
+  approveShopActivation: async (shopId) => {
+    try {
+      const response = await api.patch(`/shop/${shopId}/approve-activation`);
+      return response.data;
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.message || "Failed to approve shop activation"
+      );
+    }
+  },
+
+  // رفض الأدمن لطلب تفعيل المتجر
+  rejectShopActivation: async (shopId, reason) => {
+    try {
+      const response = await api.patch(`/shop/${shopId}/reject-activation`, {
+        reason: reason
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.message || "Failed to reject shop activation"
+      );
+    }
+  },
+
+  // الحصول على طلبات التفعيل المعلقة (للأدمن)
+  getPendingActivations: async () => {
+    try {
+      const response = await api.get("/shop/admin/pending-activations");
+      return response.data;
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.message || "Failed to fetch pending activations"
+      );
+    }
+  },
 };

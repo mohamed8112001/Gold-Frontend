@@ -15,6 +15,7 @@ import ShopDetails from './pages/shop/ShopDetails.jsx';
 import CreateShop from './pages/shop/CreateShop.jsx';
 import EditShop from './pages/shop/EditShop.jsx';
 import ManageShop from './pages/shop/ManageShop.jsx';
+import ShopActivationRequest from './pages/shop/ShopActivationRequest.jsx';
 import ProductList from './pages/product/ProductList.jsx';
 import ProductDetails from './pages/product/ProductDetails.jsx';
 import CreateProduct from './pages/product/CreateProduct.jsx';
@@ -31,6 +32,7 @@ import BookingsOnly from './pages/seller/BookingsOnly.jsx';
 import TimeManagement from './pages/seller/TimeManagement.jsx';
 import ManageRatings from './pages/seller/ManageRatings.jsx';
 import AdminDashboard from './pages/admin/AdminDashboard.jsx';
+import ShopActivationManagement from './pages/admin/ShopActivationManagement.jsx';
 import AboutUs from './pages/static/AboutUs.jsx';
 import ContactUs from './pages/static/ContactUs.jsx';
 import Careers from './pages/static/Careers.jsx';
@@ -56,23 +58,38 @@ import { useAuth } from './context/AuthContext.jsx';
 import SuccessPage from './components/ui/successPage.jsx';
 
 // Protected Route Component for better performance
-function ProtectedRoute({ children, requiresPayment = false }) {
+function ProtectedRoute({ children, requiresPayment = false, requiresApproval = false, requiresBoth = false }) {
   const { user, isShopOwner, isLoading } = useAuth();
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     if (isLoading) return;
-    console.log(`requiresPayment: ${requiresPayment} 
-      && isShopOwner: ${isShopOwner } 
-      && !user?.paid: ${!user?.paid}`);
-    
-    if (requiresPayment && isShopOwner && !user?.paid) {
-      alert(`user paid: ${!user?.paid}`)
+
+    // Check if both payment and approval are required (for products)
+    if (requiresBoth && isShopOwner) {
+      if (!user?.paid) {
+        console.log('🔄 Seller needs to pay for product management...');
+        navigate('/owner-payment', { replace: true });
+        return;
+      }
+      // Shop approval check will be handled by the component itself
+      // since we need to fetch shop data from the API
+    }
+
+    // Check if payment is required and user hasn't paid
+    else if (requiresPayment && isShopOwner && !user?.paid) {
+      console.log('🔄 Seller needs to pay, redirecting to payment page...');
       navigate('/owner-payment', { replace: true });
       return;
     }
-  }, [user, isShopOwner, isLoading, requiresPayment, navigate]);
-  
+
+    // Check if shop approval is required (for shop management features)
+    else if (requiresApproval && isShopOwner) {
+      // This will be handled by the individual components that need to check shop status
+      // since we need to fetch shop data from the API
+    }
+  }, [user, isShopOwner, isLoading, requiresPayment, requiresApproval, requiresBoth, navigate]);
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -112,13 +129,13 @@ function App() {
               <Route path="/shops" element={<ShopList />} />
               <Route path="/shops/:id" element={<ShopDetails />} />
               <Route path='/shops/:id/chat' element={<ShopChat />} />
-              <Route 
-                path="/shop/create" 
+              <Route
+                path="/shop/create"
                 element={
-                  <ProtectedRoute requiresPayment={true}>
+                  <ProtectedRoute>
                     <CreateShop />
                   </ProtectedRoute>
-                } 
+                }
               />
               <Route 
                 path="/shop/edit" 
@@ -136,33 +153,41 @@ function App() {
                   </ProtectedRoute>
                 } 
               />
-              <Route 
-                path="/shop/manage" 
+              <Route
+                path="/shop/manage"
                 element={
                   <ProtectedRoute requiresPayment={true}>
                     <ManageShop />
                   </ProtectedRoute>
-                } 
+                }
+              />
+              <Route
+                path="/shop/activation-request/:id"
+                element={
+                  <ProtectedRoute>
+                    <ShopActivationRequest />
+                  </ProtectedRoute>
+                }
               />
 
               {/* Product Routes - Protected for paid shop owners */}
               <Route path="/products" element={<ProductList />} />
               <Route path="/products/:id" element={<ProductDetails />} />
-              <Route 
-                path="/products/create" 
+              <Route
+                path="/products/create"
                 element={
-                  <ProtectedRoute requiresPayment={true}>
+                  <ProtectedRoute requiresBoth={true}>
                     <CreateProduct />
                   </ProtectedRoute>
-                } 
+                }
               />
-              <Route 
-                path="/products/edit/:id" 
+              <Route
+                path="/products/edit/:id"
                 element={
-                  <ProtectedRoute requiresPayment={true}>
+                  <ProtectedRoute requiresBoth={true}>
                     <EditProduct />
                   </ProtectedRoute>
-                } 
+                }
               />
               <Route path="/favorites" element={<FavoriteProducts />} />
 
@@ -218,6 +243,7 @@ function App() {
 
               {/* Admin Routes */}
               <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/admin/shop-activations" element={<ShopActivationManagement />} />
               <Route path="/admin/create" element={<CreateAdmin />} />
               <Route path="/admin/promote" element={<PromoteToAdmin />} />
               <Route path="/demo-login" element={<DemoAdminLogin />} />

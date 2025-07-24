@@ -89,14 +89,7 @@ const Login = () => {
       console.log('💳 Payment status:', res?.user?.paid);
       console.log('🏪 User role:', res?.user?.role);
 
-      // Check if user is a seller and hasn't paid
-      if (res?.user?.role === 'seller' && !res?.user?.paid) {
-        console.log('🔄 Seller needs to pay, redirecting to payment page...');
-        navigate('/owner-payment');
-        return;
-      }
-
-      // For regular customers or paid sellers
+      // For all users (customers and sellers)
       console.log('🏠 Redirecting to home page...');
       navigate(ROUTES.HOME);
 

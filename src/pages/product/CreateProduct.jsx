@@ -37,6 +37,14 @@ const CreateProduct = () => {
             navigate(ROUTES.LOGIN);
             return;
         }
+
+        // Check if user has paid
+        if (!user.paid) {
+            alert('يجب إتمام عملية الدفع أولاً لإضافة المنتجات');
+            navigate('/owner-payment');
+            return;
+        }
+
         loadUserShop();
     }, [user, isShopOwner, navigate]);
 
@@ -53,6 +61,25 @@ const CreateProduct = () => {
 
             if (userShopData) {
                 console.log('User shop found:', userShopData.name);
+
+                // Check shop approval status
+                if (userShopData.requestStatus !== 'approved') {
+                    let message = 'لا يمكن إضافة منتجات حتى يتم اعتماد المتجر من قبل الإدارة.';
+
+                    if (userShopData.requestStatus === 'pending') {
+                        message += '\n\nحالة المتجر: في انتظار المراجعة';
+                    } else if (userShopData.requestStatus === 'rejected') {
+                        message += '\n\nحالة المتجر: مرفوض';
+                        if (userShopData.rejectionReason) {
+                            message += `\nالسبب: ${userShopData.rejectionReason}`;
+                        }
+                    }
+
+                    alert(message);
+                    navigate('/dashboard');
+                    return;
+                }
+
                 setUserShop(userShopData);
             } else {
                 console.error('No shop found for user');
