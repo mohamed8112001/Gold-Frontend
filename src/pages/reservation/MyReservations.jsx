@@ -22,7 +22,7 @@ import { ROUTES } from '../../utils/constants';
 const MyReservations = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  
+
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -104,9 +104,9 @@ const MyReservations = () => {
   };
 
   const formatPrice = (price) => {
-    return parseFloat(price).toLocaleString('en-US', { 
-      minimumFractionDigits: 2, 
-      maximumFractionDigits: 2 
+    return parseFloat(price).toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
     });
   };
 
@@ -132,8 +132,8 @@ const MyReservations = () => {
         {error && (
           <div className="bg-red-50 border border-red-200 rounded-2xl p-4 mb-6">
             <p className="text-red-700 text-center">{error}</p>
-            <Button 
-              onClick={loadReservations} 
+            <Button
+              onClick={loadReservations}
               className="mt-2 mx-auto block"
               variant="outline"
             >
@@ -147,7 +147,7 @@ const MyReservations = () => {
             <Package className="w-16 h-16 text-gray-400 mx-auto mb-6" />
             <h2 className="text-2xl font-bold text-gray-900 mb-4">لا توجد حجوزات</h2>
             <p className="text-gray-600 mb-6">لم تقم بحجز أي منتجات بعد</p>
-            <Button 
+            <Button
               onClick={() => navigate(ROUTES.PRODUCTS)}
               className="bg-yellow-500 hover:bg-yellow-600"
             >
@@ -161,15 +161,15 @@ const MyReservations = () => {
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-start gap-4">
                     {reservation.productId?.logoUrl && (
-                      <img 
-                        src={reservation.productId.logoUrl} 
-                        alt={reservation.productId.name}
+                      <img
+                        src={`http://localhost:5006/uploads/product-images/${reservation.productId.images[0]}`}
+                        alt={reservation.productId.title}
                         className="w-16 h-16 object-cover rounded-lg"
                       />
                     )}
                     <div>
                       <h3 className="text-xl font-bold text-gray-900">
-                        {reservation.productId?.name || 'منتج غير متوفر'}
+                        {reservation.productId?.title || 'منتج غير متوفر'}
                       </h3>
                       <p className="text-gray-600 mt-1">
                         {reservation.shopId?.name || 'متجر غير متوفر'}
@@ -179,7 +179,7 @@ const MyReservations = () => {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="text-left">
                     <p className="text-sm text-gray-500">تاريخ الحجز</p>
                     <p className="font-semibold">{formatDate(reservation.reservationDate)}</p>
@@ -228,9 +228,9 @@ const MyReservations = () => {
                       </Button>
                     </>
                   )}
-                  
+
                   <Button
-                    onClick={() => navigate(`/reservation/${reservation.id}`)}
+                    onClick={() => navigate(`/products/${reservation.productId._id}`)}
                     variant="outline"
                   >
                     <Eye className="w-4 h-4 mr-2" />

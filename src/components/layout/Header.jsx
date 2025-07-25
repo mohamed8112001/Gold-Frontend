@@ -18,30 +18,22 @@ const Header = () => {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
-
-
   // Enhanced scroll detection effect
   useEffect(() => {
     const controlHeader = () => {
       const currentScrollY = window.scrollY;
 
-      // Show header when at top of page (more sensitive)
       if (currentScrollY < 5) {
         setIsVisible(true);
-      }
-      // Hide header when scrolling down (faster response)
-      else if (currentScrollY > lastScrollY && currentScrollY > 80) {
+      } else if (currentScrollY > lastScrollY && currentScrollY > 80) {
         setIsVisible(false);
-      }
-      // Show header when scrolling up (immediate response)
-      else if (currentScrollY < lastScrollY) {
+      } else if (currentScrollY < lastScrollY) {
         setIsVisible(true);
       }
 
       setLastScrollY(currentScrollY);
     };
 
-    // Throttle scroll events for better performance
     let ticking = false;
     const handleScroll = () => {
       if (!ticking) {
@@ -62,375 +54,277 @@ const Header = () => {
     navigate('/');
   };
 
-
-
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 w-full bg-white border-b border-secondary-2 shadow-sm z-50 font-cairo ${isVisible ? 'translate-y-0' : '-translate-y-full'
-          }`}
+        className={`fixed top-0 left-0 right-0 w-full bg-white/90 backdrop-blur-lg border-b border-amber-100/50 shadow-sm z-50 font-cairo transition-all duration-500 ease-in-out ${isVisible ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'}`}
         dir="rtl"
       >
-        <div className="relative w-full px-8 sm:px-12 lg:px-16 xl:px-20 overflow-hidden">
-          <div className="flex items-center justify-between h-28 min-w-0 py-4">
+        <div className="relative w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
+          <div className="flex items-center justify-between h-16 sm:h-20 md:h-24 lg:h-28 py-2 sm:py-3 md:py-4">
             {/* Right Section: Logo + Gold Prices + Navigation */}
-            <div className="flex items-center gap-8">
-              {/* Enhanced Logo - في أقصى اليمين */}
+            <div className="flex items-center gap-6 lg:gap-10">
+              {/* Enhanced Logo */}
               <Link to="/" className="flex items-center group relative">
-                <div className="flex items-center space-x-reverse space-x-6">
+                <div className="flex items-center space-x-reverse space-x-4">
                   <div className="relative">
-                    {/* Enhanced Logo Container */}
-                    <div className="relative w-16 h-16">
-                      {/* Logo Image */}
+                    <div className="relative w-14 h-14 sm:w-16 sm:h-16">
                       <img
                         src="/logo.webp"
                         alt="متجر الذهب"
-                        className="relative w-14 h-14 m-1 rounded-xl object-cover z-10"
+                        className="w-full h-full rounded-full object-cover ring-2 ring-amber-200/50 transition-transform duration-300 group-hover:scale-105"
                         onError={(e) => {
                           e.target.style.display = 'none';
                           e.target.nextSibling.style.display = 'flex';
                         }}
                       />
-
-                      {/* Fallback Logo */}
-                      <div className="absolute inset-1 bg-gradient-to-br from-[#C37C00] via-[#E6A500] to-[#A66A00] rounded-xl hidden items-center justify-center">
+                      <div className="absolute inset-0 bg-gradient-to-br from-amber-400 via-yellow-300 to-amber-600 rounded-full hidden items-center justify-center shadow-inner">
                         <div className="text-white text-xl font-bold">💍</div>
-                        <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-xl"></div>
+                        <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent rounded-full"></div>
                       </div>
-
                     </div>
                   </div>
-                  <div className="flex flex-col ml-6">
-                    {/* Main Title with Enhanced Effects */}
-                    <span className="text-3xl font-black font-cairo bg-gradient-to-r from-[#C37C00] via-[#E6A500] via-[#F4D03F] to-[#A66A00] bg-clip-text text-transparent tracking-wide">
+                  <div className="flex flex-col">
+                    <span className="text-2xl sm:text-3xl font-black font-cairo bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 bg-clip-text text-transparent tracking-tight group-hover:brightness-110 transition-all duration-300">
                       متجر الذهب
                     </span>
-
-                    {/* Subtitle */}
-                    <span className="text-xs text-[#8A5700] font-bold font-amiri tracking-widest mt-1">
-                      <span className="inline-block"></span>
-                      <span className="mx-1">ذهب فاخر</span>
-                      <span className="inline-block"></span>
+                    <span className="text-xs text-amber-700 font-semibold font-amiri tracking-wider mt-1 opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+                      ذهب فاخر
                     </span>
                   </div>
                 </div>
               </Link>
 
-              {/* Gold Prices - بجوار الشعار */}
+              {/* Gold Prices */}
               <div className="hidden lg:block">
                 <GoldPriceDisplay
-                  className="scale-90"
-                  updateInterval={300000} // Update every 5 minutes
+                  className="scale-95 hover:scale-100 transition-transform duration-300"
+                  updateInterval={300000}
                   compact={false}
                 />
               </div>
 
-              {/* Enhanced Interactive Navigation - بعد أسعار الذهب */}
-              <nav className="hidden lg:flex items-center space-x-reverse space-x-6" dir="rtl">
-              <Link
-                to="/home"
-                className="relative text-primary-900 hover:text-[#C37C00] font-bold font-cairo text-lg px-8 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-[#FFF8E6] hover:to-[#FFF0CC] hover:shadow-lg hover:scale-105 transition-all duration-300"
-              >
-                <span className="relative z-10">الرئيسية</span>
-              </Link>
-
-              <Link
-                to="/shops"
-                className="relative text-primary-900 hover:text-[#C37C00] font-bold font-cairo text-lg px-8 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-[#FFF8E6] hover:to-[#FFF0CC] hover:shadow-lg hover:scale-105 transition-all duration-300"
-              >
-                <span className="relative z-10">المتاجر</span>
-              </Link>
-
-              <Link
-                to="/products"
-                className="relative text-primary-900 hover:text-[#C37C00] font-bold font-cairo text-lg px-8 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-[#FFF8E6] hover:to-[#FFF0CC] hover:shadow-lg hover:scale-105 transition-all duration-300"
-              >
-                <span className="relative z-10">المنتجات</span>
-              </Link>
-
-              {(isAuthenticated && user && (isShopOwner)) && (
-                <Link
-                  to="/dashboard"
-                  className="relative text-primary-900 hover:text-[#C37C00] font-bold text-lg px-8 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-[#FFF8E6] hover:to-[#FFF0CC] hover:shadow-lg hover:scale-105 transition-all duration-300"
-                >
-                  <span className="relative z-10">لوحة التحكم</span>
-                </Link>
-              )}
-              {(isAuthenticated && user && (isRegularUser)) && (
-                <Link
-                  to="/favorites"
-                  className="relative text-primary-900 hover:text-[#C37C00] font-bold text-lg px-8 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-[#FFF8E6] hover:to-[#FFF0CC] hover:shadow-lg hover:scale-105 transition-all duration-300"
-                >
-                  <span className="relative z-10">المفضلة</span>
-                </Link>
-              )}
-              {isAdmin && (
-                <Link
-                  to="/admin"
-                  className="relative text-primary-900 hover:text-red-600 font-bold text-lg px-8 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 hover:shadow-lg hover:scale-105 transition-all duration-300"
-                >
-                  <span className="relative z-10">الإدارة</span>
-                </Link>
-              )}
-            </nav>
+              {/* Navigation */}
+              <nav className="hidden lg:flex items-center space-x-reverse space-x-4" dir="rtl">
+                {[
+                  { to: "/home", label: "الرئيسية" },
+                  { to: "/shops", label: "المتاجر" },
+                  { to: "/products", label: "المنتجات" },
+                  ...(isAuthenticated && user && isShopOwner ? [{ to: "/dashboard", label: "لوحة التحكم" }] : []),
+                  ...(isAuthenticated && user && isRegularUser ? [
+                    { to: "/favorites", label: "المفضلة" },
+                    { to: "/my-reservations", label: "حجوزاتي" }
+                  ] : []),
+                  ...(isAdmin ? [{ to: "/admin", label: "الإدارة", isAdmin: true }] : []),
+                ].map((item, index) => (
+                  <Link
+                    key={index}
+                    to={item.to}
+                    className={`relative text-amber-800 hover:text-amber-600 font-semibold font-cairo text-base px-6 py-3 rounded-xl hover:bg-amber-50/50 hover:shadow-md hover:scale-105 transition-all duration-300 ${item.isAdmin ? 'text-red-600 hover:text-red-700 hover:bg-red-50/50' : ''}`}
+                  >
+                    <span className="relative z-10">{item.label}</span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-amber-50/0 to-amber-100/30 rounded-xl opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+                  </Link>
+                ))}
+              </nav>
             </div>
 
-            {/* Left Section: Auth Buttons - في أقصى اليسار */}
-            <div className="hidden lg:flex items-center space-x-reverse space-x-20 flex-shrink-0">
+            {/* Left Section: Auth Buttons */}
+            <div className="hidden lg:flex items-center space-x-reverse space-x-6 flex-shrink-0">
               {isAuthenticated ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <div className="relative flex-shrink-0 cursor-pointer">
-                      <div className="w-12 h-12 bg-gradient-to-br from-[#C37C00] via-[#E6A500] to-[#A66A00] rounded-full flex items-center justify-center hover:scale-105 transition-all duration-300 shadow-md">
+                    <div className="relative flex-shrink-0 cursor-pointer group">
+                      <div className="w-12 h-12 bg-gradient-to-br from-amber-400 via-yellow-300 to-amber-600 rounded-full flex items-center justify-center hover:scale-110 transition-all duration-300 shadow-lg">
                         <span className="text-white font-bold text-base">
                           {user?.firstName?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'U'}
                         </span>
                       </div>
-                      <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-sm"></div>
+                      <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-400 rounded-full border-2 border-white shadow-sm animate-pulse"></div>
                     </div>
                   </DropdownMenuTrigger>
-
-                  <DropdownMenuContent align="end" className="w-80 bg-white border-2 border-[#C37C00]/30 rounded-2xl p-4 mt-2 backdrop-blur-sm">
-                    <div className="px-6 py-6 border-b border-[#C37C00]/20 mb-4 bg-gray-50 rounded-xl">
-                      <div className="flex items-center gap-5">
+                  <DropdownMenuContent align="end" className="w-80 bg-white/95 backdrop-blur-lg border border-amber-200/50 rounded-2xl p-4 mt-2 shadow-xl">
+                    <div className="px-5 py-5 border-b border-amber-100/50 mb-3 bg-amber-50/30 rounded-xl">
+                      <div className="flex items-center gap-4">
                         <div className="relative">
-                          <div className="w-16 h-16 bg-gradient-to-br from-[#C37C00] via-[#E6A500] to-[#A66A00] rounded-xl flex items-center justify-center ring-2 ring-white/50">
-                            <span className="text-white font-bold text-xl">
+                          <div className="w-14 h-14 bg-gradient-to-br from-amber-400 via-yellow-300 to-amber-600 rounded-xl flex items-center justify-center ring-2 ring-amber-100/50">
+                            <span className="text-white font-bold text-lg">
                               {user?.firstName?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'U'}
                             </span>
                           </div>
-                          <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+                          <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-400 rounded-full border-2 border-white"></div>
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="mb-1">
-                            <p className="font-bold text-[#8A5700] text-lg leading-tight truncate" title={user?.firstName || user?.email?.split('@')[0] || 'مستخدم'}>
-                              مرحباً، {user?.firstName || user?.email?.split('@')[0] || 'مستخدم'}
-                            </p>
-                          </div>
-                          <div className="mb-2">
-                            <p className="text-[#C37C00]/80 text-sm truncate" title={user?.email || 'لا يوجد بريد إلكتروني'}>
-                              {user?.email || 'لا يوجد بريد إلكتروني'}
-                            </p>
-                          </div>
-                          <div>
-                            <span className="inline-flex items-center text-xs font-semibold bg-gradient-to-r from-[#C37C00]/10 to-[#E6A500]/10 text-[#8A5700] px-3 py-1 rounded-full border border-[#C37C00]/20">
-                              {user?.role === 'admin' ? '👑 مدير النظام' :
-                                user?.role === 'seller' ? '🏪 صاحب متجر' : user?.role === 'customer' ? '👤 عضو ' : ""}
-                            </span>
-                          </div>
+                        <div className="flex-1 min-w-0 space-y-1">
+                          <p className="font-bold text-amber-800 text-base truncate" title={user?.firstName || user?.email?.split('@')[0] || 'مستخدم'}>
+                            مرحباً، {user?.firstName || user?.email?.split('@')[0] || 'مستخدم'}
+                          </p>
+                          <p className="text-amber-600/80 text-xs truncate" title={user?.email || 'لا يوجد بريد إلكتروني'}>
+                            {user?.email || 'لا يوجد بريد إلكتروني'}
+                          </p>
+                          <span className="inline-flex items-center text-xs font-semibold bg-amber-50/50 text-amber-700 px-3 py-1 rounded-full border border-amber-200/50">
+                            {user?.role === 'admin' ? '👑 مدير النظام' :
+                              user?.role === 'seller' ? '🏪 صاحب متجر' : user?.role === 'customer' ? '👤 عضو' : ''}
+                          </span>
                         </div>
                       </div>
                     </div>
                     <DropdownMenuItem asChild>
                       <Link
                         to="/profile"
-                        className="flex items-center gap-4 px-4 py-3 hover:bg-gray-100 cursor-pointer rounded-xl transition-all duration-300 group mx-1 mb-2"
+                        className="flex items-center gap-3 px-4 py-3 hover:bg-amber-50/50 rounded-xl transition-all duration-300 group"
                       >
-                        <div className="w-10 h-10 bg-gradient-to-br from-[#C37C00]/10 to-[#E6A500]/10 rounded-xl flex items-center justify-center group-hover:bg-gradient-to-br group-hover:from-[#C37C00]/20 group-hover:to-[#E6A500]/20 transition-all duration-300 border border-[#C37C00]/10 group-hover:border-[#C37C00]/30">
-                          <User className="w-5 h-5 text-[#8A5700] group-hover:text-[#C37C00] transition-colors duration-300" />
+                        <div className="w-9 h-9 bg-amber-50/30 rounded-xl flex items-center justify-center group-hover:bg-amber-100/50 transition-all duration-300 border border-amber-200/30 group-hover:border-amber-300/50">
+                          <User className="w-4 h-4 text-amber-700 group-hover:text-amber-600" />
                         </div>
                         <div className="flex flex-col">
-                          <span className="text-[#8A5700] font-bold text-base group-hover:text-[#C37C00] transition-colors duration-300">الملف الشخصي</span>
-                          <span className="text-[#C37C00]/60 text-xs">عرض وتعديل البيانات الشخصية</span>
+                          <span className="text-amber-800 font-semibold text-base group-hover:text-amber-600">الملف الشخصي</span>
+                          <span className="text-amber-600/70 text-xs">عرض وتعديل البيانات الشخصية</span>
                         </div>
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={handleLogout}
-                      className="flex items-center gap-4 px-4 py-3 hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 cursor-pointer rounded-xl transition-all duration-300 text-red-600 hover:text-red-700 group mx-1 border border-red-100 hover:border-red-200"
+                      className="flex items-center gap-3 px-4 py-3 hover:bg-red-50/50 rounded-xl transition-all duration-300 text-red-600 hover:text-red-700 group"
                     >
-                      <div className="w-10 h-10 bg-gradient-to-br from-red-50 to-red-100 rounded-xl flex items-center justify-center group-hover:bg-gradient-to-br group-hover:from-red-100 group-hover:to-red-200 transition-all duration-300 border border-red-200 group-hover:border-red-300">
-                        <LogOut className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
+                      <div className="w-9 h-9 bg-red-50/30 rounded-xl flex items-center justify-center group-hover:bg-red-100/50 transition-all duration-300 border border-red-200/30 group-hover:border-red-300/50">
+                        <LogOut className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
                       </div>
                       <div className="flex flex-col">
-                        <span className="font-bold text-base transition-colors duration-300">تسجيل الخروج</span>
+                        <span className="font-semibold text-base">تسجيل الخروج</span>
                         <span className="text-red-500/70 text-xs">إنهاء الجلسة الحالية</span>
                       </div>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <div className="flex items-center space-x-reverse space-x-6">
-                  {/* Enhanced Login Button */}
+                <div className="flex items-center space-x-reverse space-x-4">
                   <Button
                     variant="outline"
                     onClick={() => navigate('/login')}
-                    className="relative border-2 border-[#C37C00]/50 bg-white text-[#8A5700] hover:text-white hover:bg-gradient-to-r hover:from-[#C37C00] hover:to-[#E6A500] font-bold font-tajawal px-10 py-4 rounded-2xl transition-all duration-300"
+                    className="border-2 border-amber-300/50 bg-white text-amber-700 hover:text-white hover:bg-gradient-to-r hover:from-amber-400 hover:to-amber-600 font-semibold font-tajawal px-8 py-3 rounded-xl transition-all duration-300 hover:shadow-md"
                   >
-                    <span className="relative z-10 flex items-center gap-3">
-                      <span className="text-lg">🔑</span>
+                    <span className="flex items-center gap-2">
+                      <span className="text-base">🔑</span>
                       تسجيل الدخول
                     </span>
                   </Button>
-
-                  {/* Enhanced Register Button */}
                   <Button
                     onClick={() => navigate('/register')}
-                    className="relative bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] hover:from-[#E6A500] hover:to-[#C37C00] text-white font-bold font-tajawal px-10 py-4 rounded-2xl"
+                    className="bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-600 hover:from-amber-500 hover:to-amber-700 text-white font-semibold font-tajawal px-8 py-3 rounded-xl transition-all duration-300 hover:shadow-md relative overflow-hidden group"
                   >
-                    <span className="relative z-10 flex items-center gap-3">
-                      <span className="text-lg">✨</span>
+                    <span className="relative z-10 flex items-center gap-2">
+                      <span className="text-base">✨</span>
                       إنشاء حساب
-                      <span className="text-lg">🎯</span>
                     </span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </Button>
                 </div>
               )}
             </div>
 
-            {/* Enhanced Mobile menu button */}
+            {/* Mobile Menu Button */}
             <div className="lg:hidden ml-4">
               <Button
                 variant="ghost"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="text-[#C37C00] hover:bg-gray-100 p-4 rounded-2xl transition-all duration-300"
+                className="text-amber-600 hover:bg-amber-50/50 p-3 rounded-xl transition-all duration-300 hover:shadow-sm"
               >
-                {isMobileMenuOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
+                {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </Button>
             </div>
           </div>
 
-          {/* Enhanced Mobile Navigation */}
+          {/* Mobile Navigation */}
           {isMobileMenuOpen && (
-            <div className="lg:hidden py-8 border-t border-gray-200 bg-white">
-              {/* Mobile Gold Price Display */}
+            <div className="lg:hidden py-6 border-t border-amber-100/50 bg-white/95 backdrop-blur-lg">
               <div className="px-4 mb-6">
                 <GoldPriceDisplay
                   compact={true}
-                  className="w-full"
+                  className="w-full scale-95"
                 />
               </div>
-
-              <div className="flex flex-col space-y-4 px-4">
-                <Link
-                  to="/home"
-                  className="text-[#8A5700] hover:text-[#C37C00] font-bold text-lg px-8 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-[#FFF8E6] hover:to-[#FFF0CC] hover:shadow-lg hover:scale-105 transition-all duration-300"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  🏠 الرئيسية
-                </Link>
-
-                <Link
-                  to="/shops"
-                  className="text-[#8A5700] hover:text-[#C37C00] font-bold text-lg px-8 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-[#FFF8E6] hover:to-[#FFF0CC] hover:shadow-lg hover:scale-105 transition-all duration-300"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  🏪 المتاجر
-                </Link>
-
-                <Link
-                  to="/products"
-                  className="text-[#8A5700] hover:text-[#C37C00] font-bold text-lg px-8 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-[#FFF8E6] hover:to-[#FFF0CC] hover:shadow-lg hover:scale-105 transition-all duration-300"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  💎 المنتجات
-                </Link>
-
-                {(isAuthenticated && user) ? (
-                  <>
-                    <div className="flex items-center gap-4 py-6 px-8 bg-white rounded-2xl border-2 border-[#C37C00]/30 mb-6 backdrop-blur-sm">
-                      <div className="relative">
-                        <div className="w-16 h-16 bg-gradient-to-br from-[#C37C00] via-[#E6A500] to-[#A66A00] rounded-2xl flex items-center justify-center ring-2 ring-white/60">
-                          <span className="text-white font-bold text-2xl">
-                            {user?.firstName?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'U'}
-                          </span>
-                        </div>
-                        <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-3 border-white"></div>
+              {isAuthenticated && user ? (
+                <>
+                  <div className="flex items-center gap-4 py-5 px-6 bg-amber-50/30 rounded-2xl border border-amber-200/50 mb-6">
+                    <div className="relative">
+                      <div className="w-14 h-14 bg-gradient-to-br from-amber-400 via-yellow-300 to-amber-600 rounded-xl flex items-center justify-center ring-2 ring-amber-100/50">
+                        <span className="text-white font-bold text-lg">
+                          {user?.firstName?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'U'}
+                        </span>
                       </div>
-                      <div className="flex flex-col justify-center flex-1 min-w-0 space-y-1">
-                        <div>
-                          <span className="text-[#8A5700] font-bold text-xl leading-tight truncate block" title={user?.firstName || user?.email?.split('@')[0] || 'مستخدم'}>
-                            مرحباً، {user?.firstName || user?.email?.split('@')[0] || 'مستخدم'}
-                          </span>
-                        </div>
-                        <div>
-                          <span className="text-[#C37C00]/80 text-sm truncate block" title={user?.email || 'لا يوجد بريد إلكتروني'}>
-                            {user?.email || 'لا يوجد بريد إلكتروني'}
-                          </span>
-                        </div>
-                        <div>
-                          <span className="inline-flex items-center text-xs font-bold bg-gradient-to-r from-[#C37C00]/20 to-[#E6A500]/20 text-[#8A5700] px-3 py-1.5 rounded-full border border-[#C37C00]/30">
-                            {user?.role === 'admin' ? '👑 مدير النظام' :
-                              user?.role === 'shop_owner' ? '🏪 صاحب متجر' : '👤 عضو مميز'}
-                          </span>
-                        </div>
-                      </div>
+                      <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-400 rounded-full border-2 border-white"></div>
                     </div>
-                    {(isAdmin || isShopOwner) && (
-
+                    <div className="flex flex-col justify-center flex-1 min-w-0 space-y-1">
+                      <span className="text-amber-800 font-bold text-lg truncate block" title={user?.firstName || user?.email?.split('@')[0] || 'مستخدم'}>
+                        مرحباً، {user?.firstName || user?.email?.split('@')[0] || 'مستخدم'}
+                      </span>
+                      <span className="inline-flex items-center text-xs font-semibold bg-amber-50/50 text-amber-700 px-3 py-1 rounded-full border border-amber-200/50">
+                        {user?.role === 'admin' ? '👑 مدير النظام' :
+                          user?.role === 'shop_owner' ? '🏪 صاحب متجر' : '👤 عضو'}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex flex-col space-y-3 px-4">
+                    {[
+                      { to: "/home", label: "🏠 الرئيسية" },
+                      { to: "/shops", label: "🏪 المتاجر" },
+                      { to: "/products", label: "💎 المنتجات" },
+                      ...(isAdmin || isShopOwner ? [{ to: "/dashboard", label: "📊 لوحة التحكم" }] : []),
+                      ...(isRegularUser ? [
+                        { to: "/favorites", label: "❤️ المفضلة" },
+                        { to: "/my-reservations", label: "📅 حجوزاتي" }
+                      ] : []),
+                      ...(isAdmin ? [{ to: "/admin", label: "⚙️ لوحة الإدارة", isAdmin: true }] : []),
+                      { to: "/profile", label: "👤 الملف الشخصي" },
+                    ].map((item, index) => (
                       <Link
-                        to="/dashboard"
-                        className="text-[#8A5700] hover:text-[#C37C00] font-bold text-lg px-8 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-[#FFF8E6] hover:to-[#FFF0CC] hover:shadow-lg hover:scale-105 transition-all duration-300"
+                        key={index}
+                        to={item.to}
+                        className={`text-amber-800 hover:text-amber-600 font-semibold text-base px-6 py-3 rounded-xl hover:bg-amber-50/50 hover:shadow-md hover:scale-105 transition-all duration-300 ${item.isAdmin ? 'text-red-600 hover:text-red-700 hover:bg-red-50/50' : ''}`}
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
-                        📊 لوحة التحكم
+                        {item.label}
                       </Link>
-
-                    )}
-                    
-           
-
-                    {isAuthenticated && isRegularUser && (
-                      <Link
-                        to="/favorites"
-                        className="text-[#8A5700] hover:text-[#C37C00] font-bold text-lg px-8 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-[#FFF8E6] hover:to-[#FFF0CC] hover:shadow-lg hover:scale-105 transition-all duration-300"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        ❤️ المفضلة
-                      </Link>
-                    )}
-                    {isAdmin && (
-                      <Link
-                        to="/admin"
-                        className="text-red-600 hover:text-red-700 font-bold text-lg px-8 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 hover:shadow-lg hover:scale-105 transition-all duration-300"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        ⚙️ لوحة الإدارة
-                      </Link>
-                    )}
-                    <Link
-                      to="/profile"
-                      className="text-[#8A5700] hover:text-[#C37C00] font-bold text-lg px-8 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-[#FFF8E6] hover:to-[#FFF0CC] hover:shadow-lg hover:scale-105 transition-all duration-300"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      👤 الملف الشخصي
-                    </Link>
+                    ))}
                     <Button
                       variant="outline"
                       onClick={() => {
                         handleLogout();
                         setIsMobileMenuOpen(false);
                       }}
-                      className="w-full justify-center border-2 border-red-300 text-red-600 hover:text-white hover:bg-gradient-to-r hover:from-red-500 hover:to-red-700 font-bold text-lg py-3 rounded-2xl transition-all duration-300 hover:scale-105 mt-4"
+                      className="w-full justify-center border-2 border-red-200/50 text-red-600 hover:text-white hover:bg-gradient-to-r hover:from-red-500 hover:to-red-600 font-semibold text-base py-3 rounded-xl transition-all duration-300 hover:shadow-md"
                     >
                       🚪 تسجيل الخروج
                     </Button>
-                  </>
-                ) : (
-                  <div className="flex flex-col space-y-4 mt-6">
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        navigate('/login');
-                        setIsMobileMenuOpen(false);
-                      }}
-                      className="w-full border-2 border-[#C37C00]/40 text-[#8A5700] hover:text-white hover:bg-gradient-to-r hover:from-[#C37C00] hover:to-[#A66A00] font-bold text-lg py-4 rounded-2xl transition-all duration-300 hover:scale-105 bg-white"
-                    >
-                      🔑 تسجيل الدخول
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        navigate('/register');
-                        setIsMobileMenuOpen(false);
-                      }}
-                      className="w-full bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] hover:from-[#E6A500] hover:via-[#C37C00] hover:to-[#8A5700] text-white font-bold text-lg py-4 rounded-2xl transition-all duration-300 hover:scale-105 relative overflow-hidden group"
-                    >
-                      <span className="relative z-10">✨ إنشاء حساب</span>
-                      <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    </Button>
                   </div>
-                )}
-              </div>
+                </>
+              ) : (
+                <div className="flex flex-col space-y-4 px-4 mt-6">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      navigate('/login');
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="w-full border-2 border-amber-300/50 text-amber-700 hover:text-white hover:bg-gradient-to-r hover:from-amber-400 hover:to-amber-600 font-semibold text-base py-3 rounded-xl transition-all duration-300 hover:shadow-md"
+                  >
+                    🔑 تسجيل الدخول
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      navigate('/register');
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="w-full bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-600 hover:from-amber-500 hover:to-amber-700 text-white font-semibold text-base py-3 rounded-xl transition-all duration-300 hover:shadow-md relative overflow-hidden group"
+                  >
+                    <span className="relative z-10 flex items-center gap-2 justify-center">
+                      <span className="text-base">✨</span>
+                      إنشاء حساب
+                    </span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  </Button>
+                </div>
+              )}
             </div>
           )}
         </div>

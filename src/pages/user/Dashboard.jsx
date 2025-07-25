@@ -1204,13 +1204,13 @@ const Dashboard = () => {
                     </div>
 
                     <div className="space-y-3">
-                      <Button
+                      {/* <Button
                         onClick={() => navigate(ROUTES.SHOP_QR_CODE)}
                         className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white"
                       >
                         <QrCode className="w-4 h-4 mr-2" />
                         📱 QR Code المتجر
-                      </Button>
+                      </Button> */}
 
                       <Button
                         onClick={downloadQRCode}

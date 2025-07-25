@@ -470,7 +470,7 @@ const ProductList = () => {
                             alt={safeProduct.name}
                             className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-1000 ease-out"
                             onError={(e) => {
-                                console.log('❌ Product image failed to load:', e.target.src);
+                                console.log('Product image failed to load:', e.target.src);
                                 e.target.style.display = 'none';
                                 const fallback = e.target.parentElement.querySelector('.fallback-image');
                                 if (fallback) {
@@ -516,8 +516,6 @@ const ProductList = () => {
                             {PRODUCT_CATEGORIES[safeProduct.category.toUpperCase()] || safeProduct.category}
                         </Badge>
                     )}
-
-
                 </div>
 
                 <div className={`p-5 flex flex-col h-full ${isListView ? 'justify-between' : ''} relative z-10`}>
