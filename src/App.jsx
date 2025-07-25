@@ -42,6 +42,7 @@ import ContactUs from './pages/static/ContactUs.jsx';
 import Careers from './pages/static/Careers.jsx';
 import News from './pages/static/News.jsx';
 import HelpCenter from './pages/static/HelpCenter.jsx';
+import RatingTest from './pages/test/RatingTest.jsx';
 import FAQ from './pages/static/FAQ.jsx';
 import TermsConditions from './pages/static/TermsConditions.jsx';
 import ReturnsPolicy from './pages/static/ReturnsPolicy.jsx';
@@ -101,7 +102,7 @@ function ProtectedRoute({ children, requiresPayment = false, requiresApproval = 
       </div>
     );
   }
-  
+
   return children;
 }
 
@@ -115,6 +116,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/home" element={<Home />} />
               <Route path="/test" element={<TestPage />} />
+              <Route path="/test-rating" element={<RatingTest />} />
               <Route path="/colors" element={<NewColorShowcase />} />
 
               {/* Auth Routes */}
@@ -141,21 +143,21 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              <Route 
-                path="/shop/edit" 
+              <Route
+                path="/shop/edit"
                 element={
                   <ProtectedRoute requiresPayment={true}>
                     <EditShop />
                   </ProtectedRoute>
-                } 
+                }
               />
-              <Route 
-                path="/shop/edit/:id" 
+              <Route
+                path="/shop/edit/:id"
                 element={
                   <ProtectedRoute requiresPayment={true}>
                     <EditShop />
                   </ProtectedRoute>
-                } 
+                }
               />
               <Route
                 path="/shop/manage"
@@ -218,45 +220,45 @@ function App() {
               <Route path="/book-appointment/:shopId" element={<BookAppointment />} />
               <Route path="/booking/:shopId" element={<BookAppointment />} />
               <Route path="/my-bookings" element={<MyBookings />} />
-              <Route 
-                path="/bookings/manage" 
+              <Route
+                path="/bookings/manage"
                 element={
                   <ProtectedRoute requiresPayment={true}>
                     <ManageBookings />
                   </ProtectedRoute>
-                } 
+                }
               />
-              <Route 
-                path="/manage-times" 
+              <Route
+                path="/manage-times"
                 element={
                   <ProtectedRoute requiresPayment={true}>
                     <ManageTimes />
                   </ProtectedRoute>
-                } 
+                }
               />
-              <Route 
-                path="/bookings-only" 
+              <Route
+                path="/bookings-only"
                 element={
                   <ProtectedRoute requiresPayment={true}>
                     <BookingsOnly />
                   </ProtectedRoute>
-                } 
+                }
               />
-              <Route 
-                path="/time-management" 
+              <Route
+                path="/time-management"
                 element={
                   <ProtectedRoute requiresPayment={true}>
                     <TimeManagement />
                   </ProtectedRoute>
-                } 
+                }
               />
-              <Route 
-                path="/manage-ratings" 
+              <Route
+                path="/manage-ratings"
                 element={
                   <ProtectedRoute requiresPayment={true}>
                     <ManageRatings />
                   </ProtectedRoute>
-                } 
+                }
               />
 
               {/* Admin Routes */}
