@@ -92,6 +92,50 @@ const ShopActivationManagement = () => {
     setRejectionReason('');
   };
 
+  // دالة لعرض السجل التجاري
+  const viewCommercialRecord = async (shop) => {
+    const shopId = shop._id || shop.id;
+
+    try {
+      console.log('📤 Attempting to view commercial record for shop:', shopId);
+      const result = await shopService.downloadCommercialRecord(shopId);
+      console.log('✅ Commercial record viewed successfully:', result);
+
+      if (result.method === 'fallback') {
+        console.log('ℹ️ Used fallback method to open PDF');
+      }
+    } catch (error) {
+      console.error('❌ خطأ في عرض السجل التجاري:', error);
+
+      // محاولة الطريقة البديلة المباشرة
+      if (error.status !== 404) {
+        console.log('🔄 Trying direct method as last resort');
+        try {
+          await shopService.viewCommercialRecordDirect(shopId);
+          console.log('✅ Direct method successful');
+          return;
+        } catch (directError) {
+          console.error('❌ Direct method also failed:', directError);
+        }
+      }
+
+      // عرض رسالة خطأ مناسبة للمستخدم
+      let errorMessage = 'حدث خطأ في عرض السجل التجاري';
+
+      if (error.status === 401) {
+        errorMessage = 'انتهت صلاحية تسجيل الدخول. يرجى تسجيل الدخول مرة أخرى.';
+      } else if (error.status === 404) {
+        errorMessage = 'لم يتم العثور على ملف السجل التجاري.';
+      } else if (error.status === 403) {
+        errorMessage = 'ليس لديك صلاحية لعرض هذا الملف.';
+      } else if (error.message.includes('Popup blocked')) {
+        errorMessage = 'تم حظر النوافذ المنبثقة. يرجى السماح بالنوافذ المنبثقة لهذا الموقع.';
+      }
+
+      alert(`❌ ${errorMessage}`);
+    }
+  };
+
   if (!user || !isAdmin) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -242,7 +286,7 @@ const ShopActivationManagement = () => {
                     </Button>
                     {shop.commercialRecord && (
                       <Button
-                        onClick={() => window.open(`${import.meta.env.VITE_API_BASE_URL}/uploads/${shop.commercialRecord}`, '_blank')}
+                        onClick={() => viewCommercialRecord(shop)}
                         variant="outline"
                       >
                         <Eye className="w-4 h-4 mr-2" />

@@ -344,22 +344,46 @@ const AdminDashboard = () => {
 
     try {
       console.log('📤 Attempting to download PDF for shop:', shopId);
-      await shopService.downloadCommercialRecord(shopId);
-      console.log('✅ PDF download successful');
+      const result = await shopService.downloadCommercialRecord(shopId);
+      console.log('✅ PDF download successful:', result);
+
+      if (result.method === 'fallback') {
+        console.log('ℹ️ Used fallback method to open PDF');
+      }
     } catch (error) {
       console.error('❌ خطأ في عرض السجل التجاري:', error);
       console.error('Error details:', {
         message: error.message,
-        response: error.response?.data,
-        status: error.response?.status
+        status: error.status,
+        originalError: error.originalError
       });
 
-      if (error.response?.status === 401) {
-        alert('❌ انتهت صلاحية تسجيل الدخول. يرجى تسجيل الدخول مرة أخرى.');
-        // يمكن إضافة redirect للـ login هنا
-      } else {
-        alert('حدث خطأ في عرض السجل التجاري: ' + (error.message || 'خطأ غير معروف'));
+      // محاولة الطريقة البديلة المباشرة
+      if (error.status !== 404) {
+        console.log('🔄 Trying direct method as last resort');
+        try {
+          await shopService.viewCommercialRecordDirect(shopId);
+          console.log('✅ Direct method successful');
+          return;
+        } catch (directError) {
+          console.error('❌ Direct method also failed:', directError);
+        }
       }
+
+      // عرض رسالة خطأ مناسبة للمستخدم
+      let errorMessage = 'حدث خطأ في عرض السجل التجاري';
+
+      if (error.status === 401) {
+        errorMessage = 'انتهت صلاحية تسجيل الدخول. يرجى تسجيل الدخول مرة أخرى.';
+      } else if (error.status === 404) {
+        errorMessage = 'لم يتم العثور على ملف السجل التجاري.';
+      } else if (error.status === 403) {
+        errorMessage = 'ليس لديك صلاحية لعرض هذا الملف.';
+      } else if (error.message.includes('Popup blocked')) {
+        errorMessage = 'تم حظر النوافذ المنبثقة. يرجى السماح بالنوافذ المنبثقة لهذا الموقع.';
+      }
+
+      alert(`❌ ${errorMessage}`);
     }
   };
 
