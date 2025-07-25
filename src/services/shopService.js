@@ -594,28 +594,95 @@ export const shopService = {
       console.log("📤 Downloading PDF for shop:", shopId);
       const response = await api.get(`/shop/${shopId}/commercial-record`, {
         responseType: "blob", // مهم للـ PDF
+        timeout: 30000, // 30 seconds timeout
       });
 
       console.log("📥 PDF response received:", response.status);
+
+      // التحقق من نوع المحتوى
+      const contentType = response.headers['content-type'];
+      if (!contentType || !contentType.includes('application/pdf')) {
+        console.warn("⚠️ Response is not a PDF, trying fallback method");
+        throw new Error("Invalid content type received");
+      }
 
       // إنشاء URL للـ blob
       const blob = new Blob([response.data], { type: "application/pdf" });
       const url = window.URL.createObjectURL(blob);
 
       // فتح الـ PDF في تبويب جديد
-      window.open(url, "_blank");
+      const newWindow = window.open(url, "_blank");
+
+      // التحقق من نجاح فتح النافذة
+      if (!newWindow) {
+        console.warn("⚠️ Popup blocked, trying download instead");
+        // إنشاء رابط تحميل
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `commercial-record-${shopId}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
 
       // تنظيف الـ URL بعد فترة
       setTimeout(() => {
         window.URL.revokeObjectURL(url);
-      }, 1000);
+      }, 5000);
 
       return { success: true };
     } catch (error) {
       console.error("❌ PDF download error:", error);
-      throw new Error(
-        error.response?.data?.message || "Failed to download commercial record"
+
+      // محاولة الطريقة البديلة - فتح الرابط مباشرة
+      if (error.response?.status !== 404) {
+        console.log("🔄 Trying fallback method - direct URL");
+        try {
+          const fallbackUrl = `${import.meta.env.VITE_API_BASE_URL}/commercial-record/${shopId}`;
+          const newWindow = window.open(fallbackUrl, "_blank");
+
+          if (!newWindow) {
+            throw new Error("Popup blocked and fallback failed");
+          }
+
+          console.log("✅ Fallback method successful");
+          return { success: true, method: "fallback" };
+        } catch (fallbackError) {
+          console.error("❌ Fallback method also failed:", fallbackError);
+        }
+      }
+
+      // رمي الخطأ الأصلي مع معلومات إضافية
+      const enhancedError = new Error(
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to download commercial record"
       );
+      enhancedError.status = error.response?.status;
+      enhancedError.originalError = error;
+
+      throw enhancedError;
+    }
+  },
+
+  // طريقة بديلة لعرض السجل التجاري باستخدام الرابط المباشر
+  viewCommercialRecordDirect: (shopId) => {
+    try {
+      const baseURL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5001";
+      const directUrl = `${baseURL}/commercial-record/${shopId}`;
+
+      console.log("🔗 Opening commercial record directly:", directUrl);
+
+      const newWindow = window.open(directUrl, "_blank");
+
+      if (!newWindow) {
+        throw new Error("Popup blocked - please allow popups for this site");
+      }
+
+      return { success: true, url: directUrl };
+    } catch (error) {
+      console.error("❌ Error opening commercial record directly:", error);
+      throw error;
     }
   },
 
