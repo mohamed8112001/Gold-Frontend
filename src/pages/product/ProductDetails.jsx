@@ -10,13 +10,13 @@ import ProductInfoCard from '../../components/product/ProductInfoCard';
 import ProductDetailsTabs from '../../components/product/ProductDetailsTabs';
 import ShopInfoSidebar from '../../components/product/ShopInfoSidebar';
 import ShopChatInterface from '../../components/ui/shop_chat_interface';
+import ProductRating from '../../components/rating/ProductRating';
 // Import services
 import { productService } from '../../services/productService.js';
 import { shopService } from '../../services/shopService.js';
 import { rateService } from '../../services/rateService.js';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES, PRODUCT_CATEGORIES } from '../../utils/constants.js';
-
 
 const ProductDetails = () => {
     const { id } = useParams();
@@ -42,7 +42,6 @@ const ProductDetails = () => {
             setIsLoading(true);
             setError(null);
 
-            // Load product details
             console.log('🔍 Loading product details for ID:', id);
             const productResponse = await productService.getProduct(id);
             const productData = productResponse.data || productResponse;
@@ -53,7 +52,6 @@ const ProductDetails = () => {
                 throw new Error('Product not found');
             }
 
-            // Process product data to match our component structure
             const processedProduct = {
                 ...productData,
                 name: productData.title || productData.name,
@@ -61,7 +59,6 @@ const ProductDetails = () => {
                 weight: parseFloat(productData.weight?.$numberDecimal || productData.weight || 0),
                 shopId: productData.shop?._id,
                 shopName: productData.shop?.name,
-                // Default values for missing fields
                 rating: productData.rating || productData.averageRating || 4.5,
                 reviewCount: productData.reviewCount || 0,
                 soldCount: productData.soldCount || 0,
@@ -96,13 +93,11 @@ const ProductDetails = () => {
 
             setProduct(processedProduct);
 
-            // Set main image - prioritize logoUrl, then first image
             const imageToShow = productData.logoUrl || (productData.images && productData.images[0]);
             if (imageToShow) {
                 setMainImage(imageToShow);
             }
 
-            // Load shop details if shop ID exists
             if (productData.shop?._id) {
                 console.log('🏪 Loading shop details for ID:', productData.shop._id);
                 try {
@@ -111,7 +106,6 @@ const ProductDetails = () => {
 
                     console.log('🏪 Shop data loaded:', shopData);
 
-                    // Process shop data
                     const processedShop = {
                         ...shopData,
                         rating: shopData.averageRating || shopData.rating || 4.0,
@@ -130,17 +124,14 @@ const ProductDetails = () => {
                     setShop(processedShop);
                 } catch (shopError) {
                     console.error('❌ Error loading shop details:', shopError);
-                    // Continue without shop data
                 }
             }
 
-            // Load reviews if available
             try {
                 console.log('⭐ Loading reviews for product:', id);
                 const reviewsResponse = await rateService.getAllRates({ productId: id });
                 const reviewsData = reviewsResponse.data || reviewsResponse || [];
 
-                // Process reviews data
                 const processedReviews = reviewsData.map(review => ({
                     ...review,
                     id: review._id || review.id,
@@ -163,12 +154,9 @@ const ProductDetails = () => {
                 setReviews([]);
             }
 
-            // Check if product is favorited (if user is logged in)
             if (user) {
                 try {
-                    // You can implement this check if you have a favorites API
-                    // const favoritesResponse = await productService.checkFavorite(id);
-                    // setIsFavorited(favoritesResponse.isFavorited);
+                    // Placeholder for favorites API check
                 } catch (error) {
                     console.log('Could not check favorite status');
                 }
@@ -239,10 +227,10 @@ const ProductDetails = () => {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] via-white to-[#FFF8E6] flex items-center justify-center">
+            <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 flex items-center justify-center" aria-live="polite">
                 <div className="text-center">
-                    <div className="animate-spin rounded-full h-16 w-16 border-4 border-[#C37C00] border-t-transparent mx-auto mb-6"></div>
-                    <p className="text-gray-600 text-lg">جاري تحميل تفاصيل المنتج...</p>
+                    <div className="animate-spin rounded-full h-16 w-16 border-4 border-t-amber-500 border-r-amber-500 border-b-gray-200 border-l-gray-200 mx-auto mb-6"></div>
+                    <p className="text-gray-600 dark:text-gray-300 text-lg font-medium">جاري تحميل تفاصيل المنتج...</p>
                 </div>
             </div>
         );
@@ -250,16 +238,24 @@ const ProductDetails = () => {
 
     if (error || !product) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] to-[#FFF0CC] flex items-center justify-center">
+            <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 flex items-center justify-center" aria-live="polite">
                 <div className="text-center">
                     <div className="text-6xl mb-4">❌</div>
-                    <h2 className="text-3xl font-bold text-gray-900 mb-2">Product Not Found</h2>
-                    <p className="text-gray-600 mb-6">{error || 'The requested product could not be found'}</p>
+                    <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Product Not Found</h2>
+                    <p className="text-gray-600 dark:text-gray-300 mb-6">{error || 'The requested product could not be found'}</p>
                     <div className="flex gap-4 justify-center">
-                        <Button onClick={() => navigate(-1)} variant="outline">
+                        <Button
+                            onClick={() => navigate(-1)}
+                            variant="outline"
+                            className="border-2 border-gray-300 dark:border-gray-600 hover:border-amber-500 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md px-4 py-2 transition-all duration-300"
+                            aria-label="Go back"
+                        >
                             العودة
                         </Button>
-                        <Button onClick={() => navigate(ROUTES.PRODUCTS)} className="bg-yellow-500 hover:bg-yellow-600">
+                        <Button
+                            onClick={() => navigate(ROUTES.PRODUCTS)}
+                            className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-md px-4 py-2 transition-all duration-300"
+                        >
                             Browse Products
                         </Button>
                     </div>
@@ -269,32 +265,33 @@ const ProductDetails = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] via-white to-[#FFF8E6]">
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 font-inter">
             {/* Enhanced Header with Breadcrumb */}
-            <div className="bg-white  border-b sticky top-0 z-40">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-                    <div className="flex items-center gap-3 text-sm text-gray-600">
+            <div className="bg-white dark:bg-gray-800 border-b sticky top-0 z-40">
+                <div className="w-full px-4 sm:px-6 lg:px-8 py-4">
+                    <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-300">
                         <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => navigate(-1)}
-                            className="flex items-center gap-2 hover:bg-gray-50 transition-all duration-200 rounded-lg px-3 py-2"
+                            className="flex items-center gap-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 rounded-md px-3 py-2"
+                            aria-label="Go back"
                         >
                             <ArrowLeft className="w-4 h-4" />
                             العودة
                         </Button>
-                        <ChevronRight className="w-4 h-4 text-gray-400" />
+                        <ChevronRight className="w-4 h-4 text-gray-400 dark:text-gray-500" />
                         <span
-                            className="hover:text-yellow-600 cursor-pointer transition-colors"
+                            className="hover:text-amber-600 dark:hover:text-amber-400 cursor-pointer transition-colors"
                             onClick={() => navigate(ROUTES.PRODUCTS)}
                         >
                             Products
                         </span>
-                        <ChevronRight className="w-4 h-4 text-gray-400" />
-                        <span className="text-gray-900 font-medium truncate">{product.name}</span>
+                        <ChevronRight className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+                        <span className="text-gray-900 dark:text-white font-medium truncate">{product.name}</span>
 
                         <div className="ml-auto flex items-center gap-2">
-                            <Button variant="ghost" size="sm" className="text-gray-500 hover:text-gray-700">
+                            <Button variant="ghost" size="sm" className="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white transition-all duration-300">
                                 <Share2 className="w-4 h-4" />
                             </Button>
                         </div>
@@ -302,17 +299,21 @@ const ProductDetails = () => {
                 </div>
             </div>
 
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="w-full px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
                 {/* Product Tags */}
-                <div className="flex flex-wrap gap-2 mb-6">
+                <div className="flex flex-col sm:flex-row gap-2 mb-6">
                     {product.tags?.map((tag, index) => (
-                        <Badge key={index} variant="secondary" className="capitalize">
+                        <Badge
+                            key={index}
+                            variant="secondary"
+                            className="capitalize bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200 px-3 py-1 text-xs font-medium hover:bg-amber-200 dark:hover:bg-amber-800 transition-colors duration-300"
+                        >
                             {tag}
                         </Badge>
                     ))}
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-12">
                     {/* Product Images */}
                     <ProductImageGallery
                         product={product}
@@ -320,6 +321,7 @@ const ProductDetails = () => {
                         setMainImage={setMainImage}
                         selectedImage={selectedImage}
                         setSelectedImage={setSelectedImage}
+                        className="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-6"
                     />
 
                     {/* Product Info */}
@@ -333,26 +335,34 @@ const ProductDetails = () => {
                         onBookAppointment={handleBookAppointment}
                         onVisitShop={handleVisitShop}
                         onAddToFavorites={handleAddToFavorites}
+                        className="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-6"
                     />
                 </div>
 
                 {/* Product Details and Shop Info */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
                     <div className="lg:col-span-2">
                         <ProductDetailsTabs
                             product={product}
                             reviews={reviews}
+                            className="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-6"
                         />
                     </div>
 
                     {/* Shop Info Sidebar */}
-                    <div>
+                    <div className="sticky top-24">
                         <ShopInfoSidebar
                             shop={shop}
                             onVisitShop={handleVisitShop}
                             onOpenChat={handleOpenChat}
+                            className="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-6"
                         />
                     </div>
+                </div>
+
+                {/* Product Rating Section */}
+                <div className="w-full">
+                    <ProductRating productId={id} showForm={true} className="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-6" />
                 </div>
             </div>
 
@@ -363,6 +373,7 @@ const ProductDetails = () => {
                 shop={shop}
                 user={user}
                 product={product}
+                className="chat-animation"
             />
         </div>
     );
