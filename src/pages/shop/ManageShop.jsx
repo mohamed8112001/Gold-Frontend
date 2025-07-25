@@ -20,8 +20,11 @@ import {
     Shield,
     Tag,
     ShoppingCart,
-    MapPin
+    MapPin,
+    QrCode,
+    Download
 } from 'lucide-react';
+// QR Code will be generated on backend and displayed as image
 import { shopService } from '../../services/shopService.js';
 import { productService } from '../../services/productService.js';
 import { bookingService } from '../../services/bookingService.js';
@@ -29,8 +32,10 @@ import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES } from '../../utils/constants.js';
 
 const ManageShop = () => {
+    console.log('🎯 ManageShop component loaded');
     const navigate = useNavigate();
     const { user, isShopOwner } = useAuth();
+    console.log('👤 User:', user, 'Is Shop Owner:', isShopOwner);
     const [shop, setShop] = useState(null);
     const [products, setProducts] = useState([]);
     const [bookings, setBookings] = useState([]);
@@ -42,6 +47,8 @@ const ManageShop = () => {
     });
     const [isLoading, setIsLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('overview');
+    const [qrCode, setQrCode] = useState(null);
+    const [qrCodeLoading, setQrCodeLoading] = useState(false);
 
     useEffect(() => {
         if (!user || !isShopOwner) {
@@ -185,6 +192,84 @@ const ManageShop = () => {
         }
     };
 
+    // QR Code functions
+    const loadQRCode = async (shopId) => {
+        console.log('🔄 Loading QR Code for shop:', shopId);
+        try {
+            setQrCodeLoading(true);
+            console.log('📡 Calling shopService.getQRCode...');
+            const response = await shopService.getQRCode(shopId);
+            console.log('✅ QR Code loaded successfully:', response.data);
+            setQrCode(response.data);
+        } catch (error) {
+            console.error('❌ Error loading QR code:', error);
+            // If QR code doesn't exist, try to generate it
+            try {
+                console.log('🔄 Trying to generate new QR Code...');
+                const generateResponse = await shopService.generateQRCode(shopId);
+                console.log('✅ QR Code generated successfully:', generateResponse.data);
+                setQrCode(generateResponse.data);
+            } catch (generateError) {
+                console.error('❌ Error generating QR code:', generateError);
+            }
+        } finally {
+            setQrCodeLoading(false);
+        }
+    };
+
+    const generateNewQRCode = async () => {
+        if (!shop) return;
+
+        try {
+            setQrCodeLoading(true);
+            const response = await shopService.generateQRCode(shop._id || shop.id);
+            setQrCode(response.data);
+            alert('تم توليد QR Code جديد بنجاح!');
+        } catch (error) {
+            console.error('Error generating QR code:', error);
+            alert('حدث خطأ في توليد QR Code');
+        } finally {
+            setQrCodeLoading(false);
+        }
+    };
+
+    const downloadQRCode = () => {
+        if (!qrCode || !shop) return;
+
+        try {
+            // Create a link element and trigger download
+            const link = document.createElement('a');
+            link.href = qrCode.qrCode;
+
+            // Clean shop name for filename
+            const cleanShopName = shop.name
+                .replace(/[^a-zA-Z0-9\u0600-\u06FF\s]/g, '') // Keep Arabic, English, numbers, and spaces
+                .replace(/\s+/g, '-') // Replace spaces with hyphens
+                .trim();
+
+            link.download = `${cleanShopName}-QR-Code.png`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            console.log('QR Code downloaded successfully');
+        } catch (error) {
+            console.error('Error downloading QR code:', error);
+            alert('حدث خطأ في تحميل QR Code');
+        }
+    };
+
+    // Load QR code when shop is loaded
+    useEffect(() => {
+        console.log('🏪 Shop data changed:', shop);
+        if (shop && (shop._id || shop.id)) {
+            console.log('🚀 Triggering QR Code load for shop:', shop._id || shop.id);
+            loadQRCode(shop._id || shop.id);
+        } else {
+            console.log('⚠️ No shop data available for QR Code loading');
+        }
+    }, [shop]);
+
 
     if (isLoading) {
         return (
@@ -306,10 +391,12 @@ const ManageShop = () => {
 
                 {/* Tabs */}
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-                    <TabsList className="grid w-full grid-cols-3">
-                        <TabsTrigger value="overview"> Overview</TabsTrigger>
-                        <TabsTrigger value="products">Products ({products.length})</TabsTrigger>
-                        <TabsTrigger value="bookings">Appointments ({bookings.length})</TabsTrigger>
+                    <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 gap-2">
+                        <TabsTrigger value="overview" className="text-sm">Overview</TabsTrigger>
+                        <TabsTrigger value="products" className="text-sm">Products ({products.length})</TabsTrigger>
+                        <TabsTrigger value="bookings" className="text-sm">Appointments ({bookings.length})</TabsTrigger>
+                        <TabsTrigger value="qrcode" className="text-sm">QR Code</TabsTrigger>
+
                     </TabsList>
 
                     <TabsContent value="overview" className="space-y-6">
@@ -585,6 +672,194 @@ const ManageShop = () => {
                                 </p>
                             </div>
                         )}
+                    </TabsContent>
+
+                    {/* QR Code Tab */}
+                    <TabsContent value="qrcode" className="space-y-6">
+                        {console.log('🎨 QR Code tab is being rendered', { qrCode, qrCodeLoading, activeTab })}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2">
+                                    <QrCode className="w-5 h-5" />
+                                    QR Code للمتجر
+                                </CardTitle>
+                                <CardDescription>
+                                    يمكن للعملاء مسح هذا الكود للوصول مباشرة إلى صفحة متجرك
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-6">
+                                {qrCodeLoading ? (
+                                    <div className="text-center py-8">
+                                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-600 mx-auto mb-4"></div>
+                                        <p className="text-gray-600">جاري تحميل QR Code...</p>
+                                    </div>
+                                ) : qrCode ? (
+                                    <div className="space-y-6">
+                                        {/* QR Code Display */}
+                                        <div className="flex flex-col lg:flex-row gap-6">
+                                            <div className="flex-1">
+                                                <div className="bg-white p-6 rounded-lg border-2 border-gray-200 text-center">
+                                                    <img
+                                                        src={qrCode.qrCode}
+                                                        alt="QR Code"
+                                                        className="w-64 h-64 mx-auto mb-4"
+                                                    />
+                                                    <p className="text-sm text-gray-600 mb-4">
+                                                        يؤدي إلى: {qrCode.qrCodeUrl}
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <div className="flex-1 space-y-4">
+                                                <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                                                    <h3 className="font-semibold text-yellow-800 mb-2">
+                                                        كيفية الاستخدام:
+                                                    </h3>
+                                                    <ul className="text-sm text-yellow-700 space-y-1">
+                                                        <li>• اطبع QR Code ووضعه في متجرك</li>
+                                                        <li>• العملاء يمكنهم مسح الكود بالهاتف</li>
+                                                        <li>• سيتم توجيههم مباشرة لصفحة متجرك</li>
+                                                        <li>• يمكنهم تصفح منتجاتك وحجز مواعيد</li>
+                                                    </ul>
+                                                </div>
+
+                                                <div className="space-y-3">
+                                                    <Button
+                                                        onClick={downloadQRCode}
+                                                        className="w-full bg-green-600 hover:bg-green-700"
+                                                    >
+                                                        <Download className="w-4 h-4 mr-2" />
+                                                        تحميل QR Code
+                                                    </Button>
+
+                                                    <Button
+                                                        onClick={generateNewQRCode}
+                                                        variant="outline"
+                                                        className="w-full"
+                                                        disabled={qrCodeLoading}
+                                                    >
+                                                        <QrCode className="w-4 h-4 mr-2" />
+                                                        إنشاء QR Code جديد
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="text-center py-8">
+                                        <QrCode className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                                        <h3 className="text-xl font-medium text-gray-900 mb-2">
+                                            لا يوجد QR Code
+                                        </h3>
+                                        <p className="text-gray-600 mb-4">
+                                            قم بإنشاء QR Code لمتجرك ليتمكن العملاء من الوصول إليه بسهولة
+                                        </p>
+                                        <Button
+                                            onClick={generateNewQRCode}
+                                            className="bg-yellow-600 hover:bg-yellow-700"
+                                            disabled={qrCodeLoading}
+                                        >
+                                            <QrCode className="w-4 h-4 mr-2" />
+                                            إنشاء QR Code
+                                        </Button>
+                                    </div>
+                                )}
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+
+                    {/* QR Code Tab */}
+                    <TabsContent value="qrcode" className="space-y-6">
+                        {console.log('🎨 QR Code tab is being rendered', { qrCode, qrCodeLoading, activeTab })}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2">
+                                    <QrCode className="w-5 h-5" />
+                                    QR Code للمتجر
+                                </CardTitle>
+                                <CardDescription>
+                                    يمكن للعملاء مسح هذا الكود للوصول مباشرة إلى صفحة متجرك
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-6">
+                                {qrCodeLoading ? (
+                                    <div className="text-center py-8">
+                                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-600 mx-auto mb-4"></div>
+                                        <p className="text-gray-600">جاري تحميل QR Code...</p>
+                                    </div>
+                                ) : qrCode ? (
+                                    <div className="space-y-6">
+                                        {/* QR Code Display */}
+                                        <div className="flex flex-col lg:flex-row gap-6">
+                                            <div className="flex-1">
+                                                <div className="bg-white p-6 rounded-lg border-2 border-gray-200 text-center">
+                                                    <img
+                                                        src={qrCode.qrCode}
+                                                        alt="QR Code"
+                                                        className="w-64 h-64 mx-auto mb-4"
+                                                    />
+                                                    <p className="text-sm text-gray-600 mb-4">
+                                                        يؤدي إلى: {qrCode.qrCodeUrl}
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <div className="flex-1 space-y-4">
+                                                <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                                                    <h3 className="font-semibold text-yellow-800 mb-2">
+                                                        كيفية الاستخدام:
+                                                    </h3>
+                                                    <ul className="text-sm text-yellow-700 space-y-1">
+                                                        <li>• اطبع QR Code ووضعه في متجرك</li>
+                                                        <li>• العملاء يمكنهم مسح الكود بالهاتف</li>
+                                                        <li>• سيتم توجيههم مباشرة لصفحة متجرك</li>
+                                                        <li>• يمكنهم تصفح منتجاتك وحجز مواعيد</li>
+                                                    </ul>
+                                                </div>
+
+                                                <div className="space-y-3">
+                                                    <Button
+                                                        onClick={downloadQRCode}
+                                                        className="w-full bg-green-600 hover:bg-green-700"
+                                                    >
+                                                        <Eye className="w-4 h-4 mr-2" />
+                                                        تحميل QR Code
+                                                    </Button>
+
+                                                    <Button
+                                                        onClick={generateNewQRCode}
+                                                        variant="outline"
+                                                        className="w-full"
+                                                        disabled={qrCodeLoading}
+                                                    >
+                                                        <QrCode className="w-4 h-4 mr-2" />
+                                                        إنشاء QR Code جديد
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="text-center py-8">
+                                        <QrCode className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                                        <h3 className="text-xl font-medium text-gray-900 mb-2">
+                                            لا يوجد QR Code
+                                        </h3>
+                                        <p className="text-gray-600 mb-4">
+                                            قم بإنشاء QR Code لمتجرك ليتمكن العملاء من الوصول إليه بسهولة
+                                        </p>
+                                        <Button
+                                            onClick={generateNewQRCode}
+                                            className="bg-yellow-600 hover:bg-yellow-700"
+                                            disabled={qrCodeLoading}
+                                        >
+                                            <QrCode className="w-4 h-4 mr-2" />
+                                            إنشاء QR Code
+                                        </Button>
+                                    </div>
+                                )}
+                            </CardContent>
+                        </Card>
                     </TabsContent>
                 </Tabs>
             </div>

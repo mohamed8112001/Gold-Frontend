@@ -133,6 +133,7 @@ const Home = () => {
         : Array.isArray(response)
           ? response
           : [];
+          
 
       // Step 2: Load products
       let products = [];

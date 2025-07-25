@@ -15,12 +15,16 @@ import ShopDetails from './pages/shop/ShopDetails.jsx';
 import CreateShop from './pages/shop/CreateShop.jsx';
 import EditShop from './pages/shop/EditShop.jsx';
 import ManageShop from './pages/shop/ManageShop.jsx';
+import ShopQRCode from './pages/shop/ShopQRCode.jsx';
 import ShopActivationRequest from './pages/shop/ShopActivationRequest.jsx';
 import ProductList from './pages/product/ProductList.jsx';
 import ProductDetails from './pages/product/ProductDetails.jsx';
 import CreateProduct from './pages/product/CreateProduct.jsx';
 import EditProduct from './pages/product/EditProduct.jsx';
 import Favorites from './pages/product/Favorites.jsx';
+import ReservationPayment from './pages/reservation/ReservationPayment.jsx';
+import ReservationSuccess from './pages/reservation/ReservationSuccess.jsx';
+import MyReservations from './pages/reservation/MyReservations.jsx';
 import Dashboard from './pages/user/Dashboard.jsx';
 import Profile from './pages/user/Profile.jsx';
 import Settings from './pages/user/Settings.jsx';
@@ -162,6 +166,15 @@ function App() {
                 }
               />
               <Route
+                path="/shop/qr-code"
+                element={
+                  <ProtectedRoute requiresPayment={true}>
+                    <ShopQRCode />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
                 path="/shop/activation-request/:id"
                 element={
                   <ProtectedRoute>
@@ -190,6 +203,11 @@ function App() {
                 }
               />
               <Route path="/favorites" element={<FavoriteProducts />} />
+
+              {/* Reservation Routes */}
+              <Route path="/reservation-payment" element={<ReservationPayment />} />
+              <Route path="/reservation-success" element={<ReservationSuccess />} />
+              <Route path="/my-reservations" element={<MyReservations />} />
 
               {/* User Routes */}
               <Route path="/dashboard" element={<Dashboard />} />

@@ -19,6 +19,8 @@ import {
   Loader2,
   CheckCircle,
   XCircle,
+  QrCode,
+  Share2,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES } from '../../utils/constants.js';
@@ -776,6 +778,27 @@ const Dashboard = () => {
                   <Package className="w-4 h-4 mr-2" />
                   إدارة المنتجات
                 </Button>
+                <Button
+                  variant="outline"
+                  className={`w-full rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ${
+                    shopInfo?.requestStatus === 'approved' && user?.paid
+                      ? 'border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6]'
+                      : 'border-gray-300 text-gray-500 cursor-not-allowed'
+                  }`}
+                  onClick={() => {
+                    if (shopInfo?.requestStatus === 'approved' && user?.paid) {
+                      navigate(ROUTES.SHOP_QR_CODE);
+                    } else {
+                      alert('يجب موافقة الأدمن على المتجر وإتمام الدفع أولاً للوصول إلى QR Code');
+                    }
+                  }}
+                  disabled={shopInfo?.requestStatus !== 'approved' || !user?.paid}
+                  aria-label="Manage QR Code"
+                >
+                  <QrCode className="w-4 h-4 mr-2" />
+                  QR Code المتجر
+                </Button>
+
               </div>
             </div>
           </div>
@@ -1065,13 +1088,196 @@ const Dashboard = () => {
     );
   };
 
+  const QRCodeTab = () => {
+    const [qrCode, setQrCode] = useState(null);
+    const [qrCodeLoading, setQrCodeLoading] = useState(false);
+
+    // Load QR code when component mounts
+    useEffect(() => {
+      if (shopInfo && (shopInfo._id || shopInfo.id)) {
+        loadQRCode(shopInfo._id || shopInfo.id);
+      }
+    }, [shopInfo]);
+
+    const loadQRCode = async (shopId) => {
+      try {
+        setQrCodeLoading(true);
+        const response = await shopService.getQRCode(shopId);
+        setQrCode(response.data);
+      } catch (error) {
+        console.error('Error loading QR code:', error);
+        // If QR code doesn't exist, try to generate it
+        try {
+          const generateResponse = await shopService.generateQRCode(shopId);
+          setQrCode(generateResponse.data);
+        } catch (generateError) {
+          console.error('Error generating QR code:', generateError);
+        }
+      } finally {
+        setQrCodeLoading(false);
+      }
+    };
+
+    const generateNewQRCode = async () => {
+      if (!shopInfo) return;
+
+      try {
+        setQrCodeLoading(true);
+        const response = await shopService.generateQRCode(shopInfo._id || shopInfo.id);
+        setQrCode(response.data);
+        alert('تم توليد QR Code جديد بنجاح!');
+      } catch (error) {
+        console.error('Error generating QR code:', error);
+        alert('حدث خطأ في توليد QR Code');
+      } finally {
+        setQrCodeLoading(false);
+      }
+    };
+
+    const downloadQRCode = () => {
+      if (!qrCode || !shopInfo) return;
+
+      try {
+        const link = document.createElement('a');
+        link.href = qrCode.qrCode;
+
+        const cleanShopName = shopInfo.name
+          .replace(/[^a-zA-Z0-9\u0600-\u06FF\s]/g, '')
+          .replace(/\s+/g, '-')
+          .trim();
+
+        link.download = `${cleanShopName}-QR-Code.png`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch (error) {
+        console.error('Error downloading QR code:', error);
+        alert('حدث خطأ في تحميل QR Code');
+      }
+    };
+
+    return (
+      <div className="space-y-6">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <QrCode className="w-5 h-5" />
+              QR Code للمتجر
+            </CardTitle>
+            <CardDescription>
+              يمكن للعملاء مسح هذا الكود للوصول مباشرة إلى صفحة متجرك
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {qrCodeLoading ? (
+              <div className="text-center py-8">
+                <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-yellow-600" />
+                <p className="text-gray-600">جاري تحميل QR Code...</p>
+              </div>
+            ) : qrCode ? (
+              <div className="space-y-6">
+                <div className="flex flex-col lg:flex-row gap-6">
+                  <div className="flex-1">
+                    <div className="bg-white p-6 rounded-lg border-2 border-gray-200 text-center">
+                      <img
+                        src={qrCode.qrCode}
+                        alt="QR Code"
+                        className="w-64 h-64 mx-auto mb-4"
+                      />
+                      <p className="text-sm text-gray-600 mb-4">
+                        يؤدي إلى: {qrCode.qrCodeUrl}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex-1 space-y-4">
+                    <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                      <h3 className="font-semibold text-yellow-800 mb-2">
+                        كيفية الاستخدام:
+                      </h3>
+                      <ul className="text-sm text-yellow-700 space-y-1">
+                        <li>• اطبع QR Code ووضعه في متجرك</li>
+                        <li>• العملاء يمكنهم مسح الكود بالهاتف</li>
+                        <li>• سيتم توجيههم مباشرة لصفحة متجرك</li>
+                        <li>• يمكنهم تصفح منتجاتك وحجز مواعيد</li>
+                      </ul>
+                    </div>
+
+                    <div className="space-y-3">
+                      <Button
+                        onClick={() => navigate(ROUTES.SHOP_QR_CODE)}
+                        className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white"
+                      >
+                        <QrCode className="w-4 h-4 mr-2" />
+                        📱 QR Code المتجر
+                      </Button>
+
+                      <Button
+                        onClick={downloadQRCode}
+                        className="w-full bg-green-600 hover:bg-green-700"
+                      >
+                        <Eye className="w-4 h-4 mr-2" />
+                        تحميل QR Code
+                      </Button>
+
+                      <Button
+                        onClick={generateNewQRCode}
+                        variant="outline"
+                        className="w-full"
+                        disabled={qrCodeLoading}
+                      >
+                        <QrCode className="w-4 h-4 mr-2" />
+                        إنشاء QR Code جديد
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <QrCode className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-xl font-medium text-gray-900 mb-2">
+                  رابط المتجر غير متاح حالياً
+                </h3>
+                <p className="text-gray-600 mb-4">
+                  شارك رابط متجرك مع العملاء عبر وسائل التواصل المختلفة
+                </p>
+                <div className="space-y-3">
+                  <Button
+                    onClick={() => navigate(ROUTES.SHOP_QR_CODE)}
+                    className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white"
+                  >
+                    <Share2 className="w-4 h-4 mr-2" />
+                    📤 مشاركة رابط المتجر
+                  </Button>
+
+                  <Button
+                    onClick={generateNewQRCode}
+                    variant="outline"
+                    className="w-full"
+                    disabled={qrCodeLoading}
+                  >
+                    <QrCode className="w-4 h-4 mr-2" />
+                    إنشاء QR Code سريع
+                  </Button>
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    );
+  };
+
   const tabs = [
     { id: 'overview', label: 'نظرة عامة', icon: BarChart3 },
     { id: 'bookings', label: isShopOwner ? 'الحجوزات' : 'حجوزاتي', icon: Calendar },
     { id: 'available-times', label: isShopOwner ? 'الأوقات المتاحة' : 'مواعيدي', icon: Clock },
     ...(isShopOwner ? [
       { id: 'shop', label: 'إدارة المتجر', icon: Store },
-      { id: 'ratings', label: 'التقييمات', icon: Star }
+      { id: 'ratings', label: 'التقييمات', icon: Star },
+      { id: 'qr-code', label: 'QR Code المتجر', icon: QrCode }
+
     ] : []),
   ];
 
@@ -1163,6 +1369,7 @@ const Dashboard = () => {
             {activeTab === 'bookings' && <BookingsTab />}
             {activeTab === 'shop' && isShopOwner && <ShopOwnerTab />}
             {activeTab === 'ratings' && isShopOwner && <ManageRatings />}
+            {activeTab === 'qr-code' && isShopOwner && <QRCodeTab />}
             {activeTab === 'available-times' && <AvailableTimesTab />}
           </div>
         </div>

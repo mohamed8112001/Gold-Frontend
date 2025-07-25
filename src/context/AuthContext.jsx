@@ -22,18 +22,41 @@ export const AuthProvider = ({ children }) => {
 
   const initializeAuth = async () => {
     try {
+      console.log('🔄 Initializing authentication...');
       const token = authService.getToken();
       const userData = authService.getCurrentUser();
 
+      console.log('🔍 Auth check:', { hasToken: !!token, hasUserData: !!userData });
+
       if (token && userData) {
+        console.log('✅ User authenticated:', userData.name);
         setUser(userData);
         setIsAuthenticated(true);
+      } else if (token && !userData) {
+        // إذا كان هناك توكن لكن لا توجد بيانات مستخدم، جرب تحديث البيانات
+        console.log('🔄 Token found but no user data, refreshing...');
+        try {
+          await authService.refreshToken();
+          const refreshedUserData = authService.getCurrentUser();
+          if (refreshedUserData) {
+            setUser(refreshedUserData);
+            setIsAuthenticated(true);
+          } else {
+            setUser(null);
+            setIsAuthenticated(false);
+          }
+        } catch (refreshError) {
+          console.error('❌ Token refresh failed:', refreshError);
+          setUser(null);
+          setIsAuthenticated(false);
+        }
       } else {
+        console.log('❌ No authentication found');
         setUser(null);
         setIsAuthenticated(false);
       }
     } catch (error) {
-      console.error('Auth initialization error:', error);
+      console.error('❌ Auth initialization error:', error);
       setUser(null);
       setIsAuthenticated(false);
     } finally {
@@ -128,6 +151,25 @@ export const AuthProvider = ({ children }) => {
     setUser(prev => ({ ...prev, ...userData }));
   };
 
+  // دالة لإعادة تحميل بيانات المستخدم
+  const reloadUser = () => {
+    console.log('🔄 Reloading user data...');
+    const token = authService.getToken();
+    const userData = authService.getCurrentUser();
+
+    if (token && userData) {
+      console.log('✅ User data reloaded:', userData.name);
+      setUser(userData);
+      setIsAuthenticated(true);
+      return userData;
+    } else {
+      console.log('❌ No user data found during reload');
+      setUser(null);
+      setIsAuthenticated(false);
+      return null;
+    }
+  };
+
   const isShopOwner = user?.role === 'seller';
   const isRegularUser = user?.role === 'customer';
   const isAdmin = user?.role === 'admin';
@@ -143,6 +185,7 @@ export const AuthProvider = ({ children }) => {
     register,
     logout,
     updateUser,
+    reloadUser,
     googleLogin,
   };
 

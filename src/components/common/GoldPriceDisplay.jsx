@@ -112,14 +112,14 @@ const GoldPriceDisplay = ({
   // Compact version for mobile or small spaces
   if (compact) {
     return (
-      <div className={`bg-gradient-to-r from-[#FFF8E6] to-[#FFF0CC] rounded-lg px-3 py-2 border border-[#E6A500]/20 ${className}`} dir="rtl">
-        <div className="flex items-center justify-center gap-2 text-[#8A5700]">
-          {showIcon && <span className="text-base animate-pulse">🪙</span>}
-          <div className="flex items-center gap-2 text-xs font-medium">
-            <span className="bg-white/50 px-2 py-1 rounded font-bold">18: {prices.karat18}</span>
-            <span className="bg-white/50 px-2 py-1 rounded font-bold">21: {prices.karat21}</span>
-            <span className="bg-white/50 px-2 py-1 rounded font-bold">24: {prices.karat24}</span>
-            <span className="text-[#8A5700]/70 font-bold">ج.م</span>
+      <div className={`bg-gradient-to-r from-[#FFF8E6] to-[#FFF0CC] rounded-xl px-2 py-1.5 border border-[#E6A500]/20 ${className}`} dir="rtl">
+        <div className="flex items-center justify-center gap-1 text-[#8A5700]">
+          {showIcon && <span className="text-sm animate-pulse">🪙</span>}
+          <div className="flex items-center gap-1 text-xs font-medium">
+            <span className="bg-white/60 px-1.5 py-0.5 rounded font-bold">18: {prices.karat18}</span>
+            <span className="bg-white/60 px-1.5 py-0.5 rounded font-bold">21: {prices.karat21}</span>
+            <span className="bg-white/60 px-1.5 py-0.5 rounded font-bold">24: {prices.karat24}</span>
+            <span className="text-[#8A5700]/70 font-bold text-xs">ج.م</span>
           </div>
         </div>
       </div>
@@ -128,23 +128,23 @@ const GoldPriceDisplay = ({
 
   // Full version
   return (
-    <div className={`bg-gradient-to-r from-[#FFF8E6] to-[#FFF0CC] rounded-lg px-4 py-3 shadow-sm border border-[#E6A500]/30 ${className}`} dir="rtl">
-      <div className="flex items-center justify-center gap-3">
+    <div className={`bg-gradient-to-r from-[#FFF8E6] to-[#FFF0CC] rounded-xl px-3 py-2 shadow-sm border border-[#E6A500]/30 ${className}`} dir="rtl">
+      <div className="flex items-center justify-center gap-2">
         {/* Icon */}
         {showIcon && (
           <div className="flex-shrink-0">
-            <span className="text-xl animate-pulse">🪙</span>
+            <span className="text-lg animate-pulse">🪙</span>
           </div>
         )}
 
         {/* Price Display */}
-        <div className="flex items-center gap-2 text-[#8A5700]">
-          <span className="font-bold text-sm whitespace-nowrap text-[#8A5700] hidden sm:inline">أسعار الذهب:</span>
+        <div className="flex items-center gap-1 text-[#8A5700]">
+          <span className="font-bold text-xs whitespace-nowrap text-[#8A5700] hidden sm:inline">أسعار الذهب:</span>
 
-          <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm font-medium flex-wrap justify-center">
+          <div className="flex items-center gap-1 sm:gap-2 text-xs font-medium flex-wrap justify-center">
             {/* 18k Price */}
-            <div className="flex items-center gap-1 bg-white/50 px-2 py-1 rounded-md">
-              <span className="text-[#8A5700]/80 font-medium">عيار 18:</span>
+            <div className="flex items-center gap-1 bg-white/60 px-2 py-1 rounded-md">
+              <span className="text-[#8A5700]/80 font-medium">18:</span>
               <span className="font-bold text-[#C37C00]">{prices.karat18}</span>
             </div>
 
@@ -152,8 +152,8 @@ const GoldPriceDisplay = ({
             <span className="text-[#8A5700]/50 font-bold hidden sm:inline">|</span>
 
             {/* 21k Price */}
-            <div className="flex items-center gap-1 bg-white/50 px-2 py-1 rounded-md">
-              <span className="text-[#8A5700]/80 font-medium">عيار 21:</span>
+            <div className="flex items-center gap-1 bg-white/60 px-2 py-1 rounded-md">
+              <span className="text-[#8A5700]/80 font-medium">21:</span>
               <span className="font-bold text-[#C37C00]">{prices.karat21}</span>
             </div>
 
@@ -161,13 +161,13 @@ const GoldPriceDisplay = ({
             <span className="text-[#8A5700]/50 font-bold hidden sm:inline">|</span>
 
             {/* 24k Price */}
-            <div className="flex items-center gap-1 bg-white/50 px-2 py-1 rounded-md">
-              <span className="text-[#8A5700]/80 font-medium">عيار 24:</span>
+            <div className="flex items-center gap-1 bg-white/60 px-2 py-1 rounded-md">
+              <span className="text-[#8A5700]/80 font-medium">24:</span>
               <span className="font-bold text-[#C37C00]">{prices.karat24}</span>
             </div>
 
             {/* Currency */}
-            <span className="text-[#8A5700]/70 font-bold">ج.م</span>
+            <span className="text-[#8A5700]/70 font-bold text-xs">ج.م</span>
           </div>
         </div>
 

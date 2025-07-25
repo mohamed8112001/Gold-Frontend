@@ -88,10 +88,13 @@ class ChatService {
     });
 
     this.socket.on('connect_error', (error) => {
-      console.error('Chat service connection error:', error);
+      // تقليل الرسائل المزعجة في console
+      if (this.reconnectAttempts === 0) {
+        console.warn('Chat service connection error (will retry silently):', error.message);
+      }
       this.isConnected = false;
       this.reconnectAttempts++;
-      
+
       // If authentication error, try to refresh token
       if (error.message.includes('Authentication') || error.message.includes('No token')) {
         this.handleAuthenticationError();

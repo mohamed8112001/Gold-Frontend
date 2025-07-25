@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
@@ -11,8 +12,13 @@ import {
   Shield,
   Truck,
   RefreshCw,
-  Verified
+  Verified,
+  CreditCard,
+  Bookmark
 } from 'lucide-react';
+import { reservationService } from '../../services/reservationService';
+import { useAuth } from '../../context/AuthContext';
+import { ROUTES } from '../../utils/constants';
 
 const ProductInfoCard = ({
   product,
@@ -26,6 +32,9 @@ const ProductInfoCard = ({
   onAddToFavorites
 }) => {
   const [quantity, setQuantity] = useState(1);
+  const [reservationLoading, setReservationLoading] = useState(false);
+  const navigate = useNavigate();
+  const { user: authUser } = useAuth();
 
   // Format price safely
   const formatPrice = (price) => {
@@ -33,6 +42,28 @@ const ProductInfoCard = ({
       return price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
     return '0.00';
+  };
+
+  // حساب مبلغ الحجز (10%)
+  const reservationAmount = reservationService.calculateReservationAmount(product.price);
+
+  // معالجة الحجز
+  const handleReservation = () => {
+    if (!authUser) {
+      navigate(ROUTES.LOGIN);
+      return;
+    }
+
+    // التوجه إلى صفحة دفع الحجز مع بيانات المنتج
+    navigate('/reservation-payment', {
+      state: {
+        product,
+        reservationData: {
+          productId: product._id || product.id,
+          amount: reservationAmount.reservationAmount
+        }
+      }
+    });
   };
 
   return (
@@ -140,8 +171,34 @@ const ProductInfoCard = ({
         </div>
       </div>
 
+      {/* Reservation Info */}
+      <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-2xl p-4 mb-6">
+        <div className="flex items-center gap-2 mb-2">
+          <Bookmark className="w-5 h-5 text-green-600" />
+          <h3 className="font-bold text-green-800">احجز المنتج الآن</h3>
+        </div>
+        <p className="text-green-700 text-sm mb-3">
+          ادفع {reservationAmount.reservationAmount} جنيه فقط (10%) واحتفظ بالمنتج لمدة 7 أيام
+        </p>
+        <div className="text-xs text-green-600 space-y-1">
+          <p>• المبلغ المتبقي: {reservationAmount.remainingAmount} جنيه</p>
+          <p>• يُدفع عند الاستلام</p>
+        </div>
+      </div>
+
       {/* Action Buttons */}
       <div className="space-y-4">
+        {/* زر الحجز الجديد */}
+        <Button
+          size="lg"
+          onClick={handleReservation}
+          disabled={reservationLoading}
+          className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white py-4 rounded-2xl font-bold text-lg transition-all duration-300"
+        >
+          <CreditCard className="w-5 h-5 mr-2" />
+          {reservationLoading ? 'جاري المعالجة...' : `ادفع ${reservationAmount.reservationAmount} جنيه واحجز المنتج`}
+        </Button>
+
         <div className="grid grid-cols-2 gap-4">
           <Button
             size="lg"

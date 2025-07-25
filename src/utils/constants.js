@@ -120,6 +120,8 @@ export const ROUTES = {
   EDIT_SHOP: "/shop/edit",
   EDIT_SHOP_ID: (id) => `/shop/edit/${id}`,
   MANAGE_SHOP: "/shop/manage",
+  SHOP_QR_CODE: "/shop/qr-code",
+
 
   // Product routes
   PRODUCTS: "/products",

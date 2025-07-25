@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button.jsx';
-import { Menu, X, ChevronDown, User, LogOut } from 'lucide-react';
+import { Menu, X, User, LogOut } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.jsx';
 import {
   DropdownMenu,
@@ -72,61 +72,61 @@ const Header = () => {
         dir="rtl"
       >
         <div className="relative w-full px-8 sm:px-12 lg:px-16 xl:px-20 overflow-hidden">
-          {/* Gold Price Display Bar - Hidden on mobile, compact on medium screens */}
-          <div className="hidden md:block w-full py-2 border-b border-[#E6A500]/10">
-            <div className="flex justify-center">
-              <GoldPriceDisplay
-                className="max-w-5xl lg:max-w-6xl"
-                updateInterval={300000} // Update every 5 minutes
-                compact={false}
-              />
-            </div>
-          </div>
+          <div className="flex items-center justify-between h-28 min-w-0 py-4">
+            {/* Right Section: Logo + Gold Prices + Navigation */}
+            <div className="flex items-center gap-8">
+              {/* Enhanced Logo - في أقصى اليمين */}
+              <Link to="/" className="flex items-center group relative">
+                <div className="flex items-center space-x-reverse space-x-6">
+                  <div className="relative">
+                    {/* Enhanced Logo Container */}
+                    <div className="relative w-16 h-16">
+                      {/* Logo Image */}
+                      <img
+                        src="/logo.webp"
+                        alt="متجر الذهب"
+                        className="relative w-14 h-14 m-1 rounded-xl object-cover z-10"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.nextSibling.style.display = 'flex';
+                        }}
+                      />
 
-          <div className="flex justify-between items-center h-20 min-w-0 py-3">
-            {/* Enhanced Logo */}
-            <Link to="/" className="flex items-center group relative mr-8">
-              <div className="flex items-center space-x-reverse space-x-6">
-                <div className="relative">
-                  {/* Enhanced Logo Container */}
-                  <div className="relative w-16 h-16">
-                    {/* Logo Image */}
-                    <img
-                      src="/logo.webp"
-                      alt="متجر الذهب"
-                      className="relative w-14 h-14 m-1 rounded-xl object-cover z-10"
-                      onError={(e) => {
-                        e.target.style.display = 'none';
-                        e.target.nextSibling.style.display = 'flex';
-                      }}
-                    />
+                      {/* Fallback Logo */}
+                      <div className="absolute inset-1 bg-gradient-to-br from-[#C37C00] via-[#E6A500] to-[#A66A00] rounded-xl hidden items-center justify-center">
+                        <div className="text-white text-xl font-bold">💍</div>
+                        <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-xl"></div>
+                      </div>
 
-                    {/* Fallback Logo */}
-                    <div className="absolute inset-1 bg-gradient-to-br from-[#C37C00] via-[#E6A500] to-[#A66A00] rounded-xl hidden items-center justify-center">
-                      <div className="text-white text-xl font-bold">💍</div>
-                      <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-xl"></div>
                     </div>
+                  </div>
+                  <div className="flex flex-col ml-6">
+                    {/* Main Title with Enhanced Effects */}
+                    <span className="text-3xl font-black font-cairo bg-gradient-to-r from-[#C37C00] via-[#E6A500] via-[#F4D03F] to-[#A66A00] bg-clip-text text-transparent tracking-wide">
+                      متجر الذهب
+                    </span>
 
+                    {/* Subtitle */}
+                    <span className="text-xs text-[#8A5700] font-bold font-amiri tracking-widest mt-1">
+                      <span className="inline-block"></span>
+                      <span className="mx-1">ذهب فاخر</span>
+                      <span className="inline-block"></span>
+                    </span>
                   </div>
                 </div>
-                <div className="flex flex-col ml-6">
-                  {/* Main Title with Enhanced Effects */}
-                  <span className="text-3xl font-black font-cairo bg-gradient-to-r from-[#C37C00] via-[#E6A500] via-[#F4D03F] to-[#A66A00] bg-clip-text text-transparent tracking-wide">
-                    متجر الذهب
-                  </span>
+              </Link>
 
-                  {/* Subtitle */}
-                  <span className="text-xs text-[#8A5700] font-bold font-amiri tracking-widest mt-1">
-                    <span className="inline-block"></span>
-                    <span className="mx-1">ذهب فاخر</span>
-                    <span className="inline-block"></span>
-                  </span>
-                </div>
+              {/* Gold Prices - بجوار الشعار */}
+              <div className="hidden lg:block">
+                <GoldPriceDisplay
+                  className="scale-90"
+                  updateInterval={300000} // Update every 5 minutes
+                  compact={false}
+                />
               </div>
-            </Link>
 
-            {/* Enhanced Interactive Navigation */}
-            <nav className="hidden lg:flex items-center space-x-reverse space-x-4" dir="rtl">
+              {/* Enhanced Interactive Navigation - بعد أسعار الذهب */}
+              <nav className="hidden lg:flex items-center space-x-reverse space-x-6" dir="rtl">
               <Link
                 to="/home"
                 className="relative text-primary-900 hover:text-[#C37C00] font-bold font-cairo text-lg px-8 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-[#FFF8E6] hover:to-[#FFF0CC] hover:shadow-lg hover:scale-105 transition-all duration-300"
@@ -173,36 +173,22 @@ const Header = () => {
                 </Link>
               )}
             </nav>
+            </div>
 
-            {/* Clean Auth Buttons */}
-            <div className="hidden lg:flex items-center space-x-reverse space-x-6 flex-shrink-0 ml-8">
+            {/* Left Section: Auth Buttons - في أقصى اليسار */}
+            <div className="hidden lg:flex items-center space-x-reverse space-x-20 flex-shrink-0">
               {isAuthenticated ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-  <Button
-    variant="outline"
-    className="flex items-center gap-3 bg-white px-4 py-7 rounded-xl border-2 border-[#C37C00]/40 hover:bg-gradient-to-r hover:from-[#FFF8E6] hover:to-[#FFF0CC] hover:border-[#C37C00]/70 group backdrop-blur-sm w-full"
-  >
-    <div className="relative flex-shrink-0">
-      <div className="w-10 h-10 bg-gradient-to-br from-[#C37C00] via-[#E6A500] to-[#A66A00] rounded-lg flex items-center justify-center ring-1 ring-white/60">
-        <span className="text-white font-bold text-sm">
-          {user?.firstName?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'U'}
-        </span>
-      </div>
-      <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border border-white"></div>
-    </div>
-    <div className="flex flex-col justify-center min-w-0 flex-1 overflow-hidden">
-      <span className="text-[#8A5700] font-bold text-sm leading-tight truncate" title={user?.firstName || user?.email?.split('@')[0] || 'مستخدم'}>
-        {user?.firstName || user?.email?.split('@')[0] || 'مستخدم'}
-      </span>
-      <span className="text-[#C37C00] text-xs font-medium truncate mt-1">
-        {user?.role === 'admin' ? '👑 مدير' :
-          user?.role === 'seller' ? '' : user?.role === 'customer' ? '👤 عضو ' : ""}
-      </span>
-    </div>
-    <ChevronDown className="w-4 h-4 text-[#8A5700] group-hover:text-[#C37C00] flex-shrink-0" />
-  </Button>
-</DropdownMenuTrigger>
+                    <div className="relative flex-shrink-0 cursor-pointer">
+                      <div className="w-12 h-12 bg-gradient-to-br from-[#C37C00] via-[#E6A500] to-[#A66A00] rounded-full flex items-center justify-center hover:scale-105 transition-all duration-300 shadow-md">
+                        <span className="text-white font-bold text-base">
+                          {user?.firstName?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'U'}
+                        </span>
+                      </div>
+                      <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-sm"></div>
+                    </div>
+                  </DropdownMenuTrigger>
 
                   <DropdownMenuContent align="end" className="w-80 bg-white border-2 border-[#C37C00]/30 rounded-2xl p-4 mt-2 backdrop-blur-sm">
                     <div className="px-6 py-6 border-b border-[#C37C00]/20 mb-4 bg-gray-50 rounded-xl">
@@ -371,6 +357,7 @@ const Header = () => {
                       </div>
                     </div>
                     {(isAdmin || isShopOwner) && (
+
                       <Link
                         to="/dashboard"
                         className="text-[#8A5700] hover:text-[#C37C00] font-bold text-lg px-8 py-4 rounded-2xl hover:bg-gradient-to-r hover:from-[#FFF8E6] hover:to-[#FFF0CC] hover:shadow-lg hover:scale-105 transition-all duration-300"
@@ -378,7 +365,11 @@ const Header = () => {
                       >
                         📊 لوحة التحكم
                       </Link>
+
                     )}
+                    
+           
+
                     {isAuthenticated && isRegularUser && (
                       <Link
                         to="/favorites"

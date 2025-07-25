@@ -318,8 +318,16 @@ export const shopService = {
   // Get current user's shop
   getMyShop: async () => {
     try {
-      const response = await api.get("/shop/my-shop");
-      return response.data;
+      const response = await api.get("/shop");
+      // إرجاع أول متجر للمستخدم (معظم المستخدمين لديهم متجر واحد)
+      if (response.data && response.data.data && response.data.data.length > 0) {
+        return {
+          success: true,
+          data: response.data.data[0]
+        };
+      } else {
+        throw new Error("No shop found for current user");
+      }
     } catch (error) {
       throw new Error(
         error.response?.data?.message || "Failed to fetch user shop"
@@ -657,6 +665,29 @@ export const shopService = {
     } catch (error) {
       throw new Error(
         error.response?.data?.message || "Failed to fetch pending activations"
+      );
+    }
+  },
+
+  // QR Code functions
+  generateQRCode: async (shopId) => {
+    try {
+      const response = await api.post(`/shop/${shopId}/qr-code/generate`);
+      return response.data;
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.message || "Failed to generate QR code"
+      );
+    }
+  },
+
+  getQRCode: async (shopId) => {
+    try {
+      const response = await api.get(`/shop/${shopId}/qr-code`);
+      return response.data;
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.message || "Failed to fetch QR code"
       );
     }
   },

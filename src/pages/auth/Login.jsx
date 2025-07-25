@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button.jsx';
 import { Input } from '@/components/ui/input.jsx';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.jsx';
@@ -11,9 +11,11 @@ import { GoogleLogin } from '@react-oauth/google';
 
 const Login = () => {
   const navigate = useNavigate();
-
-  const location = useLocation();
+  const [searchParams] = useSearchParams();
   const { login, googleLogin, isLoading } = useAuth();
+
+  // الحصول على رابط إعادة التوجيه من query parameters
+  const redirectUrl = searchParams.get('redirect');
 
 
   const [formData, setFormData] = useState({
@@ -90,8 +92,14 @@ const Login = () => {
       console.log('🏪 User role:', res?.user?.role);
 
       // For all users (customers and sellers)
-      console.log('🏠 Redirecting to home page...');
-      navigate(ROUTES.HOME);
+      console.log('🏠 Redirecting...');
+      if (redirectUrl) {
+        console.log('📍 Redirecting to:', redirectUrl);
+        navigate(redirectUrl);
+      } else {
+        console.log('🏠 Redirecting to home page...');
+        navigate(ROUTES.HOME);
+      }
 
     } catch (error) {
       console.error('❌ Login error:', error);
@@ -352,7 +360,11 @@ const Login = () => {
                         await googleLogin(credentialResponse);
                         console.log('Google login success');
 
-                        navigate(ROUTES.HOME);
+                        if (redirectUrl) {
+                          navigate(redirectUrl);
+                        } else {
+                          navigate(ROUTES.HOME);
+                        }
                       } catch (error) {
                         console.error('Google login error:', error);
                       }
