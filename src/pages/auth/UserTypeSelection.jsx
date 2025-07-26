@@ -19,10 +19,12 @@ import {
   Package
 } from 'lucide-react';
 import { ROUTES } from '../../utils/constants.js';
+import { useTranslation } from 'react-i18next';
 
 const UserTypeSelection = () => {
   const [selectedType, setSelectedType] = useState(null);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleContinue = () => {
     if (selectedType) {
@@ -33,8 +35,8 @@ const UserTypeSelection = () => {
   const userTypes = [
     {
       id: 'customer',
-      title: 'مستخدم عادي',
-      description: 'تصفح واستكشف متاجر الذهب',
+      title: t('auth.user_type.customer_title'),
+      description: t('auth.user_type.customer_description'),
       icon: User,
       features: [
         { icon: ShoppingBag, text: 'تصفح مجموعات المجوهرات' },
@@ -48,8 +50,8 @@ const UserTypeSelection = () => {
     },
     {
       id: 'seller',
-      title: 'صاحب متجر',
-      description: 'سجل متجر المجوهرات الخاص بك',
+      title: t('auth.user_type.seller_title'),
+      description: t('auth.user_type.seller_description'),
       icon: Store,
       features: [
         { icon: Store, text: 'إدارة متجر المجوهرات الخاص بك' },
@@ -75,10 +77,10 @@ const UserTypeSelection = () => {
             </div>
           </div>
           <h1 className="text-heading-2xl font-bold mb-4" style={{ color: '#A37F41' }}>
-            إنشاء حسابك
+            {t('auth.user_type.title')}
           </h1>
           <p className="text-arabic-lg max-w-2xl mx-auto" style={{ color: '#6B5B47' }}>
-            انضم إلى مجتمع ديبلا واكتشف المجوهرات الرائعة
+            {t('auth.user_type.subtitle')}
           </p>
         </div>
 
@@ -197,17 +199,17 @@ const UserTypeSelection = () => {
               }
             }}
           >
-            متابعة
+            {t('auth.user_type.continue_button')}
           </Button>
 
           <div className="mt-6 text-center">
-            <span style={{ color: '#6B5B47' }}>لديك حساب بالفعل؟ </span>
+            <span style={{ color: '#6B5B47' }}>{t('auth.register.have_account')} </span>
             <Link
               to={ROUTES.LOGIN}
               className="font-medium hover:opacity-80 transition-opacity"
               style={{ color: '#A37F41' }}
             >
-              تسجيل الدخول
+              {t('auth.user_type.back_to_login')}
             </Link>
           </div>
         </div>

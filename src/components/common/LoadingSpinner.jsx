@@ -1,12 +1,15 @@
 import React from 'react';
 import { Loader2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
-const LoadingSpinner = ({ 
-  size = 'md', 
-  text = 'جاري التحميل...', 
+const LoadingSpinner = ({
+  size = 'md',
+  text,
   className = '',
-  showText = true 
+  showText = true
 }) => {
+  const { t } = useTranslation();
+  const defaultText = text || t('common.loading');
   const sizeClasses = {
     sm: 'w-4 h-4',
     md: 'w-6 h-6',
@@ -26,9 +29,9 @@ const LoadingSpinner = ({
       <Loader2 
         className={`${sizeClasses[size]} text-yellow-600 animate-spin`} 
       />
-      {showText && text && (
+      {showText && defaultText && (
         <p className={`${textSizeClasses[size]} text-gray-600 font-medium`}>
-          {text}
+          {defaultText}
         </p>
       )}
     </div>
@@ -36,7 +39,7 @@ const LoadingSpinner = ({
 };
 
 // Full page loading component
-export const FullPageLoader = ({ text = 'جاري التحميل...' }) => {
+export const FullPageLoader = ({ text }) => {
   return (
     <div className="fixed inset-0 bg-white bg-opacity-90 flex items-center justify-center z-50">
       <LoadingSpinner size="xl" text={text} />

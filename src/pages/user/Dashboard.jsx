@@ -28,10 +28,12 @@ import dashboardService from '../../services/dashboardService.js';
 import { shopService } from '../../services/shopService.js';
 import ManageRatings from '../seller/ManageRatings.jsx';
 import { useShopNotifications } from '../../hooks/useShopNotifications.js';
+import { useTranslation } from 'react-i18next';
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const { user, isShopOwner, isRegularUser } = useAuth();
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('overview');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -1258,7 +1260,7 @@ const Dashboard = () => {
                     disabled={qrCodeLoading}
                   >
                     <QrCode className="w-4 h-4 mr-2" />
-                    إنشاء QR Code سريع
+                    {t('dashboard.generate_qr')}
                   </Button>
                 </div>
               </div>
@@ -1270,13 +1272,13 @@ const Dashboard = () => {
   };
 
   const tabs = [
-    { id: 'overview', label: 'نظرة عامة', icon: BarChart3 },
-    { id: 'bookings', label: isShopOwner ? 'الحجوزات' : 'حجوزاتي', icon: Calendar },
-    { id: 'available-times', label: isShopOwner ? 'الأوقات المتاحة' : 'مواعيدي', icon: Clock },
+    { id: 'overview', label: t('dashboard.overview'), icon: BarChart3 },
+    { id: 'bookings', label: isShopOwner ? t('dashboard.bookings') : t('dashboard.my_bookings'), icon: Calendar },
+    { id: 'available-times', label: isShopOwner ? t('dashboard.available_times') : t('dashboard.my_appointments'), icon: Clock },
     ...(isShopOwner ? [
-      { id: 'shop', label: 'إدارة المتجر', icon: Store },
-      { id: 'ratings', label: 'التقييمات', icon: Star },
-      { id: 'qr-code', label: 'QR Code المتجر', icon: QrCode }
+      { id: 'shop', label: t('dashboard.shop_management'), icon: Store },
+      { id: 'ratings', label: t('dashboard.ratings'), icon: Star },
+      { id: 'qr-code', label: t('dashboard.qr_code'), icon: QrCode }
 
     ] : []),
   ];
@@ -1337,8 +1339,8 @@ const Dashboard = () => {
         {/* Main Content Area */}
         <div className="flex-1 px-4 sm:px-6 lg:px-8 py-8 lg:pr-80">
           <div className="mb-6">
-            <h1 className="text-3xl font-bold font-cairo text-primary-900">اهلا, {user?.name || 'User'}</h1>
-            <p className="text-secondary-800 mt-1 font-cairo">إدارة حسابك وتتبع أنشطتك</p>
+            <h1 className="text-3xl font-bold font-cairo text-primary-900">{t('dashboard.welcome', { name: user?.name || 'User' })}</h1>
+            <p className="text-secondary-800 mt-1 font-cairo">{t('dashboard.manage_account')}</p>
           </div>
 
           {/* Mobile Navigation - Horizontal tabs for mobile */}

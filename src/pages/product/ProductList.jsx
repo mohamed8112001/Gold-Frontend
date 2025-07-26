@@ -173,15 +173,15 @@ const ProductList = () => {
         const resultsCount = filteredProducts.length;
 
         if (searchQuery && resultsCount === 0) {
-            return "🔍 لم يتم العثور على نتائج. جرب كلمات مختلفة أو تصفح فئاتنا!";
+            return `🔍 ${t('products.no_results_found')}`;
         }
 
         if (filters.category && resultsCount === 0) {
-            return "🎯 لا توجد منتجات في هذه الفئة حتى الآن. تحقق قريباً للوافدات الجديدة!";
+            return `🎯 ${t('products.no_products_in_category')}`;
         }
 
         if (resultsCount === 0) {
-            return "🌟 ابدأ استكشاف مجموعة المجوهرات الرائعة لدينا!";
+            return `🌟 ${t('products.start_exploring')}`;
         }
 
         if (viewedCount === 0 && resultsCount > 0) {
@@ -224,8 +224,8 @@ const ProductList = () => {
         switch (displayMode) {
             case 'searching':
                 return {
-                    title: `نتائج البحث عن "${searchQuery}"`,
-                    subtitle: `تم العثور على ${filteredProducts.length} منتج يطابق بحثك`,
+                    title: `${t('products.search_results')} "${searchQuery}"`,
+                    subtitle: t('products.found_products', { count: filteredProducts.length }),
                     icon: '🔍'
                 };
             case 'filtered':
@@ -252,9 +252,9 @@ const ProductList = () => {
     const getSuggestionMessage = () => {
         if (displayMode === 'searching' && filteredProducts.length === 0) {
             return {
-                title: "لم يتم العثور على منتجات",
-                message: "جرب تعديل مصطلحات البحث أو تصفح فئاتنا",
-                action: "مسح البحث",
+                title: t('products.no_products_found'),
+                message: t('products.try_different_search'),
+                action: t('products.clear_search'),
                 actionFn: () => {
                     setSearchQuery('');
                     setSearchParams({});
@@ -264,9 +264,9 @@ const ProductList = () => {
 
         if (displayMode === 'filtered' && filteredProducts.length === 0) {
             return {
-                title: "لا توجد منتجات تطابق الفلاتر",
-                message: "جرب إزالة بعض الفلاتر لرؤية المزيد من المنتجات",
-                action: "مسح الفلاتر",
+                title: t('products.no_products_match_filters'),
+                message: t('products.try_remove_filters'),
+                action: t('products.clear_filters'),
                 actionFn: clearFilters
             };
         }
@@ -771,7 +771,7 @@ const ProductList = () => {
                                         className="flex items-center gap-1 sm:gap-2 border-2 border-red-300 text-red-600 hover:bg-red-50 hover:border-red-500 hover:text-red-700 px-3 sm:px-4 py-2 sm:py-2.5 rounded-full font-semibold shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 text-xs sm:text-sm"
                                     >
                                         <X className="w-3 h-3 sm:w-4 sm:h-4" />
-                                        <span>مسح البحث</span>
+                                        <span>{t('products.clear_search')}</span>
                                     </Button>
                                 )}
 
@@ -888,7 +888,7 @@ const ProductList = () => {
 
                                     {/* Sort */}
                                     <div>
-                                        <h3 className="font-medium mb-3 text-sm sm:text-base">ترتيب حسب</h3>
+                                        <h3 className="font-medium mb-3 text-sm sm:text-base">{t('products.sort_by')}</h3>
                                         <select
                                             value={filters.sortBy}
                                             onChange={(e) => handleFilterChange('sortBy', e.target.value)}
@@ -918,16 +918,16 @@ const ProductList = () => {
                         <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between mb-6 sm:mb-8 bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg border border-gray-100">
                             <div className="flex-1">
                                 <p className="text-base sm:text-lg font-semibold text-gray-900 mb-1">
-                                    {filteredProducts.length} منتج متاح
+                                    {t('products.available_products', { count: filteredProducts.length })}
                                 </p>
                                 {searchQuery && (
                                     <p className="text-xs sm:text-sm text-gray-600 mb-1">
-                                        نتائج البحث عن: <span className="font-medium text-yellow-600">"{searchQuery}"</span>
+                                        {t('products.search_for')} <span className="font-medium text-yellow-600">"{searchQuery}"</span>
                                     </p>
                                 )}
                                 {filters.category && (
                                     <p className="text-xs sm:text-sm text-gray-600">
-                                        الفئة: <span className="font-medium text-yellow-600">{getDisplayCategory(filters.category)}</span>
+                                        {t('products.category')} <span className="font-medium text-yellow-600">{getDisplayCategory(filters.category)}</span>
                                     </p>
                                 )}
                             </div>
@@ -939,12 +939,12 @@ const ProductList = () => {
                                 <div className="flex gap-2 justify-start sm:justify-end">
                                     {userBehavior.hasSearched && (
                                         <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full">
-                                            البحث
+                                            {t('products.search')}
                                         </span>
                                     )}
                                     {userBehavior.hasFiltered && (
                                         <span className="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full">
-                                            مفلتر
+                                            {t('products.filtered')}
                                         </span>
                                     )}
                                 </div>
@@ -985,10 +985,10 @@ const ProductList = () => {
                                                 {displayMode === 'searching' ? '🔍' : displayMode === 'filtered' ? '🎯' : '💎'}
                                             </div>
                                             <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4 px-4">
-                                                {suggestion?.title || "لم يتم العثور على منتجات"}
+                                                {suggestion?.title || t('products.no_products_found')}
                                             </h3>
                                             <p className="text-gray-600 text-base sm:text-lg mb-6 sm:mb-8 max-w-md mx-auto px-4">
-                                                {suggestion?.message || "جرب تعديل البحث أو الفلاتر"}
+                                                {suggestion?.message || t('products.try_modify_search')}
                                             </p>
                                             <Button
                                                 onClick={suggestion?.actionFn || clearFilters}

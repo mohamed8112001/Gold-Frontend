@@ -16,10 +16,12 @@ import { productService } from '../../services/productService.js';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES, PRODUCT_CATEGORIES } from '../../utils/constants.js';
 import { translateProductCategory } from '../../lib/utils.js';
+import { useTranslation } from 'react-i18next';
 
 const Favorites = () => {
     const navigate = useNavigate();
     const { user } = useAuth();
+    const { t } = useTranslation();
     const [favorites, setFavorites] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [viewMode, setViewMode] = useState('grid');
@@ -180,7 +182,7 @@ const Favorites = () => {
                             }}
                         >
                             <Eye className="w-4 h-4 mr-1" />
-                            show
+                            عرض
                         </Button>
                         <Button
                             size="sm"

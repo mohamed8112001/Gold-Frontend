@@ -10,8 +10,10 @@ import {
   Heart
 } from 'lucide-react';
 import { ROUTES } from '../../utils/constants.js';
+import { useTranslation } from 'react-i18next';
 
 const Footer = () => {
+  const { t } = useTranslation();
   const currentYear = new Date().getFullYear();
 
   const scrollToTop = () => {
@@ -23,30 +25,30 @@ const Footer = () => {
 
   const footerSections = {
     company: {
-      title: 'الشركة',
+      title: t('footer.company'),
       links: [
-        { name: 'من نحن', href: '/about' },
-        { name: 'اتصل بنا', href: '/contact' },
-        { name: 'الوظائف', href: '/careers' },
-        { name: 'الأخبار', href: '/news' },
+        { name: t('footer.about_us'), href: '/about' },
+        { name: t('footer.contact_us'), href: '/contact' },
+        { name: t('footer.careers'), href: '/careers' },
+        { name: t('footer.news'), href: '/news' },
       ],
     },
     support: {
-      title: 'الدعم',
+      title: t('footer.support'),
       links: [
-        { name: 'مركز المساعدة', href: '/help' },
-        { name: 'الأسئلة الشائعة', href: '/faq' },
-        { name: 'سياسة الخصوصية', href: '/privacy' },
-        { name: 'الشروط والأحكام', href: '/terms' },
+        { name: t('footer.help_center'), href: '/help' },
+        { name: t('footer.faq'), href: '/faq' },
+        { name: t('footer.privacy_policy'), href: '/privacy' },
+        { name: t('footer.terms_conditions'), href: '/terms' },
       ],
     },
     legal: {
-      title: 'قانوني',
+      title: t('footer.legal'),
       links: [
-        { name: 'سياسة الإرجاع', href: '/returns' },
-        { name: 'سياسة الشحن', href: '/shipping' },
-        { name: 'ضمان الجودة', href: '/quality' },
-        { name: 'شكاوى العملاء', href: '/complaints' },
+        { name: t('footer.returns_policy'), href: '/returns' },
+        { name: t('footer.shipping_policy'), href: '/shipping' },
+        { name: t('footer.quality_guarantee'), href: '/quality' },
+        { name: t('footer.customer_complaints'), href: '/complaints' },
       ],
     },
   };
@@ -131,17 +133,17 @@ const Footer = () => {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-3 md:space-y-0">
             <div className="flex items-center space-x-3 rtl:space-x-reverse text-gray-300 text-sm">
-              <span className="font-medium">© {currentYear} دبله. جميع الحقوق محفوظة.</span>
+              <span className="font-medium">© {currentYear} دبله. {t('footer.all_rights_reserved')}.</span>
               <span className="hidden sm:inline text-gray-400">•</span>
               <div className="hidden sm:flex items-center space-x-2 rtl:space-x-reverse">
-                <span>صُنع بحب</span>
+                <span>{t('footer.made_with_love')} بحب</span>
                 <Heart className="w-4 h-4 text-red-400 animate-pulse" />
-                <span>في مصر</span>
+                <span>{t('footer.in_egypt')}</span>
               </div>
             </div>
 
             <div className="flex items-center space-x-4 rtl:space-x-reverse">
-              <span className="text-gray-300 text-sm font-medium">تابعنا:</span>
+              <span className="text-gray-300 text-sm font-medium">{t('footer.follow_us')}:</span>
               <div className="flex items-center space-x-3 rtl:space-x-reverse">
                 {socialLinks.map((social) => {
                   const Icon = social.icon;

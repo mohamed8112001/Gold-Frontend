@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import ProductRating from '../rating/ProductRating';
 import {
   Award,
   User,
@@ -16,158 +17,100 @@ import {
   Shield
 } from 'lucide-react';
 
-const ProductDetailsTabs = ({ product, reviews }) => {
+const ProductDetailsTabs = ({ product, reviews, productId }) => {
   const [activeTab, setActiveTab] = useState('description');
 
   return (
-    <Card className="border-0  rounded-3xl">
-      <CardHeader className="pb-0">
+    <Card className="border-0 rounded-2xl">
+      <CardHeader className="pb-0 p-4">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-4 mb-6">
-            <TabsTrigger value="description">الوصف</TabsTrigger>
-            <TabsTrigger value="specifications">المواصفات</TabsTrigger>
-            <TabsTrigger value="reviews">التقييمات</TabsTrigger>
-            <TabsTrigger value="shipping">الشحن</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-4 mb-4 h-auto">
+            <TabsTrigger value="description" className="text-sm py-2">الوصف</TabsTrigger>
+            <TabsTrigger value="specifications" className="text-sm py-2">المواصفات</TabsTrigger>
+            <TabsTrigger value="reviews" className="text-sm py-2">التقييمات</TabsTrigger>
+            <TabsTrigger value="shipping" className="text-sm py-2">الشحن</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="description" className="space-y-6">
+          <TabsContent value="description" className="space-y-4 px-4 pb-4">
             <div>
-              <h3 className="text-2xl font-bold mb-4">وصف المنتج</h3>
-              <p className="text-gray-700 leading-relaxed mb-6 text-lg">
+              <h3 className="text-lg font-bold mb-3">وصف المنتج</h3>
+              <p className="text-gray-700 leading-relaxed mb-4 text-sm">
                 {product.description}
               </p>
 
-              <h4 className="text-xl font-semibold mb-4">Key Features</h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {product.features?.map((feature, index) => (
-                  <div key={index} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                    <Award className="w-5 h-5 text-yellow-500 flex-shrink-0" />
-                    <span className="text-gray-700">{feature}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="specifications" className="space-y-6">
-            <div>
-              <h3 className="text-2xl font-bold mb-4">المواصفات التقنية</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {product.specifications && Object.entries(product.specifications).map(([key, value]) => (
-                  <div key={key} className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
-                    <span className="font-semibold text-gray-700">{key}</span>
-                    <span className="text-gray-900 font-medium">{value}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="reviews" className="space-y-6">
-            <div>
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-2xl font-bold">تقييمات العملاء</h3>
-                <Button variant="outline">كتابة تقييم</Button>
-              </div>
-
-              <div className="space-y-6">
-                {reviews?.map((review) => (
-                  <div key={review.id} className="p-6 bg-gray-50 rounded-2xl">
-                    <div className="flex items-start gap-4">
-                      <Avatar className="w-12 h-12">
-                        <AvatarImage src={review.userAvatar} />
-                        <AvatarFallback>
-                          <User className="w-6 h-6" />
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <span className="font-semibold text-gray-900">{review.userName}</span>
-                          {review.verified && (
-                            <Badge className="bg-green-100 text-green-700 text-xs">
-                              <Verified className="w-3 h-3 mr-1" />
-                              Verified Purchase
-                            </Badge>
-                          )}
-                          <span className="text-sm text-gray-500">{review.date}</span>
-                        </div>
-
-                        <div className="flex items-center mb-3">
-                          {[...Array(5)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className={`w-4 h-4 ${i < review.rating
-                                ? 'fill-yellow-400 text-yellow-400'
-                                : 'text-gray-300'
-                                }`}
-                            />
-                          ))}
-                        </div>
-
-                        <p className="text-gray-700 mb-4 leading-relaxed">{review.comment}</p>
-
-                        {review.images && (
-                          <div className="flex gap-2 mb-4">
-                            {review.images.map((img, idx) => (
-                              <img
-                                key={idx}
-                                src={img}
-                                alt={`Review ${idx + 1}`}
-                                className="w-16 h-16 object-cover rounded-lg"
-                              />
-                            ))}
-                          </div>
-                        )}
-
-                        <div className="flex items-center gap-4 text-sm">
-                          <button className="flex items-center gap-1 text-gray-600 hover:text-green-600 transition-colors">
-                            <ThumbsUp className="w-4 h-4" />
-                            Helpful ({review.helpful})
-                          </button>
-                          <button className="flex items-center gap-1 text-gray-600 hover:text-red-600 transition-colors">
-                            <ThumbsDown className="w-4 h-4" />
-                            Not helpful
-                          </button>
-                        </div>
+              {product.features && product.features.length > 0 && (
+                <>
+                  <h4 className="text-base font-semibold mb-3">الميزات الرئيسية</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    {product.features.map((feature, index) => (
+                      <div key={index} className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg">
+                        <Award className="w-4 h-4 text-yellow-500 flex-shrink-0" />
+                        <span className="text-gray-700 text-sm">{feature}</span>
                       </div>
-                    </div>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="specifications" className="space-y-4 px-4 pb-4">
+            <div>
+              <h3 className="text-lg font-bold mb-3">المواصفات التقنية</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {product.specifications && Object.entries(product.specifications).map(([key, value]) => (
+                  <div key={key} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                    <span className="font-semibold text-gray-700 text-sm">{key}</span>
+                    <span className="text-gray-900 font-medium text-sm">{value}</span>
                   </div>
                 ))}
               </div>
             </div>
           </TabsContent>
 
-          <TabsContent value="shipping" className="space-y-6">
+          <TabsContent value="reviews" className="space-y-4 px-4 pb-4">
             <div>
-              <h3 className="text-2xl font-bold mb-4">Shipping & Returns</h3>
-              <div className="space-y-4">
-                <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-                  <div className="flex items-center gap-3 mb-2">
-                    <Truck className="w-5 h-5 text-green-600" />
-                    <span className="font-semibold text-green-800">Free Shipping</span>
+              <h3 className="text-lg font-bold mb-4">تقييمات العملاء</h3>
+              {/* استخدام مكون ProductRating الكامل */}
+              <ProductRating
+                productId={productId}
+                showForm={true}
+                className="bg-transparent border-0 shadow-none p-0"
+              />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="shipping" className="space-y-4 px-4 pb-4">
+            <div>
+              <h3 className="text-lg font-bold mb-3">الشحن والإرجاع</h3>
+              <div className="space-y-3">
+                <div className="p-3 bg-green-50 rounded-lg border border-green-200">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Truck className="w-4 h-4 text-green-600" />
+                    <span className="font-semibold text-green-800 text-sm">شحن مجاني</span>
                   </div>
-                  <p className="text-green-700">
-                    Delivery in {product.shippingInfo?.deliveryTime || '2-3 business days'} to your doorstep
+                  <p className="text-green-700 text-xs">
+                    التوصيل خلال {product.shippingInfo?.deliveryTime || '٢-٣ أيام عمل'} إلى باب منزلك
                   </p>
                 </div>
 
-                <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                  <div className="flex items-center gap-3 mb-2">
-                    <RefreshCw className="w-5 h-5 text-blue-600" />
-                    <span className="font-semibold text-blue-800">Easy Returns</span>
+                <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
+                  <div className="flex items-center gap-2 mb-1">
+                    <RefreshCw className="w-4 h-4 text-blue-600" />
+                    <span className="font-semibold text-blue-800 text-sm">إرجاع سهل</span>
                   </div>
-                  <p className="text-blue-700">
-                    {product.shippingInfo?.returnPolicy || '30 days'} hassle-free return policy
+                  <p className="text-blue-700 text-xs">
+                    {product.shippingInfo?.returnPolicy || 'إرجاع خلال ٣٠ يومًا'} بدون متاعب
                   </p>
                 </div>
 
-                <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
-                  <div className="flex items-center gap-3 mb-2">
-                    <Shield className="w-5 h-5 text-purple-600" />
-                    <span className="font-semibold text-purple-800">Quality Guarantee</span>
+                <div className="p-3 bg-purple-50 rounded-lg border border-purple-200">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Shield className="w-4 h-4 text-purple-600" />
+                    <span className="font-semibold text-purple-800 text-sm">ضمان الجودة</span>
                   </div>
-                  <p className="text-purple-700">
-                    All products come with authenticity certificate and warranty
+                  <p className="text-purple-700 text-xs">
+                    جميع المنتجات تأتي مع شهادة أصالة وضمان
                   </p>
                 </div>
               </div>

@@ -7,6 +7,7 @@ import { ArrowLeft, User, Eye, EyeOff, Phone, Mail, Lock, Check } from 'lucide-r
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES } from '../../utils/constants.js';
 import { GoogleLogin } from '@react-oauth/google';
+import { useTranslation } from 'react-i18next';
 
 
 const Register = () => {
@@ -14,6 +15,7 @@ const Register = () => {
   const userType = searchParams.get('type') || 'regular';
   const navigate = useNavigate();
   const { register, isLoading, googleRegister } = useAuth();
+  const { t } = useTranslation();
 
 
   const [formData, setFormData] = useState({
@@ -63,37 +65,37 @@ const Register = () => {
     const newErrors = {};
 
     if (!formData.firstName.trim()) {
-      newErrors.firstName = 'الاسم الأول مطلوب';
+      newErrors.firstName = t('auth.validation.required_field');
     }
 
     if (!formData.lastName.trim()) {
-      newErrors.lastName = 'الاسم الأخير مطلوب';
+      newErrors.lastName = t('auth.validation.required_field');
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = 'البريد الإلكتروني مطلوب';
+      newErrors.email = t('auth.validation.required_field');
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'البريد الإلكتروني غير صحيح';
+      newErrors.email = t('auth.validation.invalid_email');
     }
 
     if (!formData.phone.trim()) {
-      newErrors.phone = 'رقم الهاتف مطلوب';
+      newErrors.phone = t('auth.validation.required_field');
     } else if (!/^01[0-2,5]{1}[0-9]{8}$/.test(formData.phone)) {
-      newErrors.phone = 'رقم الهاتف غير صحيح';
+      newErrors.phone = t('auth.validation.invalid_phone');
     }
 
     if (!formData.password) {
-      newErrors.password = 'كلمة المرور مطلوبة';
+      newErrors.password = t('auth.validation.required_field');
     } else if (formData.password.length < 6) {
-      newErrors.password = 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
+      newErrors.password = t('auth.validation.password_min_length');
     }
 
     if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'كلمة المرور غير متطابقة';
+      newErrors.confirmPassword = t('auth.validation.passwords_not_match');
     }
 
     if (!formData.agreeToTerms) {
-      newErrors.agreeToTerms = 'يجب الموافقة على الشروط والأحكام';
+      newErrors.agreeToTerms = t('auth.validation.agree_terms_required');
     }
 
     setErrors(newErrors);
@@ -117,7 +119,7 @@ const Register = () => {
       });
       navigate(ROUTES.LOGIN);
     } catch (error) {
-      setErrors({ submit: error.message || 'حدث خطأ أثناء التسجيل' });
+      setErrors({ submit: error.message || t('messages.error.registration_failed') });
     }
   };
 
@@ -249,10 +251,10 @@ const Register = () => {
               {/* Enhanced Header */}
               <div className="text-center mb-8">
                 <h2 className="text-heading-2xl font-bold mb-3" style={{ color: '#A37F41' }}>
-                  إنشاء حساب
+                  {t('auth.register.title')}
                 </h2>
                 <p className="text-arabic-lg" style={{ color: '#6B5B47' }}>
-                  انضم إلى مجتمع ديبلا واكتشف المجوهرات الرائعة
+                  {t('auth.register.subtitle')}
                 </p>
               </div>
 
@@ -261,12 +263,12 @@ const Register = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="group">
                     <label className="block text-label-lg font-semibold mb-2 text-primary-900 font-cairo">
-                      الاسم الأول *
+                      {t('auth.register.first_name_label')}
                     </label>
                     <Input
                       name="firstName"
                       type="text"
-                      placeholder="الاسم الأول"
+                      placeholder={t('auth.register.first_name_placeholder')}
                       value={formData.firstName}
                       onChange={handleInputChange}
                       className={`py-3 border-2 rounded-xl transition-all duration-200 text-arabic-base text-primary-900 font-cairo ${errors.firstName ? 'border-error-500' : 'border-secondary-2'}`}
@@ -280,12 +282,12 @@ const Register = () => {
 
                   <div className="group">
                     <label className="block text-label-lg font-semibold mb-2" style={{ color: '#6B5B47' }}>
-                      الاسم الأخير *
+                      {t('auth.register.last_name_label')}
                     </label>
                     <Input
                       name="lastName"
                       type="text"
-                      placeholder="الاسم الأخير"
+                      placeholder={t('auth.register.last_name_placeholder')}
                       value={formData.lastName}
                       onChange={handleInputChange}
                       className={`py-3 border-2 rounded-xl transition-all duration-200 text-arabic-base ${errors.lastName ? 'border-red-500' : ''}`}
@@ -305,14 +307,14 @@ const Register = () => {
               {/* Enhanced Email Field */}
 <div className="group" dir="rtl">
   <label className="block text-label-lg font-semibold mb-2 text-right" style={{ color: '#6B5B47' }}>
-    البريد الإلكتروني *
+    {t('auth.register.email_label')}
   </label>
   <div className="relative">
     <Mail className="absolute right-4 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors" style={{ color: '#A37F41' }} />
     <Input
       name="email"
       type="email"
-      placeholder="أدخل بريدك الإلكتروني"
+      placeholder={t('auth.register.email_placeholder')}
       value={formData.email}
       onChange={handleInputChange}
       className={`pr-14 py-4 border-2 rounded-xl transition-all duration-200 text-arabic-base text-right placeholder:text-right ${errors.email ? 'border-red-500' : ''}`}
@@ -332,7 +334,7 @@ const Register = () => {
 {/* Enhanced Phone Field */}
 <div className="group" dir="rtl">
   <label className="block text-label-lg font-semibold mb-2 text-right" style={{ color: '#6B5B47' }}>
-    رقم الهاتف *
+    {t('auth.register.phone_label')}
   </label>
   <div className="relative">
     <Phone className="absolute right-4 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors" style={{ color: '#A37F41' }} />
@@ -361,14 +363,14 @@ const Register = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="group">
                     <label className="block text-label-lg font-semibold mb-2" style={{ color: '#6B5B47' }}>
-                      كلمة المرور *
+                      {t('auth.register.password_label')}
                     </label>
                     <div className="relative">
                       <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors" style={{ color: '#A37F41' }} />
                       <Input
                         name="password"
                         type={showPassword ? 'text' : 'password'}
-                        placeholder="كلمة المرور"
+                        placeholder={t('auth.register.password_placeholder')}
                         value={formData.password}
                         onChange={handleInputChange}
                         className={`pl-14 pr-14 py-4 border-2 rounded-xl transition-all duration-200 ${errors.password ? 'border-red-500' : ''}`}
@@ -395,14 +397,14 @@ const Register = () => {
 
                   <div className="group">
                     <label className="block text-label-lg font-semibold mb-2" style={{ color: '#241C0F' }}>
-                      تأكيد كلمة المرور *
+                      {t('auth.register.confirm_password_label')}
                     </label>
                     <div className="relative">
                       <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors" style={{ color: '#A37F41' }} />
                       <Input
                         name="confirmPassword"
                         type={showConfirmPassword ? 'text' : 'password'}
-                        placeholder="تأكيد كلمة المرور"
+                        placeholder={t('auth.register.confirm_password_placeholder')}
                         value={formData.confirmPassword}
                         onChange={handleInputChange}
                         className={`pl-14 pr-14 py-4 border-2 rounded-xl transition-all duration-200 ${errors.confirmPassword ? 'border-red-500' : ''}`}
@@ -478,10 +480,10 @@ const Register = () => {
                   {isLoading ? (
                     <div className="flex items-center justify-center space-x-2">
                       <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      <span>جاري إنشاء الحساب...</span>
+                      <span>{t('auth.register.creating_account')}</span>
                     </div>
                   ) : (
-                    'إنشاء حساب'
+                    t('auth.register.register_button')
                   )}
                 </Button>
 
@@ -491,7 +493,7 @@ const Register = () => {
                     <div className="w-full border-t-2" style={{ borderColor: '#E5D5C3' }}></div>
                   </div>
                   <div className="relative flex justify-center text-arabic-base">
-                    <span className="px-6 bg-gradient-to-r from-[#FFF8E6] to-white font-medium text-arabic-base" style={{ color: '#8A5700' }}>أو إنشاء حساب بـ</span>
+                    <span className="px-6 bg-gradient-to-r from-[#FFF8E6] to-white font-medium text-arabic-base" style={{ color: '#8A5700' }}>{t('auth.register.or_register_with')}</span>
                   </div>
                 </div>
 
@@ -519,18 +521,18 @@ const Register = () => {
                       <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
                       <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.60 3.30-4.53 6.16-4.53z" />
                     </svg>
-                    <span>انشاء حساب بـ Google</span>
+                    <span>{t('auth.register.google_register')}</span>
                   </GoogleLogin>
                 </div>
 
                 {/* Enhanced Sign In Link */}
                 <div className="text-center mt-6">
-                  <span className="text-gray-600">لديك حساب بالفعل؟ </span>
+                  <span className="text-gray-600">{t('auth.register.have_account')} </span>
                   <Link
                     to={ROUTES.LOGIN}
                     className="text-amber-600 hover:text-amber-700 font-semibold underline decoration-2 underline-offset-2 hover:decoration-amber-700 transition-all duration-200"
                   >
-                    تسجيل الدخول
+                    {t('auth.register.login_link')}
                   </Link>
                 </div>
               </form>
