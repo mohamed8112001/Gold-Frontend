@@ -649,7 +649,7 @@ const ProductList = () => {
                                     }}
                                 >
                                     <Heart className={`w-3 h-3 mr-1 ${safeProduct.isFavorited ? 'fill-current' : ''}`} />
-                                    <span className="hidden sm:inline">{safeProduct.isFavorited ? 'Saved' : 'Save'}</span>
+                                    <span className="hidden sm:inline mr-3">{safeProduct.isFavorited ? 'Saved' : 'حفظ'}</span>
                                 </Button>
                             </div>
                         </div>
