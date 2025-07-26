@@ -18,7 +18,7 @@ import {
 import { reservationService } from '../../services/reservationService';
 import { useAuth } from '../../context/AuthContext';
 import { ROUTES } from '../../utils/constants';
-
+import { API_BASE_URL } from '../../utils/constants';
 const MyReservations = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -160,13 +160,15 @@ const MyReservations = () => {
               <div key={reservation.id} className="bg-white rounded-3xl p-6 shadow-lg">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-start gap-4">
-                    {reservation.productId?.logoUrl && (
-                      <img
-                        src={`http://localhost:5006/uploads/product-images/${reservation.productId.images[0]}`}
-                        alt={reservation.productId.title}
-                        className="w-16 h-16 object-cover rounded-lg"
-                      />
-                    )}
+     {reservation.productId?.images?.length > 0 && (
+  <img
+    src={`${VITE_API_BASE_URL}/uploads/product-images/${reservation.productId.images[0]}`}
+    alt={reservation.productId.title}
+    className="w-16 h-16 object-cover rounded-lg"
+  />
+)}
+
+
                     <div>
                       <h3 className="text-xl font-bold text-gray-900">
                         {reservation.productId?.title || 'منتج غير متوفر'}

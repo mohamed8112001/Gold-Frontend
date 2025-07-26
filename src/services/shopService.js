@@ -40,14 +40,27 @@ export const shopService = {
         ...(signal && { signal }),
       };
 
-      const response = await api.get("/shop", config);
-      console.log("Shop API Response:", response.data);
+      // Try authenticated endpoint first, fallback to public endpoint
+      let response;
+      try {
+        response = await api.get("/shop", config);
+        console.log("Shop API Response (authenticated):", response.data);
+      } catch (authError) {
+        // If authentication fails (401/403), try public endpoint
+        if (authError.response?.status === 401 || authError.response?.status === 403) {
+          console.log("Authentication failed, trying public endpoint...");
+          response = await api.get("/shop/public", config);
+          console.log("Shop API Response (public):", response.data);
+        } else {
+          throw authError;
+        }
+      }
 
       return {
         success: true,
         data: response.data.data,
         meta: {
-          total: response.data.results,
+          total: response.data.results || response.data.result,
           page: params.page || 1,
           limit: params.limit || response.data.data.length,
         },

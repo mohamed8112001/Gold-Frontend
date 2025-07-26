@@ -42,7 +42,7 @@ const ShopList = () => {
   const [filters, setFilters] = useState({
     location: searchParams.get('location') || '',
     rating: searchParams.get('rating') || '',
-    specialties: searchParams.get('specialties') || '',
+    specialties: searchParams.get('specialties') || '', // توحيد الاسم
     sortBy: searchParams.get('sortBy') || 'rating'
   });
 
@@ -68,21 +68,17 @@ const ShopList = () => {
       setIsLoading(true);
       setError(null);
 
-      console.log(' Loading shops with filters:', { searchQuery, filters });
-
-      // Build query parameters
-      const params = {
-        ...filters,
-        page: pagination.page,
-        limit: pagination.limit
-      };
-
-      // Add search query if present
+      // Build query parameters بدون إرسال الفلاتر الفارغة
+      const params = {};
+      if (filters.location) params.location = filters.location;
+      if (filters.rating) params.rating = filters.rating;
+      if (filters.specialties) params.specialties = filters.specialties;
+      if (filters.sortBy) params.sortBy = filters.sortBy;
+      params.page = pagination.page;
+      params.limit = pagination.limit;
       if (searchQuery.trim()) {
         params.search = searchQuery.trim();
       }
-
-      console.log(' API params:', params);
 
       const response = await shopService.getAllShops(params);
 
@@ -504,8 +500,8 @@ const ShopList = () => {
 
                       {/* Specialties Filter */}
                       <Select
-                        value={filters.specialty || "all"}
-                        onValueChange={(value) => handleFilterChange('specialty', value === "all" ? "" : value)}
+                        value={filters.specialties || "all"}
+                        onValueChange={(value) => handleFilterChange('specialties', value === "all" ? "" : value)}
                       >
                         <SelectTrigger className="min-w-[150px] py-3 rounded-xl border border-[#C37C00]/50 focus:border-[#C37C00] bg-white text-sm text-[#C37C00]">
                           <SelectValue placeholder="التخصص" />
