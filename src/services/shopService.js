@@ -601,6 +601,74 @@ export const shopService = {
     return `${baseURL}/shop/${shopId}/commercial-record`;
   },
 
+  // طريقة محسنة لعرض السجل التجاري مع إدارة أفضل للأخطاء
+  viewCommercialRecordEnhanced: async (shopId) => {
+    try {
+      console.log("🔍 Starting enhanced commercial record view for shop:", shopId);
+
+      // التحقق من الـ token أولاً
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+
+      // محاولة الحصول على الملف كـ blob أولاً
+      const response = await api.get(`/shop/${shopId}/commercial-record`, {
+        responseType: "blob",
+        timeout: 30000,
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      console.log("📥 Response received:", {
+        status: response.status,
+        contentType: response.headers['content-type'],
+        size: response.data.size
+      });
+
+      // التحقق من نوع المحتوى
+      const contentType = response.headers['content-type'];
+      if (contentType && contentType.includes('application/pdf')) {
+        // إنشاء URL للـ blob
+        const blob = new Blob([response.data], { type: "application/pdf" });
+        const url = window.URL.createObjectURL(blob);
+
+        // محاولة فتح الملف في تبويب جديد
+        const newWindow = window.open(url, "_blank");
+
+        if (newWindow) {
+          console.log("✅ PDF opened successfully in new tab");
+          // تنظيف الـ URL بعد فترة
+          setTimeout(() => {
+            window.URL.revokeObjectURL(url);
+          }, 10000);
+          return { success: true, method: "blob" };
+        } else {
+          // إذا فشل فتح النافذة، محاولة التحميل
+          console.log("⚠️ Popup blocked, trying download");
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `commercial-record-${shopId}.pdf`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+
+          setTimeout(() => {
+            window.URL.revokeObjectURL(url);
+          }, 5000);
+
+          return { success: true, method: "download" };
+        }
+      } else {
+        throw new Error("Invalid content type received");
+      }
+    } catch (error) {
+      console.error("❌ Enhanced method failed:", error);
+      throw error;
+    }
+  },
+
   // Download commercial record PDF (admin only)
   downloadCommercialRecord: async (shopId) => {
     try {
@@ -651,7 +719,7 @@ export const shopService = {
       if (error.response?.status !== 404) {
         console.log("🔄 Trying fallback method - direct URL");
         try {
-          const fallbackUrl = `${import.meta.env.VITE_API_BASE_URL}/commercial-record/${shopId}`;
+          const fallbackUrl = `${import.meta.env.VITE_API_BASE_URL}/shop/${shopId}/commercial-record`;
           const newWindow = window.open(fallbackUrl, "_blank");
 
           if (!newWindow) {
@@ -681,8 +749,8 @@ export const shopService = {
   // طريقة بديلة لعرض السجل التجاري باستخدام الرابط المباشر
   viewCommercialRecordDirect: (shopId) => {
     try {
-      const baseURL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5001";
-      const directUrl = `${baseURL}/commercial-record/${shopId}`;
+      const baseURL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5006";
+      const directUrl = `${baseURL}/shop/${shopId}/commercial-record`;
 
       console.log("🔗 Opening commercial record directly:", directUrl);
 

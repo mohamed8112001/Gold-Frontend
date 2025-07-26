@@ -10,10 +10,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu.jsx';
 import GoldPriceDisplay from '../common/GoldPriceDisplay.jsx';
+import { useTranslation } from 'react-i18next';
 
 const Header = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated, isAdmin, isShopOwner, logout, isRegularUser } = useAuth();
+  const { t } = useTranslation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -107,15 +109,15 @@ const Header = () => {
               {/* Navigation */}
               <nav className="hidden lg:flex items-center space-x-reverse space-x-4" dir="rtl">
                 {[
-                  { to: "/home", label: "الرئيسية" },
-                  { to: "/shops", label: "المتاجر" },
-                  { to: "/products", label: "المنتجات" },
-                  ...(isAuthenticated && user && isShopOwner ? [{ to: "/dashboard", label: "لوحة التحكم" }] : []),
+                  { to: "/home", label: t('navigation.home') },
+                  { to: "/shops", label: t('navigation.shops') },
+                  { to: "/products", label: t('navigation.products') },
+                  ...(isAuthenticated && user && isShopOwner ? [{ to: "/dashboard", label: t('navigation.dashboard') }] : []),
                   ...(isAuthenticated && user && isRegularUser ? [
-                    { to: "/favorites", label: "المفضلة" },
+                    { to: "/favorites", label: t('navigation.favorites') },
                     { to: "/my-reservations", label: "حجوزاتي" }
                   ] : []),
-                  ...(isAdmin ? [{ to: "/admin", label: "الإدارة", isAdmin: true }] : []),
+                  ...(isAdmin ? [{ to: "/admin", label: t('admin_panel'), isAdmin: true }] : []),
                 ].map((item, index) => (
                   <Link
                     key={index}
@@ -177,7 +179,7 @@ const Header = () => {
                           <User className="w-4 h-4 text-amber-700 group-hover:text-amber-600" />
                         </div>
                         <div className="flex flex-col">
-                          <span className="text-amber-800 font-semibold text-base group-hover:text-amber-600">الملف الشخصي</span>
+                          <span className="text-amber-800 font-semibold text-base group-hover:text-amber-600">{t('navigation.profile')}</span>
                           <span className="text-amber-600/70 text-xs">عرض وتعديل البيانات الشخصية</span>
                         </div>
                       </Link>
@@ -190,7 +192,7 @@ const Header = () => {
                         <LogOut className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
                       </div>
                       <div className="flex flex-col">
-                        <span className="font-semibold text-base">تسجيل الخروج</span>
+                        <span className="font-semibold text-base">{t('navigation.logout')}</span>
                         <span className="text-red-500/70 text-xs">إنهاء الجلسة الحالية</span>
                       </div>
                     </DropdownMenuItem>
@@ -266,16 +268,16 @@ const Header = () => {
                   </div>
                   <div className="flex flex-col space-y-3 px-4">
                     {[
-                      { to: "/home", label: "🏠 الرئيسية" },
-                      { to: "/shops", label: "🏪 المتاجر" },
-                      { to: "/products", label: "💎 المنتجات" },
-                      ...(isAdmin || isShopOwner ? [{ to: "/dashboard", label: "📊 لوحة التحكم" }] : []),
+                      { to: "/home", label: `🏠 ${t('navigation.home')}` },
+                      { to: "/shops", label: `🏪 ${t('navigation.shops')}` },
+                      { to: "/products", label: `💎 ${t('navigation.products')}` },
+                      ...(isAdmin || isShopOwner ? [{ to: "/dashboard", label: `📊 ${t('navigation.dashboard')}` }] : []),
                       ...(isRegularUser ? [
-                        { to: "/favorites", label: "❤️ المفضلة" },
+                        { to: "/favorites", label: `❤️ ${t('navigation.favorites')}` },
                         { to: "/my-reservations", label: "📅 حجوزاتي" }
                       ] : []),
-                      ...(isAdmin ? [{ to: "/admin", label: "⚙️ لوحة الإدارة", isAdmin: true }] : []),
-                      { to: "/profile", label: "👤 الملف الشخصي" },
+                      ...(isAdmin ? [{ to: "/admin", label: `⚙️ ${t('admin_panel')}`, isAdmin: true }] : []),
+                      { to: "/profile", label: `👤 ${t('navigation.profile')}` },
                     ].map((item, index) => (
                       <Link
                         key={index}
@@ -294,7 +296,7 @@ const Header = () => {
                       }}
                       className="w-full justify-center border-2 border-red-200/50 text-red-600 hover:text-white hover:bg-gradient-to-r hover:from-red-500 hover:to-red-600 font-semibold text-base py-3 rounded-xl transition-all duration-300 hover:shadow-md"
                     >
-                      🚪 تسجيل الخروج
+                      🚪 {t('navigation.logout')}
                     </Button>
                   </div>
                 </>

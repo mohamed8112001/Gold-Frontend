@@ -5,9 +5,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../..
 import { Button } from '../../components/ui/button';
 import { Badge } from '../../components/ui/badge';
 import { CheckCircle, XCircle, Clock, Eye, User, Phone, Mail, MapPin } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const ShopActivationManagement = () => {
   const { user, isAdmin } = useAuth();
+  const { t } = useTranslation();
   const [pendingShops, setPendingShops] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
@@ -42,15 +44,15 @@ const ShopActivationManagement = () => {
 
       // عرض رسالة نجاح مع تفاصيل إضافية
       alert(
-        '✅ تم الموافقة على طلب التفعيل بنجاح!\n\n' +
-        '📧 تم إرسال إشعار فوري لصاحب المتجر\n' +
-        '💳 يمكن لصاحب المتجر الآن المتابعة لعملية الدفع'
+        `✅ ${t('admin.approval_success')}\n\n` +
+        `📧 ${t('admin.approval_notification')}\n` +
+        `💳 ${t('admin.payment_info')}`
       );
 
       console.log('Shop approved successfully:', response);
     } catch (err) {
       console.error('Error approving shop:', err);
-      alert('فشل في الموافقة على الطلب: ' + (err.message || 'حاول مرة أخرى'));
+      alert(`${t('admin.approval_failed')}: ${err.message || t('admin.try_again')}`);
     }
   };
 
@@ -275,14 +277,14 @@ const ShopActivationManagement = () => {
                       className="bg-green-500 hover:bg-green-600 text-white"
                     >
                       <CheckCircle className="w-4 h-4 mr-2" />
-                      الموافقة على التفعيل
+                      {t('admin.approve_activation')}
                     </Button>
                     <Button
                       onClick={() => openRejectModal(shop)}
                       variant="destructive"
                     >
                       <XCircle className="w-4 h-4 mr-2" />
-                      رفض الطلب
+                      {t('admin.reject_request')}
                     </Button>
                     {shop.commercialRecord && (
                       <Button
@@ -290,7 +292,7 @@ const ShopActivationManagement = () => {
                         variant="outline"
                       >
                         <Eye className="w-4 h-4 mr-2" />
-                        عرض السجل التجاري
+                        {t('admin.view_commercial_record')}
                       </Button>
                     )}
                   </div>

@@ -10,7 +10,7 @@ import ProductInfoCard from '../../components/product/ProductInfoCard';
 import ProductDetailsTabs from '../../components/product/ProductDetailsTabs';
 import ShopInfoSidebar from '../../components/product/ShopInfoSidebar';
 import ShopChatInterface from '../../components/ui/shop_chat_interface';
-import ProductRating from '../../components/rating/ProductRating';
+
 // Import services
 import { productService } from '../../services/productService.js';
 import { shopService } from '../../services/shopService.js';
@@ -292,33 +292,48 @@ const ProductDetails = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 font-inter">
-            {/* رأس الصفحة المحسن مع مسار التنقل */}
-            <div className="bg-white dark:bg-gray-800 border-b sticky top-0 z-40">
-                <div className="w-full px-4 sm:px-6 lg:px-8 py-4">
-                    <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-300">
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => navigate(-1)}
-                            className="flex items-center gap-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 rounded-md px-3 py-2"
-                            aria-label="العودة"
-                        >
-                            <ArrowLeft className="w-4 h-4" />
-                            العودة
-                        </Button>
-                        <ChevronRight className="w-4 h-4 text-gray-400 dark:text-gray-500" />
-                        <span
-                            className="hover:text-amber-600 dark:hover:text-amber-400 cursor-pointer transition-colors"
-                            onClick={() => navigate(ROUTES.PRODUCTS)}
-                        >
-                            المنتجات
-                        </span>
-                        <ChevronRight className="w-4 h-4 text-gray-400 dark:text-gray-500" />
-                        <span className="text-gray-900 dark:text-white font-medium truncate">{product.name}</span>
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 font-cairo">
+            {/* شريط التنقل الثابت أسفل الهيدر */}
+            <div className="mt-4 bg-gradient-to-r from-white via-amber-50/30 to-white dark:from-gray-800 dark:via-gray-700 dark:to-gray-800 border-b border-amber-200/50 dark:border-gray-700 shadow-lg">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                    <div className="flex items-center justify-between">
+                        {/* مسار التنقل */}
+                        <nav className="flex items-center gap-3 text-sm font-cairo" aria-label="مسار التنقل">
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => navigate(-1)}
+                                className="flex items-center gap-2 bg-white/80 hover:bg-amber-100 hover:text-amber-800 dark:bg-gray-700 dark:hover:bg-gray-600 transition-all duration-300 rounded-xl px-4 py-2.5 font-semibold shadow-sm border border-amber-200/50 dark:border-gray-600"
+                                aria-label="العودة للصفحة السابقة"
+                            >
+                                <ArrowLeft className="w-4 h-4" />
+                                العودة
+                            </Button>
 
-                        <div className="ml-auto flex items-center gap-2">
-                            <Button variant="ghost" size="sm" className="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white transition-all duration-300">
+                            <div className="flex items-center gap-2 bg-white/60 dark:bg-gray-700/60 rounded-xl px-4 py-2.5 shadow-sm border border-amber-200/30 dark:border-gray-600">
+                                <button
+                                    onClick={() => navigate(ROUTES.PRODUCTS)}
+                                    className="text-gray-700 dark:text-gray-200 hover:text-amber-700 dark:hover:text-amber-400 cursor-pointer transition-colors duration-300 font-semibold hover:underline"
+                                >
+                                    المنتجات
+                                </button>
+
+                                <ChevronRight className="w-4 h-4 text-amber-500 dark:text-amber-400" />
+
+                                <span className="text-amber-800 dark:text-amber-300 font-bold truncate max-w-xs sm:max-w-sm md:max-w-md">
+                                    {product?.name || 'انسيال ذهب'}
+                                </span>
+                            </div>
+                        </nav>
+
+                        {/* أزرار إضافية */}
+                        <div className="flex items-center gap-2">
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                className="bg-white/80 hover:bg-amber-100 text-gray-600 hover:text-amber-700 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-300 dark:hover:text-amber-400 transition-all duration-300 rounded-xl p-3 shadow-sm border border-amber-200/50 dark:border-gray-600"
+                                aria-label="مشاركة المنتج"
+                            >
                                 <Share2 className="w-4 h-4" />
                             </Button>
                         </div>
@@ -326,9 +341,10 @@ const ProductDetails = () => {
                 </div>
             </div>
 
-            <div className="w-full px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
+            {/* المحتوى الرئيسي */}
+            <div className="w-full px-2 sm:px-4 lg:px-6 py-3 sm:py-4 animate-fade-in">
                 {/* علامات المنتج */}
-                <div className="flex flex-col sm:flex-row gap-2 mb-6">
+                <div className="flex flex-wrap gap-2 mb-4">
                     {product.tags?.map((tag, index) => (
                         <Badge
                             key={index}
@@ -340,7 +356,7 @@ const ProductDetails = () => {
                     ))}
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-12">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 mb-6">
                     {/* صور المنتج */}
                     <ProductImageGallery
                         product={product}
@@ -348,7 +364,7 @@ const ProductDetails = () => {
                         setMainImage={setMainImage}
                         selectedImage={selectedImage}
                         setSelectedImage={setSelectedImage}
-                        className="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-6"
+                        className="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-4"
                     />
 
                     {/* معلومات المنتج */}
@@ -362,35 +378,35 @@ const ProductDetails = () => {
                         onBookAppointment={handleBookAppointment}
                         onVisitShop={handleVisitShop}
                         onAddToFavorites={handleAddToFavorites}
-                        className="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-6"
+                        className="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-4"
                     />
                 </div>
 
                 {/* تفاصيل المنتج ومعلومات المتجر */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-                    <div className="lg:col-span-2">
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 lg:gap-6 mb-6">
+                    <div className="lg:col-span-3">
                         <ProductDetailsTabs
                             product={product}
                             reviews={reviews}
-                            className="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-6"
+                            productId={id}
+                            className="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-4"
                         />
                     </div>
 
                     {/* الشريط الجانبي لمعلومات المتجر */}
-                    <div className="sticky top-24">
-                        <ShopInfoSidebar
-                            shop={shop}
-                            onVisitShop={handleVisitShop}
-                            onOpenChat={handleOpenChat}
-                            className="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-6"
-                        />
+                    <div className="lg:col-span-1">
+                        <div className="sticky top-20">
+                            <ShopInfoSidebar
+                                shop={shop}
+                                onVisitShop={handleVisitShop}
+                                onOpenChat={handleOpenChat}
+                                className="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-4"
+                            />
+                        </div>
                     </div>
                 </div>
 
-                {/* قسم تقييم المنتج */}
-                <div className="w-full">
-                    <ProductRating productId={id} showForm={true} className="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-6" />
-                </div>
+
             </div>
 
             {/* واجهة الدردشة */}

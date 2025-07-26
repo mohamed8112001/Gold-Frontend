@@ -24,9 +24,11 @@ import.meta.env.VITE_API_BASE_URL
 
 import ConversationsFloatinButton from '@/components/chat/ConversationsFloatinButton.jsx';
 import { useAuth } from '@/context/AuthContext.jsx';
+import { useTranslation } from 'react-i18next';
 
 const Home = () => {
   const { user } = useAuth()
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const [searchQuery, setSearchQuery] = useState('');

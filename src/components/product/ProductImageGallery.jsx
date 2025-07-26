@@ -60,10 +60,10 @@ const ProductImageGallery = ({ product, mainImage, setMainImage, selectedImage, 
   }, [product]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       {/* Main Image */}
       <div className="relative group">
-        <div className="aspect-square bg-white rounded-3xl overflow-hidden  border border-gray-100">
+        <div className="aspect-square bg-white rounded-2xl overflow-hidden border border-gray-100">
           <img
             src={getImageUrl(mainImage)}
             alt={product.name}
@@ -73,33 +73,33 @@ const ProductImageGallery = ({ product, mainImage, setMainImage, selectedImage, 
               e.target.src = defaultImage;
             }}
           />
-          
+
           {/* Image Navigation - Only show if multiple images */}
           {imagesToShow.length > 1 && (
             <>
               <button
                 onClick={prevImage}
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-3  opacity-0 group-hover:opacity-100 transition-all duration-300"
+                className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-all duration-300"
               >
-                <ChevronLeft className="w-5 h-5" />
+                <ChevronLeft className="w-4 h-4" />
               </button>
               <button
                 onClick={nextImage}
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-3  opacity-0 group-hover:opacity-100 transition-all duration-300"
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-all duration-300"
               >
-                <ChevronRight className="w-5 h-5" />
+                <ChevronRight className="w-4 h-4" />
               </button>
             </>
           )}
 
           {/* Zoom Button */}
-          <button className="absolute top-4 right-4 bg-white/90 hover:bg-white rounded-full p-3  opacity-0 group-hover:opacity-100 transition-all duration-300">
-            <ZoomIn className="w-5 h-5" />
+          <button className="absolute top-2 right-2 bg-white/90 hover:bg-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
+            <ZoomIn className="w-4 h-4" />
           </button>
 
           {/* Discount Badge */}
           {product.discount && (
-            <div className="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full font-bold text-sm ">
+            <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded-full font-bold text-xs">
               -{product.discount}%
             </div>
           )}
@@ -108,14 +108,14 @@ const ProductImageGallery = ({ product, mainImage, setMainImage, selectedImage, 
 
       {/* Thumbnail Gallery - Only show if multiple images */}
       {imagesToShow.length > 1 && (
-        <div className="flex gap-3 overflow-x-auto pb-2">
+        <div className="flex gap-2 overflow-x-auto pb-1">
           {imagesToShow.map((image, index) => (
             <button
               key={index}
               onClick={() => changeImage(index)}
-              className={`flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden border-2 transition-all duration-300 ${
-                selectedImage === index 
-                  ? 'border-yellow-500  scale-105' 
+              className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all duration-300 ${
+                selectedImage === index
+                  ? 'border-yellow-500 scale-105'
                   : 'border-gray-200 hover:border-gray-300'
               }`}
             >
@@ -134,8 +134,8 @@ const ProductImageGallery = ({ product, mainImage, setMainImage, selectedImage, 
 
       {/* Image Counter */}
       {imagesToShow.length > 1 && (
-        <div className="text-center text-sm text-gray-500">
-          {selectedImage + 1} of {imagesToShow.length}
+        <div className="text-center text-xs text-gray-500">
+          {selectedImage + 1} من {imagesToShow.length}
         </div>
       )}
     </div>

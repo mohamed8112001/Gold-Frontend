@@ -19,13 +19,13 @@ import {
 const ShopInfoSidebar = ({ shop, onVisitShop, onOpenChat }) => {
   if (!shop) {
     return (
-      <div className="space-y-6">
-        <Card className="border-0  rounded-3xl">
-          <CardContent className="p-8 text-center">
-            <div className="text-gray-400 mb-4">
-              <ShoppingBag className="w-16 h-16 mx-auto" />
+      <div className="space-y-3">
+        <Card className="border-0 rounded-2xl">
+          <CardContent className="p-4 text-center">
+            <div className="text-gray-400 mb-2">
+              <ShoppingBag className="w-12 h-12 mx-auto" />
             </div>
-            <p className="text-gray-600">معلومات المتجر غير متاحة</p>
+            <p className="text-gray-600 text-sm">معلومات المتجر غير متاحة</p>
           </CardContent>
         </Card>
       </div>
@@ -33,22 +33,22 @@ const ShopInfoSidebar = ({ shop, onVisitShop, onOpenChat }) => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       {/* Shop Info Card */}
-      <Card className="border-0  rounded-3xl overflow-hidden">
-        <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 p-6">
-          <div className="flex items-center gap-4 mb-4">
-            <Avatar className="w-16 h-16 border-4 border-white ">
+      <Card className="border-0 rounded-2xl overflow-hidden">
+        <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 p-4">
+          <div className="flex items-center gap-3 mb-3">
+            <Avatar className="w-12 h-12 border-2 border-white">
               <AvatarImage src={shop.image} />
               <AvatarFallback>
-                <ShoppingBag className="w-8 h-8" />
+                <ShoppingBag className="w-6 h-6" />
               </AvatarFallback>
             </Avatar>
-            <div>
+            <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
-                <h3 className="font-bold text-xl text-gray-900">{shop.name}</h3>
+                <h3 className="font-bold text-lg text-gray-900 truncate">{shop.name}</h3>
                 {shop.verified && (
-                  <Verified className="w-5 h-5 text-blue-500" />
+                  <Verified className="w-4 h-4 text-blue-500 flex-shrink-0" />
                 )}
               </div>
               <div className="flex items-center gap-2">
@@ -56,44 +56,44 @@ const ShopInfoSidebar = ({ shop, onVisitShop, onOpenChat }) => {
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
-                      className={`w-4 h-4 ${i < Math.floor(shop.rating || 0)
+                      className={`w-3 h-3 ${i < Math.floor(shop.rating || 0)
                         ? 'fill-yellow-400 text-yellow-400'
                         : 'text-gray-300'
                         }`}
                     />
                   ))}
                 </div>
-                <span className="text-sm font-semibold">
+                <span className="text-xs font-semibold">
                   {shop.rating ? shop.rating.toFixed(1) : '0.0'}
                 </span>
-                <span className="text-sm text-gray-600">({shop.reviewCount || 0})</span>
+                <span className="text-xs text-gray-600">({shop.reviewCount || 0})</span>
               </div>
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-2 mb-4">
+          <div className="flex flex-wrap gap-1 mb-2">
             {shop.badges?.map((badge, index) => (
-              <Badge key={index} className="bg-white/80 text-yellow-700 border-yellow-200">
+              <Badge key={index} className="bg-white/80 text-yellow-700 border-yellow-200 text-xs px-2 py-1">
                 {badge}
               </Badge>
             ))}
           </div>
         </div>
 
-        <CardContent className="p-6 space-y-4">
+        <CardContent className="p-4 space-y-3">
           <div>
-            <p className="text-gray-600 text-sm leading-relaxed">
+            <p className="text-gray-600 text-xs leading-relaxed">
               {shop.description || 'لا يوجد وصف متاح'}
             </p>
           </div>
 
           <Separator />
 
-          <div className="space-y-3">
+          <div className="space-y-2">
             {shop.address && (
-              <div className="flex items-start gap-3">
-                <MapPin className="w-4 h-4 text-gray-500 mt-1 flex-shrink-0" />
-                <div className="text-sm text-gray-700">
+              <div className="flex items-start gap-2">
+                <MapPin className="w-3 h-3 text-gray-500 mt-1 flex-shrink-0" />
+                <div className="text-xs text-gray-700">
                   <div>{shop.address}</div>
                   {shop.area && shop.area !== shop.address && (
                     <div className="text-gray-500">{shop.area}</div>
@@ -106,11 +106,11 @@ const ShopInfoSidebar = ({ shop, onVisitShop, onOpenChat }) => {
             )}
 
             {shop.phone && (
-              <div className="flex items-center gap-3">
-                <Phone className="w-4 h-4 text-gray-500 flex-shrink-0" />
+              <div className="flex items-center gap-2">
+                <Phone className="w-3 h-3 text-gray-500 flex-shrink-0" />
                 <a
                   href={`tel:${shop.phone}`}
-                  className="text-sm text-gray-700 hover:text-blue-600 transition-colors"
+                  className="text-xs text-gray-700 hover:text-blue-600 transition-colors"
                 >
                   {shop.phone}
                 </a>
@@ -118,54 +118,55 @@ const ShopInfoSidebar = ({ shop, onVisitShop, onOpenChat }) => {
             )}
 
             {shop.workingHours && (
-              <div className="flex items-start gap-3">
-                <Clock className="w-4 h-4 text-gray-500 mt-1 flex-shrink-0" />
-                <span className="text-sm text-gray-700">{shop.workingHours}</span>
+              <div className="flex items-start gap-2">
+                <Clock className="w-3 h-3 text-gray-500 mt-1 flex-shrink-0" />
+                <span className="text-xs text-gray-700">{shop.workingHours}</span>
               </div>
             )}
 
             {shop.established && (
-              <div className="flex items-center gap-3">
-                <Award className="w-4 h-4 text-gray-500 flex-shrink-0" />
-                <span className="text-sm text-gray-700">تأسس {shop.established}</span>
+              <div className="flex items-center gap-2">
+                <Award className="w-3 h-3 text-gray-500 flex-shrink-0" />
+                <span className="text-xs text-gray-700">تأسس {shop.established}</span>
               </div>
             )}
           </div>
 
-          <Separator />
-
           {shop.specialties && shop.specialties.length > 0 && (
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-2">Specialties</h4>
-              <div className="flex flex-wrap gap-2">
-                {shop.specialties.map((specialty, index) => (
-                  <Badge key={index} variant="secondary" className="text-xs">
-                    {specialty}
-                  </Badge>
-                ))}
+            <>
+              <Separator />
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-2 text-sm">التخصصات</h4>
+                <div className="flex flex-wrap gap-1">
+                  {shop.specialties.map((specialty, index) => (
+                    <Badge key={index} variant="secondary" className="text-xs px-2 py-1">
+                      {specialty}
+                    </Badge>
+                  ))}
+                </div>
               </div>
-            </div>
+            </>
           )}
 
           <Separator />
 
-          <div className="space-y-3">
+          <div className="space-y-2">
             <Button
-              className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700"
+              className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 py-2 text-sm"
               onClick={onVisitShop}
             >
-              <Eye className="w-4 h-4 mr-2" />
+              <Eye className="w-3 h-3 mr-2" />
               زيارة المتجر
             </Button>
             <div className="grid grid-cols-2 gap-2">
-              <Button variant="outline" size="sm" onClick={onOpenChat}>
-                <MessageSquare className="w-4 h-4 mr-1" />
+              <Button variant="outline" size="sm" onClick={onOpenChat} className="text-xs py-2">
+                <MessageSquare className="w-3 h-3 mr-1" />
                 دردشة
               </Button>
               {shop.phone && (
-                <Button variant="outline" size="sm" asChild>
+                <Button variant="outline" size="sm" asChild className="text-xs py-2">
                   <a href={`tel:${shop.phone}`}>
-                    <Phone className="w-4 h-4 mr-1" />
+                    <Phone className="w-3 h-3 mr-1" />
                     اتصال
                   </a>
                 </Button>
@@ -174,36 +175,18 @@ const ShopInfoSidebar = ({ shop, onVisitShop, onOpenChat }) => {
 
             {/* WhatsApp button if available */}
             {shop.whatsapp && (
-              <Button variant="outline" size="sm" className="w-full bg-green-50 hover:bg-green-100 text-green-700 border-green-200" asChild>
+              <Button variant="outline" size="sm" className="w-full bg-green-50 hover:bg-green-100 text-green-700 border-green-200 text-xs py-2" asChild>
                 <a
                   href={`https://wa.me/${shop.whatsapp.replace(/[^0-9]/g, '')}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <MessageSquare className="w-4 h-4 mr-2" />
+                  <MessageSquare className="w-3 h-3 mr-2" />
                   WhatsApp
                 </a>
               </Button>
             )}
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Related Products Preview */}
-      <Card className="border-0  rounded-3xl">
-        <CardHeader>
-          <CardTitle className="text-xl font-bold">You Might Also Like</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {/* Placeholder for related products - you can implement this with real API call */}
-          <div className="text-center py-8 text-gray-500">
-            <ShoppingBag className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-            <p className="text-sm">المنتجات ذات الصلة ستظهر هنا</p>
-          </div>
-
-          <Button variant="outline" className="w-full mt-4">
-            Browse All Products
-          </Button>
         </CardContent>
       </Card>
     </div>

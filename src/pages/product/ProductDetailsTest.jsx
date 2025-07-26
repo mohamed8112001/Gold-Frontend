@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { productService } from '../../services/productService.js';
 import { shopService } from '../../services/shopService.js';
+import { useTranslation } from 'react-i18next';
 
 const ProductDetailsTest = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [product, setProduct] = useState(null);
   const [shop, setShop] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -182,7 +184,7 @@ const ProductDetailsTest = () => {
             {loading ? (
               <div className="text-center py-8">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-                <p>Loading product...</p>
+                <p>{t('common.loading')}</p>
               </div>
             ) : !product ? (
               <div className="text-center py-8">
@@ -267,7 +269,7 @@ const ProductDetailsTest = () => {
                     onClick={() => window.open(`/shops/${shop._id || shop.id}`, '_blank')}
                     className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
                   >
-                    Visit Shop
+                    {t('buttons.visit_shop')}
                   </button>
                 </div>
               </div>

@@ -7,12 +7,14 @@ import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES } from '../../utils/constants.js';
 import { GoogleLogin } from '@react-oauth/google';
+import { useTranslation } from 'react-i18next';
 
 
 const Login = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { login, googleLogin, isLoading } = useAuth();
+  const { t } = useTranslation();
 
   // الحصول على رابط إعادة التوجيه من query parameters
   const redirectUrl = searchParams.get('redirect');
@@ -61,13 +63,13 @@ const Login = () => {
     const newErrors = {};
 
     if (!formData.email.trim()) {
-      newErrors.email = 'البريد الإلكتروني مطلوب';
+      newErrors.email = t('auth.validation.required_field');
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'البريد الإلكتروني غير صحيح';
+      newErrors.email = t('auth.validation.invalid_email');
     }
 
     if (!formData.password) {
-      newErrors.password = 'كلمة المرور مطلوبة';
+      newErrors.password = t('auth.validation.required_field');
     }
 
     setErrors(newErrors);
@@ -108,7 +110,7 @@ const Login = () => {
         stack: error.stack,
         response: error.response?.data
       });
-      setErrors({ submit: error.message || 'حدث خطأ أثناء تسجيل الدخول' });
+      setErrors({ submit: error.message || t('messages.error.general') });
     }
   };
 
@@ -216,10 +218,10 @@ const Login = () => {
               {/* Enhanced Header */}
               <div className="text-center mb-10">
                 <h2 className="text-heading-2xl font-bold mb-3" style={{ color: '#A37F41' }}>
-                  أهلاً بك
+                  {t('auth.login.title')}
                 </h2>
                 <p className="text-arabic-lg" style={{ color: '#6B5B47' }}>
-                  يرجى إدخال بياناتك للوصول إلى حسابك
+                  {t('auth.login.subtitle')}
                 </p>
               </div>
 
@@ -227,14 +229,14 @@ const Login = () => {
                 {/* Enhanced Email Field */}
                <div className="group" dir="rtl">
   <label className="block text-label-lg font-semibold mb-3 text-primary-900 text-right">
-    أدخل بريدك الإلكتروني
+    {t('auth.login.email_label')}
   </label>
   <div className="relative">
     <Mail className="absolute right-4 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors text-primary-500" />
     <Input
       name="email"
       type="email"
-      placeholder="البريد الإلكتروني *"
+      placeholder={t('auth.login.email_placeholder')}
       value={formData.email}
       onChange={handleInputChange}
       className={`pr-14 py-4 border-2 rounded-xl transition-all duration-200 text-arabic-base text-primary-900 text-right placeholder:text-right placeholder:text-primary-400 ${errors.email ? 'border-error-500' : 'border-secondary-2'}`}
@@ -249,14 +251,14 @@ const Login = () => {
                 {/* Enhanced Password Field */}
                 <div className="group">
                   <label className="block text-label-lg font-semibold mb-3 text-primary-900">
-                    أدخل كلمة المرور
+                    {t('auth.login.password_label')}
                   </label>
                   <div className="relative">
                     <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors" style={{ color: '#A37F41' }} />
                     <Input
                       name="password"
                       type={showPassword ? 'text' : 'password'}
-                      placeholder="كلمة المرور *"
+                      placeholder={t('auth.login.password_placeholder')}
                       value={formData.password}
                       onChange={handleInputChange}
                       className={`pl-14 pr-14 py-4 border-2 rounded-xl transition-all duration-200 text-arabic-base ${errors.password ? 'border-red-500' : ''}`}
@@ -296,7 +298,7 @@ const Login = () => {
                       }}
                     />
                     <label className="text-arabic-base font-medium" style={{ color: '#241C0F' }}>
-                      تذكرني
+                      {t('auth.login.remember_me')}
                     </label>
                   </div>
 
@@ -305,7 +307,7 @@ const Login = () => {
                     className="text-arabic-base font-medium transition-colors duration-200 hover:opacity-80"
                     style={{ color: '#A37F41' }}
                   >
-                    نسيت كلمة المرور؟
+                    {t('auth.login.forgot_password')}
                   </Link>
                 </div>
 
@@ -335,10 +337,10 @@ const Login = () => {
                   {isLoading ? (
                     <div className="flex items-center justify-center space-x-2">
                       <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      <span className="text-button-lg">جاري تسجيل الدخول...</span>
+                      <span className="text-button-lg">جاري {t('auth.login.login_button')}...</span>
                     </div>
                   ) : (
-                    <span className="text-button-lg">تسجيل الدخول</span>
+                    <span className="text-button-lg">{t('auth.login.login_button')}</span>
                   )}
                 </Button>
 
@@ -380,18 +382,18 @@ const Login = () => {
                       <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
                       <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.60 3.30-4.53 6.16-4.53z" />
                     </svg>
-                    <span>تسجيل الدخول بـ Google</span>
+                    <span>{t('auth.login.google_login')}</span>
                   </GoogleLogin>
                 </div>
 
                 {/* Enhanced Sign Up Link */}
                 <div className="text-center mt-8">
-                  <span className="text-gray-600">Don't Have Account? </span>
+                  <span className="text-gray-600">{t('auth.login.no_account')} </span>
                   <Link
                     to={ROUTES.USER_TYPE_SELECTION}
                     className="text-amber-600 hover:text-amber-700 font-semibold underline decoration-2 underline-offset-2 hover:decoration-amber-700 transition-all duration-200"
                   >
-                    Sign Up
+                    {t('auth.login.sign_up_link')}
                   </Link>
                 </div>
               </form>
