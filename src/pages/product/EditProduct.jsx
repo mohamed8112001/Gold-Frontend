@@ -13,9 +13,11 @@ import { productService } from '../../services/productService.js';
 import { shopService } from '../../services/shopService.js';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES } from '../../utils/constants.js';
+import { useTranslation } from 'react-i18next';
 
 const EditProduct = () => {
     const navigate = useNavigate();
+    const { t } = useTranslation();
     const { id } = useParams();
     const { user, isShopOwner } = useAuth();
     const [isLoading, setIsLoading] = useState(false);
@@ -799,12 +801,12 @@ const EditProduct = () => {
                                         onChange={handleInputChange}
                                         className="w-full h-12 px-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#C37C00] focus:border-[#C37C00] text-base"
                                     >
-                                        <option value="">Select category</option>
-                                        <option value="rings">Rings</option>
-                                        <option value="necklaces">Necklaces</option>
-                                        <option value="bracelets">Bracelets</option>
-                                        <option value="earrings">Earrings</option>
-                                        <option value="chains">Chains</option>
+                                        <option value="">{t('buttons.select_category') || 'Select category'}</option>
+                                        <option value="rings">{t('product_categories.rings')}</option>
+                                        <option value="necklaces">{t('product_categories.necklaces')}</option>
+                                        <option value="bracelets">{t('product_categories.bracelets')}</option>
+                                        <option value="earrings">{t('product_categories.earrings')}</option>
+                                        <option value="chains">{t('product_categories.chains')}</option>
                                     </select>
                                 </div>
                             </div>

@@ -27,6 +27,7 @@ import {
 import { shopService } from '../../services/shopService';
 import { productService } from '../../services/productService';
 import { ROUTES } from '../../utils/constants';
+import { translateProductCategory } from '../../lib/utils.js';
 import { useTranslation } from 'react-i18next';
 import MapDisplay from '../../components/ui/MapDisplay.jsx';
 import GalleryUpload from '../../components/shop/GalleryUpload.jsx';

@@ -17,6 +17,7 @@ import { shopService } from '../../services/shopService.js';
 import { rateService } from '../../services/rateService.js';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES, PRODUCT_CATEGORIES } from '../../utils/constants.js';
+import { translateProductCategory } from '../../lib/utils.js';
 
 const ProductDetails = () => {
     const { id } = useParams();
@@ -42,14 +43,14 @@ const ProductDetails = () => {
             setIsLoading(true);
             setError(null);
 
-            console.log('🔍 Loading product details for ID:', id);
+            console.log('🔍 جاري تحميل تفاصيل المنتج للمعرف:', id);
             const productResponse = await productService.getProduct(id);
             const productData = productResponse.data || productResponse;
 
-            console.log('📦 Product data loaded:', productData);
+            console.log('📦 تم تحميل بيانات المنتج:', productData);
 
             if (!productData) {
-                throw new Error('Product not found');
+                throw new Error('المنتج غير موجود');
             }
 
             const processedProduct = {
@@ -62,32 +63,58 @@ const ProductDetails = () => {
                 rating: productData.rating || productData.averageRating || 4.5,
                 reviewCount: productData.reviewCount || 0,
                 soldCount: productData.soldCount || 0,
-                availability: 'In Stock',
+                availability: 'متوفر',
                 stock: productData.stock || 10,
-                sku: productData._id?.slice(-8).toUpperCase() || 'N/A',
+                sku: productData._id?.slice(-8).toUpperCase() || 'غير متوفر',
                 specifications: {
-                    'Karat': productData.karat || 'N/A',
-                    'Weight': `${productData.weight?.$numberDecimal || productData.weight || 'N/A'} grams`,
-                    'Category': productData.category || productData.design_type || 'N/A',
-                    'Material': 'Gold',
-                    'ID': productData._id
+                    'العيار': productData.karat || 'غير متوفر',
+                    'الوزن': `${productData.weight?.$numberDecimal || productData.weight || 'غير متوفر'} جرام`,
+                    'الفئة': translateProductCategory(productData.category || productData.design_type, (key) => {
+                        const categories = {
+                            rings: 'خواتم',
+                            necklaces: 'عقود',
+                            bracelets: 'أساور',
+                            earrings: 'أقراط',
+                            chains: 'سلاسل',
+                            pendants: 'معلقات',
+                            sets: 'طقم',
+                            watches: 'ساعات',
+                            other: 'أخرى',
+                        };
+                        return categories[key?.toLowerCase()] || key || 'غير متوفر';
+                    }) || 'غير متوفر',
+                    'المعدن': 'ذهب',
+                    'معرف المنتج': productData._id
                 },
                 features: [
-                    'Handcrafted jewelry',
-                    `${productData.karat || '18K'} gold quality`,
-                    'Premium craftsmanship',
-                    'Quality guarantee',
-                    'Authentic materials'
+                    'مجوهرات مصنوعة يدويًا',
+                    `${productData.karat || 'عيار 18'} ذهب`,
+                    'حرفية عالية الجودة',
+                    'ضمان الجودة',
+                    'مواد أصلية'
                 ],
                 tags: [
-                    productData.category || 'jewelry',
-                    productData.karat || 'gold',
-                    productData.design_type || 'luxury'
+                    translateProductCategory(productData.category, (key) => {
+                        const categories = {
+                            rings: 'خواتم',
+                            necklaces: 'عقود',
+                            bracelets: 'أساور',
+                            earrings: 'أقراط',
+                            chains: 'سلاسل',
+                            pendants: 'معلقات',
+                            sets: 'طقم',
+                            watches: 'ساعات',
+                            other: 'أخرى',
+                        };
+                        return categories[key?.toLowerCase()] || key || 'مجوهرات';
+                    }),
+                    productData.karat || 'ذهب',
+                    productData.design_type || 'فاخر'
                 ].filter(Boolean),
                 shippingInfo: {
                     freeShipping: true,
-                    deliveryTime: '2-3 business days',
-                    returnPolicy: '30 days return'
+                    deliveryTime: '٢-٣ أيام عمل',
+                    returnPolicy: 'إرجاع خلال ٣٠ يومًا'
                 }
             };
 
@@ -99,12 +126,12 @@ const ProductDetails = () => {
             }
 
             if (productData.shop?._id) {
-                console.log('🏪 Loading shop details for ID:', productData.shop._id);
+                console.log('🏪 جاري تحميل تفاصيل المتجر للمعرف:', productData.shop._id);
                 try {
                     const shopResponse = await shopService.getShop(productData.shop._id);
                     const shopData = shopResponse.data || shopResponse;
 
-                    console.log('🏪 Shop data loaded:', shopData);
+                    console.log('🏪 تم تحميل بيانات المتجر:', shopData);
 
                     const processedShop = {
                         ...shopData,
@@ -113,8 +140,8 @@ const ProductDetails = () => {
                         verified: shopData.isApproved || false,
                         established: new Date(shopData.createdAt).getFullYear().toString(),
                         badges: [
-                            shopData.isApproved ? 'Verified Seller' : 'New Seller',
-                            shopData.subscriptionPlan || 'Basic Plan'
+                            shopData.isApproved ? 'بائع مُعتمد' : 'بائع جديد',
+                            shopData.subscriptionPlan || 'خطة أساسية'
                         ].filter(Boolean),
                         image: shopData.logoUrl ?
                             `${import.meta.env.VITE_API_BASE_URL}/shop-image/${shopData.logoUrl}` :
@@ -123,22 +150,22 @@ const ProductDetails = () => {
 
                     setShop(processedShop);
                 } catch (shopError) {
-                    console.error('❌ Error loading shop details:', shopError);
+                    console.error('❌ خطأ في تحميل تفاصيل المتجر:', shopError);
                 }
             }
 
             try {
-                console.log('⭐ Loading reviews for product:', id);
+                console.log('⭐ جاري تحميل التقييمات للمنتج:', id);
                 const reviewsResponse = await rateService.getAllRates({ productId: id });
                 const reviewsData = reviewsResponse.data || reviewsResponse || [];
 
                 const processedReviews = reviewsData.map(review => ({
                     ...review,
                     id: review._id || review.id,
-                    userName: review.user?.name || review.userName || 'Anonymous',
+                    userName: review.user?.name || review.userName || 'مستخدم غير مسجل',
                     userAvatar: review.user?.avatar ||
-                        `https://ui-avatars.com/api/?name=${encodeURIComponent(review.user?.name || 'User')}&background=random`,
-                    date: new Date(review.createdAt || Date.now()).toLocaleDateString('en-US', {
+                        `https://ui-avatars.com/api/?name=${encodeURIComponent(review.user?.name || 'مستخدم')}&background=random`,
+                    date: new Date(review.createdAt || Date.now()).toLocaleDateString('ar-EG', {
                         year: 'numeric',
                         month: 'short',
                         day: 'numeric'
@@ -148,23 +175,23 @@ const ProductDetails = () => {
                 }));
 
                 setReviews(processedReviews);
-                console.log('⭐ Reviews loaded:', processedReviews.length);
+                console.log('⭐ تم تحميل التقييمات:', processedReviews.length);
             } catch (reviewError) {
-                console.log('⭐ No reviews available or error loading:', reviewError.message);
+                console.log('⭐ لا توجد تقييمات متاحة أو خطأ في التحميل:', reviewError.message);
                 setReviews([]);
             }
 
             if (user) {
                 try {
-                    // Placeholder for favorites API check
+                    // مكان للتحقق من حالة المفضلة
                 } catch (error) {
-                    console.log('Could not check favorite status');
+                    console.log('تعذر التحقق من حالة المفضلة');
                 }
             }
 
         } catch (error) {
-            console.error('❌ Error loading product details:', error);
-            setError(error.message || 'Failed to load product details');
+            console.error('❌ خطأ في تحميل تفاصيل المنتج:', error);
+            setError(error.message || 'فشل في تحميل تفاصيل المنتج');
         } finally {
             setIsLoading(false);
         }
@@ -198,7 +225,7 @@ const ProductDetails = () => {
                 setIsFavorited(true);
             }
         } catch (error) {
-            console.error('Error updating favorites:', error);
+            console.error('خطأ في تحديث المفضلة:', error);
             alert('خطأ في تحديث المفضلة. يرجى المحاولة مرة أخرى.');
         }
     };
@@ -241,14 +268,14 @@ const ProductDetails = () => {
             <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 flex items-center justify-center" aria-live="polite">
                 <div className="text-center">
                     <div className="text-6xl mb-4">❌</div>
-                    <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Product Not Found</h2>
-                    <p className="text-gray-600 dark:text-gray-300 mb-6">{error || 'The requested product could not be found'}</p>
+                    <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">المنتج غير موجود</h2>
+                    <p className="text-gray-600 dark:text-gray-300 mb-6">{error || 'لم يتم العثور على المنتج المطلوب'}</p>
                     <div className="flex gap-4 justify-center">
                         <Button
                             onClick={() => navigate(-1)}
                             variant="outline"
                             className="border-2 border-gray-300 dark:border-gray-600 hover:border-amber-500 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md px-4 py-2 transition-all duration-300"
-                            aria-label="Go back"
+                            aria-label="العودة"
                         >
                             العودة
                         </Button>
@@ -256,7 +283,7 @@ const ProductDetails = () => {
                             onClick={() => navigate(ROUTES.PRODUCTS)}
                             className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-md px-4 py-2 transition-all duration-300"
                         >
-                            Browse Products
+                            تصفح المنتجات
                         </Button>
                     </div>
                 </div>
@@ -266,7 +293,7 @@ const ProductDetails = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 font-inter">
-            {/* Enhanced Header with Breadcrumb */}
+            {/* رأس الصفحة المحسن مع مسار التنقل */}
             <div className="bg-white dark:bg-gray-800 border-b sticky top-0 z-40">
                 <div className="w-full px-4 sm:px-6 lg:px-8 py-4">
                     <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-300">
@@ -275,7 +302,7 @@ const ProductDetails = () => {
                             size="sm"
                             onClick={() => navigate(-1)}
                             className="flex items-center gap-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 rounded-md px-3 py-2"
-                            aria-label="Go back"
+                            aria-label="العودة"
                         >
                             <ArrowLeft className="w-4 h-4" />
                             العودة
@@ -285,7 +312,7 @@ const ProductDetails = () => {
                             className="hover:text-amber-600 dark:hover:text-amber-400 cursor-pointer transition-colors"
                             onClick={() => navigate(ROUTES.PRODUCTS)}
                         >
-                            Products
+                            المنتجات
                         </span>
                         <ChevronRight className="w-4 h-4 text-gray-400 dark:text-gray-500" />
                         <span className="text-gray-900 dark:text-white font-medium truncate">{product.name}</span>
@@ -300,7 +327,7 @@ const ProductDetails = () => {
             </div>
 
             <div className="w-full px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
-                {/* Product Tags */}
+                {/* علامات المنتج */}
                 <div className="flex flex-col sm:flex-row gap-2 mb-6">
                     {product.tags?.map((tag, index) => (
                         <Badge
@@ -314,7 +341,7 @@ const ProductDetails = () => {
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-12">
-                    {/* Product Images */}
+                    {/* صور المنتج */}
                     <ProductImageGallery
                         product={product}
                         mainImage={mainImage}
@@ -324,7 +351,7 @@ const ProductDetails = () => {
                         className="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-6"
                     />
 
-                    {/* Product Info */}
+                    {/* معلومات المنتج */}
                     <ProductInfoCard
                         product={product}
                         shop={shop}
@@ -339,7 +366,7 @@ const ProductDetails = () => {
                     />
                 </div>
 
-                {/* Product Details and Shop Info */}
+                {/* تفاصيل المنتج ومعلومات المتجر */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
                     <div className="lg:col-span-2">
                         <ProductDetailsTabs
@@ -349,7 +376,7 @@ const ProductDetails = () => {
                         />
                     </div>
 
-                    {/* Shop Info Sidebar */}
+                    {/* الشريط الجانبي لمعلومات المتجر */}
                     <div className="sticky top-24">
                         <ShopInfoSidebar
                             shop={shop}
@@ -360,13 +387,13 @@ const ProductDetails = () => {
                     </div>
                 </div>
 
-                {/* Product Rating Section */}
+                {/* قسم تقييم المنتج */}
                 <div className="w-full">
                     <ProductRating productId={id} showForm={true} className="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-6" />
                 </div>
             </div>
 
-            {/* Chat Interface */}
+            {/* واجهة الدردشة */}
             <ShopChatInterface
                 isOpen={isChatOpen}
                 onClose={handleCloseChat}

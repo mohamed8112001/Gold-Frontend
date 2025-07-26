@@ -27,3 +27,22 @@ export function formatTime(time) {
   }).format(new Date(time))
 }
 
+/**
+ * ترجمة فئة المنتج باستخدام نظام الترجمة
+ * @param {string} category - فئة المنتج بالإنجليزية
+ * @param {Function} t - دالة الترجمة من react-i18next
+ * @returns {string} - فئة المنتج المترجمة
+ */
+export function translateProductCategory(category, t) {
+  if (!category || !t) return category;
+  
+  // تحويل الفئة إلى lowercase للتطابق مع مفاتيح الترجمة
+  const categoryKey = category.toLowerCase();
+  
+  // محاولة الترجمة من ملف الترجمة
+  const translation = t(`product_categories.${categoryKey}`);
+  
+  // إذا لم توجد ترجمة، إرجاع الفئة الأصلية
+  return translation !== `product_categories.${categoryKey}` ? translation : category;
+}
+

@@ -29,7 +29,8 @@
     "filters": "Filters",
     "grid_view": "Grid View",
     "list_view": "List View",
-    "remove": "Remove"
+    "remove": "Remove",
+    "select_category": "Select category"
   },
   "sections": {
     "featured_stores": "Featured Stores",
@@ -43,6 +44,17 @@
     "stores": "Stores",
     "products": "Products",
     "rating": "Rating"
+  },
+  "product_categories": {
+    "rings": "Rings",
+    "necklaces": "Necklaces",
+    "bracelets": "Bracelets",
+    "earrings": "Earrings",
+    "chains": "Chains",
+    "pendants": "Pendants",
+    "sets": "Sets",
+    "watches": "Watches",
+    "other": "Other"
   },
   "services": {
     "quality_guarantee": {
@@ -59,57 +71,14 @@
     }
   },
   "cta": {
-    "title": "Ready to Discover Your Perfect Jewelry?",
+    "title": "Ready to discover your perfect jewelry?",
     "description": "Join thousands of satisfied customers who found their dream jewelry through Dibla",
-    "customers_trust": "More than {{count}} satisfied customers trust us"
-  },
-  "pages": {
-    "products": {
-      "title": "Products",
-      "no_products": "No products found",
-      "loading": "Loading products...",
-      "categories": "Categories",
-      "sort_by": "Sort by",
-      "price_range": "Price Range",
-      "all_categories": "All Categories"
-    },
-    "shops": {
-      "title": "Shops",
-      "no_shops": "No shops found",
-      "loading": "Loading shops...",
-      "all_shops": "All Shops",
-      "featured_shops": "Featured Shops"
-    },
-    "favorites": {
-      "title": "My Favorites",
-      "no_favorites": "No favorite products yet",
-      "empty_message": "Start adding products to your favorites to see them here"
-    },
-    "auth": {
-      "login_title": "Welcome Back",
-      "login_subtitle": "Sign in to your account",
-      "register_title": "Create Account",
-      "register_subtitle": "Join our community",
-      "email": "Email",
-      "password": "Password",
-      "confirm_password": "Confirm Password",
-      "first_name": "First Name",
-      "last_name": "Last Name",
-      "phone": "Phone Number",
-      "remember_me": "Remember me",
-      "forgot_password": "Forgot password?",
-      "no_account": "Don't have an account?",
-      "have_account": "Already have an account?",
-      "sign_in": "Sign In",
-      "sign_up": "Sign Up",
-      "or": "OR",
-      "continue_with_google": "Continue with Google"
-    }
+    "customers_trust": "Over {{count}} satisfied customers trust us"
   },
   "hero": {
     "luxury_jewelry": {
       "title": "Luxury Jewelry",
-      "subtitle": "Discover the finest gold and jewelry pieces"
+      "subtitle": "Discover the most beautiful gold and jewelry pieces"
     },
     "wedding_rings": {
       "title": "Wedding Rings",
@@ -117,7 +86,7 @@
     },
     "precious_stones": {
       "title": "Precious Stones",
-      "subtitle": "Jewelry adorned with natural gemstones"
+      "subtitle": "Jewelry adorned with natural stones"
     },
     "gold_21k": {
       "title": "21K Gold",
@@ -129,7 +98,7 @@
     },
     "pearl_elegance": {
       "title": "Pearl Elegance",
-      "subtitle": "Timeless beauty of natural pearls"
+      "subtitle": "Timeless beauty from natural pearls"
     }
   },
   "favorites": {
@@ -138,18 +107,18 @@
     "your_favorite": "Your Favorite",
     "products": "Products",
     "description": "Discover and manage all your favorite jewelry pieces in one place",
-    "count_message": "You have {{count}} saved favorites",
+    "count_message": "You have {{count}} favorite products saved",
     "empty_message": "Save your favorite products to see them here",
-    "favorites": "favorites",
+    "favorites": "Favorites",
     "no_favorites": "No favorites yet",
     "save_instruction": "Save your favorite products by clicking the heart icon on any product"
   },
   "messages": {
     "removed_from_favorites": "Removed from favorites",
-    "failed_to_remove": "Failed to remove favorite"
+    "failed_to_remove": "Failed to remove from favorites"
   },
   "shop_details": {
-    "about_shop": "About the Shop",
+    "about_shop": "About Shop",
     "address": "Address",
     "phone": "Phone",
     "whatsapp": "WhatsApp",
@@ -160,14 +129,40 @@
     "reviews": "Reviews",
     "no_products": "No products in this shop yet",
     "add_product": "Add New Product",
-    "contact_owner": "Contact the shop owner to add products",
+    "contact_owner": "Contact shop owner to add products",
     "no_reviews": "No reviews yet",
     "write_review": "Write a Review",
     "location": "Location",
     "gallery": "Gallery",
-    "explore_gallery": "Explore the shop's gallery",
-    "no_gallery": "No images in the gallery yet",
-    "add_images": "Add images to the shop gallery",
+    "explore_gallery": "Explore Shop Gallery",
+    "no_gallery": "No images in gallery yet",
+    "add_images": "Add images to shop gallery",
     "chat_with_store": "Chat with Store"
+  },
+  "footer": {
+    "company": "Company",
+    "about_us": "About Us",
+    "contact_us": "Contact Us",
+    "careers": "Careers",
+    "news": "News",
+    "support": "Support",
+    "help_center": "Help Center",
+    "faq": "FAQ",
+    "privacy_policy": "Privacy Policy",
+    "terms_conditions": "Terms & Conditions",
+    "legal": "Legal",
+    "returns_policy": "Returns Policy",
+    "shipping_policy": "Shipping Policy",
+    "quality_guarantee": "Quality Guarantee",
+    "customer_complaints": "Customer Complaints",
+    "contact": {
+      "phone": "Phone Number",
+      "email": "Email",
+      "address": "Address"
+    },
+    "made_with_love": "Made with",
+    "in_egypt": "in Egypt",
+    "all_rights_reserved": "All rights reserved",
+    "follow_us": "Follow Us"
   }
 }

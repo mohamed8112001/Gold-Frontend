@@ -338,19 +338,7 @@ const Settings = () => {
                                 />
                             </div>
 
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    اللغة
-                                </label>
-                                <select
-                                    value={preferences.language}
-                                    onChange={(e) => handlePreferenceChange('language', e.target.value)}
-                                    className="w-full p-2 border border-gray-300 rounded-md"
-                                >
-                                    <option value="ar">العربية</option>
-                                    <option value="en">English</option>
-                                </select>
-                            </div>
+                            {/* تم حذف خيار اللغة نهائيًا */}
                         </CardContent>
                     </Card>
 

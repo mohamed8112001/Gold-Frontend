@@ -15,6 +15,7 @@ import {
 import { productService } from '../../services/productService.js';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES, PRODUCT_CATEGORIES } from '../../utils/constants.js';
+import { translateProductCategory } from '../../lib/utils.js';
 
 const Favorites = () => {
     const navigate = useNavigate();
@@ -133,7 +134,7 @@ const Favorites = () => {
                 </Button>
                 {product.category && (
                     <Badge className="absolute top-2 left-2 bg-[#A37F41] text-white">
-                        {PRODUCT_CATEGORIES[product.category.toUpperCase()] || product.category}
+                        {translateProductCategory(product.category, t)}
                     </Badge>
                 )}
             </div>

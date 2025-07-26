@@ -22,7 +22,8 @@
     "join_us": "انضم إلينا الآن",
     "view_details": "عرض التفاصيل",
     "visit_shop": "زيارة المحل",
-    "remove": "حذف"
+    "remove": "حذف",
+    "select_category": "اختر الفئة"
   },
   "sections": {
     "featured_stores": "متاجر مميزة",
@@ -119,6 +120,17 @@
     "no_gallery": "لا توجد صور في المعرض بعد",
     "add_images": "أضف صوراً لمعرض المتجر",
     "chat_with_store": "الدردشة مع المتجر"
+  },
+  "product_categories": {
+    "rings": "خواتم",
+    "necklaces": "عقود",
+    "bracelets": "أساور",
+    "earrings": "أقراط",
+    "chains": "سلاسل",
+    "pendants": "معلقات",
+    "sets": "طقم",
+    "watches": "ساعات",
+    "other": "أخرى"
   },
   "footer": {
   "company": "الشركة",

@@ -13,17 +13,72 @@ import {
     ShoppingBag,
     Eye,
     SlidersHorizontal,
-    X
+    X,
+    Menu
 } from 'lucide-react';
 
 import { productService } from '../../services/productService.js';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES, PRODUCT_CATEGORIES } from '../../utils/constants.js';
+import { translateProductCategory } from '../../lib/utils.js';
+import { useTranslation } from 'react-i18next';
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 const ProductList = () => {
     const navigate = useNavigate();
     const { user } = useAuth();
+    const { t } = useTranslation();
+
+    // دالة ترجمة فئات المنتجات إلى العربية
+    const getDisplayCategory = (category) => {
+        const categoryMap = {
+            'rings': 'خواتم',
+            'necklaces': 'عقود', 
+            'bracelets': 'أساور',
+            'earrings': 'أقراط',
+            'pendants': 'تعليقات',
+            'chains': 'سلاسل',
+            'watches': 'ساعات',
+            'anklets': 'خلاخيل',
+            'brooches': 'دبابيس',
+            'cufflinks': 'أزرار أكمام',
+            'gold': 'ذهب',
+            'silver': 'فضة',
+            'diamond': 'ألماس',
+            'pearl': 'لؤلؤ',
+            'gemstone': 'أحجار كريمة',
+            'platinum': 'بلاتين',
+            'wedding_rings': 'خواتم زفاف',
+            'engagement_rings': 'خواتم خطوبة',
+            'statement_necklaces': 'عقود بيان',
+            'delicate_bracelets': 'أساور رقيقة',
+            'stud_earrings': 'أقراط صغيرة',
+            'hoop_earrings': 'أقراط دائرية',
+            'jewelry': 'مجوهرات',
+            'accessories': 'اكسسوارات',
+            'other': 'أخرى'
+        };
+
+        // أولاً جرب الخريطة المخصصة
+        const arabicCategory = categoryMap[category?.toLowerCase()];
+        if (arabicCategory) {
+            console.log(`arabicCategory: ${arabicCategory}`);
+            return arabicCategory;
+        }
+
+        // إذا كانت بالعربية بالفعل، أرجعها
+        if (category && /[\u0600-\u06FF]/.test(category)) {
+            console.log(`category: ${category}`);
+            return category;
+        }
+
+        // كحل أخير، استخدم translateProductCategory
+        try {
+            return translateProductCategory(category, t);
+        } catch (error) {
+            return category || 'مجوهرات';
+        }
+    };
 
     const [searchParams, setSearchParams] = useSearchParams();
     const [products, setProducts] = useState([]);
@@ -111,33 +166,6 @@ const ProductList = () => {
             bgColor: "bg-gray-50"
         };
     };
-
-    // Generate activity summary message
-    // const getActivitySummaryMessage = () => {
-    //     const viewedCount = userBehavior.viewedProducts.length;
-
-    //     if (viewedCount === 0) {
-    //         return "Start your jewelry journey today!";
-    //     }
-
-    //     if (viewedCount >= 1 && viewedCount <= 5) {
-    //         return "You're just getting started - keep exploring!";
-    //     }
-
-    //     if (viewedCount >= 6 && viewedCount <= 15) {
-    //         return "Great progress! You're discovering our collection.";
-    //     }
-
-    //     if (viewedCount >= 16 && viewedCount <= 30) {
-    //         return "Impressive! You're becoming a jewelry connoisseur.";
-    //     }
-
-    //     if (viewedCount > 30) {
-    //         return "Amazing! You're a true jewelry enthusiast!";
-    //     }
-
-    //     return "Your shopping journey continues...";
-    // };
 
     // Generate motivational message based on results and behavior
     const getMotivationalMessage = () => {
@@ -333,8 +361,6 @@ const ProductList = () => {
             );
         }
 
-
-
         // Rating filter
         if (filters.rating) {
             const minRating = parseFloat(filters.rating);
@@ -417,10 +443,31 @@ const ProductList = () => {
         }
     };
 
-
-
     const ProductCard = ({ product, isListView = false }) => {
         const productId = product.id || product._id;
+
+        // Helper function to safely extract price
+        const extractPrice = (priceData) => {
+            if (typeof priceData === 'number') return priceData;
+            if (priceData && typeof priceData === 'object' && priceData.$numberDecimal) {
+                return parseFloat(priceData.$numberDecimal);
+            }
+            if (typeof priceData === 'string') return parseFloat(priceData);
+            return 0;
+        };
+
+        // Helper function to format price
+        const formatPrice = (price) => {
+            if (price && price > 0) {
+                return price.toLocaleString('ar-EG', {
+                    style: 'currency',
+                    currency: 'EGP',
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                });
+            }
+            return 'السعر غير محدد';
+        };
 
         // Safe data extraction
         const safeProduct = {
@@ -433,12 +480,14 @@ const ProductList = () => {
             shopId: product.shopId || product.shop?.id || product.shop?._id,
             isFavorited: product.isFavorited || false,
             category: product.category || product.design_type || 'other',
-            design_type: product.design_type || product.category || 'other'
+            design_type: product.design_type || product.category || 'other',
+            price: extractPrice(product.price),
+            formattedPrice: formatPrice(extractPrice(product.price))
         };
 
         return (
             <Card
-                className={`group hover:shadow-lg transition-all duration-700 cursor-pointer border-2 border-secondary-2 hover:border-primary-500 hover:shadow-primary-500/25 transform hover:-translate-y-4 hover:scale-105 ${isListView ? 'flex h-64' : 'flex flex-col h-full'} bg-white rounded-3xl overflow-hidden backdrop-blur-sm font-cairo`}
+                className={`group hover:shadow-lg transition-all duration-700 cursor-pointer border-2 border-secondary-2 hover:border-primary-500 hover:shadow-primary-500/25 transform hover:-translate-y-1 sm:hover:-translate-y-2 lg:hover:-translate-y-4 hover:scale-105 ${isListView ? 'flex flex-col sm:flex-row h-auto sm:h-64' : 'flex flex-col h-full'} bg-white rounded-2xl sm:rounded-3xl overflow-hidden backdrop-blur-sm font-cairo`}
                 onClick={async () => {
                     try {
                         // Track product view locally
@@ -463,12 +512,12 @@ const ProductList = () => {
                     }
                 }}
             >
-                <div className={`relative overflow-hidden rounded-t-3xl ${isListView ? 'w-64 flex-shrink-0 rounded-l-3xl rounded-tr-none' : 'w-full'}`}>
-                    <div className={`relative ${isListView ? 'h-full' : 'h-48'} overflow-hidden`}>
+                <div className={`relative overflow-hidden ${isListView ? 'w-full sm:w-64 flex-shrink-0 rounded-t-2xl sm:rounded-l-3xl sm:rounded-tr-none' : 'w-full rounded-t-2xl sm:rounded-t-3xl'}`}>
+                    <div className={`relative ${isListView ? 'h-48 sm:h-full' : 'h-40 sm:h-48'} overflow-hidden`}>
                         <img
                             src={`${import.meta.env.VITE_API_BASE_URL}/product-image/${safeProduct.image}`}
                             alt={safeProduct.name}
-                            className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-1000 ease-out"
+                            className="w-full h-full object-cover group-hover:scale-110 sm:group-hover:scale-125 transition-transform duration-1000 ease-out"
                             onError={(e) => {
                                 console.log('Product image failed to load:', e.target.src);
                                 e.target.style.display = 'none';
@@ -482,11 +531,11 @@ const ProductList = () => {
                         {/* Premium fallback image */}
                         <div className="fallback-image absolute inset-0 bg-gradient-to-br from-[#FFF0CC] via-[#FFF8E6] to-[#FFE6B3] hidden items-center justify-center group-hover:from-[#FFE6B3] group-hover:via-[#FFF0CC] group-hover:to-[#FFDB99] transition-all duration-700">
                             <div className="text-center transform group-hover:scale-110 transition-transform duration-700">
-                                <div className="relative mb-4">
-                                    <div className="text-6xl mb-2 filter drop-">💎</div>
+                                <div className="relative mb-2 sm:mb-4">
+                                    <div className="text-4xl sm:text-6xl mb-1 sm:mb-2 filter drop-shadow-lg">💎</div>
                                     <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/30 to-orange-400/30 rounded-full blur-xl"></div>
                                 </div>
-                                <div className="text-sm text-gray-800 font-bold px-3 py-1 bg-white/90 rounded-xl backdrop-blur-md  border border-[#C37C00]">
+                                <div className="text-xs sm:text-sm text-gray-800 font-bold px-2 sm:px-3 py-1 bg-white/90 rounded-lg sm:rounded-xl backdrop-blur-md border border-[#C37C00]">
                                     {safeProduct.name}
                                 </div>
                             </div>
@@ -501,37 +550,46 @@ const ProductList = () => {
                     <Button
                         size="sm"
                         variant="ghost"
-                        className="absolute top-3 right-3 bg-white/95 hover:bg-white  backdrop-blur-md rounded-full w-8 h-8 p-0 opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 border border-white/70 z-20"
+                        className="absolute top-2 sm:top-3 right-2 sm:right-3 bg-white/95 hover:bg-white backdrop-blur-md rounded-full w-6 h-6 sm:w-8 sm:h-8 p-0 opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 border border-white/70 z-20"
                         onClick={(e) => {
                             e.stopPropagation();
                             handleAddToFavorites(productId);
                         }}
                     >
-                        <Heart className={`w-4 h-4 ${safeProduct.isFavorited ? 'fill-red-500 text-red-500' : 'text-gray-600 hover:text-red-500'} transition-colors duration-200`} />
+                        <Heart className={`w-3 h-3 sm:w-4 sm:h-4 ${safeProduct.isFavorited ? 'fill-red-500 text-red-500' : 'text-gray-600 hover:text-red-500'} transition-colors duration-200`} />
                     </Button>
 
                     {/* Premium category badge */}
                     {safeProduct.category && (
-                        <Badge className="absolute top-3 left-3 bg-gradient-to-r from-[#C37C00] via-[#A66A00] to-[#8A5700] text-white  px-3 py-1 text-xs font-bold border border-[#C37C00]/50 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-1 group-hover:translate-y-0 z-20">
-                            {PRODUCT_CATEGORIES[safeProduct.category.toUpperCase()] || safeProduct.category}
+                        <Badge className="absolute top-2 sm:top-3 left-2 sm:left-3 bg-gradient-to-r from-[#C37C00] via-[#A66A00] to-[#8A5700] text-white px-2 sm:px-3 py-1 text-xs font-bold border border-[#C37C00]/50 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-1 group-hover:translate-y-0 z-20">
+                            {getDisplayCategory(safeProduct.category)}
                         </Badge>
                     )}
                 </div>
 
-                <div className={`p-5 flex flex-col h-full ${isListView ? 'justify-between' : ''} relative z-10`}>
+                <div className={`p-3 sm:p-5 flex flex-col h-full ${isListView ? 'justify-between' : ''} relative z-10`}>
                     <div className="flex-1">
-                        <h3 className="font-bold text-lg mb-2 group-hover:text-yellow-600 transition-colors line-clamp-2 leading-tight group-hover:scale-105 transform origin-left duration-300">
+                        <h3 className="font-bold text-base sm:text-lg mb-2 group-hover:text-yellow-600 transition-colors line-clamp-2 leading-tight group-hover:scale-105 transform origin-left duration-300">
                             {safeProduct.name}
                         </h3>
+
+                        {/* Price Display */}
+                        <div className="mb-2 sm:mb-3">
+                            <div className="flex items-center gap-2">
+                                <span className="text-lg sm:text-2xl font-bold text-[#C37C00] group-hover:text-[#A66A00] transition-colors duration-300">
+                                    {safeProduct.formattedPrice}
+                                </span>
+                            </div>
+                        </div>
 
                         {/* Enhanced shop information */}
                         {safeProduct.shopName && safeProduct.shopName !== 'Unknown Shop' && (
                             <div className="flex items-center gap-2 mb-2 bg-blue-50 p-2 rounded-lg border border-blue-200/50">
-                                <div className="w-6 h-6 bg-gradient-to-r from-[#C37C00] to-[#A66A00] rounded-full flex items-center justify-center">
-                                    <ShoppingBag className="w-3 h-3 text-white" />
+                                <div className="w-4 h-4 sm:w-6 sm:h-6 bg-gradient-to-r from-[#C37C00] to-[#A66A00] rounded-full flex items-center justify-center">
+                                    <ShoppingBag className="w-2 h-2 sm:w-3 sm:h-3 text-white" />
                                 </div>
-                                <div className="flex-1">
-                                    <p className="text-xs text-gray-600 font-medium">Available at</p>
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-xs text-gray-600 font-medium">متاح في</p>
                                     <p className="text-sm font-bold text-[#C37C00] hover:text-[#A66A00] cursor-pointer transition-colors duration-200 truncate" onClick={(e) => {
                                         e.stopPropagation();
                                         if (safeProduct.shopId) {
@@ -554,13 +612,13 @@ const ProductList = () => {
                             {/* Main View Product Button */}
                             <Button
                                 size="md"
-                                className="w-full bg-gradient-to-r from-[#C37C00] via-[#A66A00] to-[#8A5700] hover:from-[#A66A00] hover:via-[#8A5700] hover:to-[#6D4500] text-white px-4 py-2.5 rounded-xl  hover: transition-all duration-300 transform hover:scale-105 font-semibold text-sm border border-[#C37C00]/50"
+                                className="w-full bg-gradient-to-r from-[#C37C00] via-[#A66A00] to-[#8A5700] hover:from-[#A66A00] hover:via-[#8A5700] hover:to-[#6D4500] text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl hover:shadow-lg transition-all duration-300 transform hover:scale-105 font-semibold text-sm border border-[#C37C00]/50"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     navigate(ROUTES.PRODUCT_DETAILS(productId));
                                 }}
                             >
-                                <Eye className="w-4 h-4 mr-2" />
+                                <Eye className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                                 عرض التفاصيل
                             </Button>
 
@@ -570,7 +628,7 @@ const ProductList = () => {
                                     <Button
                                         variant="outline"
                                         size="sm"
-                                        className="flex-1 border border-blue-300 hover:border-blue-500 hover:bg-blue-50 text-blue-700 hover:text-blue-800 py-2 rounded-lg font-medium transition-all duration-300 text-xs"
+                                        className="flex-1 border border-blue-300 hover:border-blue-500 hover:bg-blue-50 text-blue-700 hover:text-blue-800 py-1.5 sm:py-2 rounded-lg font-medium transition-all duration-300 text-xs"
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             console.log('🏪 Shop button clicked, navigating to:', safeProduct.shopId);
@@ -578,20 +636,20 @@ const ProductList = () => {
                                         }}
                                     >
                                         <ShoppingBag className="w-3 h-3 mr-1" />
-                                        المتجر
+                                        <span className="hidden sm:inline">المتجر</span>
                                     </Button>
                                 )}
                                 <Button
                                     variant="outline"
                                     size="sm"
-                                    className="flex-1 border border-red-300 hover:border-red-500 hover:bg-red-50 text-red-700 hover:text-red-800 py-2 rounded-lg font-medium transition-all duration-300 text-xs"
+                                    className="flex-1 border border-red-300 hover:border-red-500 hover:bg-red-50 text-red-700 hover:text-red-800 py-1.5 sm:py-2 rounded-lg font-medium transition-all duration-300 text-xs"
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         handleAddToFavorites(productId);
                                     }}
                                 >
                                     <Heart className={`w-3 h-3 mr-1 ${safeProduct.isFavorited ? 'fill-current' : ''}`} />
-                                    {safeProduct.isFavorited ? 'Saved' : 'Save'}
+                                    <span className="hidden sm:inline">{safeProduct.isFavorited ? 'Saved' : 'Save'}</span>
                                 </Button>
                             </div>
                         </div>
@@ -602,20 +660,20 @@ const ProductList = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] to-[#FFF0CC] pt-20">
-            <div className="w-full px-4 sm:px-6 lg:px-8 py-8">
+        <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] to-[#FFF0CC] pt-16 sm:pt-20">
+            <div className="w-full px-2 sm:px-4 lg:px-8 py-4 sm:py-8">
                 {/* Header */}
-                <div className="mb-12">
-                    <div className="text-center mb-8">
+                <div className="mb-8 sm:mb-12">
+                    <div className="text-center mb-6 sm:mb-8">
                         {(() => {
                             const message = getDisplayMessage();
                             return (
                                 <>
-                                    <div className="text-6xl mb-4">{message.icon}</div>
-                                    <h1 className="text-5xl font-bold text-gray-900 mb-4">
+                                    <div className="text-4xl sm:text-6xl mb-2 sm:mb-4">{message.icon}</div>
+                                    <h1 className="text-2xl sm:text-3xl lg:text-5xl font-bold text-gray-900 mb-2 sm:mb-4 px-4">
                                         {message.title}
                                     </h1>
-                                    <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                                    <p className="text-base sm:text-xl text-gray-600 max-w-2xl mx-auto px-4">
                                         {message.subtitle}
                                     </p>
                                 </>
@@ -623,23 +681,24 @@ const ProductList = () => {
                         })()}
                     </div>
 
-                    {/* Enhanced Search and Controls */}
-                    <div className="flex flex-col lg:flex-row gap-8 items-start lg:items-center justify-between bg-white rounded-3xl p-8  border border-gray-100">
-                        <div className="flex-1 max-w-4xl">
-                            <div className="flex gap-4 items-center">
+                    {/* Enhanced Search and Controls - Responsive */}
+                    <div className="flex flex-col gap-4 sm:gap-6 lg:gap-8 bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-lg border border-gray-100">
+                        {/* Search Section */}
+                        <div className="w-full">
+                            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
                                 {/* Enhanced input container */}
                                 <div className="flex-1 relative group">
                                     {/* Enhanced glow effect */}
                                     <div className="absolute inset-0 bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] rounded-full blur-lg opacity-20 group-hover:opacity-40 group-focus-within:opacity-50 transition-all duration-500"></div>
 
                                     {/* Main input container */}
-                                    <div className="relative bg-white rounded-full border-2 border-gray-300 focus-within:border-[#C37C00] hover:border-[#E6A500] transition-all duration-300  hover: focus-within:">
+                                    <div className="relative bg-white rounded-full border-2 border-gray-300 focus-within:border-[#C37C00] hover:border-[#E6A500] transition-all duration-300 shadow-lg hover:shadow-xl focus-within:shadow-xl">
                                         {/* Enhanced search icon with loading state */}
-                                        <div className="absolute left-5 top-1/2 transform -translate-y-1/2">
+                                        <div className="absolute left-3 sm:left-5 top-1/2 transform -translate-y-1/2 z-10">
                                             {isLoading && searchQuery ? (
-                                                <div className="w-6 h-6 border-2 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
+                                                <div className="w-4 h-4 sm:w-6 sm:h-6 border-2 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
                                             ) : (
-                                                <Search className="text-gray-500 w-6 h-6 group-focus-within:text-yellow-600 transition-colors duration-300" />
+                                                <Search className="text-gray-500 w-4 h-4 sm:w-6 sm:h-6 group-focus-within:text-yellow-600 transition-colors duration-300" />
                                             )}
                                         </div>
 
@@ -663,7 +722,7 @@ const ProductList = () => {
                                                     return prev;
                                                 });
                                             }}
-                                            className="pl-14 pr-6 py-5 text-lg rounded-full border-0 focus:ring-0 bg-transparent placeholder-gray-500 focus:placeholder-gray-400 font-medium transition-all duration-300"
+                                            className="pl-10 sm:pl-14 pr-4 sm:pr-6 py-3 sm:py-4 lg:py-5 text-sm sm:text-base lg:text-lg rounded-full border-0 focus:ring-0 bg-transparent placeholder-gray-500 focus:placeholder-gray-400 font-medium transition-all duration-300"
                                             onKeyPress={(e) => {
                                                 if (e.key === 'Enter') {
                                                     e.preventDefault();
@@ -674,100 +733,107 @@ const ProductList = () => {
                                     </div>
                                 </div>
 
-                                {/* Separate search button */}
+                                {/* Search button */}
                                 <Button
                                     type="button"
                                     onClick={handleSearch}
-                                    className="bg-gradient-to-r from-[#C37C00] via-[#A66A00] to-[#8A5700] hover:from-[#A66A00] hover:via-[#8A5700] hover:to-[#6D4500] text-white px-8 py-5 rounded-full font-bold  hover: transition-all duration-500 transform hover:scale-105 border border-[#C37C00]/50"
+                                    className="bg-gradient-to-r from-[#C37C00] via-[#A66A00] to-[#8A5700] hover:from-[#A66A00] hover:via-[#8A5700] hover:to-[#6D4500] text-white px-4 sm:px-6 lg:px-8 py-3 sm:py-4 lg:py-5 rounded-full font-bold shadow-lg hover:shadow-xl transition-all duration-500 transform hover:scale-105 border border-[#C37C00]/50 flex-shrink-0"
                                 >
-                                    <Search className="w-5 h-5 mr-2" />
-                                    <span className="text-base">بحث</span>
+                                    <Search className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
+                                    <span className="text-sm sm:text-base">بحث</span>
                                 </Button>
                             </div>
                         </div>
 
-                        <div className="flex items-center gap-4">
-                            <div className="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-full">
+                        {/* Controls Section */}
+                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center justify-between">
+                            {/* Results count */}
+                            <div className="flex items-center justify-center sm:justify-start gap-2 bg-gray-50 px-3 sm:px-4 py-2 rounded-full order-2 sm:order-1">
                                 <span className="text-sm font-medium text-gray-600">
                                     {filteredProducts.length} منتج
                                 </span>
                             </div>
 
-                            {/* Enhanced Clear search button */}
-                            {searchQuery && (
+                            {/* Action buttons */}
+                            <div className="flex flex-wrap gap-2 sm:gap-3 items-center justify-center sm:justify-end order-1 sm:order-2">
+                                {/* Clear search button */}
+                                {searchQuery && (
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => {
+                                            setSearchQuery('');
+                                            setSearchParams(prev => {
+                                                prev.delete('search');
+                                                return prev;
+                                            });
+                                        }}
+                                        className="flex items-center gap-1 sm:gap-2 border-2 border-red-300 text-red-600 hover:bg-red-50 hover:border-red-500 hover:text-red-700 px-3 sm:px-4 py-2 sm:py-2.5 rounded-full font-semibold shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 text-xs sm:text-sm"
+                                    >
+                                        <X className="w-3 h-3 sm:w-4 sm:h-4" />
+                                        <span>مسح البحث</span>
+                                    </Button>
+                                )}
+
+                                {/* Filters button */}
                                 <Button
                                     variant="outline"
-                                    size="md"
-                                    onClick={() => {
-                                        setSearchQuery('');
-                                        setSearchParams(prev => {
-                                            prev.delete('search');
-                                            return prev;
-                                        });
-                                    }}
-                                    className="flex items-center gap-2 border-2 border-red-300 text-red-600 hover:bg-red-50 hover:border-red-500 hover:text-red-700 px-4 py-2.5 rounded-full font-semibold  hover: transition-all duration-300 transform hover:scale-105"
-                                >
-                                    <X className="w-4 h-4" />
-                                    <span>مسح البحث</span>
-                                </Button>
-                            )}
-
-                            <Button
-                                variant="outline"
-                                size="md"
-                                onClick={() => setShowFilters(!showFilters)}
-                                className="flex items-center gap-2 border-2 border-yellow-300 text-yellow-700 hover:bg-yellow-50 hover:border-yellow-500 hover:text-yellow-800 px-4 py-2.5 rounded-full font-semibold  hover: transition-all duration-300 transform hover:scale-105"
-                            >
-                                <SlidersHorizontal className="w-4 h-4" />
-                                <span>فلاتر</span>
-                                {Object.keys(filters).some(key => filters[key]) && (
-                                    <span className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></span>
-                                )}
-                            </Button>
-
-                            <div className="flex border-2 border-gray-200 rounded-xl overflow-hidden">
-                                <Button
-                                    variant={viewMode === 'grid' ? 'default' : 'ghost'}
                                     size="sm"
-                                    onClick={() => setViewMode('grid')}
-                                    className={`rounded-none ${viewMode === 'grid' ? 'bg-yellow-500 text-white' : 'hover:bg-gray-50'}`}
+                                    onClick={() => setShowFilters(!showFilters)}
+                                    className="flex items-center gap-1 sm:gap-2 border-2 border-yellow-300 text-yellow-700 hover:bg-yellow-50 hover:border-yellow-500 hover:text-yellow-800 px-3 sm:px-4 py-2 sm:py-2.5 rounded-full font-semibold shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 text-xs sm:text-sm"
                                 >
-                                    <Grid className="w-4 h-4" />
+                                    <SlidersHorizontal className="w-3 h-3 sm:w-4 sm:h-4" />
+                                    <span className="hidden xs:inline">فلاتر</span>
+                                    {Object.keys(filters).some(key => filters[key]) && (
+                                        <span className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></span>
+                                    )}
                                 </Button>
-                                <Button
-                                    variant={viewMode === 'list' ? 'default' : 'ghost'}
-                                    size="sm"
-                                    onClick={() => setViewMode('list')}
-                                    className={`rounded-none ${viewMode === 'list' ? 'bg-yellow-500 text-white' : 'hover:bg-gray-50'}`}
-                                >
-                                    <List className="w-4 h-4" />
-                                </Button>
+
+                                {/* View mode toggle */}
+                                <div className="flex border-2 border-gray-200 rounded-lg sm:rounded-xl overflow-hidden shadow-sm">
+                                    <Button
+                                        variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                                        size="sm"
+                                        onClick={() => setViewMode('grid')}
+                                        className={`rounded-none px-2 sm:px-3 py-2 ${viewMode === 'grid' ? 'bg-yellow-500 text-white' : 'hover:bg-gray-50'}`}
+                                    >
+                                        <Grid className="w-3 h-3 sm:w-4 sm:h-4" />
+                                    </Button>
+                                    <Button
+                                        variant={viewMode === 'list' ? 'default' : 'ghost'}
+                                        size="sm"
+                                        onClick={() => setViewMode('list')}
+                                        className={`rounded-none px-2 sm:px-3 py-2 ${viewMode === 'list' ? 'bg-yellow-500 text-white' : 'hover:bg-gray-50'}`}
+                                    >
+                                        <List className="w-3 h-3 sm:w-4 sm:h-4" />
+                                    </Button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div className="flex gap-8">
-                    {/* Filters Sidebar */}
+                <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-8">
+                    {/* Filters Sidebar - Mobile First */}
                     {showFilters && (
-                        <div className="w-64 flex-shrink-0">
-                            <Card>
-                                <CardHeader className="flex flex-row items-center justify-between">
-                                    <CardTitle className="text-lg">filters</CardTitle>
+                        <div className="w-full lg:w-64 lg:flex-shrink-0">
+                            <Card className="rounded-2xl sm:rounded-3xl shadow-lg">
+                                <CardHeader className="flex flex-row items-center justify-between p-4 sm:p-6">
+                                    <CardTitle className="text-base sm:text-lg">فلاتر</CardTitle>
                                     <Button
                                         variant="ghost"
-                                        size="sm"n
+                                        size="sm"
                                         onClick={() => setShowFilters(false)}
                                         className="lg:hidden"
                                     >
                                         <X className="w-4 h-4" />
                                     </Button>
                                 </CardHeader>
-                                <CardContent className="space-y-6">
+                                <CardContent className="space-y-4 sm:space-y-6 p-4 sm:p-6 pt-0">
                                     {/* Category Filter */}
                                     <div>
-                                        <h3 className="font-medium mb-3">الفئة</h3>
-                                        <div className="space-y-2">
+                                        <h3 className="font-medium mb-3 text-sm sm:text-base">الفئة</h3>
+                                        <div className="space-y-2 max-h-40 sm:max-h-48 overflow-y-auto">
                                             <label className="flex items-center">
                                                 <input
                                                     type="radio"
@@ -777,7 +843,7 @@ const ProductList = () => {
                                                     onChange={(e) => handleFilterChange('category', e.target.value)}
                                                     className="mr-2"
                                                 />
-                                                الكل
+                                                <span className="text-sm sm:text-base">الكل</span>
                                             </label>
                                             {Object.entries(PRODUCT_CATEGORIES).map(([key, value]) => (
                                                 <label key={key} className="flex items-center">
@@ -789,23 +855,21 @@ const ProductList = () => {
                                                         onChange={(e) => handleFilterChange('category', e.target.value)}
                                                         className="mr-2"
                                                     />
-                                                    {value}
+                                                    <span className="text-sm sm:text-base">{getDisplayCategory(value)}</span>
                                                 </label>
                                             ))}
                                         </div>
                                     </div>
 
-
-
                                     {/* Rating Filter */}
                                     <div>
-                                        <h3 className="font-medium mb-3">التقييم</h3>
+                                        <h3 className="font-medium mb-3 text-sm sm:text-base">التقييم</h3>
                                         <div className="space-y-2">
                                             {[
-                                                { label: 'All', value: '' },
-                                                { label: '4+ Stars', value: '4' },
-                                                { label: '3+ Stars', value: '3' },
-                                                { label: '2+ Stars', value: '2' }
+                                                { label: 'الكل', value: '' },
+                                                { label: '4+ نجوم', value: '4' },
+                                                { label: '3+ نجوم', value: '3' },
+                                                { label: '2+ نجوم', value: '2' }
                                             ].map((option) => (
                                                 <label key={option.value} className="flex items-center">
                                                     <input
@@ -816,7 +880,7 @@ const ProductList = () => {
                                                         onChange={(e) => handleFilterChange('rating', e.target.value)}
                                                         className="mr-2"
                                                     />
-                                                    {option.label}
+                                                    <span className="text-sm sm:text-base">{option.label}</span>
                                                 </label>
                                             ))}
                                         </div>
@@ -824,22 +888,22 @@ const ProductList = () => {
 
                                     {/* Sort */}
                                     <div>
-                                        <h3 className="font-medium mb-3">ترتيب حسب</h3>
+                                        <h3 className="font-medium mb-3 text-sm sm:text-base">ترتيب حسب</h3>
                                         <select
                                             value={filters.sortBy}
                                             onChange={(e) => handleFilterChange('sortBy', e.target.value)}
-                                            className="w-full p-2 border rounded-md"
+                                            className="w-full p-2 sm:p-3 border rounded-lg sm:rounded-xl text-sm sm:text-base"
                                         >
-                                            <option value="recommended">Recommended for You</option>
-                                            <option value="newest">Newest</option>
-                                            <option value="name">Name</option>
+                                            <option value="recommended">موصى به لك</option>
+                                            <option value="newest">الأحدث</option>
+                                            <option value="name">الاسم</option>
                                         </select>
                                     </div>
 
                                     <Button
                                         variant="outline"
                                         onClick={clearFilters}
-                                        className="w-full"
+                                        className="w-full text-sm sm:text-base py-2 sm:py-3"
                                     >
                                         مسح جميع الفلاتر
                                     </Button>
@@ -849,76 +913,62 @@ const ProductList = () => {
                     )}
 
                     {/* Products Grid/List */}
-                    <div className="flex-1">
+                    <div className="flex-1 min-w-0">
                         {/* Results Info */}
-                        <div className="flex items-center justify-between mb-8 bg-white rounded-xl p-4  border border-gray-100">
-                            <div>
-                                <p className="text-lg font-semibold text-gray-900">
+                        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between mb-6 sm:mb-8 bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg border border-gray-100">
+                            <div className="flex-1">
+                                <p className="text-base sm:text-lg font-semibold text-gray-900 mb-1">
                                     {filteredProducts.length} منتج متاح
                                 </p>
                                 {searchQuery && (
-                                    <p className="text-sm text-gray-600">
+                                    <p className="text-xs sm:text-sm text-gray-600 mb-1">
                                         نتائج البحث عن: <span className="font-medium text-yellow-600">"{searchQuery}"</span>
                                     </p>
                                 )}
                                 {filters.category && (
-                                    <p className="text-sm text-gray-600">
-                                        الفئة: <span className="font-medium text-yellow-600">{PRODUCT_CATEGORIES[filters.category.toUpperCase()]}</span>
+                                    <p className="text-xs sm:text-sm text-gray-600">
+                                        الفئة: <span className="font-medium text-yellow-600">{getDisplayCategory(filters.category)}</span>
                                     </p>
                                 )}
-                                {(() => {
-                                    const personalizedMsg = getPersonalizedMessage();
-                                    return (
-                                        <div className={`mt-2 p-2 rounded-lg ${personalizedMsg.bgColor} border border-opacity-20`}>
-                                            <p className={`text-xs font-medium ${personalizedMsg.color} flex items-center gap-1`}>
-                                                <span className="text-sm">{personalizedMsg.icon}</span>
-                                                {personalizedMsg.text}
-                                            </p>
-                                        </div>
-                                    );
-                                })()}
                             </div>
-                            <div className="text-right">
+                            
+                            <div className="text-left sm:text-right w-full sm:w-auto">
                                 <div className="mb-2">
-                                    <p className="text-sm text-gray-600 font-medium">{getMotivationalMessage()}</p>
+                                    <p className="text-xs sm:text-sm text-gray-600 font-medium">{getMotivationalMessage()}</p>
                                 </div>
-                                <p className="text-sm text-gray-500">وضع العرض</p>
-                                <p className="text-lg font-bold text-yellow-600">{viewMode === 'grid' ? '🔲' : '📋'}</p>
-                                {userBehavior.hasSearched && (
-                                    <div className="mt-2">
+                                <div className="flex gap-2 justify-start sm:justify-end">
+                                    {userBehavior.hasSearched && (
                                         <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full">
                                             البحث
                                         </span>
-                                    </div>
-                                )}
-                                {userBehavior.hasFiltered && (
-                                    <div className="mt-2">
+                                    )}
+                                    {userBehavior.hasFiltered && (
                                         <span className="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full">
                                             مفلتر
                                         </span>
-                                    </div>
-                                )}
+                                    )}
+                                </div>
                             </div>
                         </div>
 
                         {/* Products Grid/List */}
                         {isLoading ? (
-                            <div className={`grid gap-6 ${viewMode === 'grid'
-                                ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+                            <div className={`grid gap-4 sm:gap-6 ${viewMode === 'grid'
+                                ? 'grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
                                 : 'grid-cols-1 max-w-5xl mx-auto'
                                 }`}>
                                 {[...Array(8)].map((_, index) => (
-                                    <div key={index} className="animate-pulse bg-white rounded-2xl  overflow-hidden flex flex-col h-full">
-                                        <div className="bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 h-48"></div>
-                                        <div className="p-4 flex flex-col flex-1">
-                                            <div className="h-5 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded mb-2"></div>
-                                            <div className="h-4 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded mb-3 w-3/4"></div>
+                                    <div key={index} className="animate-pulse bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col h-full">
+                                        <div className="bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 h-40 sm:h-48"></div>
+                                        <div className="p-3 sm:p-4 flex flex-col flex-1">
+                                            <div className="h-4 sm:h-5 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded mb-2"></div>
+                                            <div className="h-3 sm:h-4 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded mb-3 w-3/4"></div>
                                             <div className="h-3 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded mb-3 w-1/2"></div>
                                             <div className="mt-auto pt-3 border-t border-gray-200">
-                                                <div className="h-6 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded mb-3 w-24"></div>
+                                                <div className="h-5 sm:h-6 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded mb-3 w-24"></div>
                                                 <div className="flex gap-2">
-                                                    <div className="h-8 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded flex-1"></div>
-                                                    <div className="h-8 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded flex-1"></div>
+                                                    <div className="h-7 sm:h-8 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded flex-1"></div>
+                                                    <div className="h-7 sm:h-8 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded flex-1"></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -926,23 +976,23 @@ const ProductList = () => {
                                 ))}
                             </div>
                         ) : filteredProducts.length === 0 ? (
-                            <div className="text-center py-20 bg-white rounded-2xl ">
+                            <div className="text-center py-12 sm:py-20 bg-white rounded-2xl shadow-lg">
                                 {(() => {
                                     const suggestion = getSuggestionMessage();
                                     return (
                                         <>
-                                            <div className="text-8xl mb-6">
+                                            <div className="text-6xl sm:text-8xl mb-4 sm:mb-6">
                                                 {displayMode === 'searching' ? '🔍' : displayMode === 'filtered' ? '🎯' : '💎'}
                                             </div>
-                                            <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                                            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4 px-4">
                                                 {suggestion?.title || "لم يتم العثور على منتجات"}
                                             </h3>
-                                            <p className="text-gray-600 text-lg mb-8 max-w-md mx-auto">
+                                            <p className="text-gray-600 text-base sm:text-lg mb-6 sm:mb-8 max-w-md mx-auto px-4">
                                                 {suggestion?.message || "جرب تعديل البحث أو الفلاتر"}
                                             </p>
                                             <Button
                                                 onClick={suggestion?.actionFn || clearFilters}
-                                                className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-8 py-3"
+                                                className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base"
                                             >
                                                 {suggestion?.action || "مسح جميع الفلاتر"}
                                             </Button>
@@ -951,8 +1001,8 @@ const ProductList = () => {
                                 })()}
                             </div>
                         ) : (
-                            <div className={`grid gap-6 ${viewMode === 'grid'
-                                ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+                            <div className={`grid gap-4 sm:gap-6 ${viewMode === 'grid'
+                                ? 'grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
                                 : 'grid-cols-1 max-w-5xl mx-auto'
                                 }`}>
                                 {filteredProducts.map((product) => (
@@ -967,15 +1017,15 @@ const ProductList = () => {
 
                         {/* Related Products Section */}
                         {relatedProducts.length > 0 && userBehavior.viewedProducts.length > 0 && (
-                            <div className="mt-16">
-                                <div className="bg-gradient-to-r from-[#FFF8E6] to-[#FFF0CC] rounded-2xl p-8  mb-8">
-                                    <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                            <div className="mt-12 sm:mt-16">
+                                <div className="bg-gradient-to-r from-[#FFF8E6] to-[#FFF0CC] rounded-2xl p-4 sm:p-6 lg:p-8 shadow-lg mb-6 sm:mb-8">
+                                    <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">
                                         موصى به بناءً على مشاهداتك
                                     </h3>
-                                    <p className="text-gray-600 mb-6">
+                                    <p className="text-gray-600 mb-4 sm:mb-6 text-sm sm:text-base">
                                         منتجات مشابهة لما كنت تتصفحه
                                     </p>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                                         {relatedProducts.slice(0, 6).map((product) => {
                                             const safeProduct = {
                                                 id: product._id || product.id,
@@ -992,7 +1042,7 @@ const ProductList = () => {
                                             return (
                                                 <Card
                                                     key={safeProduct.id}
-                                                    className="group hover: transition-all duration-300 cursor-pointer border-0 bg-white rounded-2xl  h-full flex flex-col"
+                                                    className="group hover:shadow-xl transition-all duration-300 cursor-pointer border-0 bg-white rounded-2xl shadow-lg h-full flex flex-col"
                                                     onClick={async () => {
                                                         try {
                                                             trackProductView(safeProduct.id);
@@ -1018,40 +1068,40 @@ const ProductList = () => {
                                                         <img
                                                             src={safeProduct.image}
                                                             alt={safeProduct.name}
-                                                            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                                                            className="w-full h-40 sm:h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                                                             onError={(e) => {
                                                                 e.target.src = 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop&crop=center&auto=format&q=60';
                                                             }}
                                                         />
-                                                        <div className="absolute top-3 right-3">
+                                                        <div className="absolute top-2 sm:top-3 right-2 sm:right-3">
                                                             <span className="bg-[#FFF0CC] text-[#C37C00] text-xs px-2 py-1 rounded-full font-medium">
-                                                                Recommended
+                                                                موصى به
                                                             </span>
                                                         </div>
                                                     </div>
-                                                    <CardContent className="p-4 flex-1 flex flex-col">
-                                                        <h3 className="font-bold text-lg text-primary-900 mb-2 line-clamp-2 font-cairo">
+                                                    <CardContent className="p-3 sm:p-4 flex-1 flex flex-col">
+                                                        <h3 className="font-bold text-sm sm:text-lg text-primary-900 mb-2 line-clamp-2 font-cairo">
                                                             {safeProduct.name}
                                                         </h3>
-                                                        <p className="text-sm text-secondary-800 mb-3 line-clamp-2 font-cairo">
+                                                        <p className="text-xs sm:text-sm text-secondary-800 mb-3 line-clamp-2 font-cairo">
                                                             {safeProduct.description}
                                                         </p>
                                                         <div className="flex items-center justify-between mt-auto">
                                                             <div className="flex items-center">
-                                                                <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                                                                <span className="text-sm text-gray-600 ml-1">
+                                                                <Star className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-400 fill-current" />
+                                                                <span className="text-xs sm:text-sm text-gray-600 ml-1">
                                                                     {safeProduct.rating.toFixed(1)}
                                                                 </span>
                                                             </div>
                                                             <Button
                                                                 size="sm"
-                                                                className="bg-yellow-500 hover:bg-yellow-600 text-white"
+                                                                className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1.5 text-xs sm:text-sm"
                                                                 onClick={(e) => {
                                                                     e.stopPropagation();
                                                                     navigate(ROUTES.PRODUCT_DETAILS(safeProduct.id));
                                                                 }}
                                                             >
-                                                                <Eye className="w-4 h-4 mr-1" />
+                                                                <Eye className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
                                                                 عرض
                                                             </Button>
                                                         </div>
