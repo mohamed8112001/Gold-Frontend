@@ -412,7 +412,7 @@ const Dashboard = () => {
       </Card>
       <Card className="bg-white/90 backdrop-blur-md rounded-lg">
         <CardHeader>
-          <CardTitle>Quick Actions</CardTitle>
+          <CardTitle>إجراءات سريعة</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -870,10 +870,10 @@ const Dashboard = () => {
           <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 text-center">
             <div className="flex items-center justify-center mb-3 space-x-2">
               <Clock className="w-8 h-8 text-blue-600 mr-2 " />
-              <span className="text-sm font-medium text-[#A66A00]">Available</span>
+              <span className="text-sm font-medium text-[#A66A00]">متاح</span>
             </div>
             <span className="text-3xl font-bold text-[#8A5700]">{stats.availableTimes || 0}</span>
-            <p className="text-xs text-[#A66A00] mt-1">Open time slots</p>
+            <p className="text-xs text-[#A66A00] mt-1">أوقات زمنية متاحة</p>
           </div>
           <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 text-center">
             <div className="flex items-center justify-center mb-3 space-x-2">

@@ -840,17 +840,19 @@ const Home = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Service 1 */}
-            <div className="text-center p-6 bg-primary-1 rounded-2xl hover:bg-white transition-all duration-300">
-              <div className="w-20 h-20 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <Shield className="w-10 h-10 text-white" />
-              </div>
-              <h3 className="text-2xl font-bold font-cairo mb-4 text-primary-900">
+            <div className="text-center p-6 bg-[#F8F4ED] rounded-2xl hover:bg-white transition-all duration-300">
+              <div className="w-20 h-20 bg-gradient-to-br from-[#A66A00] to-[#A66A00] rounded-2xl flex items-center justify-center mx-auto mb-6">
+  <Shield className="w-10 h-10 text-white" />
+</div>
+
+              <h3 className="text-2xl font-bold font-cairo mb-4 text-gray-900">
                 ضمان الجودة
               </h3>
-              <p className="text-secondary-800 font-cairo leading-relaxed">
+              <p className="text-gray-600 font-tajawal leading-relaxed">
                 جميع المنتجات معتمدة ومضمونة الجودة مع شهادات أصالة للذهب والمجوهرات
               </p>
             </div>
+
 
             {/* Service 2 */}
             <div className="text-center p-6 bg-[#F8F4ED] rounded-2xl hover:bg-white transition-all duration-300">
