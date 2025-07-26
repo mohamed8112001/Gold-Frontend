@@ -109,6 +109,13 @@ const FavoriteProducts = () => {
       price: safeNumber(product.price || product.productPrice),
       favoriteId: safeString(product.favoriteId || product._id),
     };
+    
+    {
+      if(1){
+            console.log(``+product.category)
+
+      }
+    }
     return (
       <Card
         className={`group hover:shadow-2xl hover:shadow-[#C37C00]/10 hover:border-[#C37C00]/50 hover:scale-[1.02] transition-all duration-500 cursor-pointer border border-gray-200/80 rounded-3xl overflow-hidden flex ${viewMode === 'grid' ? 'flex-col' : 'flex-row'} bg-white/95 backdrop-blur-sm shadow-lg shadow-gray-200/50`}
@@ -145,25 +152,7 @@ const FavoriteProducts = () => {
           >
             <Heart className="w-5 h-5 fill-red-500 text-red-500" />
           </Button>
-          {/* شارة التصنيف */}
-          {safeProduct.category && (
-            <Badge className="absolute top-4 left-4 bg-gradient-to-r from-[#C37C00] to-[#A66A00] text-white px-4 py-2 text-xs font-bold rounded-2xl opacity-90 group-hover:opacity-100 transition-all duration-300 shadow-lg">
-              {translateProductCategory(safeProduct.category, (key) => {
-                const categories = {
-                  rings: 'خواتم',
-                  necklaces: 'عقود',
-                  bracelets: 'أساور',
-                  earrings: 'أقراط',
-                  chains: 'سلاسل',
-                  pendants: 'معلقات',
-                  sets: 'طقم',
-                  watches: 'ساعات',
-                  other: 'أخرى',
-                };
-                return categories[key?.toLowerCase()] || key || 'غير معروف';
-              })}
-            </Badge>
-          )}
+          
           {/* تقييم المنتج */}
           {safeProduct.rating > 0 && (
             <div className="absolute bottom-4 left-4 bg-white/95 backdrop-blur-sm rounded-2xl px-3 py-2 shadow-lg">

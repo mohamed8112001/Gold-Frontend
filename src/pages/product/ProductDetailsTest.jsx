@@ -122,7 +122,7 @@ const ProductDetailsTest = () => {
         </h1>
         
         {/* Status */}
-        <div className="bg-white rounded-lg  p-6 mb-6">
+        <div className="bg-white rounded-lg   p-6 mb-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="bg-blue-50 p-4 rounded">
               <h3 className="font-semibold text-blue-800">Status</h3>
