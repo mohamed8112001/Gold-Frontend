@@ -214,9 +214,9 @@ const CreateShop = () => {
 
             alert(
                 'تم إنشاء المتجر بنجاح!\n\n' +
-                '📋 يمكنك الآن تقديم طلب تفعيل المتجر\n' +
-                '📄 تم رفع السجل التجاري والمستندات المطلوبة\n' +
-                '🔔 ستتلقى إشعاراً عند الموافقة على المتجر'
+                ' يمكنك الآن تقديم طلب تفعيل المتجر\n' +
+                ' تم رفع السجل التجاري والمستندات المطلوبة\n' +
+                ' ستتلقى إشعاراً عند الموافقة على المتجر'
             );
 
             // Navigate to shop activation request page
@@ -319,7 +319,7 @@ const CreateShop = () => {
                                         name="city"
                                         value={formData.city}
                                         onChange={handleInputChange}
-                                        placeholder="أدخل المدينة (مثل: الرياض)"
+                                        placeholder="أدخل المدينة (مثل: اسيوط)"
                                         required
                                     />
                                 </div>
@@ -360,7 +360,9 @@ const CreateShop = () => {
                                         name="phone"
                                         value={formData.phone}
                                         onChange={handleInputChange}
-                                        placeholder="+966 123 456 789"
+                                        placeholder="++20 127 325 1511
+
+"
                                         required
                                     />
                                 </div>
@@ -373,7 +375,9 @@ const CreateShop = () => {
                                         name="whatsapp"
                                         value={formData.whatsapp}
                                         onChange={handleInputChange}
-                                        placeholder="+966 987 654 321"
+                                        placeholder="+20 127 325 1511
+
+"
                                     />
                                 </div>
                             </div>

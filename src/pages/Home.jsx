@@ -460,36 +460,6 @@ const Home = () => {
                     {slide.subtitle}
                   </h2>
 
-                  {/* Description with Animation */}
-                  {/* <p className={`text-base md:text-lg lg:text-xl text-white/80 mb-12 w-full leading-relaxed drop- transition-all duration-1000 delay-600 ${index === currentSlide ? 'animate-fade-in translate-y-0' : 'translate-y-10 opacity-0'
-                    }`}>
-                    {slide.description}
-                  </p> */}
-
-                  {/* Action Buttons with Animation */}
-                  {/* <div className={`flex flex-col sm:flex-row gap-6 justify-center transition-all duration-1000 delay-800 ${index === currentSlide ? 'animate-fade-in translate-y-0' : 'translate-y-10 opacity-0'
-                    }`}>
-                    <Button
-                      size="lg"
-                      onClick={() => navigate('/shops')}
-                      className={`bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] hover:from-[#A66A00] hover:via-[#C37C00] hover:to-[#8A5700] text-white px-10 py-3 text-lg font-bold rounded-full transition-all duration-500 transform hover:scale-110 hover:-translate-y-1 border-2 border-[#D3BB92]/50`}
-                    >
-                      <span className="flex items-center gap-3">
-                        استكشف المتاجر
-                        <span className="text-2xl">←</span>
-                      </span>
-                    </Button>
-                    <Button
-                      size="lg"
-                      variant="outline"
-                      onClick={() => navigate('/products')}
-                      className="bg-white/15 backdrop-blur-md border-2 border-white/40 text-white hover:bg-white/25 hover:border-white/60 px-10 py-3 text-lg font-bold rounded-full transition-all duration-500 transform hover:scale-110"
-                    >
-                      <span className="flex items-center gap-3">
-                        عرض المنتجات
-                      </span>
-                    </Button>
-                  </div> */}
                 </div>
               </div>
             </div>
@@ -593,7 +563,7 @@ const Home = () => {
                 className="group bg-white border-2 border-secondary-2 hover:border-primary-500 text-primary-900 hover:text-primary-500 transition-all duration-300 p-6 h-auto rounded-2xl"
               >
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-primary-1 to-primary-2 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-16 h-16 bg-gradient-to-br from-[#F0E8DB] to-[#D3BB92] rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
                     <span className="text-2xl">💍</span>
                   </div>
                   <div className="font-semibold font-cairo text-sm">خواتم ذهبية</div>

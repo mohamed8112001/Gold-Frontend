@@ -170,11 +170,6 @@ const ShopActivationRequest = () => {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-3">
-                <img 
-                  src={`${import.meta.env.VITE_API_BASE_URL}/uploads/${shop.logoUrl}`}
-                  alt={shop.name}
-                  className="w-12 h-12 rounded-lg object-cover"
-                />
                 {shop.name}
               </CardTitle>
               <CardDescription>

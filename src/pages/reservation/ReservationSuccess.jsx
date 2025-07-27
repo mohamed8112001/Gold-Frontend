@@ -26,7 +26,7 @@ const ReservationSuccess = () => {
       console.log('URL params:', { sessionId, productId });
 
       if (!sessionId || !productId) {
-        console.error('❌ Missing required parameters:', { sessionId, productId });
+        console.error(' Missing required parameters:', { sessionId, productId });
         setError('معلومات الجلسة أو المنتج مفقودة. يرجى التأكد من الرابط.');
         setLoading(false);
         return;
@@ -197,7 +197,7 @@ const ReservationSuccess = () => {
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-8">
           <CheckCircle className="w-20 h-20 text-green-500 mx-auto mb-6" />
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">تم الحجز بنجاح! 🎉</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">تم الحجز بنجاح! </h1>
           <p className="text-gray-600 text-lg">تم دفع 10% من قيمة المنتج وحجزه لمدة 7 أيام</p>
         </div>
 

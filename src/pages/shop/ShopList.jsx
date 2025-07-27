@@ -267,124 +267,117 @@ const ShopList = () => {
     const shopReviewCount = shop.reviewCount || shop.reviews?.length || 0;
 
     return (
-      <Card
-        className={`group relative overflow-hidden hover:shadow-lg hover:-translate-y-3 transition-all duration-700 cursor-pointer border-2 border-secondary-2/40 hover:border-primary-500/60 bg-gradient-to-br from-white via-primary-1/20 to-primary-2/30 rounded-3xl hover:shadow-primary-500/25 h-full flex flex-col transform hover:scale-[1.02] font-cairo ${isListView ? 'lg:flex-row lg:h-auto' : ''}`}
-        onClick={() => {
+     <Card
+  className={`mb-3 group relative overflow-hidden hover:shadow-lg hover:-translate-y-3 transition-all duration-700 cursor-pointer border-2 border-secondary-2/40 hover:border-primary-500/60 bg-gradient-to-br from-white via-primary-1/20 to-primary-2/30 rounded-3xl hover:shadow-primary-500/25 h-full flex flex-col transform hover:scale-[1.02] font-cairo ${isListView ? 'lg:flex-row lg:h-auto' : ''}`}
+  onClick={() => {
+    const shopId = shop._id || shop.id;
+    console.log('Navigating to shop:', shopId, shop.name);
+    if (shopId) {
+      navigate(ROUTES.SHOP_DETAILS(shopId));
+    } else {
+      console.error('Shop ID is missing:', shop);
+    }
+  }}
+>
+  {/* Enhanced Image Section */}
+  <div className={`relative overflow-hidden rounded-t-3xl ${isListView ? 'lg:w-64 lg:flex-shrink-0 lg:rounded-l-3xl lg:rounded-tr-none' : 'w-full'}`}>
+    {shop.logoUrl ? (
+      <img
+        src={`${import.meta.env.VITE_API_BASE_URL}/shop-image/${shop.logoUrl}`}
+        alt={shopName}
+        className={`w-full object-cover group-hover:scale-110 transition-transform duration-700 ${isListView ? 'h-full lg:h-56' : 'h-56'}`}
+        onError={(e) => {
+          e.target.style.display = 'none';
+          e.target.nextSibling.style.display = 'flex';
+        }}
+      />
+    ) : null}
+
+    <div className={`bg-gradient-to-br from-[#FFF0CC] via-[#FFE6B3] to-[#FFDB99] flex items-center justify-center group-hover:from-[#FFE6B3] group-hover:to-[#FFD700]/30 transition-all duration-700 ${isListView ? 'h-full lg:h-56' : 'h-56'} ${shop.logoUrl ? 'hidden' : 'flex'} relative`}>
+      <div className="text-7xl opacity-80 transform group-hover:scale-110 transition-transform duration-500">💎</div>
+      <div className="absolute inset-0 bg-gradient-to-t from-[#C37C00]/10 to-transparent"></div>
+    </div>
+
+    <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+    <div className="absolute bottom-3 left-3 z-10">
+      <div className="bg-white/95 backdrop-blur-sm px-2.5 py-1 rounded-full">
+        <span className="text-xs font-semibold text-[#C37C00]">Verified Shop</span>
+      </div>
+    </div>
+  </div>
+
+  {/* Enhanced Content Section */}
+  <CardContent className={`p-6 flex-1 flex flex-col justify-between bg-gradient-to-b from-white to-[#FFF8E6]/30 ${isListView ? 'lg:flex-1' : ''}`}>
+    <div className="flex-1 space-y-4">
+      <div className="flex items-start justify-between">
+        <h3 className="font-bold text-xl mb-1 group-hover:text-[#C37C00] transition-colors duration-300 line-clamp-2 flex-1">
+          {shopName}
+        </h3>
+      </div>
+
+      <p className="text-gray-600 text-sm leading-relaxed line-clamp-2 group-hover:text-gray-700 transition-colors">
+        {shopDescription}
+      </p>
+
+      <div className="grid grid-cols-1 gap-2.5">
+        <div className="flex items-center gap-2.5 text-sm text-gray-600 group-hover:text-gray-700 transition-colors">
+          <div className="w-8 h-8 bg-gradient-to-br from-[#FFF0CC] to-[#FFE6B3] rounded-full flex items-center justify-center">
+            <MapPin className="w-4 h-4 text-[#C37C00]" />
+          </div>
+          <span className="truncate font-medium">{shopAddress}</span>
+        </div>
+        <div className="flex items-center gap-2.5 text-sm text-gray-600 group-hover:text-gray-700 transition-colors">
+          <div className="w-8 h-8 bg-gradient-to-br from-[#FFF0CC] to-[#FFE6B3] rounded-full flex items-center justify-center">
+            <Clock className="w-4 h-4 text-[#C37C00]" />
+          </div>
+          <span className="font-medium">{shopWorkingHours}</span>
+        </div>
+      </div>
+
+      {shopSpecialties.length > 0 && (
+        <div className="space-y-2">
+          <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Specialties</h4>
+          <div className="flex flex-wrap gap-1.5">
+            {shopSpecialties.slice(0, 3).map((specialty, index) => (
+              <span
+                key={index}
+                className="bg-gradient-to-r from-[#FFF0CC] to-[#FFE6B3] text-[#C37C00] text-xs px-3 py-1.5 rounded-full font-semibold border border-[#FFE6B3] "
+              >
+                {specialty}
+              </span>
+            ))}
+            {shopSpecialties.length > 3 && (
+              <span className="bg-gradient-to-r from-[#E2D2B6] to-[#D3BB92] text-[#8A6C37] text-xs px-3 py-1.5 rounded-full font-semibold border border-[#D3BB92] ">
+                +{shopSpecialties.length - 3} المزيد
+              </span>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+
+    <div className="mt-6 pt-4 border-t border-gradient-to-r from-transparent via-secondary-2/50 to-transparent">
+      <Button
+        className="w-full bg-gradient-to-r from-primary-500 font-bold transition-all duration-300 py-3.5 rounded-xl"
+        onClick={(e) => {
+          e.stopPropagation();
           const shopId = shop._id || shop.id;
-          console.log('Navigating to shop:', shopId, shop.name);
           if (shopId) {
             navigate(ROUTES.SHOP_DETAILS(shopId));
-          } else {
-            console.error('Shop ID is missing:', shop);
           }
         }}
       >
-        {/* Enhanced Image Section */}
-        <div className={`relative overflow-hidden rounded-t-3xl ${isListView ? 'lg:w-64 lg:flex-shrink-0 lg:rounded-l-3xl lg:rounded-tr-none' : 'w-full'}`}>
-          {shop.logoUrl ? (
-            <img
-              src={`${import.meta.env.VITE_API_BASE_URL}/shop-image/${shop.logoUrl}`}
-              alt={shopName}
-              className={`w-full object-cover group-hover:scale-110 transition-transform duration-700 ${isListView ? 'h-full lg:h-56' : 'h-56'}`}
-              onError={(e) => {
-                e.target.style.display = 'none';
-                e.target.nextSibling.style.display = 'flex';
-              }}
-            />
-          ) : null}
-
-          {/* Enhanced Default Image */}
-          <div className={`bg-gradient-to-br from-[#FFF0CC] via-[#FFE6B3] to-[#FFDB99] flex items-center justify-center group-hover:from-[#FFE6B3] group-hover:to-[#FFD700]/30 transition-all duration-700 ${isListView ? 'h-full lg:h-56' : 'h-56'} ${shop.logoUrl ? 'hidden' : 'flex'} relative`}>
-            <div className="text-7xl opacity-80 transform group-hover:scale-110 transition-transform duration-500">💎</div>
-            <div className="absolute inset-0 bg-gradient-to-t from-[#C37C00]/10 to-transparent"></div>
-          </div>
-
-          {/* Enhanced Overlay Gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
-          {/* New Badge for Featured Shops */}
-          <div className="absolute bottom-3 left-3 z-10">
-            <div className="bg-white/95 backdrop-blur-sm px-2.5 py-1 rounded-full">
-              <span className="text-xs font-semibold text-[#C37C00]">Verified Shop</span>
-            </div>
-          </div>
+        <div className="flex items-center justify-center gap-2 ">
+          <Eye className="w-5 h-5" />
+          <span>عرض المحل</span>
+          <div className="w-1 h-1 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         </div>
+      </Button>
+    </div>
+  </CardContent>
+</Card>
 
-        {/* Enhanced Content Section */}
-        <CardContent className={`p-6 flex-1 flex flex-col bg-gradient-to-b from-white to-[#FFF8E6]/30 ${isListView ? 'lg:flex-1' : ''}`}>
-          <div className="flex-1 space-y-4">
-            {/* Enhanced Shop Name */}
-            <div className="flex items-start justify-between">
-              <h3 className="font-bold text-xl mb-1 group-hover:text-[#C37C00] transition-colors duration-300 line-clamp-2 flex-1">
-                {shopName}
-              </h3>
-            </div>
-
-            {/* Enhanced Description */}
-            <p className="text-gray-600 text-sm leading-relaxed line-clamp-2 group-hover:text-gray-700 transition-colors">
-              {shopDescription}
-            </p>
-
-            {/* Enhanced Info Grid */}
-            <div className="grid grid-cols-1 gap-2.5">
-              <div className="flex items-center gap-2.5 text-sm text-gray-600 group-hover:text-gray-700 transition-colors">
-                <div className="w-8 h-8 bg-gradient-to-br from-[#FFF0CC] to-[#FFE6B3] rounded-full flex items-center justify-center">
-                  <MapPin className="w-4 h-4 text-[#C37C00]" />
-                </div>
-                <span className="truncate font-medium">{shopAddress}</span>
-              </div>
-              <div className="flex items-center gap-2.5 text-sm text-gray-600 group-hover:text-gray-700 transition-colors">
-                <div className="w-8 h-8 bg-gradient-to-br from-[#FFF0CC] to-[#FFE6B3] rounded-full flex items-center justify-center">
-                  <Clock className="w-4 h-4 text-[#C37C00]" />
-                </div>
-                <span className="font-medium">{shopWorkingHours}</span>
-              </div>
-            </div>
-
-            {/* Enhanced Specialties */}
-            {shopSpecialties.length > 0 && (
-              <div className="space-y-2">
-                <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Specialties</h4>
-                <div className="flex flex-wrap gap-1.5">
-                  {shopSpecialties.slice(0, 3).map((specialty, index) => (
-                    <span
-                      key={index}
-                      className="bg-gradient-to-r from-[#FFF0CC] to-[#FFE6B3] text-[#C37C00] text-xs px-3 py-1.5 rounded-full font-semibold border border-[#FFE6B3] "
-                    >
-                      {specialty}
-                    </span>
-                  ))}
-                  {shopSpecialties.length > 3 && (
-                    <span className="bg-gradient-to-r from-[#E2D2B6] to-[#D3BB92] text-[#8A6C37] text-xs px-3 py-1.5 rounded-full font-semibold border border-[#D3BB92] ">
-                      +{shopSpecialties.length - 3} more
-                    </span>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Enhanced Action Button */}
-          <div className="mt-6 pt-4 border-t border-gradient-to-r from-transparent via-secondary-2/50 to-transparent">
-            <Button
-              className="w-full bg-gradient-to-r from-primary-500 via-primary-500 to-primary-600 hover:from-primary-600 hover:via-primary-600 hover:to-primary-600 text-white py-3.5 rounded-xl font-bold transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:shadow-primary-500/30"
-              onClick={(e) => {
-                e.stopPropagation();
-                const shopId = shop._id || shop.id;
-                if (shopId) {
-                  navigate(ROUTES.SHOP_DETAILS(shopId));
-                }
-              }}
-            >
-              <div className="flex items-center justify-center gap-2 ">
-                <Eye className="w-5 h-5" />
-                <span>Explore Shop</span>
-                <div className="w-1 h-1 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              </div>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
     );
   };
 
@@ -445,15 +438,15 @@ const ShopList = () => {
           <div className="absolute bottom-10 left-1/3 w-40 h-40 bg-[#C37C00]/10 rounded-full blur-[80px]"></div>
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 ">
+        <div className="relative  ">
           <div className="text-center mb-12">
-            <h1 className="text-6xl md:text-7xl font-black mb-6 leading-tight text-[#C37C00]">
+            <h1 className="text-6xl md:text-7xl font-black mt-10 leading-tight text-[#C37C00]">
               <span className="bg-gradient-to-r from-[#C37C00] to-[#E6A500] bg-clip-text text-transparent drop- m-10">
                 اكتشف المتاجر
               </span>
             </h1>
-
-            <form onSubmit={handleSearch} className="max-w-6xl mx-auto">
+            
+            <form onSubmit={handleSearch} className="max-w-6xl mx-auto  ">
               <div className="relative">
                 <div className="absolute inset-0 bg-white/20 rounded-2xl blur-sm"></div>
                 <div className="relative bg-white/95 backdrop-blur-md rounded-2xl p-4  border border-white/30">
@@ -563,12 +556,12 @@ const ShopList = () => {
 
 
       {/* Main Content */}
-      <div className="w-full ">
+      <div className="w-full pb-10 ">
         <div className="max-w-[1600px] mx-auto">
           {/* Shops Grid/List */}
           <div className="w-full">
             {/* Results Info */}
-            <div className="flex items-center justify-between mb-8 bg-white rounded-2xl p-6  border-0">
+            <div className="flex items-center justify-between mb-8 bg-white rounded-2xl p-6  border-0 ">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 bg-[#A37F41] rounded-full"></div>
