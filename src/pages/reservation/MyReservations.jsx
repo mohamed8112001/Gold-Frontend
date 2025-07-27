@@ -122,9 +122,20 @@ const MyReservations = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] to-[#FFF0CC] py-12">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="text-center mb-8">
+    <div className="min-h-screen relative bg-gradient-to-br from-[#F8F4ED] via-white to-[#F0E8DB] py-12">
+    
+    {/* تأثير خلفية ذهبي هادي */}
+    <div className="absolute inset-0 bg-[#C37C00]/5 pointer-events-none z-0"></div>
+
+    {/* دوائر زخرفية بلون ذهبي خفيف */}
+    <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-0">
+      <div className="absolute top-10 left-10 w-32 h-32 bg-[#C37C00]/10 rounded-full blur-2xl"></div>
+      <div className="absolute top-20 right-20 w-24 h-24 bg-[#C37C00]/10 rounded-full blur-xl"></div>
+      <div className="absolute bottom-10 left-1/3 w-40 h-40 bg-[#C37C00]/10 rounded-full blur-[80px]"></div>
+    </div>
+
+    {/* المحتوى الفعلي */}
+    <div className="relative z-10 max-w-6xl mx-auto px-4">  <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">حجوزاتي</h1>
           <p className="text-gray-600">إدارة جميع حجوزات المنتجات الخاصة بك</p>
         </div>

@@ -190,7 +190,7 @@ const Dashboard = () => {
   const StatCard = ({ icon: IconComponent, title, value, description, color = 'yellow' }) => {
     const colorClasses = colorMap[color] || colorMap.yellow;
     return (
-      <Card className="hover:shadow-lg transition-all duration-300 bg-white border-secondary-2 rounded-lg font-cairo">
+      <Card className="hover:shadow transition-all duration-300 bg-white border-secondary-2 rounded-lg font-cairo">
         <CardContent className="p-4">
           <div className="flex items-center justify-between">
             <div>
@@ -243,7 +243,7 @@ const Dashboard = () => {
   };
 
   const FavoriteItem = ({ item }) => (
-    <Card className="hover:shadow-lg transition-all duration-300 bg-white/90 backdrop-blur-md rounded-lg">
+    <Card className="hover:shadow transition-all duration-300 bg-white/90 backdrop-blur-md rounded-lg">
       <CardContent className="p-4">
         <div className="flex space-x-3">
           <div className="w-16 h-16 bg-[#F0E8DB] rounded-lg flex items-center justify-center">
@@ -280,7 +280,7 @@ const Dashboard = () => {
   );
 
   const BookingItem = ({ booking }) => (
-    <Card className="hover:shadow-lg transition-all duration-300 bg-white/90 backdrop-blur-md rounded-lg">
+    <Card className="hover:shadow transition-all duration-300 bg-white/90 backdrop-blur-md rounded-lg">
       <CardContent className="p-4">
         <div className="flex items-center justify-between">
           <div>
@@ -418,7 +418,7 @@ const Dashboard = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <Button
               variant="outline"
-              className="h-20 flex flex-col items-center justify-center border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+              className="h-20 flex flex-col items-center justify-center border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] rounded-lg shadow-md hover:shadow transition-all duration-300"
               onClick={() => navigate(ROUTES.SHOPS)}
               aria-label="Browse shops"
             >
@@ -427,7 +427,7 @@ const Dashboard = () => {
             </Button>
             <Button
               variant="outline"
-              className="h-20 flex flex-col items-center justify-center border-primary-500 text-primary-500 hover:bg-primary-1 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 font-cairo"
+              className="h-20 flex flex-col items-center justify-center border-primary-500 text-primary-500 hover:bg-primary-1 rounded-lg shadow-md hover:shadow transition-all duration-300 font-cairo"
               onClick={() => setActiveTab('bookings')}
               aria-label="Book an appointment"
             >
@@ -436,7 +436,7 @@ const Dashboard = () => {
             </Button>
             <Button
               variant="outline"
-              className="h-20 flex flex-col items-center justify-center border-primary-500 text-primary-500 hover:bg-primary-1 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 font-cairo"
+              className="h-20 flex flex-col items-center justify-center border-primary-500 text-primary-500 hover:bg-primary-1 rounded-lg shadow-md hover:shadow transition-all duration-300 font-cairo"
               onClick={() => navigate(ROUTES.PROFILE)}
               aria-label="View profile"
             >
@@ -457,7 +457,7 @@ const Dashboard = () => {
             <>
               <Button
                 onClick={() => navigate(ROUTES.TIME_MANAGEMENT)}
-                className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+                className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow transition-all duration-300"
                 aria-label="Manage time"
               >
                 <Clock className="w-4 h-4 mr-2" />
@@ -466,7 +466,7 @@ const Dashboard = () => {
               <Button
                 variant="outline"
                 onClick={() => navigate(ROUTES.BOOKINGS_ONLY)}
-                className="border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+                className="border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] rounded-lg shadow-md hover:shadow transition-all duration-300"
                 aria-label="View bookings only"
               >
                 <Calendar className="w-4 h-4 mr-2" />
@@ -476,7 +476,7 @@ const Dashboard = () => {
           ) : (
             <Button
               onClick={() => navigate(ROUTES.SHOPS)}
-              className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+              className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow transition-all duration-300"
               aria-label="Book new appointment"
             >
               <Plus className="w-4 h-4 mr-2" />
@@ -495,7 +495,7 @@ const Dashboard = () => {
             <p className="mb-4 font-tajawal">ابدأ بحجز موعد في أحد المتاجر</p>
             <Button
               onClick={() => navigate(ROUTES.SHOPS)}
-              className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+              className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow transition-all duration-300"
               aria-label="Browse shops"
             >
               <ShoppingBag className="w-4 h-4 mr-2" />
@@ -656,7 +656,7 @@ const Dashboard = () => {
       {/* Main Management Sections - Side by Side Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Section 1: Shop Management */}
-        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300">
+        <div className="bg-white rounded-xl p-6 shadow border border-gray-200 hover:shadow-xl transition-shadow duration-300">
           <div className="flex items-center mb-6">
             <div className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] p-3 rounded-lg mr-4">
               <Store className="w-6 h-6 text-white" />
@@ -674,7 +674,7 @@ const Dashboard = () => {
               </div>
               <div className="space-y-3">
                 <Button
-                  className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+                  className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow transition-all duration-300"
                   onClick={() => navigate(ROUTES.CREATE_SHOP)}
                   aria-label="Add new shop"
                 >
@@ -683,7 +683,7 @@ const Dashboard = () => {
                 </Button>
                 <Button
                   variant="outline"
-                  className="w-full border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+                  className="w-full border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] rounded-lg shadow-md hover:shadow transition-all duration-300"
                   onClick={() => navigate(ROUTES.MANAGE_SHOP)}
                   aria-label="Manage existing shops"
                 >
@@ -696,7 +696,7 @@ const Dashboard = () => {
         </div>
 
         {/* Section 2: Product Management */}
-        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300">
+        <div className="bg-white rounded-xl p-6 shadow border border-gray-200 hover:shadow-xl transition-shadow duration-300">
           <div className="flex items-center mb-6">
             <div className="bg-gradient-to-r from-[#A66A00] to-[#8A5700] p-3 rounded-lg mr-4">
               <Package className="w-6 h-6 text-white" />
@@ -742,7 +742,7 @@ const Dashboard = () => {
 
               <div className="space-y-3">
                 <Button
-                  className={`w-full rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ${
+                  className={`w-full rounded-lg shadow-md hover:shadow transition-all duration-300 ${
                     shopInfo?.requestStatus === 'approved' && user?.paid
                       ? 'bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white'
                       : 'bg-gray-300 text-gray-500 cursor-not-allowed'
@@ -762,7 +762,7 @@ const Dashboard = () => {
                 </Button>
                 <Button
                   variant="outline"
-                  className={`w-full rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ${
+                  className={`w-full rounded-lg shadow-md hover:shadow transition-all duration-300 ${
                     shopInfo?.requestStatus === 'approved' && user?.paid
                       ? 'border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6]'
                       : 'border-gray-300 text-gray-500 cursor-not-allowed'
@@ -782,7 +782,7 @@ const Dashboard = () => {
                 </Button>
                 <Button
                   variant="outline"
-                  className={`w-full rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ${
+                  className={`w-full rounded-lg shadow-md hover:shadow transition-all duration-300 ${
                     shopInfo?.requestStatus === 'approved' && user?.paid
                       ? 'border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6]'
                       : 'border-gray-300 text-gray-500 cursor-not-allowed'
@@ -807,7 +807,7 @@ const Dashboard = () => {
         </div>
 
         {/* Section 3: Appointment Management */}
-        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300">
+        <div className="bg-white rounded-xl p-6 shadow border border-gray-200 hover:shadow-xl transition-shadow duration-300">
           <div className="flex items-center mb-6">
             <div className="bg-gradient-to-r from-[#8A5700] to-[#6D552C] p-3 rounded-lg mr-4">
               <Clock className="w-6 h-6 text-white" />
@@ -825,7 +825,7 @@ const Dashboard = () => {
               </div>
               <div className="space-y-3">
                 <Button
-                  className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+                  className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow transition-all duration-300"
                   onClick={() => navigate(ROUTES.TIME_MANAGEMENT)}
                   aria-label="Manage all appointments"
                 >
@@ -834,7 +834,7 @@ const Dashboard = () => {
                 </Button>
                 <Button
                   variant="outline"
-                  className="w-full border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+                  className="w-full border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] rounded-lg shadow-md hover:shadow transition-all duration-300"
                   onClick={() => setActiveTab('available-times')}
                   aria-label="View time management"
                 >
@@ -848,7 +848,7 @@ const Dashboard = () => {
       </div>
 
       {/* Section 4: Appointment Statistics */}
-      <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+      <div className="bg-white rounded-xl p-6 shadow border border-gray-200">
         <div className="flex items-center mb-6">
           <div className="bg-gradient-to-r from-[#6D552C] to-[#49391D] p-3 rounded-lg mr-4">
             <BarChart3 className="w-6 h-6 text-white" />
@@ -997,7 +997,7 @@ const Dashboard = () => {
                   <Button
                     onClick={handleAddTimeSlot}
                     disabled={isAdding}
-                    className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+                    className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow transition-all duration-300"
                     aria-label="Add time slot"
                   >
                     {isAdding ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Plus className="w-4 h-4 mr-2" />}
@@ -1056,7 +1056,7 @@ const Dashboard = () => {
                           size="sm"
                           variant="outline"
                           onClick={() => handleDeleteTimeSlot(timeSlot._id)}
-                          className="border-red-400 text-red-600 hover:bg-red-500 hover:text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+                          className="border-red-400 text-red-600 hover:bg-red-500 hover:text-white rounded-lg shadow-md hover:shadow transition-all duration-300"
                           aria-label="Delete time slot"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -1067,7 +1067,7 @@ const Dashboard = () => {
                           size="sm"
                           variant="outline"
                           onClick={() => handleCancelBooking(timeSlot._id)}
-                          className="border-red-400 text-red-600 hover:bg-red-500 hover:text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+                          className="border-red-400 text-red-600 hover:bg-red-500 hover:text-white rounded-lg shadow-md hover:shadow transition-all duration-300"
                           aria-label="Cancel booking"
                         >
                           إلغاء الحجز
@@ -1302,7 +1302,7 @@ const Dashboard = () => {
           <p className="text-red-600 mb-4">{error}</p>
           <Button
             onClick={() => window.location.reload()}
-            className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+            className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow transition-all duration-300"
             aria-label="Try again"
           >
             Try Again
@@ -1323,7 +1323,7 @@ const Dashboard = () => {
           <p className="text-lg font-tajawal text-[#A66A00] mb-8">الوصول إلى لوحة التحكم مقتصر على أصحاب المتاجر والمديرين فقط.</p>
           <Button
             onClick={() => navigate('/')}
-            className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-8 py-3 rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+            className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-8 py-3 rounded-lg shadow-md hover:shadow transition-all duration-300"
             aria-label="Go to home"
           >
             Go to Home
@@ -1344,7 +1344,7 @@ const Dashboard = () => {
           </div>
 
           {/* Mobile Navigation - Horizontal tabs for mobile */}
-          <div className="lg:hidden sticky top-0 z-10 bg-white/90 backdrop-blur-md rounded-lg shadow-lg mb-6">
+          <div className="lg:hidden sticky top-0 z-10 bg-white/90 backdrop-blur-md rounded-lg shadow mb-6">
             <nav className="flex space-x-2 p-4 border-b border-gray-200 overflow-x-auto">
               {tabs.map(tab => {
                 const Icon = tab.icon;
@@ -1377,9 +1377,9 @@ const Dashboard = () => {
         </div>
 
         {/* Right Sidebar - Desktop only */}
-        <div className="hidden lg:block fixed right-0 top-20 h-[calc(100vh-5rem)] w-72 bg-white/90 backdrop-blur-md shadow-lg border-l border-gray-200">
+        <div className="hidden lg:block fixed right-0 top-20 h-[calc(100vh-5rem)] w-72 bg-white/90 backdrop-blur-md shadow border-l border-gray-200">
           <div className="p-6">
-            <h2 className="text-xl font-bold font-cairo text-[#8A5700] mb-6">قائمة لوحة التحكم</h2>
+            <h2 className="text-xl font-bold font-cairo text-[#8A5700] m-6">قائمة لوحة التحكم</h2>
             <nav className="space-y-2">
               {tabs.map(tab => {
                 const Icon = tab.icon;
