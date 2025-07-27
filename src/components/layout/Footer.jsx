@@ -70,7 +70,7 @@ const Footer = () => {
                 <span className="text-white font-bold text-lg">D</span>
               </div>
               <span className="text-2xl font-bold text-white mr-3 font-cairo">
-                ديبلا
+                دبله
               </span>
             </div>
 
@@ -78,7 +78,7 @@ const Footer = () => {
               دبله هي منصة تربط العملاء بأفضل محلات الذهب والمجوهرات في مصر. استكشف مجموعة واسعة من المجوهرات الفاخرة واحجز موعدك بسهولة.
             </p>
 
-            <div className="space-y-2 mt-7">
+            {/* <div className="space-y-2 mt-">
               <div className="flex items-center space-x-3 rtl:space-x-reverse text-gray-300 group hover:text-white transition-all duration-300">
                 <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center group-hover:bg-gray-700 transition-all duration-300 border border-gray-700">
                   <Phone className="w-3 h-3 text-gray-300 group-hover:text-white transition-colors duration-300" />
@@ -97,7 +97,7 @@ const Footer = () => {
                 </div>
                 <span className="text-sm font-medium">اسيوط، مصر</span>
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* روابط الفوتر */}

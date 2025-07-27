@@ -917,9 +917,9 @@ const ProductList = () => {
                         {/* Results Info */}
                         <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between mb-6 sm:mb-8 bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg border border-gray-100">
                             <div className="flex-1">
-                                <p className="text-base sm:text-lg font-semibold text-gray-900 mb-1">
+                                {/* <p className="text-base sm:text-lg font-semibold text-gray-900 mb-1">
                                     {t('products.available_products', { count: filteredProducts.length })}
-                                </p>
+                                </p> */}
                                 {searchQuery && (
                                     <p className="text-xs sm:text-sm text-gray-600 mb-1">
                                         {t('products.search_for')} <span className="font-medium text-yellow-600">"{searchQuery}"</span>
@@ -932,23 +932,28 @@ const ProductList = () => {
                                 )}
                             </div>
                             
-                            <div className="text-left sm:text-right w-full sm:w-auto">
-                                <div className="mb-2">
-                                    <p className="text-xs sm:text-sm text-gray-600 font-medium">{getMotivationalMessage()}</p>
-                                </div>
-                                <div className="flex gap-2 justify-start sm:justify-end">
-                                    {userBehavior.hasSearched && (
-                                        <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full">
-                                            {t('products.search')}
-                                        </span>
-                                    )}
-                                    {userBehavior.hasFiltered && (
-                                        <span className="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full">
-                                            {t('products.filtered')}
-                                        </span>
-                                    )}
-                                </div>
-                            </div>
+    <div className=" sm:text-right w-full sm:w-auto">
+  {/* <div className="w-full">
+  <p className=" text-sm text-gray-700 font-medium">
+    {getMotivationalMessage()}
+  </p>
+</div> */}
+
+
+  <div className="flex gap-2 justify-start sm:justify-end mt-2">
+    {userBehavior.hasSearched && (
+      <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full">
+        {t('products.search')}
+      </span>
+    )}
+    {userBehavior.hasFiltered && (
+      <span className="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full">
+        {t('products.filtered')}
+      </span>
+    )}
+  </div>
+</div>
+
                         </div>
 
                         {/* Products Grid/List */}
