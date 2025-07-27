@@ -9,7 +9,7 @@ import ProductImageGallery from '../../components/product/ProductImageGallery';
 import ProductInfoCard from '../../components/product/ProductInfoCard';
 import ProductDetailsTabs from '../../components/product/ProductDetailsTabs';
 import ShopInfoSidebar from '../../components/product/ShopInfoSidebar';
-import ShopChatInterface from '../../components/ui/shop_chat_interface';
+import ShopChatInterface from '../../components/chat/shop_chat_interface';
 
 // Import services
 import { productService } from '../../services/productService.js';
