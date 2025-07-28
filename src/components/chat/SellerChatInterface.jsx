@@ -41,7 +41,6 @@ const SellerChatInterface = ({
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [productsError, setProductsError] = useState(null);
   const [viewMode, setViewMode] = useState('grid');
-  const [selectedProduct, setSelectedProduct] = useState(null);
   const [isTyping, setIsTyping] = useState(false);
   const [conversationData, setConversationData] = useState(null);
   const [loadingConversation, setLoadingConversation] = useState(true);
@@ -136,7 +135,7 @@ const SellerChatInterface = ({
       console.log('Loading products for shop:', shopId);
       const response = await productService.getProductsByShop(shopId);
       const selectedProduct = response.data.filter(product=>{
-        return product._id = conversation.product;
+        return product._id == conversation.product;
       })
       
       console.log('Products response:', response);
