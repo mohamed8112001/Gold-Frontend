@@ -344,17 +344,6 @@ const ProductDetails = () => {
             {/* المحتوى الرئيسي */}
             <div className="w-full px-2 sm:px-4 lg:px-6 py-3 sm:py-4 animate-fade-in">
                 {/* علامات المنتج */}
-                <div className="flex flex-wrap gap-2 mb-4">
-                    {product.tags?.map((tag, index) => (
-                        <Badge
-                            key={index}
-                            variant="secondary"
-                            className="capitalize bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200 px-3 py-1 text-xs font-medium hover:bg-amber-200 dark:hover:bg-amber-800 transition-colors duration-300"
-                        >
-                            {tag}
-                        </Badge>
-                    ))}
-                </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 mb-6">
                     {/* صور المنتج */}

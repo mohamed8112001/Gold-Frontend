@@ -121,7 +121,7 @@ const ShopImageSlider = ({ images = [], shopName }) => {
 const ShopDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const { user , isShopOwner ,isAdmin } = useAuth();
     const [shop, setShop] = useState(null);
     const [products, setProducts] = useState([]);
     const [reviews, setReviews] = useState([]);
@@ -280,7 +280,7 @@ const ShopDetails = () => {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
-                    <Button
+                    {!isShopOwner && (<Button
                         size="sm"
                         variant="ghost"
                         className="absolute top-3 right-3 bg-white/90 hover:bg-white backdrop-blur-sm rounded-full w-9 h-9 p-0  opacity-0 group-hover:opacity-100 transition-all duration-300"
@@ -290,11 +290,10 @@ const ShopDetails = () => {
                         }}
                     >
                         <Heart className={`w-4 h-4 ${product.isFavorited ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
-                    </Button>
+                    </Button>)}
 
                     <Badge className="absolute top-3 left-3 bg-[#C37C00] hover:bg-[#A66A00] text-white opacity-0 group-hover:opacity-100 transition-all duration-300">
-                        Available
-                    </Badge>
+متاح                    </Badge>
                 </div>
 
                 <CardContent className="p-5 flex-1 flex flex-col">
@@ -346,8 +345,7 @@ const ShopDetails = () => {
                             }}
                         >
                             <Eye className="w-4 h-4 mr-2" />
-                            View Details
-                        </Button>
+عرض التفاصيل                               </Button>
                     </div>
                 </CardContent>
             </Card>
@@ -381,8 +379,7 @@ const ShopDetails = () => {
                         className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-8 py-3 rounded-full font-semibold"
                     >
                         <ArrowLeft className="w-4 h-4 mr-2" />
-                        Back to Shops
-                    </Button>
+ الرجوع الى المحلات                     </Button>
                 </div>
             </div>
         );
@@ -416,7 +413,7 @@ const ShopDetails = () => {
     });
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-[#F8F4ED] via-white to-[#F0E8DB]">
+        <div className="">
             {/* Back Button */}
             <div className="relative z-50 pt-20 pb-4 px-4 sm:px-6 lg:px-8">
                 <Button
@@ -426,8 +423,7 @@ const ShopDetails = () => {
                     className="bg-white/90 hover:bg-white text-[#C37C00] border border-[#C37C00]/30 backdrop-blur-md transition-all duration-300 rounded-full px-6 py-2  hover:"
                 >
                     <ArrowLeft className="w-4 h-4 mr-2" />
-                    Back to Shops
-                </Button>
+ الرجوع الى المحلات                </Button>
             </div>
 
             {/* Image Slider */}
@@ -465,12 +461,7 @@ const ShopDetails = () => {
                         <div className="text-white">
                             <div className="flex items-center gap-3 mb-3">
                                 <h1 className="text-4xl md:text-5xl font-bold">{safeShop.name}</h1>
-                                {safeShop.verified && (
-                                    <Badge className="bg-green-500 hover:bg-green-600 flex items-center gap-1">
-                                        <Shield className="w-3 h-3" />
-                                        Verified
-                                    </Badge>
-                                )}
+                               
                             </div>
                             <div className="flex items-center gap-6 text-white/90">
                                 <div className="flex items-center gap-2">
@@ -530,7 +521,7 @@ const ShopDetails = () => {
                                     <Phone className="w-6 h-6 text-white" />
                                 </div>
                                 <div>
-                                    <p className="text-sm text-indigo-600 font-medium mb-1">Phone</p>
+                                    <p className="text-sm text-indigo-600 font-medium mb-1">رقم الهاتف</p>
                                     <p className="text-gray-800 font-semibold text-base">
                                         <a
                                             href={`tel:${safeShop.phone}`}
@@ -549,7 +540,7 @@ const ShopDetails = () => {
                                     <WhatsAppIcon className="w-6 h-6 text-white" />
                                 </div>
                                 <div>
-                                    <p className="text-sm text-green-600 font-medium mb-1">WhatsApp</p>
+                                    <p className="text-sm text-green-600 font-medium mb-1">الواتساب</p>
                                     <p className="text-gray-800 font-semibold text-base">
                                         <a
                                             href={`https://wa.me/${safeShop.whatsapp}`}
@@ -570,7 +561,7 @@ const ShopDetails = () => {
                                     <Clock className="w-6 h-6 text-white" />
                                 </div>
                                 <div>
-                                    <p className="text-sm text-purple-600 font-medium mb-1">Working Hours</p>
+                                    <p className="text-sm text-purple-600 font-medium mb-1">ساعات العمل </p>
                                     <p className="text-gray-800 font-semibold text-base">{safeShop.workingHours}</p>
                                 </div>
                             </CardContent>
@@ -578,22 +569,24 @@ const ShopDetails = () => {
                     </div>
 
                     {/* Description */}
-                    <div className="mb-10">
+                    <div className="mb-1">
                         <div className="flex  justify-between items-center mb-6">
                             <h3 className="text-2xl font-bold text-gray-900">
                                 {t('shop_details.about_shop')}
                             </h3>
-                            <Button
+                            {!isShopOwner && !isAdmin && ( <Button
                                 size="lg"
                                 onClick={handleBookAppointment}
                                 className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-10 py-4 rounded-full font-bold text-lg  hover: transition-all"
                             >
                                 <Calendar className="w-6 h-6 mr-3" />
                                 {t('shop_details.book_appointment')}
-                            </Button>
+                            </Button>)}
+                           
                         </div>
 
                         <p className="text-gray-700 leading-relaxed text-xl bg-gradient-to-br from-[#F8F4ED] to-[#F0E8DB] p-6 rounded-2xl border border-[#E2D2B6]/30">
+                        {/* <p className=""> */}
                             {safeShop.description}
                         </p>
 
@@ -649,82 +642,97 @@ const ShopDetails = () => {
                         </TabsTrigger>
                     </TabsList>
 
-                    <TabsContent value="products" className="px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
-                        <div className="flex items-center justify-between mb-10">
-                            <div>
-                                <h2 className="text-4xl font-bold text-gray-900 mb-3">منتجات المتجر</h2>
-                                <p className="text-gray-600 text-lg">اكتشف مجموعتنا الحصرية</p>
-                            </div>
-                            <div className="flex items-center gap-4">
-                                <div className="flex bg-[#F0E8DB] rounded-full p-2 border border-[#E2D2B6]/50">
-                                    <Button
-                                        variant={viewMode === 'grid' ? 'default' : 'ghost'}
-                                        size="lg"
-                                        onClick={() => setViewMode('grid')}
-                                        className={`rounded-full px-6 py-3 font-semibold ${viewMode === 'grid' ? 'bg-white  text-[#8A6C37]' : 'hover:bg-[#E2D2B6] text-gray-600'}`}
-                                    >
-                                        <Grid className="w-5 h-5 mr-2" />
-                                        Grid
-                                    </Button>
-                                    <Button
-                                        variant={viewMode === 'list' ? 'default' : 'ghost'}
-                                        size="lg"
-                                        onClick={() => setViewMode('list')}
-                                        className={`rounded-full px-6 py-3 font-semibold ${viewMode === 'list' ? 'bg-white  text-[#8A6C37]' : 'hover:bg-[#E2D2B6] text-gray-600'}`}
-                                    >
-                                        <List className="w-5 h-5 mr-2" />
-                                        List
-                                    </Button>
-                                </div>
-                            </div>
-                        </div>
+                <TabsContent
+  value="products"
+  className="px-4 sm:px-6 lg:px-8 py-6 lg:py-8"
+  dir="rtl"
+  lang="ar"
+>
+  <div className="flex items-center justify-between mb-10">
+    <div>
+      <h2 className="text-4xl font-bold text-gray-900 mb-3">منتجات المتجر</h2>
+      <p className="text-gray-600 text-lg">اكتشف مجموعتنا الحصرية</p>
+    </div>
+    <div className="flex items-center gap-4">
+      <div className="flex bg-[#F0E8DB] rounded-full p-2 border border-[#E2D2B6]/50">
+        <Button
+          variant={viewMode === 'grid' ? 'default' : 'ghost'}
+          size="lg"
+          onClick={() => setViewMode('grid')}
+          className={`rounded-full px-6 py-3 font-semibold ${
+            viewMode === 'grid'
+              ? 'bg-white  text-[#8A6C37]'
+              : 'hover:bg-[#E2D2B6] text-gray-600'
+          }`}
+        >
+          <Grid className="w-5 h-5 ml-2" />
+          عرض شبكي
+        </Button>
+        <Button
+          variant={viewMode === 'list' ? 'default' : 'ghost'}
+          size="lg"
+          onClick={() => setViewMode('list')}
+          className={`rounded-full px-6 py-3 font-semibold ${
+            viewMode === 'list'
+              ? 'bg-white  text-[#8A6C37]'
+              : 'hover:bg-[#E2D2B6] text-gray-600'
+          }`}
+        >
+          <List className="w-5 h-5 ml-2" />
+          عرض قائم
+        </Button>
+      </div>
+    </div>
+  </div>
 
-                        {safeProducts.length > 0 ? (
-                            <div>
-                                <div className="mb-6 text-base text-gray-600 font-medium">
-                                    عرض {safeProducts.length} منتج من {safeShop.name}
-                                </div>
-                                <div className={`grid gap-6 ${viewMode === 'grid'
-                                    ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-                                    : 'grid-cols-1'
-                                    }`}>
-                                    {safeProducts.map((product) => {
-                                        const productKey = product.id || product._id || Math.random();
-                                        return (
-                                            <ProductCard key={productKey} product={product} />
-                                        );
-                                    })}
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="text-center py-12 bg-gradient-to-br from-[#F8F4ED] to-[#F0E8DB] rounded-lg border border-[#E2D2B6]/30">
-                                <div className="text-6xl mb-4">📦</div>
-                                <h3 className="text-xl font-medium text-gray-900 mb-2">
-                                    لا توجد منتجات متاحة في هذا المتجر
-                                </h3>
-                                <p className="text-gray-600 mb-4">
-                                    لم يتم إضافة منتجات إلى "{safeShop.name}" بعد
-                                </p>
-                                {user?.role === 'admin' || user?.id === safeShop.ownerId || user?._id === safeShop.ownerId ? (
-                                    <Button
-                                        variant="outline"
-                                        onClick={() => navigate(ROUTES.PRODUCTS_CREATE)}
-                                    >
-                                        Add New Product
-                                    </Button>
-                                ) : (
-                                    <p className="text-sm text-gray-500">
-                                        تواصل مع صاحب المتجر لطلب إضافة منتجات
-                                    </p>
-                                )}
-                            </div>
-                        )}
-                    </TabsContent>
+  {safeProducts.length > 0 ? (
+    <div>
+      <div className="mb-6 text-base text-gray-600 font-medium">
+        عرض {safeProducts.length} منتج من {safeShop.name}
+      </div>
+      <div
+        className={`grid gap-6 ${
+          viewMode === 'grid'
+            ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+            : 'grid-cols-1'
+        }`}
+      >
+        {safeProducts.map((product) => {
+          const productKey = product.id || product._id || Math.random();
+          return <ProductCard key={productKey} product={product} />;
+        })}
+      </div>
+    </div>
+  ) : (
+    <div className="text-center py-12 bg-gradient-to-br from-[#F8F4ED] to-[#F0E8DB] rounded-lg border border-[#E2D2B6]/30">
+      <div className="text-6xl mb-4">📦</div>
+      <h3 className="text-xl font-medium text-gray-900 mb-2">
+        لا توجد منتجات متاحة في هذا المتجر
+      </h3>
+      <p className="text-gray-600 mb-4">
+        لم يتم إضافة منتجات إلى "{safeShop.name}" بعد
+      </p>
+      {user?.role === 'admin' || user?.id === safeShop.ownerId || user?._id === safeShop.ownerId ? (
+        <Button
+          variant="outline"
+          onClick={() => navigate(ROUTES.PRODUCTS_CREATE)}
+        >
+          إضافة منتج جديد
+        </Button>
+      ) : (
+        <p className="text-sm text-gray-500">
+          تواصل مع صاحب المتجر لطلب إضافة منتجات
+        </p>
+      )}
+    </div>
+  )}
+</TabsContent>
+
 
                     <TabsContent value="location" className="px-4 sm:px-6 lg:px-8 py-8">
                         <div className="mb-8">
-                            <h2 className="text-3xl font-bold text-gray-900 mb-2">Shop Location</h2>
-                            <p className="text-gray-600">Find the shop and get directions</p>
+                            <h2 className="text-3xl font-bold text-gray-900 mb-2">موقع المحل  </h2>
+                            <p className="text-gray-600">ابحث عن المتجر واحصل على الاتجاهات</p>
                         </div>
 
                         <MapDisplay
@@ -752,114 +760,118 @@ const ShopDetails = () => {
                         />
                     </TabsContent>
 
-                    <TabsContent value="gallery" className="px-4 sm:px-6 lg:px-8 py-8">
-                        <div className="flex items-center justify-between mb-12">
-                            <div>
-                                <h2 className="text-4xl font-bold text-gray-900 mb-3">معرض المتجر</h2>
-                                <p className="text-gray-600 text-lg">استكشف صور عالية الجودة للمتجر والأعمال المميزة</p>
-                            </div>
-                            {(user?.role === 'admin' || user?.id === safeShop.ownerId || user?._id === safeShop.ownerId) && (
-                                <GalleryUpload
-                                    shopId={safeShop._id || safeShop.id}
-                                    currentUser={user}
-                                    onUploadSuccess={(newImages) => {
-                                        console.log('🖼️ Gallery upload success, updating shop state with:', newImages);
-                                        // Reload shop details to get the updated gallery including local images
-                                        loadShopDetails();
-                                    }}
-                                />
-                            )}
-                        </div>
+                  <TabsContent
+  value="gallery"
+  className="px-4 sm:px-6 lg:px-8 py-8"
+  dir="rtl"
+  lang="ar"
+>
+  <div className="flex items-center justify-between mb-12">
+    <div className="text-right">
+      <h2 className="text-4xl font-bold text-gray-900 mb-3">معرض المتجر</h2>
+      <p className="text-gray-600 text-lg">استكشف صور عالية الجودة للمتجر والأعمال المميزة</p>
+    </div>
+    {(user?.role === 'admin' || user?.id === safeShop.ownerId || user?._id === safeShop.ownerId) && (
+      <GalleryUpload
+        shopId={safeShop._id || safeShop.id}
+        currentUser={user}
+        onUploadSuccess={(newImages) => {
+          console.log('🖼️ تم رفع الصور بنجاح، يتم تحديث بيانات المتجر:', newImages);
+          loadShopDetails();
+        }}
+      />
+    )}
+  </div>
 
+  {safeShop.gallery && safeShop.gallery.length > 0 ? (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+      {safeShop.gallery.map((image, index) => {
+        const isLocalImage = typeof image === 'object' && image.data;
+        const imageUrl = isLocalImage ? image.data : `${import.meta.env.VITE_API_BASE_URL}/shop-gallery/${image}`;
+        const imageName = isLocalImage ? image.name : `صورة ${index + 1}`;
+        const imageId = isLocalImage ? image.id : image;
 
-                        {safeShop.gallery && safeShop.gallery.length > 0 ? (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                                {safeShop.gallery.map((image, index) => {
-                                    const isLocalImage = typeof image === 'object' && image.data;
-                                    const imageUrl = isLocalImage ? image.data : `${import.meta.env.VITE_API_BASE_URL}/shop-gallery/${image}`;
-                                    const imageName = isLocalImage ? image.name : `صورة ${index + 1}`;
-                                    const imageId = isLocalImage ? image.id : image;
+        return (
+          <div key={imageId} className="group relative">
+            <div className="relative aspect-square rounded-3xl overflow-hidden transition-all duration-500 transform hover:-translate-y-2">
+              <img
+                src={imageUrl}
+                alt={`${safeShop.name} - ${imageName}`}
+                className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700 cursor-pointer"
+                style={{
+                  filter: 'brightness(1.05) contrast(1.1) saturate(1.15)',
+                  imageRendering: 'crisp-edges',
+                }}
+                onError={(e) => {
+                  e.target.src = 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop&crop=center&auto=format&q=60';
+                }}
+                onClick={() => {
+                  window.open(imageUrl, '_blank');
+                }}
+              />
 
-                                    return (
-                                        <div key={imageId} className="group relative">
-                                            <div className="relative aspect-square rounded-3xl overflow-hidden  hover: transition-all duration-500 transform hover:-translate-y-2">
-                                                <img
-                                                    src={imageUrl}
-                                                    alt={`${safeShop.name} - ${imageName}`}
-                                                    className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700 cursor-pointer"
-                                                    style={{
-                                                        filter: 'brightness(1.05) contrast(1.1) saturate(1.15)',
-                                                        imageRendering: 'crisp-edges'
-                                                    }}
-                                                    onError={(e) => {
-                                                        e.target.src = 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop&crop=center&auto=format&q=60';
-                                                    }}
-                                                    onClick={() => {
-                                                        window.open(imageUrl, '_blank');
-                                                    }}
-                                                />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300">
+                <div className="absolute bottom-4 right-4 left-4 text-white text-right">
+                  <p className="font-bold text-lg mb-1">{imageName}</p>
+                  <p className="text-sm text-white/80">اضغط لعرض الصورة بالحجم الكامل</p>
+                  {isLocalImage && (
+                    <p className="text-xs text-[#C5A56D] mt-1">محفوظة محلياً</p>
+                  )}
+                </div>
 
-                                                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300">
-                                                    <div className="absolute bottom-4 left-4 right-4 text-white">
-                                                        <p className="font-bold text-lg mb-1">{imageName}</p>
-                                                        <p className="text-sm text-white/80">Click to view full size</p>
-                                                        {isLocalImage && (
-                                                            <p className="text-xs text-[#C5A56D] mt-1">محفوظ محلياً</p>
-                                                        )}
-                                                    </div>
+                <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm rounded-full p-2">
+                  <Eye className="w-5 h-5 text-white" />
+                </div>
+              </div>
 
-                                                    <div className="absolute top-4 left-4 bg-white/20 backdrop-blur-sm rounded-full p-2">
-                                                        <Eye className="w-5 h-5 text-white" />
-                                                    </div>
-                                                </div>
-                                                {(user?.role === 'admin' || user?.id === safeShop.ownerId || user?._id === safeShop.ownerId) && (
-                                                    <button
-                                                        className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleDeleteGalleryImage(imageId, index);
-                                                        }}
-                                                    >
-                                                        <X className="w-4 h-4" />
-                                                    </button>
-                                                )}
-                                            </div>
+              {(user?.role === 'admin' || user?.id === safeShop.ownerId || user?._id === safeShop.ownerId) && (
+                <button
+                  className="absolute top-2 left-2 bg-red-500 hover:bg-red-600 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteGalleryImage(imageId, index);
+                  }}
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
 
-                                            <div className="mt-4 text-center">
-                                                <h3 className="font-semibold text-gray-900 text-lg">{imageName}</h3>
-                                                <p className="text-gray-500 text-sm mt-1">معرض {safeShop.name}</p>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        ) : (
-                            <div className="text-center py-16 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl">
-                                <div className="text-8xl mb-6">📸</div>
-                                <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                                    لا توجد صور في المعرض
-                                </h3>
-                                <p className="text-gray-600 text-lg mb-6">
-                                    لم يتم إضافة صور إلى معرض المتجر بعد
-                                </p>
-                                {(user?.role === 'admin' || user?.id === safeShop.ownerId || user?._id === safeShop.ownerId) && (
-                                    <GalleryUpload
-                                        shopId={safeShop._id || safeShop.id}
-                                        currentUser={user}
-                                        onUploadSuccess={(newImages) => {
-                                            console.log('🖼️ Gallery upload success, updating shop state with:', newImages);
-                                            setShop(prev => ({
-                                                ...prev,
-                                                gallery: [...(prev.gallery || []), ...newImages]
-                                            }));
-                                            loadShopDetails();
-                                        }}
-                                    />
-                                )}
-                            </div>
+            <div className="mt-4 text-center">
+              <h3 className="font-semibold text-gray-900 text-lg">{imageName}</h3>
+              <p className="text-gray-500 text-sm mt-1">معرض {safeShop.name}</p>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  ) : (
+    <div className="text-center py-16 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl">
+      <div className="text-8xl mb-6">📸</div>
+      <h3 className="text-2xl font-bold text-gray-900 mb-3">
+        لا توجد صور في المعرض
+      </h3>
+      <p className="text-gray-600 text-lg mb-6">
+        لم يتم إضافة صور إلى معرض المتجر بعد
+      </p>
+      {(user?.role === 'admin' || user?.id === safeShop.ownerId || user?._id === safeShop.ownerId) && (
+        <GalleryUpload
+          shopId={safeShop._id || safeShop.id}
+          currentUser={user}
+          onUploadSuccess={(newImages) => {
+            console.log('🖼️ تم رفع الصور بنجاح، يتم التحديث:', newImages);
+            setShop(prev => ({
+              ...prev,
+              gallery: [...(prev.gallery || []), ...newImages],
+            }));
+            loadShopDetails();
+          }}
+        />
+      )}
+    </div>
+  )}
+</TabsContent>
 
-                        )}
-                    </TabsContent>
                 </Tabs>
             </div>
         </div>

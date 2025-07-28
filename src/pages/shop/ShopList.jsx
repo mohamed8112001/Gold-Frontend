@@ -302,80 +302,68 @@ const ShopList = () => {
 
     <div className="absolute bottom-3 left-3 z-10">
       <div className="bg-white/95 backdrop-blur-sm px-2.5 py-1 rounded-full">
-        <span className="text-xs font-semibold text-[#C37C00]">Verified Shop</span>
+        <span className="text-xs font-semibold text-[#C37C00]">متجر موثوق</span>
       </div>
     </div>
   </div>
 
   {/* Enhanced Content Section */}
-  <CardContent className={`p-6 flex-1 flex flex-col justify-between bg-gradient-to-b from-white to-[#FFF8E6]/30 ${isListView ? 'lg:flex-1' : ''}`}>
-    <div className="flex-1 space-y-4">
-      <div className="flex items-start justify-between">
-        <h3 className="font-bold text-xl mb-1 group-hover:text-[#C37C00] transition-colors duration-300 line-clamp-2 flex-1">
-          {shopName}
-        </h3>
-      </div>
-
-      <p className="text-gray-600 text-sm leading-relaxed line-clamp-2 group-hover:text-gray-700 transition-colors">
-        {shopDescription}
-      </p>
-
-      <div className="grid grid-cols-1 gap-2.5">
-        <div className="flex items-center gap-2.5 text-sm text-gray-600 group-hover:text-gray-700 transition-colors">
-          <div className="w-8 h-8 bg-gradient-to-br from-[#FFF0CC] to-[#FFE6B3] rounded-full flex items-center justify-center">
-            <MapPin className="w-4 h-4 text-[#C37C00]" />
-          </div>
-          <span className="truncate font-medium">{shopAddress}</span>
-        </div>
-        <div className="flex items-center gap-2.5 text-sm text-gray-600 group-hover:text-gray-700 transition-colors">
-          <div className="w-8 h-8 bg-gradient-to-br from-[#FFF0CC] to-[#FFE6B3] rounded-full flex items-center justify-center">
-            <Clock className="w-4 h-4 text-[#C37C00]" />
-          </div>
-          <span className="font-medium">{shopWorkingHours}</span>
-        </div>
-      </div>
-
-      {shopSpecialties.length > 0 && (
-        <div className="space-y-2">
-          <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Specialties</h4>
-          <div className="flex flex-wrap gap-1.5">
-            {shopSpecialties.slice(0, 3).map((specialty, index) => (
-              <span
-                key={index}
-                className="bg-gradient-to-r from-[#FFF0CC] to-[#FFE6B3] text-[#C37C00] text-xs px-3 py-1.5 rounded-full font-semibold border border-[#FFE6B3] "
-              >
-                {specialty}
-              </span>
-            ))}
-            {shopSpecialties.length > 3 && (
-              <span className="bg-gradient-to-r from-[#E2D2B6] to-[#D3BB92] text-[#8A6C37] text-xs px-3 py-1.5 rounded-full font-semibold border border-[#D3BB92] ">
-                +{shopSpecialties.length - 3} المزيد
-              </span>
-            )}
-          </div>
-        </div>
-      )}
+  <CardContent
+  className={`p-6 flex-1 flex flex-col justify-between bg-gradient-to-b from-white to-[#FFF8E6]/30 ${isListView ? 'lg:flex-1' : ''}`}
+  dir="rtl"
+>
+  <div className="flex-1 space-y-4 text-right">
+    {/* اسم المحل */}
+    <div className="flex items-start justify-between">
+      <h3 className="font-bold text-xl mb-1 group-hover:text-[#C37C00] transition-colors duration-300 line-clamp-2 flex-1">
+        {shopName}
+      </h3>
     </div>
 
-    <div className="mt-6 pt-4 border-t border-gradient-to-r from-transparent via-secondary-2/50 to-transparent">
-      <Button
-        className="w-full bg-gradient-to-r from-primary-500 font-bold transition-all duration-300 py-3.5 rounded-xl"
-        onClick={(e) => {
-          e.stopPropagation();
-          const shopId = shop._id || shop.id;
-          if (shopId) {
-            navigate(ROUTES.SHOP_DETAILS(shopId));
-          }
-        }}
-      >
-        <div className="flex items-center justify-center gap-2 ">
-          <Eye className="w-5 h-5" />
-          <span>عرض المحل</span>
-          <div className="w-1 h-1 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+    {/* وصف المحل */}
+    <p className="text-gray-600 text-sm leading-relaxed line-clamp-2 group-hover:text-gray-700 transition-colors">
+      {shopDescription}
+    </p>
+
+    {/* العنوان وساعات العمل */}
+    <div className="grid grid-cols-1 gap-2.5">
+      <div className="flex flex-row items-center gap-2.5 text-sm text-gray-600 group-hover:text-gray-700 transition-colors justify-end">
+        <div className="w-8 h-8 bg-gradient-to-br from-[#FFF0CC] to-[#FFE6B3] rounded-full flex items-center justify-center shrink-0 ml-auto">
+          <MapPin className="w-4 h-4 text-[#C37C00]" />
         </div>
-      </Button>
+        <span className="truncate font-medium text-right">{shopAddress}</span>
+      </div>
+
+      <div className="flex flex-row items-center gap-2.5 text-sm text-gray-600 group-hover:text-gray-700 transition-colors justify-end">
+        <div className="w-8 h-8 bg-gradient-to-br from-[#FFF0CC] to-[#FFE6B3] rounded-full flex items-center justify-center shrink-0 ml-auto">
+          <Clock className="w-4 h-4 text-[#C37C00]" />
+        </div>
+        <span className="font-medium text-right">{shopWorkingHours}</span>
+      </div>
     </div>
-  </CardContent>
+  </div>
+
+  {/* زر عرض المحل */}
+  <div className="mt-6 pt-4 border-t border-gradient-to-r from-transparent via-secondary-2/50 to-transparent">
+    <Button
+      className="w-full bg-gradient-to-r from-primary-500 font-bold transition-all duration-300 py-3.5 rounded-xl"
+      onClick={(e) => {
+        e.stopPropagation();
+        const shopId = shop._id || shop.id;
+        if (shopId) {
+          navigate(ROUTES.SHOP_DETAILS(shopId));
+        }
+      }}
+    >
+      <div className="flex items-center justify-center gap-2">
+        <Eye className="w-5 h-5" />
+        <span>عرض المحل</span>
+        <div className="w-1 h-1 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+      </div>
+    </Button>
+  </div>
+</CardContent>
+
 </Card>
 
     );
@@ -424,10 +412,10 @@ const ShopList = () => {
       exit={{ opacity: 0, x: -100 }}
       transition={{ duration: 0.5 }}
       className="min-h-screen bg-gradient-to-br from-[#F8F4ED] via-white to-[#F0E8DB]"
-      dir="ltr"
+      dir="rtl"
     >
       {/* Hero Section */}
-      <div className="relative bg-white text-[#C37C00] overflow-hidden mt-4 ">
+      <div className="relative bg-white text-[#C37C00] overflow-hidden mt-4 text-right">
         {/* تأثير خلفية ذهبي هادي */}
         <div className="absolute inset-0 bg-[#C37C00]/5 pointer-events-none"></div>
 
@@ -438,28 +426,28 @@ const ShopList = () => {
           <div className="absolute bottom-10 left-1/3 w-40 h-40 bg-[#C37C00]/10 rounded-full blur-[80px]"></div>
         </div>
 
-        <div className="relative  ">
+        <div className="relative">
           <div className="text-center mb-12">
             <h1 className="text-6xl md:text-7xl font-black mt-10 leading-tight text-[#C37C00]">
-              <span className="bg-gradient-to-r from-[#C37C00] to-[#E6A500] bg-clip-text text-transparent drop- m-10">
+              <span className="bg-gradient-to-r from-[#C37C00] to-[#E6A500] bg-clip-text text-transparent">
                 اكتشف المتاجر
               </span>
             </h1>
-            
-            <form onSubmit={handleSearch} className="max-w-6xl mx-auto  ">
+
+            <form onSubmit={handleSearch} className="max-w-6xl mx-auto text-right">
               <div className="relative">
                 <div className="absolute inset-0 bg-white/20 rounded-2xl blur-sm"></div>
-                <div className="relative bg-white/95 backdrop-blur-md rounded-2xl p-4  border border-white/30">
+                <div className="relative bg-white/95 backdrop-blur-md rounded-2xl p-4 border border-white/30">
                   <div className="flex flex-col lg:flex-row items-center gap-4">
                     {/* Search Input */}
                     <div className="flex-1 relative w-full lg:w-auto">
-                      <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#C37C00] w-6 h-6" />
+                      <Search className="absolute right-4 top-1/2 transform -translate-y-1/2 text-[#C37C00] w-6 h-6" />
                       <Input
                         type="text"
                         placeholder="ابحث عن متاجر المجوهرات..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="pl-14 pr-4 py-4 text-lg rounded-xl border-0 focus:ring-2 focus:ring-[#C37C00]/30 bg-transparent text-[#C37C00] placeholder-[#C37C00]/70 font-medium w-full"
+                        className="pr-14 pl-4 py-4 text-lg rounded-xl border-0 focus:ring-2 focus:ring-[#C37C00]/30 bg-transparent text-[#C37C00] placeholder-[#C37C00]/70 font-medium w-full"
                       />
                     </div>
 
@@ -467,12 +455,12 @@ const ShopList = () => {
                     <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
                       {/* Location Filter */}
                       <div className="relative min-w-[200px]">
-                        <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#C37C00]/70 w-4 h-4" />
+                        <MapPin className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#C37C00]/70 w-4 h-4" />
                         <Input
                           placeholder="الموقع"
                           value={filters.location}
                           onChange={(e) => handleFilterChange('location', e.target.value)}
-                          className="pl-10 pr-4 py-3 text-sm rounded-xl border border-[#C37C00]/50 focus:border-[#C37C00] bg-white text-[#C37C00]"
+                          className="pr-10 pl-4 py-3 text-sm rounded-xl border border-[#C37C00]/50 focus:border-[#C37C00] bg-white text-[#C37C00]"
                         />
                       </div>
 
@@ -519,7 +507,7 @@ const ShopList = () => {
                           onClick={clearFilters}
                           className="px-4 py-3 text-sm rounded-xl border border-[#C37C00] hover:border-[#A37C00] hover:text-[#A37C00]"
                         >
-                          <X className="w-4 h-4 mr-1 text-[#C37C00]" />
+                          <X className="w-4 h-4 ml-1 text-[#C37C00]" />
                           مسح
                         </Button>
                       )}
@@ -528,21 +516,18 @@ const ShopList = () => {
                       <Button
                         type="submit"
                         className="
-                    text-white 
-                    text-sm 
-                    px-6 py-3.5 
-                    rounded-xl 
-                    font-semibold 
-                     
-                    transition-all duration-300 
-                    transform hover:scale-[1.02] 
-                    bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] 
-                    hover:from-[#A66A00] hover:via-[#C37C00] hover:to-[#8A5700]
-                    hover: hover:[#C37C00]/30
-                    
-                  "
+                      text-white 
+                      text-sm 
+                      px-6 py-3.5 
+                      rounded-xl 
+                      font-semibold 
+                      transition-all duration-300 
+                      transform hover:scale-[1.02] 
+                      bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] 
+                      hover:from-[#A66A00] hover:via-[#C37C00] hover:to-[#8A5700]
+                    "
                       >
-                        <Search className="w-4 h-4 mr-1" />
+                        <Search className="w-4 h-4 ml-1" />
                         بحث
                       </Button>
                     </div>
@@ -556,12 +541,12 @@ const ShopList = () => {
 
 
       {/* Main Content */}
-      <div className="w-full pb-10 ">
+      <div className="w-full pb-10 text-right">
         <div className="max-w-[1600px] mx-auto">
           {/* Shops Grid/List */}
           <div className="w-full">
             {/* Results Info */}
-            <div className="flex items-center justify-between mb-8 bg-white rounded-2xl p-6  border-0 ">
+            <div className="flex items-center justify-between mb-8 bg-white rounded-2xl p-6 border-0">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 bg-[#A37F41] rounded-full"></div>
@@ -605,7 +590,7 @@ const ShopList = () => {
 
             {/* Shops Grid/List */}
             {filteredShops.length === 0 ? (
-              <div className="text-center py-20 bg-gradient-to-br from-white to-[#F8F4ED]/50 rounded-2xl  border border-[#E2D2B6]/30">
+              <div className="text-center py-20 bg-gradient-to-br from-white to-[#F8F4ED]/50 rounded-2xl border border-[#E2D2B6]/30">
                 <div className="text-8xl mb-6"></div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">لم يتم العثور على متاجر</h3>
                 <p className="text-gray-600 text-lg mb-8 max-w-md mx-auto">
@@ -613,13 +598,12 @@ const ShopList = () => {
                 </p>
                 <Button
                   onClick={clearFilters}
-                  className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-8 py-3  hover:[#C37C00]/30"
+                  className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-8 py-3"
                 >
                   مسح جميع الفلاتر
                 </Button>
               </div>
             ) : (
-              /* All Shops Section - No Premium Distinction */
               <div className={`grid ${viewMode === 'grid'
                 ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8'
                 : 'grid-cols-1 gap-6'

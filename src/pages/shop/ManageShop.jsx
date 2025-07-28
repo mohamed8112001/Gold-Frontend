@@ -587,8 +587,7 @@ const ManageShop = () => {
                                                             onClick={() => navigate(ROUTES.PRODUCT_DETAILS(product._id))}
                                                         >
                                                             <Eye className="w-4 h-4 mr-1" />
-                                                            View Details
-                                                        </Button>
+عرض التفاصيل                                                        </Button>
                                                         <Button
                                                             size="sm"
                                                             className="flex-1 bg-gray-50 hover:bg-gray-100 text-gray-800"
@@ -732,7 +731,7 @@ const ManageShop = () => {
                                                         تحميل QR Code
                                                     </Button>
 
-                                                    <Button
+                                                    {/* <Button
                                                         onClick={generateNewQRCode}
                                                         variant="outline"
                                                         className="w-full"
@@ -740,7 +739,7 @@ const ManageShop = () => {
                                                     >
                                                         <QrCode className="w-4 h-4 mr-2" />
                                                         إنشاء QR Code جديد
-                                                    </Button>
+                                                    </Button> */}
                                                 </div>
                                             </div>
                                         </div>
@@ -826,7 +825,7 @@ const ManageShop = () => {
                                                         تحميل QR Code
                                                     </Button>
 
-                                                    <Button
+                                                    {/* <Button
                                                         onClick={generateNewQRCode}
                                                         variant="outline"
                                                         className="w-full"
@@ -834,7 +833,7 @@ const ManageShop = () => {
                                                     >
                                                         <QrCode className="w-4 h-4 mr-2" />
                                                         إنشاء QR Code جديد
-                                                    </Button>
+                                                    </Button> */}
                                                 </div>
                                             </div>
                                         </div>

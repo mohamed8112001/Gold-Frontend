@@ -323,7 +323,7 @@ const BookAppointment = () => {
                 <Calendar className="w-16 h-16 mx-auto mb-4 text-gray-300" />
                 <h3 className="text-lg font-medium mb-2">No Available Appointments</h3>
                 <p className="mb-4">There are currently no available appointment slots at this shop</p>
-                <Button onClick={() => navigate(-1)}>Back to Shop</Button>
+                <Button onClick={() => navigate(-1)}> الرجوع الى المحل  </Button>
               </div>
             )}
           </CardContent>

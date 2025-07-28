@@ -1,7 +1,9 @@
+'use client';
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card.jsx';
 import { Button } from '@/components/ui/button.jsx';
 import { Badge } from '@/components/ui/badge.jsx';
+
 import {
   Plus,
   Calendar,
@@ -21,6 +23,11 @@ import {
 } from 'lucide-react';
 import { bookingService } from '../../services/bookingService.js';
 import { useAuth } from '../../context/AuthContext.jsx';
+import { CalendarIcon } from 'lucide-react';
+import DatePicker, { registerLocale } from 'react-datepicker';
+import { ar } from 'date-fns/locale';
+
+registerLocale('ar', ar);
 
 const TimeManagement = () => {
   const { user } = useAuth();

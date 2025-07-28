@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
+import { useAuth } from "../../context/AuthContext.jsx";
+
 import {
   ShoppingBag,
   MapPin,
@@ -17,6 +19,9 @@ import {
 } from 'lucide-react';
 
 const ShopInfoSidebar = ({ shop, onVisitShop, onOpenChat }) => {
+    const { user, isAuthenticated, isAdmin, isShopOwner, logout, isRegularUser } =     useAuth();
+    
+
   if (!shop) {
     return (
       <div className="space-y-3">
@@ -71,13 +76,6 @@ const ShopInfoSidebar = ({ shop, onVisitShop, onOpenChat }) => {
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-1 mb-2">
-            {shop.badges?.map((badge, index) => (
-              <Badge key={index} className="bg-white/80 text-yellow-700 border-yellow-200 text-xs px-2 py-1">
-                {badge}
-              </Badge>
-            ))}
-          </div>
         </div>
 
         <CardContent className="p-4 space-y-3">
@@ -150,7 +148,7 @@ const ShopInfoSidebar = ({ shop, onVisitShop, onOpenChat }) => {
 
           <Separator />
 
-          <div className="space-y-2">
+          { !isShopOwner && !isAdmin && ( <div className="space-y-2">
             <Button
               className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 py-2 text-sm"
               onClick={onVisitShop}
@@ -182,11 +180,12 @@ const ShopInfoSidebar = ({ shop, onVisitShop, onOpenChat }) => {
                   rel="noopener noreferrer"
                 >
                   <MessageSquare className="w-3 h-3 mr-2" />
-                  WhatsApp
+                  واتساب
                 </a>
               </Button>
             )}
-          </div>
+          </div>)}
+         
         </CardContent>
       </Card>
     </div>

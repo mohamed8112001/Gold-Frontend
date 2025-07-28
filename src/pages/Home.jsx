@@ -367,7 +367,7 @@ const Home = () => {
                     className="w-full border-2 border-[#E2D2B6] hover:border-[#8A6C37] hover:bg-[#F8F4ED] text-gray-700 hover:text-[#8A6C37] py-3 rounded-xl font-semibold transition-all duration-300"
                   >
                     <Phone className="w-4 h-4 mr-2" />
-                    Call
+                    تواصل معنا 
                   </Button>
                 </a>
 
@@ -385,7 +385,7 @@ const Home = () => {
                     className="w-full border-2 border-[#E2D2B6] hover:border-[#6D552C] hover:bg-[#F0E8DB] text-gray-700 hover:text-[#6D552C] py-3 rounded-xl font-semibold transition-all duration-300"
                   >
                     <MapPin className="w-4 h-4 mr-2" />
-                    Map
+                    الموقع 
                   </Button>
                 </a>
               </div>

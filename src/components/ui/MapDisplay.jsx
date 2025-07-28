@@ -61,8 +61,7 @@ const MapDisplay = ({
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <MapPin className="w-5 h-5" />
-              Shop Location
-            </CardTitle>
+موقع المحل             </CardTitle>
           </CardHeader>
         )}
         <CardContent>
@@ -139,8 +138,7 @@ const MapDisplay = ({
               className="flex-1"
             >
               <Navigation className="w-4 h-4 mr-2" />
-              Get Directions
-            </Button>
+احصل على الاتجاهات            </Button>
             <Button
               type="button"
               variant="outline"
@@ -149,22 +147,11 @@ const MapDisplay = ({
               className="flex-1"
             >
               <ExternalLink className="w-4 h-4 mr-2" />
-              Open in Maps
-            </Button>
+افتح فى الخرائط            </Button>
           </div>
         )}
 
-        {/* Location Info */}
-        <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">
-          <div className="flex items-center gap-2 mb-1">
-            <MapPin className="w-4 h-4" />
-            <span className="font-medium">Coordinates:</span>
-          </div>
-          <div className="grid grid-cols-2 gap-2 text-xs">
-            <div>Latitude: {lat.toFixed(6)}</div>
-            <div>Longitude: {lng.toFixed(6)}</div>
-          </div>
-        </div>
+   
       </CardContent>
     </Card>
   );

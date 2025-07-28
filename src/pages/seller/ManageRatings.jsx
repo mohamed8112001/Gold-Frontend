@@ -31,6 +31,7 @@ const ManageRatings = () => {
 
       // Fetch ratings for shop owner's shops
       const ratingsResponse = await rateService.getAllRates();
+      console.log(ratingsResponse)
       const allRatings = ratingsResponse.data || [];
 
       // Filter ratings for current user's shops (if user is shop owner)

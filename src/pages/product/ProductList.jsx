@@ -639,7 +639,7 @@ const ProductList = () => {
                                         <span className="hidden sm:inline">المتجر</span>
                                     </Button>
                                 )}
-                                <Button
+                                {/* <Button
                                     variant="outline"
                                     size="sm"
                                     className="flex-1 border border-red-300 hover:border-red-500 hover:bg-red-50 text-red-700 hover:text-red-800 py-1.5 sm:py-2 rounded-lg font-medium transition-all duration-300 text-xs"
@@ -650,7 +650,7 @@ const ProductList = () => {
                                 >
                                     <Heart className={`w-3 h-3 mr-1 ${safeProduct.isFavorited ? 'fill-current' : ''}`} />
                                     <span className="hidden sm:inline mr-3">{safeProduct.isFavorited ? 'Saved' : 'حفظ'}</span>
-                                </Button>
+                                </Button> */}
                             </div>
                         </div>
                     </div>

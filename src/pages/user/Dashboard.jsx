@@ -1206,13 +1206,7 @@ const Dashboard = () => {
                     </div>
 
                     <div className="space-y-3">
-                      {/* <Button
-                        onClick={() => navigate(ROUTES.SHOP_QR_CODE)}
-                        className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white"
-                      >
-                        <QrCode className="w-4 h-4 mr-2" />
-                        📱 QR Code المتجر
-                      </Button> */}
+                   
 
                       <Button
                         onClick={downloadQRCode}
@@ -1222,15 +1216,6 @@ const Dashboard = () => {
                         تحميل QR Code
                       </Button>
 
-                      <Button
-                        onClick={generateNewQRCode}
-                        variant="outline"
-                        className="w-full"
-                        disabled={qrCodeLoading}
-                      >
-                        <QrCode className="w-4 h-4 mr-2" />
-                        إنشاء QR Code جديد
-                      </Button>
                     </div>
                   </div>
                 </div>
@@ -1273,8 +1258,8 @@ const Dashboard = () => {
 
   const tabs = [
     { id: 'overview', label: t('dashboard.overview'), icon: BarChart3 },
-    { id: 'bookings', label: isShopOwner ? t('dashboard.bookings') : t('dashboard.my_bookings'), icon: Calendar },
-    { id: 'available-times', label: isShopOwner ? t('dashboard.available_times') : t('dashboard.my_appointments'), icon: Clock },
+    // { id: 'bookings', label: isShopOwner ? t('dashboard.bookings') : t('dashboard.my_bookings'), icon: Calendar },
+    // { id: 'available-times', label: isShopOwner ? t('dashboard.available_times') : t('dashboard.my_appointments'), icon: Clock },
     ...(isShopOwner ? [
       { id: 'shop', label: t('dashboard.shop_management'), icon: Store },
       { id: 'ratings', label: t('dashboard.ratings'), icon: Star },
@@ -1326,8 +1311,7 @@ const Dashboard = () => {
             className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white px-8 py-3 rounded-lg shadow-md hover:shadow transition-all duration-300"
             aria-label="Go to home"
           >
-            Go to Home
-          </Button>
+ارجع للصفحة الرئيسية          </Button>
         </div>
       </div>
     );
@@ -1368,7 +1352,7 @@ const Dashboard = () => {
 
           <div className="pt-4">
             {activeTab === 'overview' && <OverviewTab />}
-            {activeTab === 'bookings' && <BookingsTab />}
+            {/* {activeTab === 'bookings' && <BookingsTab />} */}
             {activeTab === 'shop' && isShopOwner && <ShopOwnerTab />}
             {activeTab === 'ratings' && isShopOwner && <ManageRatings />}
             {activeTab === 'qr-code' && isShopOwner && <QRCodeTab />}

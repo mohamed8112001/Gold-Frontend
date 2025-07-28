@@ -18,10 +18,11 @@ import { useAuth } from '../../context/AuthContext';
 import { ratingService } from '../../services/ratingService';
 
 const ProductRating = ({ productId, showForm = true }) => {
-  const { user } = useAuth();
   const [ratings, setRatings] = useState([]);
   const [stats, setStats] = useState(null);
   const [userRating, setUserRating] = useState(null);
+    const { user, isAuthenticated, isAdmin, isShopOwner, logout, isRegularUser } =
+      useAuth();
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [showRatingForm, setShowRatingForm] = useState(false);
@@ -54,6 +55,9 @@ const ProductRating = ({ productId, showForm = true }) => {
   };
 
   const loadUserRating = async () => {
+      const { user, isAuthenticated, isAdmin, isShopOwner, logout, isRegularUser } =    useAuth();
+      
+
     try {
       const response = await ratingService.getUserRating(productId);
       setUserRating(response.data.rating);
@@ -66,6 +70,7 @@ const ProductRating = ({ productId, showForm = true }) => {
   };
 
   const handleSubmitRating = async () => {
+    
     if (!selectedRating) {
       alert('يرجى اختيار تقييم');
       return;
@@ -221,7 +226,7 @@ const ProductRating = ({ productId, showForm = true }) => {
       )}
 
       {/* User Rating Form */}
-      {showForm && user && (
+      {showForm && user && !isShopOwner && !isAdmin && (
         <Card className="border-[#C37C00]">
           <CardHeader>
             <CardTitle className="text-[#8A5700] flex items-center gap-2">
@@ -230,7 +235,7 @@ const ProductRating = ({ productId, showForm = true }) => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {!showRatingForm && !userRating && (
+            {!showRatingForm && !userRating &&    (
               <Button
                 onClick={() => setShowRatingForm(true)}
                 className="bg-[#C37C00] hover:bg-[#A66A00] text-white"
@@ -239,7 +244,7 @@ const ProductRating = ({ productId, showForm = true }) => {
               </Button>
             )}
 
-            {!showRatingForm && userRating && (
+            {!showRatingForm && userRating &&  (
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2">
