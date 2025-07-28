@@ -27,7 +27,9 @@ import { testAuthentication } from '../../utils/testAuth.js';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const { user, isAdmin } = useAuth();
+  // Add isLoading from useAuth and rename to avoid conflict
+  const { user, isAdmin, isLoading: authLoading } = useAuth();
+  
   const [stats, setStats] = useState({
     totalShops: 0,
     pendingShops: 0,
@@ -43,10 +45,32 @@ const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
 
   useEffect(() => {
-    if (!user || !isAdmin) {
+    console.log('🔍 Auth state check:', { 
+      authLoading, 
+      user: !!user, 
+      isAdmin,
+      userName: user?.name 
+    });
+
+    // Don't redirect while authentication is still loading
+    if (authLoading) {
+      console.log('⏳ Authentication still loading, waiting...');
+      return;
+    }
+
+    if (!user) {
+      console.log('❌ No user found, redirecting to login');
       navigate(ROUTES.LOGIN);
       return;
     }
+    
+    if (!isAdmin) {
+      console.log('❌ User is not admin, redirecting to home');
+      navigate('/');
+      return;
+    }
+
+    console.log('✅ User is authenticated admin, loading data');
     loadAdminData();
 
     // تحديث البيانات تلقائيًا كل 30 ثانية
@@ -55,7 +79,7 @@ const AdminDashboard = () => {
     }, 30000);
 
     return () => clearInterval(interval);
-  }, [user, isAdmin, navigate]);
+  }, [user, isAdmin, navigate, authLoading]); // Add authLoading to dependencies
 
   const loadAdminData = async () => {
     try {
@@ -387,6 +411,23 @@ const AdminDashboard = () => {
     }
   };
 
+  // Show loading screen while auth is being determined
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-yellow-50/30 to-amber-50/20 flex items-center justify-center pt-20">
+        <div className="bg-white rounded-2xl border border-yellow-200/30 backdrop-blur-sm p-12 text-center">
+          <div className="w-16 h-16 bg-gradient-to-br from-yellow-500 to-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-6 animate-pulse">
+            <BarChart3 className="w-8 h-8 text-white" />
+          </div>
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-yellow-100 border-t-yellow-600 mx-auto mb-6"></div>
+          <h3 className="text-xl font-bold text-gray-900 mb-2">جارٍ التحقق من الهوية...</h3>
+          <p className="text-gray-600">يرجى الانتظار</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show loading screen while data is being loaded
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-yellow-50/30 to-amber-50/20 flex items-center justify-center pt-20">
