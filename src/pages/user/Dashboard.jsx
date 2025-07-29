@@ -79,10 +79,37 @@ const Dashboard = () => {
           setRecentActivity(userActivity.data || []);
         }
 
+        // Fetch shops count
+        try {
+          const response = await shopService.getAllShops();
+          const approvedShops = Array.isArray(response?.data)
+            ? response.data
+            : Array.isArray(response)
+            ? response
+            : [];
+          setStats(prev => ({ ...prev, shops: approvedShops.length }));
+        } catch (error) {
+          console.warn('Failed to fetch shops count:', error.message);
+        }
+
+        // Fetch products count
+        try {
+          const token = localStorage.getItem("token");
+          const headers = token ? { Authorization: `Bearer ${token}` } : {};
+          const productsResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}/product`, { headers });
+
+          if (!productsResponse.ok) {
+            throw new Error(`Product API error: ${productsResponse.status}`);
+          }
+
+          const products = await productsResponse.json();
+          setStats(prev => ({ ...prev, products: products.length || 0 })); // Ensure products count is updated
+        } catch (error) {
+          console.warn('Failed to fetch products count:', error.message);
+        }
+
         const bookingsData = await dashboardService.getBookings();
         setBookings(bookingsData.data || []);
-
-
       } catch (err) {
         setError(err.message || 'خطأ في تحميل البيانات');
       } finally {
@@ -1206,8 +1233,6 @@ const Dashboard = () => {
                     </div>
 
                     <div className="space-y-3">
-                   
-
                       <Button
                         onClick={downloadQRCode}
                         className="w-full bg-green-600 hover:bg-green-700"
@@ -1215,7 +1240,6 @@ const Dashboard = () => {
                         <Eye className="w-4 h-4 mr-2" />
                         تحميل QR Code
                       </Button>
-
                     </div>
                   </div>
                 </div>

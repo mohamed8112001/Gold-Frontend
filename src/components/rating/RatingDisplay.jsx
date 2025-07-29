@@ -8,7 +8,7 @@ import { toast } from 'react-hot-toast';
 import RatingForm from './RatingForm';
 
 const RatingDisplay = ({ shopId, shopName, onRatingsUpdate }) => {
-  const { user , isShopOwner } = useAuth();
+  const { user , isShopOwner ,isAdmin } = useAuth();
   const [ratings, setRatings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showRatingForm, setShowRatingForm] = useState(false);
@@ -147,7 +147,7 @@ const RatingDisplay = ({ shopId, shopName, onRatingsUpdate }) => {
       )}
 
       {/* Add Rating Button */}
-      {user && !userRating && !isShopOwner && (
+      {user && !userRating && !isShopOwner && !isAdmin && (
         <div className="text-center">
           <Button
             onClick={() => setShowRatingForm(true)}

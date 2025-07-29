@@ -712,18 +712,19 @@ const ShopDetails = () => {
       <p className="text-gray-600 mb-4">
         لم يتم إضافة منتجات إلى "{safeShop.name}" بعد
       </p>
-      {user?.role === 'admin' || user?.id === safeShop.ownerId || user?._id === safeShop.ownerId ? (
-        <Button
+      {isAdmin && isShopOwner && (  <Button
           variant="outline"
           onClick={() => navigate(ROUTES.PRODUCTS_CREATE)}
         >
           إضافة منتج جديد
-        </Button>
-      ) : (
+        </Button>)}
+      {/* {user?.role === 'admin' || user?.id === safeShop.ownerId || user?._id === safeShop.ownerId ? ( */}
+      
+      {/* ) : (
         <p className="text-sm text-gray-500">
           تواصل مع صاحب المتجر لطلب إضافة منتجات
         </p>
-      )}
+      )} */}
     </div>
   )}
 </TabsContent>

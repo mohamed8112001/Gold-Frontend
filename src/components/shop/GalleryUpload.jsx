@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import { Upload, X, Plus, Image as ImageIcon } from 'lucide-react';
 import { Button } from '../ui/button';
 import { shopService } from '../../services/shopService';
+import { useAuth } from "../../context/AuthContext.jsx";
 
 const GalleryUpload = ({ shopId, currentUser, onUploadSuccess }) => {
+    const { user, isAdmin, isRegularUser } = useAuth();
+  
   const [uploading, setUploading] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [previews, setPreviews] = useState([]);
@@ -134,7 +137,7 @@ const GalleryUpload = ({ shopId, currentUser, onUploadSuccess }) => {
   return (
     <div className="space-y-4">
       {/* Upload Button */}
-      <div className="flex items-center gap-4">
+      { !user && !isAdmin && !isRegularUser && (   <div className="flex items-center gap-4">
         <label className="cursor-pointer">
           <input
             type="file"
@@ -169,8 +172,9 @@ const GalleryUpload = ({ shopId, currentUser, onUploadSuccess }) => {
           </Button>
         )}
       </div>
-
-      {/* Preview Selected Images */}
+   
+)}
+     
       {previews.length > 0 && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-gray-50 rounded-lg">
           {previews.map((preview, index) => (
@@ -194,15 +198,16 @@ const GalleryUpload = ({ shopId, currentUser, onUploadSuccess }) => {
         </div>
       )}
 
-      {/* Upload Instructions */}
-      {selectedFiles.length === 0 && (
+      {selectedFiles.length  === 0 && !isAdmin && !isRegularUser && !user(
         <div className="text-center p-6 border-2 border-dashed border-gray-300 rounded-lg">
           <ImageIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
           <p className="text-gray-600 mb-2">اضغط "اختيار صور" لإضافة صور للمعرض</p>
           <p className="text-sm text-gray-500">يمكنك اختيار عدة صور في نفس الوقت</p>
         </div>
       )}
+      
     </div>
+    
   );
 };
 

@@ -14,8 +14,7 @@ import { useTranslation } from "react-i18next";
 
 const Header = () => {
   const navigate = useNavigate();
-  const { user, isAuthenticated, isAdmin, isShopOwner, logout, isRegularUser } =
-    useAuth();
+  const { user, isAuthenticated, isAdmin, isShopOwner, logout, isRegularUser } = useAuth();
   const { t } = useTranslation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
