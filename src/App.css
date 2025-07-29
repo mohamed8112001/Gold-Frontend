@@ -47,7 +47,10 @@ input[type="date"].hide-placeholder::-webkit-datetime-edit {
 input[type="date"].hide-placeholder:focus::-webkit-datetime-edit {
   color: black;
 }
-
+.star-icon {
+  width: 5rem !important;
+  height: 5rem !important;
+}
 :root {
   --radius: 0.625rem;
   /* New Design System - Light Mode */

@@ -161,7 +161,7 @@ const ManageRatings = () => {
           variant="outline"
           className="flex items-center gap-2"
         >
-          <Eye className="w-4 h-4" />
+          {/* <Eye className="w-4 h-4" /> */}
           تحديث البيانات
         </Button>
       </div>

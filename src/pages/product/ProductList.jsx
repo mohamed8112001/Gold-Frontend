@@ -748,7 +748,7 @@ const ProductList = () => {
                 {/* Enhanced input container */}
                 <div className="flex-1 relative group">
                   {/* Enhanced glow effect */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] rounded-full blur-lg opacity-20 group-hover:opacity-40 group-focus-within:opacity-50 transition-all duration-500"></div>
+<div className="absolute inset-0 bg-gradient-to-r from-[#C37C00] via-[#E6A500] to-[#A66A00] rounded-full blur-lg opacity-20 focus-within:opacity-50 transition-all duration-500"></div>
 
                   {/* Main input container */}
                   <div className="relative bg-white rounded-full border-2 border-gray-300 focus-within:border-[#C37C00] hover:border-[#E6A500] transition-all duration-300 shadow hover:shadow-xl focus-within:shadow-xl">

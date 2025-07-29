@@ -201,9 +201,9 @@ const AdminDashboard = () => {
       console.log("نتيجة الموافقة:", result);
 
       alert(
-        `✅ تم الموافقة على طلب تفعيل متجر "${shopName}" بنجاح!\n\n` +
-          "📧 تم إرسال إشعار فوري لصاحب المتجر\n" +
-          "💳 يمكن لصاحب المتجر الآن المتابعة لعملية الدفع"
+        ` تم الموافقة على طلب تفعيل متجر "${shopName}" بنجاح!\n\n` +
+          " تم إرسال إشعار فوري لصاحب المتجر\n" +
+          " يمكن لصاحب المتجر الآن المتابعة لعملية الدفع"
       );
 
       console.log("جارٍ إعادة تحميل بيانات الإدارة...");
@@ -530,7 +530,7 @@ const AdminDashboard = () => {
         <div className="flex-1 overflow-auto">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
             {/* Enhanced Stats Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 mb-8">
               {[
                 { 
                   title: "إجمالي المتاجر", 
@@ -572,7 +572,7 @@ const AdminDashboard = () => {
                   className={`bg-gradient-to-br ${stat.bgColor} border-0 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer group`}
                   onClick={stat.onClick}
                 >
-                  <CardContent className="p-6">
+                  <CardContent className="p-6 ">
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
                         <p className="text-sm font-medium text-gray-700 mb-2 group-hover:text-gray-800 transition-colors">

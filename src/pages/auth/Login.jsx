@@ -220,9 +220,9 @@ const Login = () => {
                 <h2 className="text-heading-2xl font-bold mb-3" style={{ color: '#A37F41' }}>
                   {t('auth.login.title')}
                 </h2>
-                <p className="text-arabic-lg" style={{ color: '#6B5B47' }}>
+                {/* <p className="text-arabic-lg" style={{ color: '#6B5B47' }}>
                   {t('auth.login.subtitle')}
-                </p>
+                </p> */}
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-8">

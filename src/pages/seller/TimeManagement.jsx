@@ -311,7 +311,7 @@ const TimeManagement = () => {
         )}
 
         {/* Statistics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <Card className="border-yellow-200">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
@@ -366,7 +366,7 @@ const TimeManagement = () => {
             </CardContent>
           </Card>
 
-          <Card className="border-purple-200">
+          {/* <Card className="border-purple-200">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -385,7 +385,7 @@ const TimeManagement = () => {
                 </div>
               </div>
             </CardContent>
-          </Card>
+          </Card> */}
         </div>
 
         {/* Filters and Tabs */}

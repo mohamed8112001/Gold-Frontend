@@ -352,11 +352,7 @@ const Home = () => {
           <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
           {/* Verified Badge */}
-          <div className="absolute top-4 left-4">
-            <div className="bg-gradient-to-r from-green-500 to-green-600 text-white text-sm px-4 py-2 rounded-full backdrop-blur-sm border border-white/20">
-              <span className="font-semibold">✓ Verified</span>
-            </div>
-          </div>
+          <div className="absolute top-4 left-4"></div>
         </div>
 
         {/* Enhanced Content Section */}
@@ -488,13 +484,12 @@ const Home = () => {
           {heroSlides.map((slide, index) => (
             <div
               key={slide.id}
-              className={`absolute inset-0 transition-all duration-1500 ease-in-out ${
+              className={`absolute  inset-0 transition-all duration-1500 ease-in-out ${
                 index === currentSlide
                   ? "opacity-100 scale-100 z-20"
                   : "opacity-0 scale-110 z-10"
               }`}
             >
-              {/* Background Image with Ken Burns Effect */}
               <div
                 className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-[15000ms] ${
                   index === currentSlide ? "scale-110" : "scale-100"
@@ -521,7 +516,7 @@ const Home = () => {
 
                   {/* Subtitle with Animation */}
                   <h2
-                    className={`text-xl md:text-2xl lg:text-3xl text-white/90 font-medium font-tajawal mb-6 w-full drop- transition-all duration-1000 delay-400 ${
+                    className={`text-2xl md:text-3xl  lg:text-4xl text-white/90 font-medium font-tajawal mb-6 w-full drop- transition-all duration-1000 delay-400 ${
                       index === currentSlide
                         ? "animate-fade-in translate-y-0"
                         : "translate-y-10 opacity-0"
@@ -624,7 +619,8 @@ const Home = () => {
           </div>
 
           {/* Simple Categories */}
-          <div className="w-full">؛
+          <div className="w-full">
+            ؛
             <div className="text-center mb-12">
               <h3 className="text-2xl md:text-3xl font-bold font-cairo text-gray-800 mb-4">
                 الفئات الشائعة
@@ -634,66 +630,66 @@ const Home = () => {
               </p>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-  <Button
-    variant="outline"
-    onClick={() => navigate("/shops?category=gold")}
-    className="group bg-white border-2 border-secondary-200 hover:border-[#FFD700] text-gray-800 hover:text-[#FFD700] transition-all duration-300 p-6 h-auto rounded-2xl shadow-sm hover:shadow-md"
-  >
-    <div className="text-center">
-      <div className="w-16 h-16 bg-gradient-to-br from-[#FFF8E1] to-[#F4D03F] rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-        <span className="text-3xl">💍</span>
-      </div>
-      <div className="font-semibold font-tajawal text-sm">
-        خواتم ذهبية
-      </div>
-    </div>
-  </Button>
+              <Button
+                variant="outline"
+                onClick={() => navigate("/shops?category=gold")}
+                className="group bg-white border-2 border-secondary-200 hover:border-[#FFD700] text-gray-800 hover:text-[#FFD700] transition-all duration-300 p-6 h-auto rounded-2xl shadow-sm hover:shadow-md"
+              >
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gradient-to-br from-[#FFF8E1] to-[#F4D03F] rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <span className="text-3xl">💍</span>
+                  </div>
+                  <div className="font-semibold font-tajawal text-sm">
+                    خواتم ذهبية
+                  </div>
+                </div>
+              </Button>
 
-  <Button
-    variant="outline"
-    onClick={() => navigate("/shops?category=necklaces")}
-    className="group bg-white border-2 border-secondary-200 hover:border-[#FFD700] text-gray-800 hover:text-[#FFD700] transition-all duration-300 p-6 h-auto rounded-2xl shadow-sm hover:shadow-md"
-  >
-    <div className="text-center">
-      <div className="w-16 h-16 bg-gradient-to-br from-[#FFF8E1] to-[#F4D03F] rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-        <span className="text-3xl">📿</span>
-      </div>
-      <div className="font-semibold font-tajawal text-sm">
-        قلائد
-      </div>
-    </div>
-  </Button>
+              <Button
+                variant="outline"
+                onClick={() => navigate("/shops?category=necklaces")}
+                className="group bg-white border-2 border-secondary-200 hover:border-[#FFD700] text-gray-800 hover:text-[#FFD700] transition-all duration-300 p-6 h-auto rounded-2xl shadow-sm hover:shadow-md"
+              >
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gradient-to-br from-[#FFF8E1] to-[#F4D03F] rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <span className="text-3xl">📿</span>
+                  </div>
+                  <div className="font-semibold font-tajawal text-sm">
+                    قلائد
+                  </div>
+                </div>
+              </Button>
 
-  <Button
-    variant="outline"
-    onClick={() => navigate("/shops?category=bracelets")}
-    className="group bg-white border-2 border-secondary-200 hover:border-[#FFD700] text-gray-800 hover:text-[#FFD700] transition-all duration-300 p-6 h-auto rounded-2xl shadow-sm hover:shadow-md"
-  >
-    <div className="text-center">
-      <div className="w-16 h-16 bg-gradient-to-br from-[#FFF8E1] to-[#F4D03F] rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-        <span className="text-3xl">🔗</span>
-      </div>
-      <div className="font-semibold font-tajawal text-sm">
-        أساور
-      </div>
-    </div>
-  </Button>
+              <Button
+                variant="outline"
+                onClick={() => navigate("/shops?category=bracelets")}
+                className="group bg-white border-2 border-secondary-200 hover:border-[#FFD700] text-gray-800 hover:text-[#FFD700] transition-all duration-300 p-6 h-auto rounded-2xl shadow-sm hover:shadow-md"
+              >
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gradient-to-br from-[#FFF8E1] to-[#F4D03F] rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <span className="text-3xl">🔗</span>
+                  </div>
+                  <div className="font-semibold font-tajawal text-sm">
+                    أساور
+                  </div>
+                </div>
+              </Button>
 
-  <Button
-    variant="outline"
-    onClick={() => navigate("/shops?category=earrings")}
-    className="group bg-white border-2 border-secondary-200 hover:border-[#FFD700] text-gray-800 hover:text-[#FFD700] transition-all duration-300 p-6 h-auto rounded-2xl shadow-sm hover:shadow-md"
-  >
-    <div className="text-center">
-      <div className="w-16 h-16 bg-gradient-to-br from-[#FFF8E1] to-[#F4D03F] rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-        <span className="text-3xl">👂</span>
-      </div>
-      <div className="font-semibold font-tajawal text-sm">
-        أقراط
-      </div>
-    </div>
-  </Button>
-</div>
+              <Button
+                variant="outline"
+                onClick={() => navigate("/shops?category=earrings")}
+                className="group bg-white border-2 border-secondary-200 hover:border-[#FFD700] text-gray-800 hover:text-[#FFD700] transition-all duration-300 p-6 h-auto rounded-2xl shadow-sm hover:shadow-md"
+              >
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gradient-to-br from-[#FFF8E1] to-[#F4D03F] rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <span className="text-3xl">👂</span>
+                  </div>
+                  <div className="font-semibold font-tajawal text-sm">
+                    أقراط
+                  </div>
+                </div>
+              </Button>
+            </div>
           </div>
         </div>
       </section>
@@ -765,7 +761,7 @@ const Home = () => {
 
           {/* Premium Featured Shops Section - Only 4 Cards */}
           {isLoading ? (
-            <div className="mb-16">
+            <div className="mb-16" dir="rtl">
               {/* Premium Badge Skeleton */}
               <div className="flex items-center justify-center mb-6">
                 <div className="w-48 h-10 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded-full animate-pulse"></div>
@@ -780,11 +776,11 @@ const Home = () => {
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
                     {/* Premium Badge Skeleton */}
-                    <div className="absolute -top-3 left-3 z-20">
+                    <div className="absolute -top-3 right-3 z-20">
                       <div className="w-20 h-6 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded-full animate-pulse"></div>
                     </div>
                     {/* Premium Crown Skeleton */}
-                    <div className="absolute -top-2 right-3 z-20">
+                    <div className="absolute -top-2 left-3 z-20">
                       <div className="w-6 h-6 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 rounded-full animate-pulse"></div>
                     </div>
                     {/* Image Skeleton */}
@@ -804,10 +800,10 @@ const Home = () => {
             </div>
           ) : (
             featuredShops.length > 0 && (
-              <div className="mb-16">
+              <div className="mb-16" dir="rtl">
                 <div className="flex items-center justify-center mb-6">
-                  <div className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] text-white px-6 py-2 rounded-full  ">
-                    <div className="flex items-center gap-2 ">
+                  <div className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] text-white px-6 py-2 rounded-full">
+                    <div className="flex items-center gap-2">
                       <svg
                         className="w-5 h-5"
                         fill="currentColor"
@@ -815,7 +811,7 @@ const Home = () => {
                       >
                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                       </svg>
-                      <span className="font-bold font-tajawal text-sm ">
+                      <span className="font-bold font-tajawal text-sm">
                         المتاجر المميزة المدفوعة
                       </span>
                     </div>
@@ -834,23 +830,23 @@ const Home = () => {
                       }}
                     >
                       {/* Premium Badge */}
-                      <div className="absolute -top-3 left-3 z-20">
-                        <div
-                          className={`bg-gradient-to-r ${
-                            index === 0
-                              ? "from-yellow-400 to-yellow-600"
-                              : index === 1
-                              ? "from-gray-300 to-gray-500"
-                              : index === 2
-                              ? "from-amber-600 to-amber-800"
-                              : "from-blue-400 to-blue-600"
-                          } text-white px-3 py-1 rounded-full text-xs font-bold`}
-                        >
-                          #{index + 1} مميز
-                        </div>
-                      </div>
+                      {/* <div className="absolute -top-3 right-3 z-20">
+              <div
+                className={`bg-gradient-to-r ${
+                  index === 0
+                    ? "from-yellow-400 to-yellow-600"
+                    : index === 1
+                    ? "from-gray-300 to-gray-500"
+                    : index === 2
+                    ? "from-amber-600 to-amber-800"
+                    : "from-blue-400 to-blue-600"
+                } text-white px-3 py-1 rounded-full text-xs font-bold`}
+              >
+                #{index + 1} مميز
+              </div>
+            </div> */}
                       {/* Premium Crown */}
-                      <div className="absolute -top-2 right-3 z-20">
+                      <div className="absolute -top-2 left-3 z-20">
                         <div className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] p-1.5 rounded-full">
                           <svg
                             className="w-3 h-3 text-white"

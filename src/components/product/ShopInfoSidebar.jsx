@@ -90,7 +90,7 @@ const ShopInfoSidebar = ({ shop, onVisitShop, onOpenChat }) => {
           <div className="space-y-2">
             {shop.address && (
               <div className="flex items-start gap-2">
-                <MapPin className="w-3 h-3 text-gray-500 mt-1 flex-shrink-0" />
+                <MapPin className="w-3 h-3 text-gray-500 mt-1 flex-shrink-0 mt-3" />
                 <div className="text-xs text-gray-700">
                   <div>{shop.address}</div>
                   {shop.area && shop.area !== shop.address && (
@@ -105,7 +105,7 @@ const ShopInfoSidebar = ({ shop, onVisitShop, onOpenChat }) => {
 
             {shop.phone && (
               <div className="flex items-center gap-2">
-                <Phone className="w-3 h-3 text-gray-500 flex-shrink-0" />
+                <Phone className="w-3 h-3 text-gray-500 flex-shrink-0 " />
                 <a
                   href={`tel:${shop.phone}`}
                   className="text-xs text-gray-700 hover:text-blue-600 transition-colors"
@@ -117,7 +117,7 @@ const ShopInfoSidebar = ({ shop, onVisitShop, onOpenChat }) => {
 
             {shop.workingHours && (
               <div className="flex items-start gap-2">
-                <Clock className="w-3 h-3 text-gray-500 mt-1 flex-shrink-0" />
+                <Clock className="w-3 h-3 text-gray-500 mt-1 flex-shrink-0 mt-3" />
                 <span className="text-xs text-gray-700">{shop.workingHours}</span>
               </div>
             )}

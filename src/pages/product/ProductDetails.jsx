@@ -274,7 +274,7 @@ const ProductDetails = () => {
                         <Button
                             onClick={() => navigate(-1)}
                             variant="outline"
-                            className="border-2 border-gray-300 dark:border-gray-600 hover:border-amber-500 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md px-4 py-2 transition-all duration-300"
+                            className="border-2 border-gray-300 dark:border-gray-600 hover:border-amber-500 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md px-4 py-2 transition-all duration-300 "
                             aria-label="العودة"
                         >
                             العودة
