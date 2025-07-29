@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { MessageSquare, X, Bell, AlertCircle, Search, User, Store } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 import chatService from '@/services/chatService';
 import { productService } from '@/services/productService'; 
 import { STORAGE_KEYS } from '@/utils/constants';
-import SellerChatInterface from './SellerChatInterface';
+import SellerChatInterface from './SellerChatInterface'; // Import the new component
 
 const ConversationsModal = ({ 
   isOpen = true, 
@@ -276,7 +276,7 @@ const ConversationsModal = ({
   );
 };
 
-const ConversationsFloatingButton = ({ user, onOpenChat, onSelectConversation }) => {
+const ConversationsFloatinButton = ({ user, onOpenChat, onSelectConversation }) => {
   const [isConnected, setIsConnected] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const [isConnecting, setIsConnecting] = useState(false);
@@ -285,43 +285,90 @@ const ConversationsFloatingButton = ({ user, onOpenChat, onSelectConversation })
   const [showConversations, setShowConversations] = useState(false);
   const [showSellerChatInterface, setShowSellerChatInterface] = useState(false);
   const [selectedConversation, setSelectedConversation] = useState(null);
-  
-  // Use refs to track cleanup functions and prevent memory leaks
-  const cleanupFunctionsRef = useRef([]);
-  const isInitializingRef = useRef(false);
 
-  // Clear all event listeners
-  const clearEventListeners = useCallback(() => {
-    cleanupFunctionsRef.current.forEach(cleanup => {
-      if (typeof cleanup === 'function') {
-        cleanup();
+  // Initialize socket connection
+  const initializeSocket = useCallback(async () => {
+    if (!user) return;
+
+    setIsConnecting(true);
+    setConnectionError(null);
+
+    try {
+      const token = localStorage.getItem(STORAGE_KEYS.TOKEN);
+      if (!token) {
+        throw new Error('No authentication token found');
       }
-    });
-    cleanupFunctionsRef.current = [];
-  }, []);
+
+      console.log('Connecting to chat service...');
+      const socket = chatService.connect(token);
+
+      // Wait for connection
+      await new Promise((resolve, reject) => {
+        const timeout = setTimeout(() => {
+          reject(new Error('Connection timeout'));
+        }, 20000);
+
+        const onConnect = () => {
+          clearTimeout(timeout);
+          socket.off('connect', onConnect);
+          socket.off('connect_error', onConnectError);
+          setIsConnected(true);
+          setConnectionError(null);
+          resolve();
+        };
+
+        const onConnectError = (error) => {
+          clearTimeout(timeout);
+          socket.off('connect', onConnect);
+          socket.off('connect_error', onConnectError);
+          setIsConnected(false);
+          setConnectionError(error.message);
+          reject(error);
+        };
+
+        if (socket.connected) {
+          onConnect();
+        } else {
+          socket.on('connect', onConnect);
+          socket.on('connect_error', onConnectError);
+        }
+      });
+
+      // Load conversations to get unread count
+      await loadConversations();
+
+      // Setup event listeners
+      setupEventListeners();
+
+      console.log('Chat service connected successfully');
+
+    } catch (error) {
+      console.error('Failed to connect to chat service:', error);
+      setConnectionError(error.message);
+      setIsConnected(false);
+
+      // Retry connection after delay
+      setTimeout(() => {
+        initializeSocket();
+      }, 5000);
+    } finally {
+      setIsConnecting(false);
+    }
+  }, [user]);
 
   // Load conversations to calculate unread count
   const loadConversations = useCallback(async () => {
     try {
       const socket = chatService.getSocket();
       if (!socket || !chatService.getConnectionStatus()) {
-        console.log('Socket not available for loading conversations');
         return;
       }
 
-      console.log('Loading conversations...');
       const loadedConversations = await new Promise((resolve, reject) => {
-        const timeout = setTimeout(() => {
-          reject(new Error('Timeout loading conversations'));
-        }, 10000);
-
         socket.emit('getConversations', (response) => {
-          clearTimeout(timeout);
           if (response.status === 'success') {
-            console.log('Conversations loaded successfully:', response.conversations.length);
             resolve(response.conversations);
           } else {
-            console.error('Failed to load conversations:', response.message);
             reject(new Error(response.message));
           }
         });
@@ -335,23 +382,16 @@ const ConversationsFloatingButton = ({ user, onOpenChat, onSelectConversation })
       }, 0);
 
       setUnreadCount(totalUnread);
-      console.log('Total unread messages:', totalUnread);
 
     } catch (error) {
       console.error('Error loading conversations:', error);
-      // Don't show error toast for this as it might be expected during connection
     }
   }, []);
 
   // Setup event listeners for real-time updates
   const setupEventListeners = useCallback(() => {
     const socket = chatService.getSocket();
-    if (!socket) {
-      console.log('No socket available for setting up event listeners');
-      return;
-    }
-
-    console.log('Setting up event listeners...');
+    if (!socket) return;
 
     // Listen for new messages
     const handleNewMessage = (message) => {
@@ -375,6 +415,8 @@ const ConversationsFloatingButton = ({ user, onOpenChat, onSelectConversation })
       // Update unread count if message is from someone else
       if (message.sender._id !== user._id) {
         setUnreadCount(prev => prev + 1);
+
+        // Show notification
         showNotification(message);
       }
     };
@@ -393,11 +435,13 @@ const ConversationsFloatingButton = ({ user, onOpenChat, onSelectConversation })
     // Listen for message read events
     const handleMessageRead = ({ messageId }) => {
       console.log('Message read:', messageId);
+      // You can update UI to show read status if needed
     };
 
     // Listen for typing indicators
     const handleUserTyping = ({ userId, userName, isTyping }) => {
       console.log(`${userName} is ${isTyping ? 'typing' : 'stopped typing'}`);
+      // You can show typing indicators in chat UI
     };
 
     // Listen for authentication failures
@@ -414,12 +458,9 @@ const ConversationsFloatingButton = ({ user, onOpenChat, onSelectConversation })
 
     // Listen for connection status changes
     const handleConnect = () => {
-      console.log('Socket connected successfully');
+      console.log('Socket connected');
       setIsConnected(true);
       setConnectionError(null);
-      
-      // Load conversations after successful connection
-      loadConversations();
     };
 
     const handleDisconnect = (reason) => {
@@ -438,119 +479,28 @@ const ConversationsFloatingButton = ({ user, onOpenChat, onSelectConversation })
     };
 
     // Setup all listeners
-    const unsubscribeNewMessage = chatService.onNewMessage(handleNewMessage);
-    const unsubscribeNewConversation = chatService.onNewShopConversation(handleNewConversation);
-    const unsubscribeMessageRead = chatService.onMessageRead(handleMessageRead);
-    const unsubscribeUserTyping = chatService.onUserTyping(handleUserTyping);
-    const unsubscribeAuthFailed = chatService.onAuthenticationFailed(handleAuthenticationFailed);
+    chatService.onNewMessage(handleNewMessage);
+    chatService.onNewShopConversation(handleNewConversation);
+    chatService.onMessageRead(handleMessageRead);
+    chatService.onUserTyping(handleUserTyping);
+    chatService.onAuthenticationFailed(handleAuthenticationFailed);
 
     socket.on('connect', handleConnect);
     socket.on('disconnect', handleDisconnect);
     socket.on('connect_error', handleConnectError);
 
-    // Store cleanup functions
-    const cleanup = () => {
-      console.log('Cleaning up event listeners...');
-      
-      if (unsubscribeNewMessage) unsubscribeNewMessage();
-      if (unsubscribeNewConversation) unsubscribeNewConversation();
-      if (unsubscribeMessageRead) unsubscribeMessageRead();
-      if (unsubscribeUserTyping) unsubscribeUserTyping();
-      if (unsubscribeAuthFailed) unsubscribeAuthFailed();
+    // Cleanup function
+    return () => {
+      chatService.offNewMessage(handleNewMessage);
+      chatService.offNewShopConversation(handleNewConversation);
+      chatService.offMessageRead(handleMessageRead);
+      chatService.offUserTyping(handleUserTyping);
 
       socket.off('connect', handleConnect);
       socket.off('disconnect', handleDisconnect);
       socket.off('connect_error', handleConnectError);
     };
-
-    cleanupFunctionsRef.current.push(cleanup);
-
-    return cleanup;
   }, [user, loadConversations]);
-
-  // Initialize socket connection
-  const initializeSocket = useCallback(async () => {
-    if (!user || isInitializingRef.current) {
-      console.log('Cannot initialize socket: user not available or already initializing');
-      return;
-    }
-
-    // Prevent multiple simultaneous initializations
-    isInitializingRef.current = true;
-    setIsConnecting(true);
-    setConnectionError(null);
-
-    try {
-      const token = localStorage.getItem(STORAGE_KEYS.TOKEN);
-      if (!token) {
-        throw new Error('No authentication token found');
-      }
-
-      console.log('Connecting to chat service...');
-      
-      // Clear any existing listeners before connecting
-      clearEventListeners();
-      
-      const socket = chatService.connect(token);
-
-      // Wait for connection with timeout
-      await new Promise((resolve, reject) => {
-        const timeout = setTimeout(() => {
-          reject(new Error('Connection timeout after 20 seconds'));
-        }, 20000);
-
-        const onConnect = () => {
-          clearTimeout(timeout);
-          socket.off('connect', onConnect);
-          socket.off('connect_error', onConnectError);
-          console.log('Socket connected, setting up event listeners...');
-          
-          setIsConnected(true);
-          setConnectionError(null);
-          
-          // Setup event listeners after successful connection
-          setupEventListeners();
-          
-          resolve();
-        };
-
-        const onConnectError = (error) => {
-          clearTimeout(timeout);
-          socket.off('connect', onConnect);
-          socket.off('connect_error', onConnectError);
-          
-          console.error('Socket connection error:', error);
-          setIsConnected(false);
-          setConnectionError(error.message);
-          reject(error);
-        };
-
-        if (socket.connected) {
-          console.log('Socket already connected');
-          onConnect();
-        } else {
-          socket.on('connect', onConnect);
-          socket.on('connect_error', onConnectError);
-        }
-      });
-
-      console.log('Chat service connected successfully');
-
-    } catch (error) {
-      console.error('Failed to connect to chat service:', error);
-      setConnectionError(error.message);
-      setIsConnected(false);
-
-      // Retry connection after delay
-      setTimeout(() => {
-        isInitializingRef.current = false;
-        initializeSocket();
-      }, 5000);
-    } finally {
-      setIsConnecting(false);
-      isInitializingRef.current = false;
-    }
-  }, [user, setupEventListeners, clearEventListeners]);
 
   // Show browser/toast notification for new messages
   const showNotification = useCallback((message) => {
@@ -597,18 +547,16 @@ const ConversationsFloatingButton = ({ user, onOpenChat, onSelectConversation })
   // Initialize on mount
   useEffect(() => {
     if (user) {
-      console.log('User available, initializing socket connection...');
       initializeSocket();
       requestNotificationPermission();
     }
 
-    // Cleanup on unmount
     return () => {
-      console.log('Component unmounting, cleaning up...');
-      clearEventListeners();
-      isInitializingRef.current = false;
+      // Cleanup on unmount
+      const cleanup = setupEventListeners();
+      if (cleanup) cleanup();
     };
-  }, [user]); // Only depend on user, not on initializeSocket to avoid infinite loops
+  }, [user, initializeSocket, requestNotificationPermission]);
 
   // Handle button click
   const handleClick = () => {
@@ -777,4 +725,4 @@ const ConversationsFloatingButton = ({ user, onOpenChat, onSelectConversation })
   );
 };
 
-export default ConversationsFloatingButton;
+export default ConversationsFloatinButton;
