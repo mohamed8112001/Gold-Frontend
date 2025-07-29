@@ -57,7 +57,7 @@ export default function GoldStorePaymentPrompt() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
-          productId: 'price_1RmZ5F2XYUV5klvcqmbi27VF',
+          productId: 'price_1Rnf4y2XYUV5klvc9QfaTrIr',
           email: user?.email
         }),
       });

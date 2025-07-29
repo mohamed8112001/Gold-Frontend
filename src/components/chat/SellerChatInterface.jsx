@@ -252,8 +252,19 @@ const SellerChatInterface = ({
 
   // Send product as message
   const handleSendProduct = async (product) => {
-    const productMessage = `🛍️ *${product.title}*\n\n${product.description}\n\n💰 السعر: ${product.price} ج.م\n📦 ${product.inStock ? 'متوفر' : 'غير متوفر'}\n\n⭐ التقييم: ${product.rating}/5 (${product.reviews} تقييم)`;
+    const productMessage = `✨ *${product.title}* ✨
+
+    📄 *الوصف:* ${product.description}
+    🔗 *التصنيف:* ${product.design_type === 'chains' ? 'سلاسل' : product.design_type}
+    💎 *العيار:* ${product.karat}
+    ⚖️ *الوزن:* ${product.weight.toString()} جرام
+    🏷️ *القسم:* ${product.category === 'chains' ? 'سلاسل' : product.category}
     
+    📦 *الحالة:* ${product.isAvailable ? 'متوفر حالياً ✅' : 'غير متوفر ❌'}
+    
+    ⭐ *التقييم:* ${product.averageRating}/5 (${product.numRatings} تقييم)
+    
+    📸 *شاهد الصور في الأعلى لرؤية التصميم*`;    
     if (!chatService || !conversation?._id) return;
 
     try {
