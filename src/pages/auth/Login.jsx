@@ -139,7 +139,7 @@ const Login = () => {
             <div className="absolute bottom-10 right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
 
             {/* Image Slider Container */}
-            <div className="relative w-80 h-80 mb-12">
+            <div className="relative w-80 h-80 ">
               {/* Main circular container */}
               <div className="w-full h-full rounded-full flex items-center justify-center  relative overflow-hidden border-8 border-white/50" style={{ background: 'linear-gradient(135deg, #FEF7ED 0%, #FDF4E8 100%)' }}>
                 {/* Slider images */}
@@ -167,8 +167,8 @@ const Login = () => {
 
             {/* Enhanced Dibla text with animation */}
             <h1 className="text-9xl font-bold mb-8 relative" style={{ fontFamily: 'serif', color: '#2D1810' }}>
-              <span className="relative z-10">
-                ديبلا
+              <span className="relative z-10"style={{fontSize: '80px'}}>
+                دبله
               </span>
               <div className="absolute inset-0 blur-lg opacity-30 animate-pulse" style={{ background: 'linear-gradient(90deg, #D4AF37 0%, #F4E4BC 100%)' }}></div>
             </h1> 

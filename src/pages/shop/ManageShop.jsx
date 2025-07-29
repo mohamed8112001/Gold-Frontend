@@ -24,7 +24,6 @@ import {
     QrCode,
     Download
 } from 'lucide-react';
-// QR Code will be generated on backend and displayed as image
 import { shopService } from '../../services/shopService.js';
 import { productService } from '../../services/productService.js';
 import { bookingService } from '../../services/bookingService.js';
@@ -32,10 +31,10 @@ import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES } from '../../utils/constants.js';
 
 const ManageShop = () => {
-    console.log('🎯 ManageShop component loaded');
+    console.log('🎯 تم تحميل مكون إدارة المتجر');
     const navigate = useNavigate();
     const { user, isShopOwner } = useAuth();
-    console.log('👤 User:', user, 'Is Shop Owner:', isShopOwner);
+    console.log('👤 المستخدم:', user, 'مالك متجر:', isShopOwner);
     const [shop, setShop] = useState(null);
     const [products, setProducts] = useState([]);
     const [bookings, setBookings] = useState([]);
@@ -62,26 +61,20 @@ const ManageShop = () => {
         try {
             setIsLoading(true);
 
-            // Load shop details - get current user's shop
+            // تحميل تفاصيل المتجر
             const loadShop = async () => {
                 try {
-                    console.log('Loading shop for user:', user.id);
-
-                    // Try to get user's shop first
+                    console.log('تحميل المتجر للمستخدم:', user.id);
                     try {
                         const userShopResponse = await shopService.getMyShop();
                         const userShop = userShopResponse.data || userShopResponse;
-                        console.log('User shop loaded:', userShop);
+                        console.log('تم تحميل متجر المستخدم:', userShop);
                         setShop(userShop);
                         return userShop;
                     } catch (userShopError) {
-                        console.warn('No user shop found, trying all shops:', userShopError);
-
-                        // Fallback: get all shops and filter by user
+                        console.warn('لم يتم العثور على متجر للمستخدم، جاري محاولة البحث في جميع المتاجر:', userShopError);
                         const shopResponse = await shopService.getAllShops();
                         const shopsData = Array.isArray(shopResponse) ? shopResponse : shopResponse.data || [];
-
-                        // Filter shops by current user (owner)
                         const userShop = shopsData.find(shop =>
                             shop.ownerId === user.id ||
                             shop.owner === user.id ||
@@ -89,23 +82,23 @@ const ManageShop = () => {
                         );
 
                         if (userShop) {
-                            console.log('Found user shop in all shops:', userShop);
+                            console.log('تم العثور على متجر المستخدم في جم180يع المتاجر:', userShop);
                             setShop(userShop);
                             return userShop;
                         } else {
-                            console.log('No shop found for user, user needs to create one');
+                            console.log('لم يتم العثور على متجر للمستخدم، يحتاج المستخدم لإنشاء واحد');
                             setShop(null);
                             return null;
                         }
                     }
                 } catch (error) {
-                    console.error('Error loading shop:', error);
+                    console.error('خطأ في تحميل المتجر:', error);
                     setShop(null);
                     return null;
                 }
             };
 
-            // Load products for the shop
+            // تحميل المنتجات للمتجر
             const loadProducts = async (shopId) => {
                 try {
                     const productsResponse = await productService.getAllProducts({ shopId });
@@ -115,13 +108,13 @@ const ManageShop = () => {
                     setProducts(productsData);
                     return productsData;
                 } catch (error) {
-                    console.error('Error loading products:', error);
+                    console.error('خطأ في تحميل المنتجات:', error);
                     setProducts([]);
                     return [];
                 }
             };
 
-            // Load bookings for the shop
+            // تحميل المواعيد للمتجر
             const loadBookings = async () => {
                 try {
                     const bookingsResponse = await bookingService.getMyBookings();
@@ -131,20 +124,20 @@ const ManageShop = () => {
                     setBookings(bookingsData);
                     return bookingsData;
                 } catch (error) {
-                    console.error('Error loading bookings:', error);
+                    console.error('خطأ في تحميل المواعيد:', error);
                     setBookings([]);
                     return [];
                 }
             };
 
-            // Load data sequentially
+            // تحميل البيانات بالتسلسل
             const shopData = await loadShop();
             const [productsData, bookingsData] = await Promise.all([
                 loadProducts(shopData.id),
                 loadBookings()
             ]);
 
-            // Calculate stats
+            // حساب الإحصائيات
             setStats({
                 totalProducts: productsData.length,
                 totalBookings: bookingsData.length,
@@ -153,8 +146,7 @@ const ManageShop = () => {
             });
 
         } catch (error) {
-            console.error('Error loading shop data:', error);
-            // Fallback to mock data
+            console.error('خطأ في تحميل بيانات المتجر:', error);
             setShop(mockShop);
             setProducts(mockProducts);
             setBookings(mockBookings);
@@ -170,47 +162,41 @@ const ManageShop = () => {
     };
 
     const handleDeleteProduct = async (productId) => {
-        const confirmed = window.confirm('Are you sure you want to delete this product?');
-
+        const confirmed = window.confirm('هل أنت متأكد من حذف هذا المنتج؟');
         if (confirmed) {
             try {
-                console.log('🗑️ Deleting product with ID:', productId);
+                console.log('🗑️ حذف المنتج برقم:', productId);
                 await productService.deleteProduct(productId);
-
-                // Update the products list by removing the deleted product
                 setProducts(prev => prev.filter(product => {
                     const id = product._id || product.id;
                     return id !== productId;
                 }));
-
-                alert('Product deleted successfully!');
-                console.log('✅ Product deleted successfully');
+                alert('تم حذف المنتج بنجاح!');
+                console.log('✅ تم حذف المنتج بنجاح');
             } catch (error) {
-                console.error('❌ Error deleting product:', error);
-                alert('Error deleting product: ' + (error.message || 'Unknown error'));
+                console.error('❌ خطأ في حذف المنتج:', error);
+                alert('خطأ في حذف المنتج: ' + (error.message || 'خطأ غير معروف'));
             }
         }
     };
 
-    // QR Code functions
     const loadQRCode = async (shopId) => {
-        console.log('🔄 Loading QR Code for shop:', shopId);
+        console.log('🔄 تحميل رمز الاستجابة السريعة للمتجر:', shopId);
         try {
             setQrCodeLoading(true);
-            console.log('📡 Calling shopService.getQRCode...');
+            console.log('📡 استدعاء shopService.getQRCode...');
             const response = await shopService.getQRCode(shopId);
-            console.log('✅ QR Code loaded successfully:', response.data);
+            console.log('✅ تم تحميل رمز الاستجابة السريعة بنجاح:', response.data);
             setQrCode(response.data);
         } catch (error) {
-            console.error('❌ Error loading QR code:', error);
-            // If QR code doesn't exist, try to generate it
+            console.error('❌ خطأ في تحميل رمز الاستجابة السريعة:', error);
             try {
-                console.log('🔄 Trying to generate new QR Code...');
+                console.log('🔄 محاولة إنشاء رمز استجابة سريعة جديد...');
                 const generateResponse = await shopService.generateQRCode(shopId);
-                console.log('✅ QR Code generated successfully:', generateResponse.data);
+                console.log('✅ تم إنشاء رمز الاستجابة السريعة بنجاح:', generateResponse.data);
                 setQrCode(generateResponse.data);
             } catch (generateError) {
-                console.error('❌ Error generating QR code:', generateError);
+                console.error('❌ خطأ في إنشاء رمز الاستجابة السريعة:', generateError);
             }
         } finally {
             setQrCodeLoading(false);
@@ -219,15 +205,14 @@ const ManageShop = () => {
 
     const generateNewQRCode = async () => {
         if (!shop) return;
-
         try {
             setQrCodeLoading(true);
             const response = await shopService.generateQRCode(shop._id || shop.id);
             setQrCode(response.data);
-            alert('تم توليد QR Code جديد بنجاح!');
+            alert('تم إنشاء رمز الاستجابة السريعة بنجاح!');
         } catch (error) {
-            console.error('Error generating QR code:', error);
-            alert('حدث خطأ في توليد QR Code');
+            console.error('خطأ في إنشاء رمز الاستجابة السريعة:', error);
+            alert('حدث خطأ أثناء إنشاء رمز الاستجابة السريعة');
         } finally {
             setQrCodeLoading(false);
         }
@@ -235,74 +220,64 @@ const ManageShop = () => {
 
     const downloadQRCode = () => {
         if (!qrCode || !shop) return;
-
         try {
-            // Create a link element and trigger download
             const link = document.createElement('a');
             link.href = qrCode.qrCode;
-
-            // Clean shop name for filename
             const cleanShopName = shop.name
-                .replace(/[^a-zA-Z0-9\u0600-\u06FF\s]/g, '') // Keep Arabic, English, numbers, and spaces
-                .replace(/\s+/g, '-') // Replace spaces with hyphens
+                .replace(/[^a-zA-Z0-9\u0600-\u06FF\s]/g, '')
+                .replace(/\s+/g, '-')
                 .trim();
-
-            link.download = `${cleanShopName}-QR-Code.png`;
+            link.download = `${cleanShopName}-رمز-الاستجابة-السريعة.png`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-
-            console.log('QR Code downloaded successfully');
+            console.log('تم تحميل رمز الاستجابة السريعة بنجاح');
         } catch (error) {
-            console.error('Error downloading QR code:', error);
-            alert('حدث خطأ في تحميل QR Code');
+            console.error('خطأ في تحميل رمز الاستجابة السريعة:', error);
+            alert('حدث خطأ أثناء تحميل رمز الاستجابة السريعة');
         }
     };
 
-    // Load QR code when shop is loaded
     useEffect(() => {
-        console.log('🏪 Shop data changed:', shop);
+        console.log('🏪 تغيير بيانات المتجر:', shop);
         if (shop && (shop._id || shop.id)) {
-            console.log('🚀 Triggering QR Code load for shop:', shop._id || shop.id);
+            console.log('🚀 تفعيل تحميل رمز الاستجابة السريعة للمتجر:', shop._id || shop.id);
             loadQRCode(shop._id || shop.id);
         } else {
-            console.log('⚠️ No shop data available for QR Code loading');
+            console.log('⚠️ لا توجد بيانات متجر متاحة لتحميل رمز الاستجابة السريعة');
         }
     }, [shop]);
 
-
     if (isLoading) {
         return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center pt-20">
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center pt-20" dir="rtl">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600 mx-auto mb-4"></div>
-                    <p className="text-gray-600">جاري تحميل بيانات المتجر...</p>
+                    <p className="text-gray-600 font-cairo">جاري تحميل بيانات المتجر...</p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 pt-20">
+        <div className="min-h-screen bg-gray-50 pt-20" dir="rtl">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                {/* Header */}
                 <div className="mb-8">
                     <div className="flex items-center justify-between mb-4">
                         <div>
-                            '                            <h1 className="text-3xl font-bold text-gray-900">Manage Shop</h1>'
+                            <h1 className="text-3xl font-bold text-gray-900 font-cairo">إدارة المتجر</h1>
                             {shop && (
                                 <div className="flex items-center gap-2 mt-2">
-                                    <span className="text-lg font-medium text-gray-700">{shop.name}</span>
+                                    <span className="text-lg font-medium text-gray-700 font-cairo">{shop.name}</span>
                                     {shop.status === 'pending' || shop.approved === false || shop.isActive === false ? (
-                                        <span className="px-3 py-1 bg-yellow-100 text-yellow-800 text-sm rounded-full flex items-center gap-1">
+                                        <span className="px-3 py-1 bg-yellow-100 text-yellow-800 text-sm rounded-full flex items-center gap-1 font-cairo">
                                             <Clock className="w-3 h-3" />
-                                            Waiting for approval
-
+                                            في انتظار الموافقة
                                         </span>
                                     ) : (
-                                        <span className="px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full flex items-center gap-1">
+                                        <span className="px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full flex items-center gap-1 font-cairo">
                                             <CheckCircle className="w-3 h-3" />
-                                            approved
+                                            مُوافق عليه
                                         </span>
                                     )}
                                 </div>
@@ -312,40 +287,46 @@ const ManageShop = () => {
                             <Button
                                 variant="outline"
                                 onClick={() => navigate(ROUTES.SHOP_DETAILS(shop?.id || shop?._id))}
+                                className="font-cairo"
                             >
-                                <Eye className="w-4 h-4 mr-2" />
-                                View store
+                                <Eye className="w-4 h-4 ml-2" />
+                                عرض المتجر
                             </Button>
                             <Button
                                 variant="outline"
                                 onClick={() => navigate(ROUTES.EDIT_SHOP)}
+                                className="font-cairo"
                             >
-                                <Edit className="w-4 h-4 mr-2" />
-                                Store update
+                                <Edit className="w-4 h-4 ml-2" />
+                                تحديث المتجر
                             </Button>
-                            <Button onClick={() => navigate(ROUTES.PRODUCTS_CREATE)}>
-                                <Plus className="w-4 h-4 mr-2" />
-                                Add a product
+                            <Button
+                                onClick={() => navigate(ROUTES.PRODUCTS_CREATE)}
+                                className="font-cairo"
+                            >
+                                <Plus className="w-4 h-4 ml-2" />
+                                إضافة منتج
                             </Button>
                         </div>
                     </div>
-                    <p className="text-gray-600">
-                        Manage your store, products, and appointments                        {shop && (shop.status === 'pending' || shop.approved === false || shop.isActive === false) && (
-                            <span className="block text-yellow-600 text-sm mt-1 flex items-center gap-1">
+                    <p className="text-gray-600 font-cairo">
+                        إدارة متجرك ومنتجاتك ومواعيدك
+                        {shop && (shop.status === 'pending' || shop.approved === false || shop.isActive === false) && (
+                            <span className="block text-yellow-600 text-sm mt-1 flex items-center gap-1 font-cairo">
                                 <AlertTriangle className="w-4 h-4" />
-                                Your store is awaiting management approval and will not be visible to customers until approved.                            </span>
+                                متجرك في انتظار موافقة الإدارة ولن يكون مرئياً للعملاء حتى الموافقة عليه.
+                            </span>
                         )}
                     </p>
                 </div>
 
-                {/* Stats Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                     <Card className="bg-white border-secondary-2">
                         <CardContent className="p-6">
                             <div className="flex items-center">
                                 <Package className="w-8 h-8 text-primary-500" />
-                                <div className="ml-4">
-                                    <p className="text-sm font-medium text-secondary-800 font-cairo">Products</p>
+                                <div className="mr-4">
+                                    <p className="text-sm font-medium text-secondary-800 font-cairo">المنتجات</p>
                                     <p className="text-2xl font-bold text-primary-900 font-cairo">{stats.totalProducts}</p>
                                 </div>
                             </div>
@@ -356,8 +337,8 @@ const ManageShop = () => {
                         <CardContent className="p-6">
                             <div className="flex items-center">
                                 <Calendar className="w-8 h-8 text-success-500" />
-                                <div className="ml-4">
-                                    <p className="text-sm font-medium text-secondary-800 font-cairo">Appointments</p>
+                                <div className="mr-4">
+                                    <p className="text-sm font-medium text-secondary-800 font-cairo">المواعيد</p>
                                     <p className="text-2xl font-bold text-primary-900 font-cairo">{stats.totalBookings}</p>
                                 </div>
                             </div>
@@ -368,9 +349,9 @@ const ManageShop = () => {
                         <CardContent className="p-6">
                             <div className="flex items-center">
                                 <Users className="w-8 h-8 text-purple-600" />
-                                <div className="ml-4">
-                                    <p className="text-sm font-medium text-gray-600">Customers</p>
-                                    <p className="text-2xl font-bold text-gray-900">{stats.totalCustomers}</p>
+                                <div className="mr-4">
+                                    <p className="text-sm font-medium text-gray-600 font-cairo">العملاء</p>
+                                    <p className="text-2xl font-bold text-gray-900 font-cairo">{stats.totalCustomers}</p>
                                 </div>
                             </div>
                         </CardContent>
@@ -380,102 +361,73 @@ const ManageShop = () => {
                         <CardContent className="p-6">
                             <div className="flex items-center">
                                 <Star className="w-8 h-8 text-yellow-600" />
-                                <div className="ml-4">
-                                    <p className="text-sm font-medium text-gray-600">Evaluation</p>
-                                    <p className="text-2xl font-bold text-gray-900">{stats.averageRating}</p>
+                                <div className="mr-4">
+                                    <p className="text-sm font-medium text-gray-600 font-cairo">التقييم</p>
+                                    <p className="text-2xl font-bold text-gray-900 font-cairo">{stats.averageRating}</p>
                                 </div>
                             </div>
                         </CardContent>
                     </Card>
                 </div>
 
-                {/* Tabs */}
-                <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+                <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6" dir="rtl">
                     <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 gap-2">
-                        <TabsTrigger value="overview" className="text-sm">Overview</TabsTrigger>
-                        <TabsTrigger value="products" className="text-sm">Products ({products.length})</TabsTrigger>
-                        <TabsTrigger value="bookings" className="text-sm">Appointments ({bookings.length})</TabsTrigger>
-                        <TabsTrigger value="qrcode" className="text-sm">QR Code</TabsTrigger>
-
+                        <TabsTrigger value="overview" className="text-sm font-cairo">نظرة عامة</TabsTrigger>
+                        <TabsTrigger value="products" className="text-sm font-cairo">المنتجات ({products.length})</TabsTrigger>
+                        <TabsTrigger value="bookings" className="text-sm font-cairo">المواعيد ({bookings.length})</TabsTrigger>
+                        <TabsTrigger value="qrcode" className="text-sm font-cairo">رمز الاستجابة السريعة</TabsTrigger>
                     </TabsList>
 
                     <TabsContent value="overview" className="space-y-6">
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            {/* Shop Info */}
-                            <Card>
-                                <CardHeader>
-                                    <div className="flex items-center justify-between">
-                                        <CardTitle>Store information</CardTitle>
-                                        <Button size="sm" variant="outline">
-                                            <Edit className="w-4 h-4 mr-1" />
-                                            Edit
-                                        </Button>
-                                    </div>
-                                </CardHeader>
-                                <CardContent className="space-y-4">
+                        <Card>
+                            <CardHeader>
+                                <div className="flex items-center justify-between">
+                                    <CardTitle className="font-cairo">معلومات المتجر</CardTitle>
+                                    <Button size="sm" variant="outline" onClick={() => navigate(ROUTES.EDIT_SHOP)} className="font-cairo">
+                                        <Edit className="w-4 h-4 ml-1" />
+                                        تعديل
+                                    </Button>
+                                </div>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                     <div>
-                                        <p className="text-sm font-medium text-gray-600">Store name</p>
-                                        <p className="text-gray-900">{shop?.name}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-sm font-medium text-gray-600">Description</p>
-                                        <p className="text-gray-900">{shop?.description}</p>
+                                        <p className="text-sm font-medium text-gray-600 mb-1 font-cairo">اسم المتجر</p>
+                                        <p className="text-gray-900 font-medium font-cairo">{shop?.name || 'غير محدد'}</p>
                                     </div>
                                     <div>
-                                        <p className="text-sm font-medium text-gray-600">Address</p>
-                                        <p className="text-gray-900">{shop?.address}</p>
+                                        <p className="text-sm font-medium text-gray-600 mb-1 font-cairo">الهاتف</p>
+                                        <p className="text-gray-900 font-cairo">{shop?.phone || 'غير محدد'}</p>
                                     </div>
                                     <div>
-                                        <p className="text-sm font-medium text-gray-600">Phone</p>
-                                        <p className="text-gray-900">{shop?.phone}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-sm font-medium text-gray-600">Location</p>
+                                        <p className="text-sm font-medium text-gray-600 mb-1 font-cairo">الموقع</p>
                                         <div className="flex items-center gap-2">
                                             <MapPin className={`w-4 h-4 ${shop?.location && shop?.location.coordinates ? 'text-green-500' : 'text-gray-400'}`} />
-                                            <p className="text-gray-900">
+                                            <p className="text-gray-900 font-cairo">
                                                 {shop?.location && shop?.location.coordinates
-                                                    ? 'Location determined on map'
-                                                    : 'Location not determined'}
+                                                    ? 'تم تحديد الموقع على الخريطة'
+                                                    : 'لم يتم تحديد الموقع'}
                                             </p>
                                         </div>
                                     </div>
-                                </CardContent>
-                            </Card>
-
-                            {/* Recent Activity */}
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle>النشاط الأخير</CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="space-y-4">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                                            <p className="text-sm">تم حجز موعد جديد من أحمد محمد</p>
-                                            <span className="text-xs text-gray-500 mr-auto">منذ ساعة</span>
-                                        </div>
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                                            <p className="text-sm">تم إضافة منتج جديد: خاتم ذهبي</p>
-                                            <span className="text-xs text-gray-500 mr-auto">منذ 3 ساعات</span>
-                                        </div>
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                                            <p className="text-sm">تقييم جديد: 5 نجوم</p>
-                                            <span className="text-xs text-gray-500 mr-auto">أمس</span>
-                                        </div>
+                                    <div className="md:col-span-2 lg:col-span-3">
+                                        <p className="text-sm font-medium text-gray-600 mb-1 font-cairo">الوصف</p>
+                                        <p className="text-gray-900 font-cairo">{shop?.description || 'لا يوجد وصف'}</p>
                                     </div>
-                                </CardContent>
-                            </Card>
-                        </div>
+                                    <div className="md:col-span-2 lg:col-span-3">
+                                        <p className="text-sm font-medium text-gray-600 mb-1 font-cairo">العنوان</p>
+                                        <p className="text-gray-900 font-cairo">{shop?.address || 'لم يتم تحديد العنوان'}</p>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
                     </TabsContent>
 
                     <TabsContent value="products" className="space-y-6">
                         <div className="flex items-center justify-between">
-                            <h2 className="text-xl font-semibold">منتجاتي</h2>
-                            <Button onClick={() => navigate(ROUTES.PRODUCTS_CREATE)}>
-                                <Plus className="w-4 h-4 mr-2" />
+                            <h2 className="text-xl font-semibold font-cairo">منتجاتي</h2>
+                            <Button onClick={() => navigate(ROUTES.PRODUCTS_CREATE)} className="font-cairo">
+                                <Plus className="w-4 h-4 ml-2" />
                                 إضافة منتج جديد
                             </Button>
                         </div>
@@ -485,124 +437,109 @@ const ManageShop = () => {
                                 {products.map((product) => (
                                     <Card key={product.id}>
                                         <CardContent className="p-6">
-                                            {/* <p>{JSON.stringify(product)}</p> */}
-                                            <div className="bg-white rounded-xl  border border-gray-100 overflow-hidden hover: transition-all duration-200">
-                                                {/* Top Section - Image with Status and Quick Actions */}
+                                            <div className="bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-200">
                                                 <div className="relative group">
                                                     <img
                                                         src={product.logoUrl ? `${import.meta.env.VITE_API_BASE_URL}/product-image/${product.logoUrl}` : '/placeholder-product.jpg'}
                                                         alt={product.title || product.name}
                                                         className="w-full h-48 object-cover"
                                                     />
-
-                                                    {/* Status and Floating Actions */}
-                                                    <div className="absolute top-3 left-3 flex items-start gap-2">
-                                                        <span className={`px-2 py-1 rounded-full text-xs font-semibold ${product.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                                                            }`}>
+                                                    <div className="absolute top-3 right-3 flex items-start gap-2">
+                                                        <span className={`px-2 py-1 rounded-full text-xs font-semibold font-cairo ${product.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
                                                             {product.status === 'active' ? 'نشط' : 'مسودة'}
                                                         </span>
-
                                                         {product.isFeatured && (
-                                                            <span className="px-2 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800">
+                                                            <span className="px-2 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800 font-cairo">
                                                                 مميز
                                                             </span>
                                                         )}
                                                     </div>
-                                                    {/* Quick View Button (appears on hover) */}
                                                     <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
                                                         <Button
                                                             size="sm"
-                                                            className="bg-white text-gray-800  hover:bg-gray-50"
+                                                            className="bg-white text-gray-800 hover:bg-gray-50 font-cairo"
                                                             onClick={() => navigate(ROUTES.PRODUCT_DETAILS(product.id))}
                                                         >
-                                                            <Eye className="w-4 h-4 mr-1" />
+                                                            <Eye className="w-4 h-4 ml-1" />
                                                             معاينة سريعة
                                                         </Button>
                                                     </div>
                                                 </div>
-
-                                                {/* Main Content Section */}
                                                 <div className="p-4">
-                                                    {/* Title and Price */}
                                                     <div className="flex justify-between items-start mb-2">
                                                         <div>
-                                                            <h3 className="font-bold text-lg text-gray-900">{product.title || product.name}</h3>
+                                                            <h3 className="font-bold text-lg text-gray-900 font-cairo">{product.title || product.name}</h3>
                                                             {product.description && (
-                                                                <p className="text-gray-500 text-sm mt-1 line-clamp-2">{product.description}</p>
+                                                                <p className="text-gray-500 text-sm mt-1 line-clamp-2 font-cairo">{product.description}</p>
                                                             )}
                                                         </div>
-                                                        <div className="text-right">
-                                                            <p className="text-yellow-600 font-bold text-xl">
-                                                                {product.price?.['$numberDecimal'] ? (product.price['$numberDecimal'] * 50) : product.price} EGP
+                                                        <div className="text-left">
+                                                            <p className="text-yellow-600 font-bold text-xl font-cairo">
+                                                                {product.price?.['$numberDecimal'] ? (product.price['$numberDecimal'] * 50) : product.price} ج.م
                                                             </p>
                                                             {product.oldPrice && (
-                                                                <p className="text-gray-400 text-sm line-through">
+                                                                <p className="text-gray-400 text-sm line-through font-cairo">
                                                                     {product.oldPrice['$numberDecimal'] * 50} ج.م
                                                                 </p>
                                                             )}
                                                         </div>
                                                     </div>
-
-                                                    {/* Metadata Grid */}
                                                     <div className="grid grid-cols-2 gap-2 my-3 text-sm">
-                                                        <div className="flex items-center text-gray-600">
-                                                            <Shield className="w-4 h-4 mr-1 text-gray-400" />
+                                                        <div className="flex items-center text-gray-600 font-cairo">
+                                                            <Shield className="w-4 h-4 ml-1 text-gray-400" />
                                                             <span>الضمان: {product.warranty || 'غير متوفر'}</span>
                                                         </div>
-                                                        <div className="flex items-center text-gray-600">
-                                                            <Package className="w-4 h-4 mr-1 text-gray-400" />
+                                                        <div className="flex items-center text-gray-600 font-cairo">
+                                                            <Package className="w-4 h-4 ml-1 text-gray-400" />
                                                             <span>المخزن: {product.stock || 0}</span>
                                                         </div>
-                                                        <div className="flex items-center text-gray-600">
-                                                            <Tag className="w-4 h-4 mr-1 text-gray-400" />
+                                                        <div className="flex items-center text-gray-600 font-cairo">
+                                                            <Tag className="w-4 h-4 ml-1 text-gray-400" />
                                                             <span>الفئة: {product.category}</span>
                                                         </div>
-                                                        <div className="flex items-center text-gray-600">
-                                                            <Calendar className="w-4 h-4 mr-1 text-gray-400" />
-                                                            <span>أضيف في: {new Date(product.createdAt).toLocaleDateString()}</span>
+                                                        <div className="flex items-center text-gray-600 font-cairo">
+                                                            <Calendar className="w-4 h-4 ml-1 text-gray-400" />
+                                                            <span>أضيف في: {new Date(product.createdAt).toLocaleDateString('ar-EG')}</span>
                                                         </div>
                                                     </div>
-
-                                                    {/* Stats Bar */}
                                                     <div className="flex items-center justify-between bg-gray-50 rounded-lg px-3 py-2 mb-3 text-sm">
-                                                        <div className="flex items-center text-gray-600">
-                                                            <Eye className="w-4 h-4 mr-1" />
+                                                        <div className="flex items-center text-gray-600 font-cairo">
+                                                            <Eye className="w-4 h-4 ml-1" />
                                                             <span>{product.views || 0} مشاهدات</span>
                                                         </div>
-                                                        <div className="flex items-center text-gray-600">
-                                                            <Heart className="w-4 h-4 mr-1" />
+                                                        <div className="flex items-center text-gray-600 font-cairo">
+                                                            <Heart className="w-4 h-4 ml-1" />
                                                             <span>{product.favorites || 0} مفضلة</span>
                                                         </div>
-                                                        <div className="flex items-center text-gray-600">
-                                                            <ShoppingCart className="w-4 h-4 mr-1" />
+                                                        <div className="flex items-center text-gray-600 font-cairo">
+                                                            <ShoppingCart className="w-4 h-4 ml-1" />
                                                             <span>{product.orders || 0} طلبات</span>
                                                         </div>
                                                     </div>
-
-                                                    {/* Action Buttons */}
                                                     <div className="flex gap-2 border-t border-gray-100 pt-3">
                                                         <Button
                                                             size="sm"
-                                                            className="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-600"
+                                                            className="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-600 font-cairo"
                                                             onClick={() => navigate(ROUTES.PRODUCT_DETAILS(product._id))}
                                                         >
-                                                            <Eye className="w-4 h-4 mr-1" />
-عرض التفاصيل                                                        </Button>
-                                                        <Button
-                                                            size="sm"
-                                                            className="flex-1 bg-gray-50 hover:bg-gray-100 text-gray-800"
-                                                            onClick={() => navigate(ROUTES.EDIT_PRODUCT(product._id))}
-                                                        >
-                                                            <Edit className="w-4 h-4 mr-1" />
-                                                            Edit Product
+                                                            <Eye className="w-4 h-4 ml-1" />
+                                                            عرض التفاصيل
                                                         </Button>
                                                         <Button
                                                             size="sm"
-                                                            className="flex-1 bg-red-50 hover:bg-red-100 text-red-600"
+                                                            className="flex-1 bg-gray-50 hover:bg-gray-100 text-gray-800 font-cairo"
+                                                            onClick={() => navigate(ROUTES.EDIT_PRODUCT(product._id))}
+                                                        >
+                                                            <Edit className="w-4 h-4 ml-1" />
+                                                            تعديل المنتج
+                                                        </Button>
+                                                        <Button
+                                                            size="sm"
+                                                            className="flex-1 bg-red-50 hover:bg-red-100 text-red-600 font-cairo"
                                                             onClick={() => handleDeleteProduct(product._id)}
                                                         >
-                                                            <Trash2 className="w-4 h-4 mr-1" />
-                                                            Delete
+                                                            <Trash2 className="w-4 h-4 ml-1" />
+                                                            حذف
                                                         </Button>
                                                     </div>
                                                 </div>
@@ -614,14 +551,14 @@ const ManageShop = () => {
                         ) : (
                             <div className="text-center py-12">
                                 <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                                <h3 className="text-xl font-medium text-gray-900 mb-2">
+                                <h3 className="text-xl font-medium text-gray-900 mb-2 font-cairo">
                                     لا توجد منتجات
                                 </h3>
-                                <p className="text-gray-600 mb-4">
+                                <p className="text-gray-600 mb-4 font-cairo">
                                     ابدأ بإضافة منتجاتك الأولى
                                 </p>
-                                <Button onClick={() => navigate(ROUTES.PRODUCTS_CREATE)}>
-                                    <Plus className="w-4 h-4 mr-2" />
+                                <Button onClick={() => navigate(ROUTES.PRODUCTS_CREATE)} className="font-cairo">
+                                    <Plus className="w-4 h-4 ml-2" />
                                     إضافة منتج جديد
                                 </Button>
                             </div>
@@ -630,9 +567,9 @@ const ManageShop = () => {
 
                     <TabsContent value="bookings" className="space-y-6">
                         <div className="flex items-center justify-between">
-                            <h2 className="text-xl font-semibold">المواعيد</h2>
-                            <Button onClick={() => navigate(ROUTES.MANAGE_BOOKINGS)}>
-                                <Calendar className="w-4 h-4 mr-2" />
+                            <h2 className="text-xl font-semibold font-cairo">المواعيد</h2>
+                            <Button onClick={() => navigate(ROUTES.MANAGE_BOOKINGS)} className="font-cairo">
+                                <Calendar className="w-4 h-4 ml-2" />
                                 إدارة المواعيد
                             </Button>
                         </div>
@@ -644,12 +581,12 @@ const ManageShop = () => {
                                         <CardContent className="p-4">
                                             <div className="flex items-center justify-between">
                                                 <div>
-                                                    <h4 className="font-medium">{booking.customerName}</h4>
-                                                    <p className="text-sm text-gray-600">
+                                                    <h4 className="font-medium font-cairo">{booking.customerName}</h4>
+                                                    <p className="text-sm text-gray-600 font-cairo">
                                                         {new Date(booking.date).toLocaleDateString('ar-EG')} في {booking.time}
                                                     </p>
                                                 </div>
-                                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${booking.status === 'confirmed'
+                                                <span className={`px-2 py-1 rounded-full text-xs font-medium font-cairo ${booking.status === 'confirmed'
                                                     ? 'bg-green-100 text-green-800'
                                                     : 'bg-yellow-100 text-yellow-800'
                                                     }`}>
@@ -663,83 +600,78 @@ const ManageShop = () => {
                         ) : (
                             <div className="text-center py-12">
                                 <Calendar className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                                <h3 className="text-xl font-medium text-gray-900 mb-2">
+                                <h3 className="text-xl font-medium text-gray-900 mb-2 font-cairo">
                                     لا توجد مواعيد
                                 </h3>
-                                <p className="text-gray-600">
+                                <p className="text-gray-600 font-cairo">
                                     ستظهر هنا المواعيد المحجوزة من العملاء
                                 </p>
                             </div>
                         )}
                     </TabsContent>
 
-                    {/* QR Code Tab */}
                     <TabsContent value="qrcode" className="space-y-6">
-                        {console.log('🎨 QR Code tab is being rendered', { qrCode, qrCodeLoading, activeTab })}
+                        {console.log('🎨 يتم عرض تبويب رمز الاستجابة السريعة', { qrCode, qrCodeLoading, activeTab })}
                         <Card>
                             <CardHeader>
-                                <CardTitle className="flex items-center gap-2">
+                                <CardTitle className="flex items-center gap-2 font-cairo">
                                     <QrCode className="w-5 h-5" />
-                                    QR Code للمتجر
+                                    رمز الاستجابة السريعة للمتجر
                                 </CardTitle>
-                                <CardDescription>
-                                    يمكن للعملاء مسح هذا الكود للوصول مباشرة إلى صفحة متجرك
+                                <CardDescription className="font-cairo">
+                                    يمكن للعملاء مسح هذا الرمز للوصول مباشرة إلى صفحة متجرك
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-6">
                                 {qrCodeLoading ? (
                                     <div className="text-center py-8">
                                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-600 mx-auto mb-4"></div>
-                                        <p className="text-gray-600">جاري تحميل QR Code...</p>
+                                        <p className="text-gray-600 font-cairo">جاري تحميل رمز الاستجابة السريعة...</p>
                                     </div>
                                 ) : qrCode ? (
                                     <div className="space-y-6">
-                                        {/* QR Code Display */}
                                         <div className="flex flex-col lg:flex-row gap-6">
                                             <div className="flex-1">
                                                 <div className="bg-white p-6 rounded-lg border-2 border-gray-200 text-center">
                                                     <img
                                                         src={qrCode.qrCode}
-                                                        alt="QR Code"
+                                                        alt="رمز الاستجابة السريعة"
                                                         className="w-64 h-64 mx-auto mb-4"
                                                     />
-                                                    <p className="text-sm text-gray-600 mb-4">
+                                                    <p className="text-sm text-gray-600 mb-4 font-cairo">
                                                         يؤدي إلى: {qrCode.qrCodeUrl}
                                                     </p>
                                                 </div>
                                             </div>
-
                                             <div className="flex-1 space-y-4">
                                                 <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
-                                                    <h3 className="font-semibold text-yellow-800 mb-2">
+                                                    <h3 className="font-semibold text-yellow-800 mb-2 font-cairo">
                                                         كيفية الاستخدام:
                                                     </h3>
-                                                    <ul className="text-sm text-yellow-700 space-y-1">
-                                                        <li>• اطبع QR Code ووضعه في متجرك</li>
-                                                        <li>• العملاء يمكنهم مسح الكود بالهاتف</li>
+                                                    <ul className="text-sm text-yellow-700 space-y-1 font-cairo">
+                                                        <li>• اطبع رمز الاستجابة السريعة وضعه في متجرك</li>
+                                                        <li>• العملاء يمكنهم مسح الرمز بالهاتف</li>
                                                         <li>• سيتم توجيههم مباشرة لصفحة متجرك</li>
                                                         <li>• يمكنهم تصفح منتجاتك وحجز مواعيد</li>
                                                     </ul>
                                                 </div>
-
                                                 <div className="space-y-3">
                                                     <Button
                                                         onClick={downloadQRCode}
-                                                        className="w-full bg-green-600 hover:bg-green-700"
+                                                        className="w-full bg-green-600 hover:bg-green-700 font-cairo"
                                                     >
-                                                        <Download className="w-4 h-4 mr-2" />
-                                                        تحميل QR Code
+                                                        <Download className="w-4 h-4 ml-2" />
+                                                        تحميل رمز الاستجابة السريعة
                                                     </Button>
-
-                                                    {/* <Button
+                                                    <Button
                                                         onClick={generateNewQRCode}
                                                         variant="outline"
-                                                        className="w-full"
+                                                        className="w-full font-cairo"
                                                         disabled={qrCodeLoading}
                                                     >
-                                                        <QrCode className="w-4 h-4 mr-2" />
-                                                        إنشاء QR Code جديد
-                                                    </Button> */}
+                                                        <QrCode className="w-4 h-4 ml-2" />
+                                                        إنشاء رمز استجابة سريعة جديد
+                                                    </Button>
                                                 </div>
                                             </div>
                                         </div>
@@ -747,113 +679,19 @@ const ManageShop = () => {
                                 ) : (
                                     <div className="text-center py-8">
                                         <QrCode className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                                        <h3 className="text-xl font-medium text-gray-900 mb-2">
-                                            لا يوجد QR Code
+                                        <h3 className="text-xl font-medium text-gray-900 mb-2 font-cairo">
+                                            لا يوجد رمز استجابة سريعة
                                         </h3>
-                                        <p className="text-gray-600 mb-4">
-                                            قم بإنشاء QR Code لمتجرك ليتمكن العملاء من الوصول إليه بسهولة
+                                        <p className="text-gray-600 mb-4 font-cairo">
+                                            قم بإنشاء رمز استجابة سريعة لمتجرك ليتمكن العملاء من الوصول إليه بسهولة
                                         </p>
                                         <Button
                                             onClick={generateNewQRCode}
-                                            className="bg-yellow-600 hover:bg-yellow-700"
+                                            className="bg-yellow-600 hover:bg-yellow-700 font-cairo"
                                             disabled={qrCodeLoading}
                                         >
-                                            <QrCode className="w-4 h-4 mr-2" />
-                                            إنشاء QR Code
-                                        </Button>
-                                    </div>
-                                )}
-                            </CardContent>
-                        </Card>
-                    </TabsContent>
-
-                    {/* QR Code Tab */}
-                    <TabsContent value="qrcode" className="space-y-6">
-                        {console.log('🎨 QR Code tab is being rendered', { qrCode, qrCodeLoading, activeTab })}
-                        <Card>
-                            <CardHeader>
-                                <CardTitle className="flex items-center gap-2">
-                                    <QrCode className="w-5 h-5" />
-                                    QR Code للمتجر
-                                </CardTitle>
-                                <CardDescription>
-                                    يمكن للعملاء مسح هذا الكود للوصول مباشرة إلى صفحة متجرك
-                                </CardDescription>
-                            </CardHeader>
-                            <CardContent className="space-y-6">
-                                {qrCodeLoading ? (
-                                    <div className="text-center py-8">
-                                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-600 mx-auto mb-4"></div>
-                                        <p className="text-gray-600">جاري تحميل QR Code...</p>
-                                    </div>
-                                ) : qrCode ? (
-                                    <div className="space-y-6">
-                                        {/* QR Code Display */}
-                                        <div className="flex flex-col lg:flex-row gap-6">
-                                            <div className="flex-1">
-                                                <div className="bg-white p-6 rounded-lg border-2 border-gray-200 text-center">
-                                                    <img
-                                                        src={qrCode.qrCode}
-                                                        alt="QR Code"
-                                                        className="w-64 h-64 mx-auto mb-4"
-                                                    />
-                                                    <p className="text-sm text-gray-600 mb-4">
-                                                        يؤدي إلى: {qrCode.qrCodeUrl}
-                                                    </p>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex-1 space-y-4">
-                                                <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
-                                                    <h3 className="font-semibold text-yellow-800 mb-2">
-                                                        كيفية الاستخدام:
-                                                    </h3>
-                                                    <ul className="text-sm text-yellow-700 space-y-1">
-                                                        <li>• اطبع QR Code ووضعه في متجرك</li>
-                                                        <li>• العملاء يمكنهم مسح الكود بالهاتف</li>
-                                                        <li>• سيتم توجيههم مباشرة لصفحة متجرك</li>
-                                                        <li>• يمكنهم تصفح منتجاتك وحجز مواعيد</li>
-                                                    </ul>
-                                                </div>
-
-                                                <div className="space-y-3">
-                                                    <Button
-                                                        onClick={downloadQRCode}
-                                                        className="w-full bg-green-600 hover:bg-green-700"
-                                                    >
-                                                        <Eye className="w-4 h-4 mr-2" />
-                                                        تحميل QR Code
-                                                    </Button>
-
-                                                    {/* <Button
-                                                        onClick={generateNewQRCode}
-                                                        variant="outline"
-                                                        className="w-full"
-                                                        disabled={qrCodeLoading}
-                                                    >
-                                                        <QrCode className="w-4 h-4 mr-2" />
-                                                        إنشاء QR Code جديد
-                                                    </Button> */}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div className="text-center py-8">
-                                        <QrCode className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                                        <h3 className="text-xl font-medium text-gray-900 mb-2">
-                                            لا يوجد QR Code
-                                        </h3>
-                                        <p className="text-gray-600 mb-4">
-                                            قم بإنشاء QR Code لمتجرك ليتمكن العملاء من الوصول إليه بسهولة
-                                        </p>
-                                        <Button
-                                            onClick={generateNewQRCode}
-                                            className="bg-yellow-600 hover:bg-yellow-700"
-                                            disabled={qrCodeLoading}
-                                        >
-                                            <QrCode className="w-4 h-4 mr-2" />
-                                            إنشاء QR Code
+                                            <QrCode className="w-4 h-4 ml-2" />
+                                            إنشاء رمز استجابة سريعة
                                         </Button>
                                     </div>
                                 )}

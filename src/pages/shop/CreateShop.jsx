@@ -249,15 +249,18 @@ const CreateShop = () => {
         <div className="min-h-screen bg-gray-50">
             <div className="w-full px-2 sm:px-4 py-8">
                 {/* Header */}
-                <div className="mb-8">
-                    <Button
+                <div className="mb-8 ">
+                    <div className='text-left'>
+                          <Button
                         variant="ghost"
                         onClick={() => navigate(-1)}
-                        className="mb-4"
+                        className="mb-4 "
                     >
-                        <ArrowLeft className="w-4 h-4 mr-2" />
+                        <ArrowLeft className="w-4 h-4 mr-2 " />
                         العودة
                     </Button>
+                    </div>
+                  
                     <h1 className="text-3xl font-bold text-gray-900 mb-4">إنشاء متجر جديد</h1>
                     <p className="text-gray-600">أنشئ متجرك الخاص لبيع المجوهرات والذهب</p>
                 </div>
@@ -577,7 +580,7 @@ const CreateShop = () => {
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center">
                                                 <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center mr-3">
-                                                    <span className="text-red-600 font-semibold text-sm">PDF</span>
+                                                    <span className="text-black-600 font-semibold text-sm">PDF</span>
                                                 </div>
                                                 <div>
                                                     <p className="text-sm font-medium text-gray-900">{commercialRecord.name}</p>
@@ -591,8 +594,9 @@ const CreateShop = () => {
                                                 variant="destructive"
                                                 size="sm"
                                                 onClick={removeCommercialRecord}
+                                                className="bg-black-100"
                                             >
-                                                <X className="w-4 h-4" />
+                                                <X className="w-4 h-4 " />
                                             </Button>
                                         </div>
                                     </div>

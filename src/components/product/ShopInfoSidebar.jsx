@@ -154,18 +154,21 @@ const ShopInfoSidebar = ({ shop, onVisitShop, onOpenChat }) => {
               onClick={onVisitShop}
             >
               <Eye className="w-3 h-3 mr-2" />
-              زيارة المتجر
+                                              <p className='m-2'>                    زيارة المتجر   </p>
+
             </Button>
             <div className="grid grid-cols-2 gap-2">
               <Button variant="outline" size="sm" onClick={onOpenChat} className="text-xs py-2">
                 <MessageSquare className="w-3 h-3 mr-1" />
-                دردشة
+                                    <p className='m-2'>                  دردشة </p>
+
               </Button>
               {shop.phone && (
                 <Button variant="outline" size="sm" asChild className="text-xs py-2">
                   <a href={`tel:${shop.phone}`}>
                     <Phone className="w-3 h-3 mr-1" />
-                    اتصال
+                    <p className='m-2'>                  اتصال </p>
+
                   </a>
                 </Button>
               )}
@@ -180,8 +183,8 @@ const ShopInfoSidebar = ({ shop, onVisitShop, onOpenChat }) => {
                   rel="noopener noreferrer"
                 >
                   <MessageSquare className="w-3 h-3 mr-2" />
-                  واتساب
-                </a>
+<p className='m-2'>                  واتساب 
+</p>                </a>
               </Button>
             )}
           </div>)}

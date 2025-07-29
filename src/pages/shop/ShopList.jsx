@@ -300,11 +300,11 @@ const ShopList = () => {
 
     <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-    <div className="absolute bottom-3 left-3 z-10">
+    {/* <div className="absolute bottom-3 left-3 z-10">
       <div className="bg-white/95 backdrop-blur-sm px-2.5 py-1 rounded-full">
         <span className="text-xs font-semibold text-[#C37C00]">متجر موثوق</span>
       </div>
-    </div>
+    </div> */}
   </div>
 
   {/* Enhanced Content Section */}
@@ -326,21 +326,22 @@ const ShopList = () => {
     </p>
 
     {/* العنوان وساعات العمل */}
-    <div className="grid grid-cols-1 gap-2.5">
-      <div className="flex flex-row items-center gap-2.5 text-sm text-gray-600 group-hover:text-gray-700 transition-colors justify-end">
-        <div className="w-8 h-8 bg-gradient-to-br from-[#FFF0CC] to-[#FFE6B3] rounded-full flex items-center justify-center shrink-0 ml-auto">
-          <MapPin className="w-4 h-4 text-[#C37C00]" />
-        </div>
-        <span className="truncate font-medium text-right">{shopAddress}</span>
-      </div>
-
-      <div className="flex flex-row items-center gap-2.5 text-sm text-gray-600 group-hover:text-gray-700 transition-colors justify-end">
-        <div className="w-8 h-8 bg-gradient-to-br from-[#FFF0CC] to-[#FFE6B3] rounded-full flex items-center justify-center shrink-0 ml-auto">
-          <Clock className="w-4 h-4 text-[#C37C00]" />
-        </div>
-        <span className="font-medium text-right">{shopWorkingHours}</span>
-      </div>
+  <div className="grid grid-cols-1 gap-2.5">
+  <div className="flex flex-row items-center gap-2.5 text-sm text-gray-600 group-hover:text-gray-700 transition-colors">
+    <span className="truncate font-medium text-right flex-1">{shopAddress}</span>
+    <div className="w-8 h-8 bg-gradient-to-br from-[#FFF0CC] to-[#FFE6B3] rounded-full flex items-center justify-center shrink-0">
+      <MapPin className="w-4 h-4 text-[#C37C00]" />
     </div>
+  </div>
+
+  <div className="flex flex-row items-center gap-2.5 text-sm text-gray-600 group-hover:text-gray-700 transition-colors">
+    <span className="font-medium text-right flex-1">{shopWorkingHours}</span>
+    <div className="w-8 h-8 bg-gradient-to-br from-[#FFF0CC] to-[#FFE6B3] rounded-full flex items-center justify-center shrink-0">
+      <Clock className="w-4 h-4 text-[#C37C00]" />
+    </div>
+  </div>
+</div>
+
   </div>
 
   {/* زر عرض المحل */}
@@ -356,8 +357,9 @@ const ShopList = () => {
       }}
     >
       <div className="flex items-center justify-center gap-2">
-        <Eye className="w-5 h-5" />
         <span>عرض المحل</span>
+                <Eye className="w-5 h-5" />
+
         <div className="w-1 h-1 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </div>
     </Button>
@@ -500,17 +502,6 @@ const ShopList = () => {
                       </Select>
 
                       {/* Clear Filters Button */}
-                      {getActiveFilterCount() > 0 && (
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={clearFilters}
-                          className="px-4 py-3 text-sm rounded-xl border border-[#C37C00] hover:border-[#A37C00] hover:text-[#A37C00]"
-                        >
-                          <X className="w-4 h-4 ml-1 text-[#C37C00]" />
-                          مسح
-                        </Button>
-                      )}
 
                       {/* Search Button */}
                       <Button

@@ -381,7 +381,7 @@ const Dashboard = () => {
             : 'bg-gray-50 border-gray-200'
         }`}>
           <div className="flex items-center">
-            <Clock className={`w-5 h-5 mr-3 ${
+            <Clock className={`w-5 h-5 ml-5 ${
               shopInfo.requestStatus === 'pending'
                 ? 'text-amber-600'
                 : shopInfo.requestStatus === 'rejected'
@@ -455,7 +455,7 @@ const Dashboard = () => {
             <Button
               variant="outline"
               className="h-20 flex flex-col items-center justify-center border-primary-500 text-primary-500 hover:bg-primary-1 rounded-lg shadow-md hover:shadow transition-all duration-300 font-cairo"
-              onClick={() => setActiveTab('bookings')}
+              onClick={() => navigate(ROUTES.TIME_MANAGEMENT)}
               aria-label="Book an appointment"
             >
               <Calendar className="w-6 h-6 mb-2" />
@@ -567,7 +567,7 @@ const Dashboard = () => {
                 <Clock className="w-6 h-6 text-amber-600" />
               )}
             </div>
-            <div className="flex-1">
+            <div className="flex-1 mr-10">
               <h3 className={`text-lg font-bold mb-1 ${
                 shopInfo.requestStatus === 'approved' && user?.paid
                   ? 'text-green-800'
@@ -611,7 +611,7 @@ const Dashboard = () => {
                 {shopInfo.requestStatus === 'pending' && (
                   <div>
                     <p className="text-xs text-amber-600 mb-2">
-                      📄 تم رفع السجل التجاري والمستندات المطلوبة • 🔔 ستتلقى إشعاراً عند الموافقة
+                      📄 تم رفع السجل التجاري والمستندات المطلوبة • ستتلقى إشعاراً عند الموافقة
                     </p>
                     <div className="flex gap-2">
                       <Button
@@ -627,7 +627,7 @@ const Dashboard = () => {
                         className="text-blue-600 border-blue-300 hover:bg-blue-50"
                         size="sm"
                       >
-                        🔄 تحديث
+                         تحديث
                       </Button>
                     </div>
                   </div>
@@ -745,20 +745,18 @@ const Dashboard = () => {
                 <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
                   <div className="flex items-start">
                     <div className="flex-shrink-0">
-                      <svg className="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                      </svg>
+
                     </div>
                     <div className="mr-3">
                       <h4 className="text-sm font-medium text-amber-800">متطلبات إدارة المنتجات</h4>
                       <div className="mt-1 text-sm text-amber-700">
                         <p>لإضافة وإدارة المنتجات، يجب:</p>
-                        <ul className="list-disc list-inside mt-1 space-y-1">
+                        <ul className="list-disc list-inside mr-4 space-y-1">
                           <li className={shopInfo.requestStatus === 'approved' ? 'text-green-600' : 'text-amber-700'}>
-                            {shopInfo.requestStatus === 'approved' ? '✅' : '⏳'} موافقة الأدمن على المتجر
+                            {shopInfo.requestStatus === 'approved' ? '' : ''} موافقة الأدمن على المتجر
                           </li>
                           <li className={user?.paid ? 'text-green-600' : 'text-amber-700'}>
-                            {user?.paid ? '✅' : '💳'} إتمام عملية الدفع
+                            {user?.paid ? ' ' : ''} إتمام عملية الدفع
                           </li>
                         </ul>
                       </div>
@@ -875,7 +873,7 @@ const Dashboard = () => {
       </div>
 
       {/* Section 4: Appointment Statistics */}
-      <div className="bg-white rounded-xl p-6 shadow border border-gray-200">
+      {/* <div className="bg-white rounded-xl p-6 shadow border border-gray-200">
         <div className="flex items-center mb-6">
           <div className="bg-gradient-to-r from-[#6D552C] to-[#49391D] p-3 rounded-lg mr-4">
             <BarChart3 className="w-6 h-6 text-white" />
@@ -911,7 +909,7 @@ const Dashboard = () => {
             <p className="text-xs text-[#A66A00] mt-1">جميع المواعيد</p>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 
@@ -1237,7 +1235,7 @@ const Dashboard = () => {
                         onClick={downloadQRCode}
                         className="w-full bg-green-600 hover:bg-green-700"
                       >
-                        <Eye className="w-4 h-4 mr-2" />
+                        
                         تحميل QR Code
                       </Button>
                     </div>

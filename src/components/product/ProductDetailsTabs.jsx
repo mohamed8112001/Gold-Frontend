@@ -92,16 +92,17 @@ const ProductDetailsTabs = ({ product, reviews, productId }) => {
           </TabsContent>
 
           <TabsContent value="reviews" className="space-y-4 px-4 pb-4">
-            <div>
-              <h3 className="text-lg font-bold mb-4">تقييمات العملاء</h3>
-              {/* استخدام مكون ProductRating الكامل */}
-              <ProductRating
-                productId={productId}
-                showForm={true}
-                className="bg-transparent border-0 shadow-none p-0"
-              />
-            </div>
-          </TabsContent>
+  <div className="text-right" dir="rtl">
+    <h3 className="text-lg font-bold mb-4 text-right">تقييمات العملاء</h3>
+    {/* استخدام مكون ProductRating الكامل */}
+    <ProductRating
+      productId={productId}
+      showForm={true}
+      className="bg-transparent border-0 shadow-none p-0 text-right"
+      dir="rtl"
+    />
+  </div>
+</TabsContent>
           <TabsContent
             value="shipping"
             className="space-y-4 px-4 pb-4"

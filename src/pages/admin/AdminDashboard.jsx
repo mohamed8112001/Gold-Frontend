@@ -347,56 +347,32 @@ const AdminDashboard = () => {
   };
 
   const viewCommercialRecord = async (shop) => {
-    const shopId = shop._id || shop.id;
-
-    const token = localStorage.getItem("token");
-    console.log("🔍 Token check:", {
-      hasToken: !!token,
-      tokenLength: token?.length,
-      shopId: shopId,
-    });
-
-    if (!token) {
-      alert("❌ لا يوجد token. يرجى تسجيل الدخول مرة أخرى.");
-      return;
-    }
-
     try {
-      console.log("📤 Attempting to download PDF for shop:", shopId);
-      const result = await shopService.downloadCommercialRecord(shopId);
-      console.log("✅ PDF download successful:", result);
-
-      if (result.method === "fallback") {
-        console.log("ℹ️ Used fallback method to open PDF");
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("❌ لا يوجد token. يرجى تسجيل الدخول مرة أخرى.");
+        return;
       }
+
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/shop/${shop.id}/commercial-record`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorMessage = `Error: ${response.status} - ${response.statusText}`;
+        console.error(errorMessage);
+        alert(`فشل في تحميل السجل التجاري. ${errorMessage}`);
+        return;
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      window.open(url, "_blank");
     } catch (error) {
-      console.error("❌ خطأ في عرض السجل التجاري:", error);
-
-      if (error.status !== 404) {
-        console.log("🔄 Trying direct method as last resort");
-        try {
-          await shopService.viewCommercialRecordDirect(shopId);
-          console.log("✅ Direct method successful");
-          return;
-        } catch (directError) {
-          console.error("❌ Direct method also failed:", directError);
-        }
-      }
-
-      let errorMessage = "حدث خطأ في عرض السجل التجاري";
-
-      if (error.status === 401) {
-        errorMessage = "انتهت صلاحية تسجيل الدخول. يرجى تسجيل الدخول مرة أخرى.";
-      } else if (error.status === 404) {
-        errorMessage = "لم يتم العثور على ملف السجل التجاري.";
-      } else if (error.status === 403) {
-        errorMessage = "ليس لديك صلاحية لعرض هذا الملف.";
-      } else if (error.message.includes("Popup blocked")) {
-        errorMessage =
-          "تم حظر النوافذ المنبثقة. يرجى السماح بالنوافذ المنبثقة لهذا الموقع.";
-      }
-
-      alert(`❌ ${errorMessage}`);
+      console.error("Error viewing commercial record:", error);
+      alert("حدث خطأ أثناء عرض السجل التجاري. يرجى المحاولة مرة أخرى.");
     }
   };
 
@@ -450,14 +426,12 @@ const AdminDashboard = () => {
         {/* Header */}
         <div className="p-6 lg:p-8 border-b border-gray-100">
           <div className="flex items-center space-x-4 space-x-reverse">
-            <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-amber-600 rounded-xl flex items-center justify-center shadow-lg">
-              <BarChart3 className="w-6 h-6 text-white" />
-            </div>
+           
             <div>
               <h1 className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-                لوحة تحكم الإدارة
+                لوحة التحكم 
               </h1>
-              <p className="text-sm text-gray-500">إدارة المنصة</p>
+              {/* <p className="text-sm text-gray-500">إدارة المنصة</p> */}
             </div>
           </div>
         </div>
@@ -502,21 +476,7 @@ const AdminDashboard = () => {
           </nav>
 
           {/* Quick Stats */}
-          <div className="mt-8 space-y-4">
-            <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">
-              إحصائيات سريعة
-            </h3>
-
-            <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-purple-700 font-medium">المنتجات</p>
-                  <p className="text-2xl font-bold text-purple-900">{stats.totalProducts}</p>
-                </div>
-                <Package className="w-8 h-8 text-purple-600" />
-              </div>
-            </div>
-          </div>
+         
         </div>
 
         {/* Footer */}
@@ -598,14 +558,14 @@ const AdminDashboard = () => {
                   color: "from-green-500 to-green-600",
                   bgColor: "from-green-50 to-green-100"
                 },
-                { 
-                  title: "المنتجات", 
-                  value: stats.totalProducts, 
-                  subtitle: "إجمالي المنتجات",
-                  icon: Package, 
-                  color: "from-purple-500 to-purple-600",
-                  bgColor: "from-purple-50 to-purple-100"
-                },
+                // { 
+                //   title: "المنتجات", 
+                //   value: stats.totalProducts, 
+                //   subtitle: "إجمالي المنتجات",
+                //   icon: Package, 
+                //   color: "from-purple-500 to-purple-600",
+                //   bgColor: "from-purple-50 to-purple-100"
+                // },
               ].map((stat, index) => (
                 <Card 
                   key={index}
