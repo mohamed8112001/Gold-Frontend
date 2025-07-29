@@ -14,8 +14,8 @@ const SuccessPage = () => {
   useEffect(() => {
     const updateUserPaymentStatus = async () => {
       if (!user?.email || !sessionId) {
-        setError('Missing user information or session ID');
-        setLoading(false);
+        // setError('Missing user information or session ID');
+        setLoading(true);
         return;
       }
 
