@@ -479,7 +479,7 @@ const Profile = () => {
       <footer className="bg-[#1C1C1C] py-8 mt-16">
         <div className="w-full px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-sm" style={{ color: "#D4AF37" }}>
-            اكتشف أجود المجوهرات مع ديبلا
+            اكتشف أجود المجوهرات مع دبله
           </p>
           <p className="text-xs mt-2" style={{ color: "#666666" }}>
             © 2025 ديبلا. جميع الحقوق محفوظة.

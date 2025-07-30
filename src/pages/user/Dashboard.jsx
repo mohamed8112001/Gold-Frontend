@@ -39,7 +39,8 @@ import { useTranslation } from "react-i18next";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { user, isShopOwner, isRegularUser , reloadUser, updateUser} = useAuth();
+  const { user, isShopOwner, isRegularUser, reloadUser, updateUser } =
+    useAuth();
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("overview");
   const [loading, setLoading] = useState(true);
@@ -61,10 +62,10 @@ const Dashboard = () => {
 
   useEffect(() => {
     (async () => {
-    const newUSer = await reloadUser();
-    console.log(`new user: ${JSON.stringify(newUSer)}`);
-    
-    updateUser(newUSer);
+      const newUSer = await reloadUser();
+      console.log(`new user: ${JSON.stringify(newUSer)}`);
+
+      updateUser(newUSer);
     })();
     if (isRegularUser) {
       navigate("/");
@@ -85,6 +86,7 @@ const Dashboard = () => {
           setStats((prev) => ({ ...prev, ...shopStats.data }));
           setRecentActivity(shopActivity.data || []);
           setShopInfo(shopData.data);
+          console.log(`status of Shop${shopData.data.id}`);
         } else {
           const userStats = await dashboardService.getUserStats();
           // const userActivity = await dashboardService.getUserActivity();
@@ -110,10 +112,10 @@ const Dashboard = () => {
           const token = localStorage.getItem("token");
           const headers = token ? { Authorization: `Bearer ${token}` } : {};
           const productsResponse = await fetch(
-            `${import.meta.env.VITE_API_BASE_URL}/product`,
+            `${import.meta.env.VITE_API_BASE_URL}/product/shop/${shopInfo.id}`,
             { headers }
           );
-
+          console.log(`shop data: ${shopInfo.products.length}`)
           if (!productsResponse.ok) {
             throw new Error(`Product API error: ${productsResponse.status}`);
           }
@@ -742,7 +744,7 @@ const Dashboard = () => {
                       className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-2 rounded-lg mb-2"
                       onClick={() => navigate("/owner-payment")}
                     >
-                    ادفع  30$ الآن لتفعيل المتجر
+                      ادفع 30$ الآن لتفعيل المتجر
                     </Button>
                     {/* <p className="text-xs text-blue-600">
                       💰 رسوم التفعيل: 100 جنيه • 🔒 دفع آمن ومشفر
@@ -995,18 +997,18 @@ const Dashboard = () => {
           <div className="space-y-4">
             <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
               <div className="flex items-center justify-between mb-3">
-                <span className="text-sm font-medium text-[#A66A00]">
+                {/* <span className="text-sm font-medium text-[#A66A00]">
                   الحجوزات النشطة
                 </span>
                 <span className="text-2xl font-bold text-[#8A5700]">
                   {stats.bookings || 0}
-                </span>
+                </span> */}
               </div>
               <div className="space-y-3">
                 <Button
                   className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow transition-all duration-300"
                   onClick={() => {
-                     if (shopInfo?.requestStatus === "approved" && user?.paid) {
+                    if (shopInfo?.requestStatus === "approved" && user?.paid) {
                       navigate(ROUTES.TIME_MANAGEMENT);
                     } else {
                       alert(
@@ -1019,7 +1021,7 @@ const Dashboard = () => {
                   <Clock className="w-4 h-4 mr-2" />
                   إدارة جميع المواعيد
                 </Button>
-                <Button
+                {/* <Button
                   variant="outline"
                   className="w-full border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] rounded-lg shadow-md hover:shadow transition-all duration-300"
                   onClick={() => setActiveTab("available-times")}
@@ -1027,7 +1029,7 @@ const Dashboard = () => {
                 >
                   <Calendar className="w-4 h-4 mr-2" />
                   عرض إدارة الوقت
-                </Button>
+                </Button> */}
               </div>
             </div>
           </div>
@@ -1639,6 +1641,5 @@ const Dashboard = () => {
     </div>
   );
 };
-
 
 export default Dashboard;

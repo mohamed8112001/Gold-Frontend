@@ -34,7 +34,7 @@ export const authService = {
       }
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || "Login failed");
+      throw new Error(error.response?.data?.message || "خطأ فى تسجيل الدخول");
     }
   },
 

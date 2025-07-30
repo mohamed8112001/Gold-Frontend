@@ -24,6 +24,7 @@ import {
     X,
     Bot
 } from 'lucide-react';
+
 import { shopService } from '../../services/shopService';
 import { productService } from '../../services/productService';
 import { ROUTES } from '../../utils/constants';
@@ -121,7 +122,8 @@ const ShopImageSlider = ({ images = [], shopName }) => {
 const ShopDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { user , isShopOwner ,isAdmin } = useAuth();
+      const { user, isAuthenticated, isAdmin, isShopOwner, logout, isRegularUser , reloadUser, updateUser} = useAuth();
+    
     const [shop, setShop] = useState(null);
     const [products, setProducts] = useState([]);
     const [reviews, setReviews] = useState([]);
@@ -712,7 +714,7 @@ const ShopDetails = () => {
       <p className="text-gray-600 mb-4">
         لم يتم إضافة منتجات إلى "{safeShop.name}" بعد
       </p>
-      {isAdmin && isShopOwner && (  <Button
+      { !isAdmin && !isRegularUser  && (  <Button
           variant="outline"
           onClick={() => navigate(ROUTES.PRODUCTS_CREATE)}
         >

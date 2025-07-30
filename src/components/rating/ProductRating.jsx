@@ -96,7 +96,6 @@ const ProductRating = ({ productId, showForm = true }) => {
       alert(userRating ? "تم تحديث التقييم بنجاح!" : "تم إضافة التقييم بنجاح!");
     } catch (error) {
       console.error("Error submitting rating:", error);
-      alert("حدث خطأ في إرسال التقييم");
     } finally {
       setSubmitting(false);
     }

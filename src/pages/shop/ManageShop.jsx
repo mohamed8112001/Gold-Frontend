@@ -58,6 +58,8 @@ const ManageShop = () => {
     }, [user, isShopOwner, navigate]);
 
     const loadShopData = async () => {
+                            console.log("sdaaaaaaaaaaaaaa")
+
         try {
             setIsLoading(true);
 
@@ -100,6 +102,7 @@ const ManageShop = () => {
 
             // تحميل المنتجات للمتجر
             const loadProducts = async (shopId) => {
+                
                 try {
                     const productsResponse = await productService.getAllProducts({ shopId });
                     const productsData = Array.isArray(productsResponse)

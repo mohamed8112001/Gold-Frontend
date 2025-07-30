@@ -935,7 +935,7 @@ const Home = () => {
           </h2>
           <p className="text-xl font-tajawal text-[#5C4A1C] mb-8 max-w-2xl mx-auto">
             انضم إلى آلاف العملاء الراضين الذين وجدوا مجوهرات أحلامهم من خلال
-            ديبلا
+            دبله
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button

@@ -73,7 +73,7 @@ const UserTypeSelection = () => {
         <div className="text-center mb-12">
           <div className="flex justify-center mb-6">
             <div className="w-32 h-32 rounded-full flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #A37F41 0%, #B8904F 100%)' }}>
-              <span className="text-5xl font-bold text-white">ديبلا</span>
+              <span className="text-5xl font-bold text-white">دبله</span>
             </div>
           </div>
           <h1 className="text-heading-2xl font-bold mb-4" style={{ color: '#A37F41' }}>
