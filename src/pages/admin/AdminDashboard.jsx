@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import { shopService } from "../../services/shopService.js";
 import { userService } from "../../services/userService.js";
+import { authService } from "../../services/authService.js";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { ROUTES } from "../../utils/constants.js";
 import { testAuthentication } from "../../utils/testAuth.js";
@@ -348,7 +349,7 @@ const AdminDashboard = () => {
 
   const viewCommercialRecord = async (shop) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = authService.getToken();
       if (!token) {
         alert("❌ لا يوجد token. يرجى تسجيل الدخول مرة أخرى.");
         return;

@@ -45,6 +45,7 @@ const TimeManagement = () => {
   const [newTimeSlot, setNewTimeSlot] = useState({
     date: "",
     time: "",
+    duration: "30"
   });
 
   useEffect(() => {
@@ -257,7 +258,7 @@ const TimeManagement = () => {
             <CardContent className="p-6">
               <form
                 onSubmit={handleAddTimeSlot}
-                className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end"
+                className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end"
               >
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -284,6 +285,23 @@ const TimeManagement = () => {
                     onChange={(e) =>
                       setNewTimeSlot({ ...newTimeSlot, time: e.target.value })
                     }
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    المدة (دقائق)
+                  </label>
+                  <input
+                    type="number"
+                    value={newTimeSlot.duration}
+                    onChange={(e) =>
+                      setNewTimeSlot({ ...newTimeSlot, duration: e.target.value })
+                    }
+                    min="15"
+                    max="120"
+                    step="15"
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
                     required
                   />
@@ -546,6 +564,9 @@ const TimeManagement = () => {
                                   />
                                   <span className="font-medium text-gray-900">
                                     {formatTime(time.time)}
+                                  </span>
+                                  <span className="text-gray-600">
+                                    ({time.duration} دقيقة)
                                   </span>
                                 </div>
                                 <Badge
