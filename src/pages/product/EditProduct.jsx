@@ -21,7 +21,7 @@ const EditProduct = () => {
     const { id } = useParams();
     const { user, isShopOwner } = useAuth();
     const [isLoading, setIsLoading] = useState(false);
-    const [loadingMessage, setLoadingMessage] = useState('Updating...');
+    const [loadingMessage, setLoadingMessage] = useState('جاري التحديث...');
     const [userShop, setUserShop] = useState(null);
     const [product, setProduct] = useState(null);
     const [formData, setFormData] = useState({
@@ -53,14 +53,14 @@ const EditProduct = () => {
         // Validate product ID
         if (!id) {
             console.error('❌ Product ID is missing from URL');
-            alert('Product ID is missing. Please check the URL.');
+            alert('معرف المنتج مفقود. يرجى التحقق من الرابط.');
             navigate(ROUTES.MANAGE_SHOP);
             return;
         }
 
         if (id.length !== 24 || !/^[0-9a-fA-F]{24}$/.test(id)) {
             console.error('❌ Invalid product ID format:', id);
-            alert('Invalid product ID format. Please check the URL.');
+            alert('تنسيق معرف المنتج غير صحيح. يرجى التحقق من الرابط.');
             navigate(ROUTES.MANAGE_SHOP);
             return;
         }
@@ -111,7 +111,7 @@ const EditProduct = () => {
             }
         } catch (error) {
             console.error('❌ Error loading user shop:', error);
-            alert('Error loading shop information');
+            alert('خطأ في تحميل معلومات المتجر');
         }
     };
 
@@ -194,7 +194,7 @@ const EditProduct = () => {
 
         } catch (error) {
             console.error('❌ Error loading product:', error);
-            alert(`Error loading product information: ${error.message || 'Unknown error'}\n\nPlease check if the product exists and you have permission to edit it.`);
+            alert(`خطأ في تحميل معلومات المنتج: ${error.message || 'خطأ غير معروف'}\n\nيرجى التحقق من وجود المنتج وصلاحيتك لتعديله.`);
             navigate(ROUTES.MANAGE_SHOP);
         }
     };
@@ -232,46 +232,46 @@ const EditProduct = () => {
 
         // Validate product ID first
         if (!id || id.trim() === '') {
-            alert('Product ID is missing. Please try refreshing the page.');
+            alert('معرف المنتج مفقود. يرجى تحديث الصفحة.');
             return;
         }
 
         // Validate ID format (MongoDB ObjectId is 24 characters)
         if (id.length !== 24 || !/^[0-9a-fA-F]{24}$/.test(id)) {
-            alert('Invalid product ID format. Please check the URL.');
+            alert('تنسيق معرف المنتج غير صحيح. يرجى التحقق من الرابط.');
             return;
         }
 
         if (!userShop) {
-            alert('Shop information not loaded');
+            alert('معلومات المتجر غير محملة');
             return;
         }
 
         // Enhanced Validation
         if (!formData.title?.trim()) {
-            alert('Product title is required');
+            alert('عنوان المنتج مطلوب');
             return;
         }
 
         if (!formData.description?.trim()) {
-            alert('Product description is required');
+            alert('وصف المنتج مطلوب');
             return;
         }
 
         if (!formData.price || isNaN(formData.price) || parseFloat(formData.price) <= 0) {
-            alert('Please enter a valid price greater than 0');
+            alert('يرجى إدخال سعر صحيح أكبر من صفر');
             return;
         }
 
         // Validate shop information
         if (!userShop || (!userShop._id && !userShop.id)) {
-            alert('Shop information is missing. Please try refreshing the page.');
+            alert('معلومات المتجر مفقودة. يرجى تحديث الصفحة.');
             return;
         }
 
         try {
             setIsLoading(true);
-            setLoadingMessage('Updating product information...');
+            setLoadingMessage('جاري تحديث معلومات المنتج...');
 
             // Check if we have files to upload
             const hasFiles = logo || images.length > 0;
@@ -314,7 +314,7 @@ const EditProduct = () => {
                     productData.append('shop', String(shopId));
                     console.log('🏪 Adding shop ID:', shopId);
                 } else {
-                    throw new Error('Shop ID is missing');
+                    throw new Error('معرف المتجر مفقود');
                 }
 
                 // Add logo if selected
@@ -376,7 +376,7 @@ const EditProduct = () => {
                     productData.append('shop', String(shopId));
                     console.log('🏪 Adding shop ID:', shopId);
                 } else {
-                    throw new Error('Shop ID is missing');
+                    throw new Error('معرف المتجر مفقود');
                 }
 
                 // Add existing images if any
@@ -394,7 +394,7 @@ const EditProduct = () => {
 
             // Final validation before sending
             if (!id || id.trim() === '') {
-                throw new Error('Product ID is missing');
+                throw new Error('معرف المنتج مفقود');
             }
 
             console.log('📦 Updating product with ID:', id);
@@ -420,13 +420,13 @@ const EditProduct = () => {
             const response = await productService.updateProduct(id, productData);
             console.log('✅ Product updated successfully:', response);
 
-            alert(`Product "${formData.title}" updated successfully! 🎉`);
+            alert(`تم تحديث المنتج "${formData.title}" بنجاح! `);
             navigate(ROUTES.MANAGE_SHOP);
 
         } catch (error) {
             console.error('❌ Error updating product:', error);
 
-            let errorMessage = 'Unknown error occurred';
+            let errorMessage = 'حدث خطأ غير معروف';
             let technicalDetails = '';
 
             if (error.response) {
@@ -434,7 +434,7 @@ const EditProduct = () => {
                 const status = error.response.status;
                 const data = error.response.data;
 
-                errorMessage = data?.message || data?.error || `Server error (${status})`;
+                errorMessage = data?.message || data?.error || `خطأ في الخادم (${status})`;
                 technicalDetails = `Status: ${status}, Data: ${JSON.stringify(data)}`;
 
                 console.error('Server response:', {
@@ -446,25 +446,25 @@ const EditProduct = () => {
 
                 // Specific error handling
                 if (status === 400) {
-                    errorMessage = 'Invalid product data. Please check all fields and try again.';
+                    errorMessage = 'بيانات المنتج غير صحيحة. يرجى التحقق من جميع الحقول والمحاولة مرة أخرى.';
                 } else if (status === 401) {
-                    errorMessage = 'Authentication failed. Please log in again.';
+                    errorMessage = 'فشل في المصادقة. يرجى تسجيل الدخول مرة أخرى.';
                 } else if (status === 403) {
-                    errorMessage = 'You do not have permission to edit this product.';
+                    errorMessage = 'ليس لديك صلاحية لتعديل هذا المنتج.';
                 } else if (status === 404) {
-                    errorMessage = 'Product not found. It may have been deleted.';
+                    errorMessage = 'المنتج غير موجود. ربما تم حذفه.';
                 } else if (status === 500) {
-                    errorMessage = 'Server error. Please try again later.';
+                    errorMessage = 'خطأ في الخادم. يرجى المحاولة مرة أخرى لاحقاً.';
                 }
             } else if (error.request) {
                 // Request was made but no response received
-                errorMessage = 'Network error - please check your internet connection';
-                technicalDetails = 'No response received from server';
+                errorMessage = 'خطأ في الشبكة - يرجى التحقق من اتصال الإنترنت';
+                technicalDetails = 'لم يتم تلقي استجابة من الخادم';
                 console.error('Network error:', error.request);
             } else {
                 // Something else happened
-                errorMessage = error.message || 'Unknown error';
-                technicalDetails = error.stack || 'No additional details';
+                errorMessage = error.message || 'خطأ غير معروف';
+                technicalDetails = error.stack || 'لا توجد تفاصيل إضافية';
             }
 
             console.error('Technical details:', technicalDetails);
@@ -472,7 +472,7 @@ const EditProduct = () => {
             console.error('Product ID type:', typeof id);
             console.error('Product ID length:', id?.length);
 
-            alert(`Error updating product: ${errorMessage}\n\nPlease try again or contact support if the problem persists.`);
+            alert(`خطأ في تحديث المنتج: ${errorMessage}\n\nيرجى المحاولة مرة أخرى أو الاتصال بالدعم الفني إذا استمرت المشكلة.`);
         } finally {
             setIsLoading(false);
         }
@@ -480,14 +480,14 @@ const EditProduct = () => {
 
     if (!product) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] to-[#FFF0CC] pt-20">
+            <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] to-[#FFF0CC] pt-20" dir="rtl">
                 <div className="w-full px-4 sm:px-6 lg:px-8 py-8">
                     <div className="text-center py-20">
-                        <div className="w-20 h-20 bg-gradient-to-r from-[#C37C00] to-[#A66A00] rounded-full flex items-center justify-center mx-auto mb-6 ">
+                        <div className="w-20 h-20 bg-gradient-to-r from-[#C37C00] to-[#A66A00] rounded-full flex items-center justify-center mx-auto mb-6">
                             <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-white"></div>
                         </div>
-                        <h2 className="text-2xl font-bold text-gray-900 mb-2">Loading Product</h2>
-                        <p className="text-gray-600">Please wait while we fetch the product details...</p>
+                        <h2 className="text-2xl font-bold text-gray-900 mb-2">جاري تحميل المنتج</h2>
+                        <p className="text-gray-600">يرجى الانتظار أثناء جلب تفاصيل المنتج...</p>
                     </div>
                 </div>
             </div>
@@ -495,10 +495,10 @@ const EditProduct = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] to-[#FFF0CC] pt-20">
+        <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] to-[#FFF0CC] pt-20" dir="rtl">
             <div className="w-full px-4 sm:px-6 lg:px-8 py-8">
                 {/* Enhanced Header */}
-                <div className="bg-white rounded-2xl  border border-gray-100 p-6 mb-8">
+                <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-8">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-6">
                             <Button
@@ -506,24 +506,24 @@ const EditProduct = () => {
                                 onClick={() => navigate(ROUTES.MANAGE_SHOP)}
                                 className="flex items-center gap-2 border-[#C37C00] text-[#C37C00] hover:bg-[#C37C00] hover:text-white rounded-xl px-6 py-3 font-semibold transition-all duration-300"
                             >
-                                <ArrowLeft className="w-5 h-5" />
-                                Back to Shop Management
+                                <ArrowLeft className="w-5 h-5 rotate-180" />
+                                العودة إلى إدارة المتجر
                             </Button>
                             <div className="h-8 w-px bg-gray-300"></div>
                             <div>
                                 <h1 className="text-4xl font-bold text-gray-900 mb-1">
-                                    Edit Product
+                                    تعديل المنتج
                                 </h1>
                                 <p className="text-gray-600 text-lg">
-                                    Update product information, images, and details
+                                    تحديث معلومات المنتج والصور والتفاصيل
                                 </p>
                             </div>
                         </div>
                         <div className="hidden lg:flex items-center gap-4">
-                            <div className="text-right">
-                                <p className="text-sm text-gray-500">Last Updated</p>
+                            <div className="text-left">
+                                <p className="text-sm text-gray-500">آخر تحديث</p>
                                 <p className="font-semibold text-gray-800">
-                                    {new Date().toLocaleDateString()}
+                                    {new Date().toLocaleDateString('ar-EG')}
                                 </p>
                             </div>
                             <div className="w-12 h-12 bg-gradient-to-r from-[#C37C00] to-[#A66A00] rounded-xl flex items-center justify-center">
@@ -544,16 +544,16 @@ const EditProduct = () => {
                                         <span className="text-3xl">✨</span>
                                     </div>
                                     <div>
-                                        <h2 className="text-3xl font-bold mb-1">Current Product</h2>
+                                        <h2 className="text-3xl font-bold mb-1">المنتج الحالي</h2>
                                         <p className="text-white/90 text-lg">{product.title}</p>
                                     </div>
                                 </div>
-                                <div className="text-right">
+                                <div className="text-left">
                                     <div className="bg-white/20 rounded-xl px-4 py-2 backdrop-blur-sm">
-                                        <p className="text-sm text-white/80">Status</p>
+                                        <p className="text-sm text-white/80">الحالة</p>
                                         <div className="flex items-center gap-2">
                                             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                                            <p className="font-bold text-lg">Active</p>
+                                            <p className="font-bold text-lg">نشط</p>
                                         </div>
                                     </div>
                                 </div>
@@ -561,31 +561,31 @@ const EditProduct = () => {
                         </div>
 
                         {/* Product Content */}
-                        <div className="bg-white rounded-b-3xl  overflow-hidden">
+                        <div className="bg-white rounded-b-3xl overflow-hidden">
                             <div className="p-8">
                                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                                     {/* Main Product Image */}
                                     <div className="lg:col-span-1">
                                         <div className="relative group">
                                             {product.logoUrl ? (
-                                                <div className="relative overflow-hidden rounded-2xl ">
+                                                <div className="relative overflow-hidden rounded-2xl">
                                                     <img
                                                         src={`${import.meta.env.VITE_API_BASE_URL}/product-image/${product.logoUrl}`}
                                                         alt={product.title}
                                                         className="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-300"
                                                     />
                                                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-                                                    <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-1">
-                                                        <span className="text-sm font-semibold text-gray-800">Main Image</span>
+                                                    <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-1">
+                                                        <span className="text-sm font-semibold text-gray-800">الصورة الرئيسية</span>
                                                     </div>
                                                 </div>
                                             ) : (
-                                                <div className="w-full h-80 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex flex-col items-center justify-center ">
+                                                <div className="w-full h-80 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex flex-col items-center justify-center">
                                                     <div className="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center mb-4">
                                                         <span className="text-2xl text-gray-500">📷</span>
                                                     </div>
-                                                    <p className="text-gray-500 font-medium">No image available</p>
-                                                    <p className="text-gray-400 text-sm">Upload a new image below</p>
+                                                    <p className="text-gray-500 font-medium">لا توجد صورة متاحة</p>
+                                                    <p className="text-gray-400 text-sm">ارفع صورة جديدة أدناه</p>
                                                 </div>
                                             )}
                                         </div>
@@ -597,41 +597,48 @@ const EditProduct = () => {
                                         <div className="bg-gradient-to-r from-[#FFF8E6] to-[#FFF0CC] rounded-2xl p-6">
                                             <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
                                                 <span className="w-2 h-2 bg-[#C37C00] rounded-full"></span>
-                                                Product Information
+                                                معلومات المنتج
                                             </h3>
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                <div className="bg-white rounded-xl p-4 ">
-                                                    <p className="text-sm text-gray-500 mb-1">Price</p>
+                                                <div className="bg-white rounded-xl p-4">
+                                                    <p className="text-sm text-gray-500 mb-1">السعر</p>
                                                     <p className="text-2xl font-bold text-[#C37C00]">
                                                         {typeof product.price === 'object' && product.price?.['$numberDecimal']
-                                                            ? `${product.price['$numberDecimal']} EGP`
-                                                            : `${product.price || 'N/A'} EGP`
+                                                            ? `${product.price['$numberDecimal']} جنيه`
+                                                            : `${product.price || 'غير محدد'} جنيه`
                                                         }
                                                     </p>
                                                 </div>
                                                 {product.category && (
-                                                    <div className="bg-white rounded-xl p-4 ">
-                                                        <p className="text-sm text-gray-500 mb-1">Category</p>
-                                                        <p className="text-lg font-semibold text-gray-800 capitalize">{String(product.category)}</p>
+                                                    <div className="bg-white rounded-xl p-4">
+                                                        <p className="text-sm text-gray-500 mb-1">الفئة</p>
+                                                        <p className="text-lg font-semibold text-gray-800 capitalize">
+                                                            {String(product.category) === 'rings' ? 'خواتم' :
+                                                             String(product.category) === 'necklaces' ? 'قلائد' :
+                                                             String(product.category) === 'bracelets' ? 'أساور' :
+                                                             String(product.category) === 'earrings' ? 'أقراط' :
+                                                             String(product.category) === 'chains' ? 'سلاسل' :
+                                                             String(product.category)}
+                                                        </p>
                                                     </div>
                                                 )}
                                                 {product.karat && (
-                                                    <div className="bg-white rounded-xl p-4 ">
-                                                        <p className="text-sm text-gray-500 mb-1">Karat</p>
+                                                    <div className="bg-white rounded-xl p-4">
+                                                        <p className="text-sm text-gray-500 mb-1">القيراط</p>
                                                         <p className="text-lg font-semibold text-gray-800">{String(product.karat)}</p>
                                                     </div>
                                                 )}
                                                 {product.weight && (
-                                                    <div className="bg-white rounded-xl p-4 ">
-                                                        <p className="text-sm text-gray-500 mb-1">Weight</p>
+                                                    <div className="bg-white rounded-xl p-4">
+                                                        <p className="text-sm text-gray-500 mb-1">الوزن</p>
                                                         <p className="text-lg font-semibold text-gray-800">
                                                             {typeof product.weight === 'object'
                                                                 ? (product.weight['$numberDecimal'] ||
                                                                     product.weight.value ||
                                                                     Object.values(product.weight)[0] ||
-                                                                    'N/A')
+                                                                    'غير محدد')
                                                                 : String(product.weight)
-                                                            } grams
+                                                            } جرام
                                                         </p>
                                                     </div>
                                                 )}
@@ -643,7 +650,7 @@ const EditProduct = () => {
                                             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6">
                                                 <h4 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
                                                     <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-                                                    Description
+                                                    الوصف
                                                 </h4>
                                                 <p className="text-gray-700 leading-relaxed">{product.description}</p>
                                             </div>
@@ -654,7 +661,7 @@ const EditProduct = () => {
                                             <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-6">
                                                 <h4 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
                                                     <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
-                                                    Design Type
+                                                    نوع التصميم
                                                 </h4>
                                                 <p className="text-gray-700 font-medium">{String(product.design_type)}</p>
                                             </div>
@@ -667,18 +674,18 @@ const EditProduct = () => {
                                     <div className="mt-8 pt-8 border-t border-gray-100">
                                         <h4 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
                                             <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                                            Current Gallery ({product.images.length} images)
+                                            المعرض الحالي ({product.images.length} صورة)
                                         </h4>
                                         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
                                             {product.images.map((image, index) => (
                                                 <div key={index} className="relative group">
                                                     <img
                                                         src={image}
-                                                        alt={`Gallery ${index + 1}`}
-                                                        className="w-full h-24 object-cover rounded-xl  group-hover: transition-all duration-200 group-hover:scale-105"
+                                                        alt={`معرض ${index + 1}`}
+                                                        className="w-full h-24 object-cover rounded-xl group-hover:scale-105 transition-all duration-200"
                                                     />
                                                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 rounded-xl transition-all duration-200"></div>
-                                                    <div className="absolute bottom-1 right-1 bg-white/90 backdrop-blur-sm rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                                    <div className="absolute bottom-1 left-1 bg-white/90 backdrop-blur-sm rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                                                         <span className="text-xs font-semibold text-gray-800">#{index + 1}</span>
                                                     </div>
                                                 </div>
@@ -694,85 +701,89 @@ const EditProduct = () => {
                 {/* Divider */}
                 <div className="flex items-center gap-4 my-8">
                     <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
-                    <div className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] text-white px-6 py-2 rounded-full font-semibold ">
-                        ✏️ Edit Product Information
+                    <div className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] text-white px-6 py-2 rounded-full font-semibold">
+                        ✏️ تعديل معلومات المنتج
                     </div>
                     <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Basic Information */}
-                    <Card className=" border-0 bg-white rounded-2xl overflow-hidden">
+                    <Card className="border-0 bg-white rounded-2xl overflow-hidden">
                         <CardHeader className="bg-gradient-to-r from-[#F8F4ED] to-[#F0E8DB] border-b border-[#E2D2B6]/30">
-                            <CardTitle className="text-2xl font-bold text-gray-900">Product Information</CardTitle>
+                            <CardTitle className="text-2xl font-bold text-gray-900">معلومات المنتج</CardTitle>
                             <CardDescription className="text-gray-600">
-                                Update the basic details of your product
+                                قم بتحديث التفاصيل الأساسية لمنتجك
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="p-8 space-y-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <label className="block text-sm font-semibold text-gray-800 mb-3">
-                                        Product Title *
+                                        عنوان المنتج *
                                     </label>
                                     <Input
                                         name="title"
                                         value={formData.title}
                                         onChange={handleInputChange}
-                                        placeholder="Enter product title"
+                                        placeholder="أدخل عنوان المنتج"
                                         required
                                         className="h-12 border-2 border-gray-200 focus:border-[#C37C00] focus:ring-[#C37C00] rounded-xl text-base"
+                                        dir="rtl"
                                     />
                                 </div>
 
                                 <div>
                                     <label className="block text-sm font-semibold text-gray-800 mb-3">
-                                        Price *
+                                        السعر *
                                     </label>
                                     <Input
                                         name="price"
                                         type="number"
                                         value={formData.price}
                                         onChange={handleInputChange}
-                                        placeholder="Enter price"
+                                        placeholder="أدخل السعر"
                                         required
                                         className="h-12 border-2 border-gray-200 focus:border-[#C37C00] focus:ring-[#C37C00] rounded-xl text-base"
+                                        dir="rtl"
                                     />
                                 </div>
                             </div>
 
                             <div>
                                 <label className="block text-sm font-semibold text-gray-800 mb-3">
-                                    Description *
+                                    الوصف *
                                 </label>
                                 <textarea
                                     name="description"
                                     value={formData.description}
                                     onChange={handleInputChange}
-                                    placeholder="Describe your product..."
+                                    placeholder="صف منتجك..."
                                     className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#C37C00] focus:border-[#C37C00] text-base resize-none"
                                     rows={4}
                                     required
+                                    dir="rtl"
                                 />
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div>
                                     <label className="block text-sm font-semibold text-gray-800 mb-3">
-                                        Karat
+                                        القيراط
                                     </label>
                                     <Input
                                         name="karat"
                                         value={formData.karat}
                                         onChange={handleInputChange}
-                                        placeholder="e.g., 18K, 21K"
+                                        placeholder="مثال: 18، 21"
                                         className="h-12 border-2 border-gray-200 focus:border-[#C37C00] focus:ring-[#C37C00] rounded-xl text-base"
+                                        dir="rtl"
                                     />
                                 </div>
 
                                 <div>
                                     <label className="block text-sm font-semibold text-gray-800 mb-3">
-                                        Weight (grams)
+                                        الوزن (جرام)
                                     </label>
                                     <div className="relative">
                                         <Input
@@ -782,73 +793,76 @@ const EditProduct = () => {
                                             min="0"
                                             value={formData.weight}
                                             onChange={handleInputChange}
-                                            placeholder="e.g., 5.5, 10.25"
-                                            className="h-12 border-2 border-gray-200 focus:border-[#C37C00] focus:ring-[#C37C00] rounded-xl text-base pr-12"
+                                            placeholder="مثال: 5.5، 10.25"
+                                            className="h-12 border-2 border-gray-200 focus:border-[#C37C00] focus:ring-[#C37C00] rounded-xl text-base pl-12"
+                                            dir="rtl"
                                         />
-                                        <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm font-medium">
-                                            g
+                                        <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm font-medium">
+                                            جم
                                         </div>
                                     </div>
                                 </div>
 
                                 <div>
                                     <label className="block text-sm font-semibold text-gray-800 mb-3">
-                                        Category
+                                        الفئة
                                     </label>
                                     <select
                                         name="category"
                                         value={formData.category}
                                         onChange={handleInputChange}
                                         className="w-full h-12 px-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#C37C00] focus:border-[#C37C00] text-base"
+                                        dir="rtl"
                                     >
-                                        <option value="">{t('buttons.select_category') || 'Select category'}</option>
-                                        <option value="rings">{t('product_categories.rings')}</option>
-                                        <option value="necklaces">{t('product_categories.necklaces')}</option>
-                                        <option value="bracelets">{t('product_categories.bracelets')}</option>
-                                        <option value="earrings">{t('product_categories.earrings')}</option>
-                                        <option value="chains">{t('product_categories.chains')}</option>
+                                        <option value="">اختر الفئة</option>
+                                        <option value="rings">خواتم</option>
+                                        <option value="necklaces">قلائد</option>
+                                        <option value="bracelets">أساور</option>
+                                        <option value="earrings">أقراط</option>
+                                        <option value="chains">سلاسل</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div>
                                 <label className="block text-sm font-semibold text-gray-800 mb-3">
-                                    Design Type
+                                    نوع التصميم
                                 </label>
                                 <Input
                                     name="design_type"
                                     value={formData.design_type}
                                     onChange={handleInputChange}
-                                    placeholder="e.g., Classic, Modern, Traditional"
+                                    placeholder="مثال: كلاسيكي، عصري، تراثي"
                                     className="h-12 border-2 border-gray-200 focus:border-[#C37C00] focus:ring-[#C37C00] rounded-xl text-base"
+                                    dir="rtl"
                                 />
                             </div>
                         </CardContent>
                     </Card>
 
                     {/* Images Section */}
-                    <Card className=" border-0 bg-white rounded-2xl overflow-hidden">
+                    <Card className="border-0 bg-white rounded-2xl overflow-hidden">
                         <CardHeader className="bg-gradient-to-r from-[#F8F4ED] to-[#F0E8DB] border-b border-[#E2D2B6]/30">
-                            <CardTitle className="text-2xl font-bold text-gray-900">Product Images</CardTitle>
+                            <CardTitle className="text-2xl font-bold text-gray-900">صور المنتج</CardTitle>
                             <CardDescription className="text-gray-600">
-                                Update product images and logo
+                                قم بتحديث صور المنتج والشعار
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="p-8 space-y-8">
                             {/* Logo Upload */}
                             <div>
                                 <label className="block text-sm font-semibold text-gray-800 mb-3">
-                                    Product Logo
+                                    شعار المنتج
                                 </label>
 
                                 {/* Current Logo Display */}
                                 {product?.logoUrl && !logo && (
                                     <div className="mb-4">
-                                        <p className="text-sm text-gray-600 mb-2">Current Logo:</p>
+                                        <p className="text-sm text-gray-600 mb-2">الشعار الحالي:</p>
                                         <img
                                             src={`${import.meta.env.VITE_API_BASE_URL}/product-image/${product.logoUrl}`}
-                                            alt="Current logo"
-                                            className="w-32 h-32 object-cover rounded-xl "
+                                            alt="الشعار الحالي"
+                                            className="w-32 h-32 object-cover rounded-xl"
                                         />
                                     </div>
                                 )}
@@ -856,12 +870,12 @@ const EditProduct = () => {
                                 {/* New Logo Preview */}
                                 {logo && (
                                     <div className="mb-4">
-                                        <p className="text-sm text-gray-600 mb-2">New Logo Preview:</p>
+                                        <p className="text-sm text-gray-600 mb-2">معاينة الشعار الجديد:</p>
                                         <div className="relative inline-block">
                                             <img
                                                 src={URL.createObjectURL(logo)}
-                                                alt="New logo preview"
-                                                className="w-32 h-32 object-cover rounded-xl "
+                                                alt="معاينة الشعار الجديد"
+                                                className="w-32 h-32 object-cover rounded-xl"
                                             />
                                             <Button
                                                 type="button"
@@ -880,9 +894,9 @@ const EditProduct = () => {
                                     <div className="text-center">
                                         <Upload className="w-12 h-12 text-[#C37C00] mx-auto mb-4" />
                                         <p className="text-gray-700 mb-2">
-                                            {product?.logoUrl ? 'Upload new logo to replace current one' : 'Upload product logo'}
+                                            {product?.logoUrl ? 'ارفع شعاراً جديداً لاستبدال الحالي' : 'ارفع شعار المنتج'}
                                         </p>
-                                        <p className="text-sm text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                                        <p className="text-sm text-gray-500">PNG، JPG، GIF حتى 10 ميجابايت</p>
                                     </div>
                                     <input
                                         type="file"
@@ -898,8 +912,8 @@ const EditProduct = () => {
                                     onClick={() => document.getElementById('logo-input').click()}
                                     className="w-full mt-3 h-12 border-2 border-[#C37C00] text-[#C37C00] hover:bg-[#C37C00] hover:text-white rounded-xl font-semibold"
                                 >
-                                    <Upload className="w-4 h-4 mr-2" />
-                                    {product?.logoUrl ? 'Change Logo' : 'Choose Logo'}
+                                    <Upload className="w-4 h-4 ml-2" />
+                                    {product?.logoUrl ? 'تغيير الشعار' : 'اختيار الشعار'}
                                 </Button>
                             </div>
 
@@ -907,21 +921,21 @@ const EditProduct = () => {
                             {existingImages.length > 0 && (
                                 <div>
                                     <label className="block text-sm font-semibold text-gray-800 mb-3">
-                                        Current Images
+                                        الصور الحالية
                                     </label>
                                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                                         {existingImages.map((image, index) => (
                                             <div key={index} className="relative group">
                                                 <img
                                                     src={image}
-                                                    alt={`Current ${index + 1}`}
-                                                    className="w-full h-32 object-cover rounded-xl  group-hover: transition- duration-200"
+                                                    alt={`الحالية ${index + 1}`}
+                                                    className="w-full h-32 object-cover rounded-xl group-hover:scale-105 transition-transform duration-200"
                                                 />
                                                 <Button
                                                     type="button"
                                                     variant="destructive"
                                                     size="sm"
-                                                    className="absolute top-2 right-2 w-7 h-7 p-0 rounded-full  opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                                                    className="absolute top-2 left-2 w-7 h-7 p-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"
                                                     onClick={() => removeExistingImage(index)}
                                                 >
                                                     <X className="w-3 h-3" />
@@ -935,13 +949,13 @@ const EditProduct = () => {
                             {/* New Images Upload */}
                             <div>
                                 <label className="block text-sm font-semibold text-gray-800 mb-3">
-                                    Add New Images
+                                    إضافة صور جديدة
                                 </label>
                                 <div className="border-2 border-dashed border-[#C37C00]/30 rounded-xl p-6 bg-gradient-to-br from-[#FFF8E6] to-[#FFF0CC]">
                                     <div className="text-center">
                                         <Upload className="w-12 h-12 text-[#C37C00] mx-auto mb-4" />
-                                        <p className="text-gray-700 mb-2">Add additional images</p>
-                                        <p className="text-sm text-gray-500">Select multiple images at once</p>
+                                        <p className="text-gray-700 mb-2">إضافة صور إضافية</p>
+                                        <p className="text-sm text-gray-500">اختر عدة صور في نفس الوقت</p>
                                     </div>
                                     <input
                                         type="file"
@@ -958,29 +972,29 @@ const EditProduct = () => {
                                     onClick={() => document.getElementById('images-input').click()}
                                     className="w-full mt-3 h-12 border-2 border-[#C37C00] text-[#C37C00] hover:bg-[#C37C00] hover:text-white rounded-xl font-semibold"
                                 >
-                                    <Upload className="w-4 h-4 mr-2" />
-                                    Add New Images
+                                    <Upload className="w-4 h-4 ml-2" />
+                                    إضافة صور جديدة
                                 </Button>
 
                                 {/* New Images Preview */}
                                 {images.length > 0 && (
                                     <div className="mt-6">
                                         <h4 className="text-sm font-semibold text-gray-800 mb-3">
-                                            New Images Preview ({images.length} images)
+                                            معاينة الصور الجديدة ({images.length} صورة)
                                         </h4>
                                         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                                             {images.map((image, index) => (
                                                 <div key={index} className="relative group">
                                                     <img
                                                         src={URL.createObjectURL(image)}
-                                                        alt={`New ${index + 1}`}
-                                                        className="w-full h-32 object-cover rounded-xl  group-hover: transition- duration-200"
+                                                        alt={`جديدة ${index + 1}`}
+                                                        className="w-full h-32 object-cover rounded-xl group-hover:scale-105 transition-transform duration-200"
                                                     />
                                                     <Button
                                                         type="button"
                                                         variant="destructive"
                                                         size="sm"
-                                                        className="absolute top-2 right-2 w-7 h-7 p-0 rounded-full  opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                                                        className="absolute top-2 left-2 w-7 h-7 p-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"
                                                         onClick={() => removeImage(index)}
                                                     >
                                                         <X className="w-3 h-3" />
@@ -995,22 +1009,22 @@ const EditProduct = () => {
                     </Card>
 
                     {/* Submit Buttons */}
-                    <div className="bg-white rounded-2xl  border-0 p-8">
+                    <div className="bg-white rounded-2xl border-0 p-8">
                         <div className="flex flex-col sm:flex-row gap-4">
                             <Button
                                 type="submit"
                                 disabled={isLoading}
-                                className="flex-1 h-14 bg-gradient-to-r from-[#C37C00] via-[#A66A00] to-[#8A5700] hover:from-[#A66A00] hover:via-[#8A5700] hover:to-[#6D4500] text-white rounded-xl font-bold text-lg  hover: transition-all duration-300 transform hover:scale-105"
+                                className="flex-1 h-14 bg-gradient-to-r from-[#C37C00] via-[#A66A00] to-[#8A5700] hover:from-[#A66A00] hover:via-[#8A5700] hover:to-[#6D4500] text-white rounded-xl font-bold text-lg hover:scale-105 transition-all duration-300 transform"
                             >
                                 {isLoading ? (
                                     <>
-                                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+                                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white ml-3"></div>
                                         {loadingMessage}
                                     </>
                                 ) : (
                                     <>
-                                        <Save className="w-5 h-5 mr-3" />
-                                        Update Product
+                                        <Save className="w-5 h-5 ml-3" />
+                                        تحديث المنتج
                                     </>
                                 )}
                             </Button>
@@ -1020,11 +1034,11 @@ const EditProduct = () => {
                                 onClick={() => navigate(ROUTES.MANAGE_SHOP)}
                                 className="h-14 border-2 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 rounded-xl font-semibold text-lg px-8"
                             >
-                                Cancel
+                                إلغاء
                             </Button>
                         </div>
                         <p className="text-sm text-gray-500 text-center mt-4">
-                            Make sure all required fields are filled before updating the product
+                            تأكد من ملء جميع الحقول المطلوبة قبل تحديث المنتج
                         </p>
                     </div>
                 </form>
