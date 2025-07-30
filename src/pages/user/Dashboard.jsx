@@ -39,7 +39,7 @@ import { useTranslation } from "react-i18next";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { user, isShopOwner, isRegularUser } = useAuth();
+  const { user, isShopOwner, isRegularUser , reloadUser, updateUser} = useAuth();
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("overview");
   const [loading, setLoading] = useState(true);
@@ -60,6 +60,12 @@ const Dashboard = () => {
   const [shopInfo, setShopInfo] = useState(null);
 
   useEffect(() => {
+    (async () => {
+    const newUSer = await reloadUser();
+    console.log(`new user: ${JSON.stringify(newUSer)}`);
+    
+    updateUser(newUSer);
+    })();
     if (isRegularUser) {
       navigate("/");
       return;
@@ -81,9 +87,9 @@ const Dashboard = () => {
           setShopInfo(shopData.data);
         } else {
           const userStats = await dashboardService.getUserStats();
-          const userActivity = await dashboardService.getUserActivity();
+          // const userActivity = await dashboardService.getUserActivity();
           setStats((prev) => ({ ...prev, ...userStats.data }));
-          setRecentActivity(userActivity.data || []);
+          // setRecentActivity(userActivity.data || []);
         }
 
         // Fetch shops count
@@ -736,11 +742,11 @@ const Dashboard = () => {
                       className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-2 rounded-lg mb-2"
                       onClick={() => navigate("/owner-payment")}
                     >
-                      💳 ادفع الآن لتفعيل المتجر
+                    ادفع  30$ الآن لتفعيل المتجر
                     </Button>
-                    <p className="text-xs text-blue-600">
+                    {/* <p className="text-xs text-blue-600">
                       💰 رسوم التفعيل: 100 جنيه • 🔒 دفع آمن ومشفر
-                    </p>
+                    </p> */}
                   </div>
                 )}
 
@@ -999,7 +1005,15 @@ const Dashboard = () => {
               <div className="space-y-3">
                 <Button
                   className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow transition-all duration-300"
-                  onClick={() => navigate(ROUTES.TIME_MANAGEMENT)}
+                  onClick={() => {
+                     if (shopInfo?.requestStatus === "approved" && user?.paid) {
+                      navigate(ROUTES.TIME_MANAGEMENT);
+                    } else {
+                      alert(
+                        "يجب موافقة الأدمن على المتجر وإتمام الدفع أولاً للوصول إلى QR Code"
+                      );
+                    }
+                  }}
                   aria-label="Manage all appointments"
                 >
                   <Clock className="w-4 h-4 mr-2" />

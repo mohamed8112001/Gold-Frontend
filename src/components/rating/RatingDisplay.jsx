@@ -109,7 +109,7 @@ const RatingDisplay = ({ shopId, shopName, onRatingsUpdate }) => {
 
   if (loading) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-4 text-left">
         {[...Array(3)].map((_, index) => (
           <Card key={index} className="animate-pulse">
             <CardContent className="p-4">
@@ -129,7 +129,7 @@ const RatingDisplay = ({ shopId, shopName, onRatingsUpdate }) => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6"dir="rtl" lang="ar">
       {/* Rating Form Modal */}
       {showRatingForm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -173,7 +173,7 @@ const RatingDisplay = ({ shopId, shopName, onRatingsUpdate }) => {
           </Card>
         ) : (
           ratings.map((rating) => (
-            <Card key={rating._id} className="hover: transition-colors">
+            <Card key={rating._id} className="hover: transition-colors ">
               <CardContent className="p-4">
                 <div className="flex items-start gap-4">
                   {/* User Avatar */}

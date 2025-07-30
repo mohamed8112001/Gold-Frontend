@@ -83,7 +83,7 @@ export const AuthProvider = ({ children }) => {
     try {
       setIsLoading(true);
       const response = await authService.register(userData);
-      const userDataFromStorage = authService.getCurrentUser();
+      const userDataFromStorage =await authService.getCurrentUser();
       setUser(userDataFromStorage);
       setIsAuthenticated(true);
       return response;

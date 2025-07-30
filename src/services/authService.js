@@ -119,9 +119,32 @@ export const authService = {
   },
 
   // Get current user
-  getCurrentUser: () => {
-    const user = localStorage.getItem(STORAGE_KEYS.USER);
-    return user ? JSON.parse(user) : null;
+  getCurrentUser: async () => {
+    const token = localStorage.getItem(STORAGE_KEYS.TOKEN);
+    console.log(`token: ${token}`);
+    
+    try {
+      const userResponse = await api.get("/user/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(`userResponse: ${JSON.stringify(userResponse)}`);
+      
+      localStorage.setItem(
+        STORAGE_KEYS.USER,
+        JSON.stringify(userResponse.data.data)
+      );
+
+      console.log(`user: ${localStorage.getItem(STORAGE_KEYS.USER)}`);
+      
+      return JSON.parse(localStorage.getItem(STORAGE_KEYS.USER));
+    } catch (userError) {
+      console.warn("Failed to fetch user data:", userError);
+      return null;
+    }
+
+    return null;
   },
 
   // Get token

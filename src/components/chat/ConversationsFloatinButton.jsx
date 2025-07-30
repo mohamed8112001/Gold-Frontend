@@ -586,12 +586,12 @@ const ConversationsFloatinButton = ({ user, onOpenChat, onSelectConversation }) 
       
       if (isSeller) {
         // For sellers, open the seller chat interface
-        setSelectedConversation(conversation);
+        setSelectedConversation(conversation.product);
         setShowSellerChatInterface(true);
       } else {
         // For customers, use the original callback
         if (onSelectConversation) {
-          onSelectConversation(conversation);
+          onSelectConversation(conversation.product);
         } else if (onOpenChat) {
           onOpenChat(conversation);
         }

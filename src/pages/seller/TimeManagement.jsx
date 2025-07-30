@@ -68,10 +68,19 @@ const TimeManagement = () => {
         isBooked: true,
       }));
 
-      console.log("Setting booked times:", bookedTimes);
-      setAllTimes(bookedTimes);
+      const shopId = user.shop?._id;
+      console.log("Getting available times for shop:", shopId);
+      const availableRes = await bookingService.getAvailableTimesForShop(shopId);
+      console.log("Available times response:", availableRes);
 
-      // TODO: Add available times when we figure out the correct endpoint
+      const availableTimes = (availableRes || []).map((time) => ({
+        ...time,
+        isBooked: false,
+      }));
+
+      const combinedTimes = [...availableTimes, ...bookedTimes];
+      console.log("Setting all times:", combinedTimes);
+      setAllTimes(combinedTimes);
     } catch (error) {
       console.error("Error loading times:", error);
       setAllTimes([]);

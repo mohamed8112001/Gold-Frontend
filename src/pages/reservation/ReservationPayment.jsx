@@ -132,7 +132,7 @@ const ReservationPayment = () => {
 
   if (!product || !amounts) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] to-[#FFF0CC] flex items-center justify-center">
+      <div className="min-h-screen bg-[#F8F9FA] flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">خطأ في البيانات</h2>
           <Button onClick={() => navigate(ROUTES.HOME)}>العودة للرئيسية</Button>
@@ -143,7 +143,7 @@ const ReservationPayment = () => {
 
   if (paymentSuccess) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] to-[#FFF0CC] py-12">
+      <div className="min-h-screen bg-[#F8F9FA] py-12">
         <div className="max-w-2xl mx-auto px-4">
           <div className="bg-white rounded-3xl p-8 shadow-lg text-center">
             <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-6" />
@@ -184,117 +184,126 @@ const ReservationPayment = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] to-[#FFF0CC] py-12">
-      <div className="max-w-4xl mx-auto px-4">
+    <div className="min-h-screen bg-[#F8F9FA] py-12 font-cairo">
+      <div className="container mx-auto px-4">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">احجز المنتج الآن</h1>
           <p className="text-gray-600">ادفع 10% فقط واحتفظ بالمنتج لمدة 7 أيام</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 rtl">
           {/* تفاصيل المنتج */}
-          <div className="bg-white rounded-3xl p-6 shadow-lg">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-              <Package className="w-6 h-6 mr-2" />
+          <div className="bg-white rounded-3xl p-8 shadow-lg">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+              <Package className="w-6 h-6" />
               تفاصيل المنتج
             </h2>
             
-            <div className="flex items-start gap-4 mb-6">
+            <div className="flex items-start gap-6 mb-6">
               {product.logoUrl && (
                 <img 
                   src={product.logoUrl} 
                   alt={product.name}
-                  className="w-20 h-20 object-cover rounded-lg"
+                  className="w-32 h-32 object-cover rounded-lg"
                 />
               )}
               <div className="flex-1">
-                <h3 className="text-xl font-semibold text-gray-900">{product.name}</h3>
-                <p className="text-gray-600 mt-1">{product.description}</p>
-                <Badge className="mt-2 bg-green-100 text-green-800">متوفر</Badge>
+                <h3 className="text-2xl font-semibold text-gray-900">{product.name}</h3>
+                <p className="text-gray-600 mt-2 text-lg">{product.description}</p>
+                <Badge className="mt-3 bg-green-100 text-green-800 text-base px-4 py-1">متوفر</Badge>
               </div>
             </div>
 
-            <Separator className="my-4" />
+            <Separator className="my-6" />
 
-            <div className="space-y-3">
-              <div className="flex justify-between">
-                <span className="text-gray-600">العيار:</span>
+            <div className="space-y-4 text-lg">
+              <div className="flex justify-between items-center bg-gray-50 p-4 rounded-xl">
+                <span className="text-gray-600">العيار</span>
                 <span className="font-semibold">{product.karat || 'غير محدد'}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">الوزن:</span>
+              <div className="flex justify-between items-center bg-gray-50 p-4 rounded-xl">
+                <span className="text-gray-600">الوزن</span>
                 <span className="font-semibold">{product.weight || 'غير محدد'} جرام</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">المتجر:</span>
+              <div className="flex justify-between items-center bg-gray-50 p-4 rounded-xl">
+                <span className="text-gray-600">المتجر</span>
                 <span className="font-semibold">{product.shopName || 'غير محدد'}</span>
               </div>
             </div>
           </div>
 
           {/* تفاصيل الدفع */}
-          <div className="bg-white rounded-3xl p-6 shadow-lg">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-              <Calculator className="w-6 h-6 mr-2" />
+          <div className="bg-white rounded-3xl p-8 shadow-lg">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+              <Calculator className="w-6 h-6" />
               تفاصيل الدفع
             </h2>
 
-            <div className="bg-gray-50 rounded-2xl p-4 mb-6">
-              <div className="space-y-3">
-                <div className="flex justify-between text-lg">
-                  <span>إجمالي سعر المنتج:</span>
-                  <span className="font-bold">{amounts.totalAmount} جنيه</span>
+            <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl p-6 mb-8">
+              <div className="space-y-4">
+                <div className="flex justify-between text-xl">
+                  <span>إجمالي سعر المنتج</span>
+                  <span className="font-bold text-gray-900">{amounts.totalAmount} جنيه</span>
                 </div>
                 <Separator />
-                <div className="flex justify-between text-lg text-blue-600">
-                  <span>المبلغ المطلوب الآن (10%):</span>
+                <div className="flex justify-between text-xl text-blue-700">
+                  <span>المبلغ المطلوب الآن (10%)</span>
                   <span className="font-bold">{amounts.reservationAmount} جنيه</span>
                 </div>
-                <div className="flex justify-between text-lg text-gray-600">
-                  <span>المبلغ المتبقي:</span>
+                <div className="flex justify-between text-xl text-gray-600">
+                  <span>المبلغ المتبقي</span>
                   <span className="font-bold">{amounts.remainingAmount} جنيه</span>
                 </div>
               </div>
             </div>
 
-            <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-6">
-              <div className="flex items-start gap-3">
-                <Clock className="w-5 h-5 text-blue-500 mt-1" />
-                <div>
-                  <h4 className="font-semibold text-blue-800">شروط الحجز</h4>
-                  <ul className="text-blue-700 text-sm mt-2 space-y-1">
-                    <li>• فترة الحجز: 7 أيام من تاريخ الدفع</li>
-                    <li>• دفع المبلغ المتبقي عند الاستلام</li>
-                    <li>• إمكانية الإلغاء في أي وقت</li>
+            <div className="bg-blue-50 border-2 border-blue-200 rounded-2xl p-6 mb-8">
+              <div className="flex items-start gap-4">
+                <Clock className="w-6 h-6 text-blue-600 mt-1" />
+                <div className="flex-1">
+                  <h4 className="font-semibold text-blue-900 text-xl mb-4">شروط الحجز</h4>
+                  <ul className="text-blue-800 text-lg space-y-3">
+                    <li className="flex items-center gap-2">
+                      <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                      فترة الحجز: 7 أيام من تاريخ الدفع
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                      دفع المبلغ المتبقي عند الاستلام
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                      إمكانية الإلغاء في أي وقت
+                    </li>
                   </ul>
                 </div>
               </div>
             </div>
 
             {error && (
-              <div className="bg-red-50 border border-red-200 rounded-2xl p-4 mb-6">
-                <p className="text-red-700 text-center">{error}</p>
+              <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-6 mb-8">
+                <p className="text-red-700 text-center text-lg">{error}</p>
               </div>
             )}
 
             <Button
               onClick={handlePayment}
               disabled={loading}
-              className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white py-4 rounded-2xl font-bold text-lg"
+              className="w-full bg-gradient-to-l from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white py-6 rounded-2xl font-bold text-xl"
             >
               {loading ? (
                 'جاري المعالجة...'
               ) : (
-                <>
-                  <CreditCard className="w-5 h-5 mr-2" />
-                  ادفع {amounts.reservationAmount} جنيه واحجز المنتج
-                </>
+                <div className="flex items-center justify-center gap-3">
+                  <CreditCard className="w-6 h-6" />
+                  <span>ادفع {amounts.reservationAmount} جنيه واحجز المنتج</span>
+                </div>
               )}
             </Button>
 
-            <div className="flex items-center justify-center gap-2 mt-4 text-sm text-gray-500">
-              <Shield className="w-4 h-4" />
-              <span>دفع آمن ومشفر</span>
+            <div className="flex items-center justify-center gap-3 mt-6 text-base text-gray-500">
+              <Shield className="w-5 h-5" />
+              <span>دفع آمن ومشفر بالكامل</span>
             </div>
           </div>
         </div>

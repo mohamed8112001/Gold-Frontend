@@ -145,7 +145,7 @@ const ReservationSuccess = () => {
       <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] to-[#FFF0CC] flex items-center justify-center">
         <div className="max-w-md mx-auto text-center">
           <div className="bg-white rounded-3xl p-8 shadow-lg">
-            <div className="text-6xl mb-4">{isAuthError ? '🔐' : '❌'}</div>
+            {/* <div className="text-6xl mb-4">{isAuthError ? '🔐' : ''}</div> */}
             <h2 className="text-2xl font-bold text-red-600 mb-4">
               {isAuthError ? 'مشكلة في المستخدم' : 'خطأ في إنشاء الحجز'}
             </h2>

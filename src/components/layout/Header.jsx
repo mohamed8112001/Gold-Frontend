@@ -14,14 +14,26 @@ import { useTranslation } from "react-i18next";
 
 const Header = () => {
   const navigate = useNavigate();
-  const { user, isAuthenticated, isAdmin, isShopOwner, logout, isRegularUser } = useAuth();
+  const { user, isAuthenticated, isAdmin, isShopOwner, logout, isRegularUser , reloadUser, updateUser} = useAuth();
   const { t } = useTranslation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
+  useEffect(() => {
+    (async () => {
+      const newUSer = await reloadUser();
+      console.log(`new user: ${JSON.stringify(newUSer)}`);
+      
+      updateUser(newUSer);
+    })();
+    const controlHeader = () => {
+      const currentScrollY = window.scrollY;    
+    }
+  }, []);
   // Enhanced scroll detection effect
   useEffect(() => {
+    
     const controlHeader = () => {
       const currentScrollY = window.scrollY;
 
@@ -262,7 +274,7 @@ const Header = () => {
                 <div className="flex items-center space-x-reverse space-x-2 sm:space-x-3 md:space-x-4">
                   <Button
                     variant="outline"
-                    onClick={() => navigate("/login")}
+                    // onClick={() => navigate("/login")}
                     className="border-2 border-amber-300/50 bg-white text-amber-700 hover:text-white hover:bg-gradient-to-r hover:from-amber-400 hover:to-amber-600 font-semibold font-tajawal px-3 sm:px-4 md:px-6 lg:px-8 py-2 sm:py-3 rounded-xl transition-all duration-300 hover:shadow-md text-xs sm:text-sm md:text-base"
                   >
                     <span className="flex items-center gap-1 sm:gap-2">
@@ -408,7 +420,7 @@ const Header = () => {
                 <div className="flex flex-col space-y-3 xs:space-y-4 px-3 xs:px-4 mt-4 xs:mt-5 sm:mt-6">
                   <Button
                     variant="outline"
-                   onClick={() => window.location.href = '/login'}
+                  //  onClick={() => window.location.href = '/login'}
                     className="w-full border-2 border-amber-300/50 text-amber-700 hover:text-white hover:bg-gradient-to-r hover:from-amber-400 hover:to-amber-600 font-semibold text-sm xs:text-base py-2 xs:py-3 rounded-xl transition-all duration-300 hover:shadow-md"
                   >
                      تسجيل الدخول

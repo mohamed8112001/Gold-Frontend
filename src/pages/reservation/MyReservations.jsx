@@ -19,9 +19,10 @@ import { reservationService } from '../../services/reservationService';
 import { useAuth } from '../../context/AuthContext';
 import { ROUTES } from '../../utils/constants';
 import { API_BASE_URL } from '../../utils/constants';
+
 const MyReservations = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth(); // إضافة authLoading
 
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -29,12 +30,15 @@ const MyReservations = () => {
   const [cancellingId, setCancellingId] = useState(null);
 
   useEffect(() => {
+    // انتظار انتهاء تحميل بيانات المصادقة قبل التحقق من المستخدم
+    if (authLoading) return;
+    
     if (!user) {
       navigate(ROUTES.LOGIN);
       return;
     }
     loadReservations();
-  }, [user, navigate]);
+  }, [user, navigate, authLoading]); // إضافة authLoading للـ dependencies
 
   const loadReservations = async () => {
     try {
@@ -110,7 +114,8 @@ const MyReservations = () => {
     });
   };
 
-  if (loading) {
+  // عرض loading لحين انتهاء تحميل بيانات المصادقة
+  if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] to-[#FFF0CC] flex items-center justify-center">
         <div className="text-center">
@@ -121,21 +126,27 @@ const MyReservations = () => {
     );
   }
 
+  // التأكد من وجود المستخدم بعد انتهاء تحميل المصادقة
+  if (!user) {
+    return null; // أو يمكن عرض رسالة خطأ هنا
+  }
+
   return (
     <div className="min-h-screen relative bg-gradient-to-br from-[#F8F4ED] via-white to-[#F0E8DB] py-12">
     
-    {/* تأثير خلفية ذهبي هادي */}
-    <div className="absolute inset-0 bg-[#C37C00]/5 pointer-events-none z-0"></div>
+      {/* تأثير خلفية ذهبي هادي */}
+      <div className="absolute inset-0 bg-[#C37C00]/5 pointer-events-none z-0"></div>
 
-    {/* دوائر زخرفية بلون ذهبي خفيف */}
-    <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-0">
-      <div className="absolute top-10 left-10 w-32 h-32 bg-[#C37C00]/10 rounded-full blur-2xl"></div>
-      <div className="absolute top-20 right-20 w-24 h-24 bg-[#C37C00]/10 rounded-full blur-xl"></div>
-      <div className="absolute bottom-10 left-1/3 w-40 h-40 bg-[#C37C00]/10 rounded-full blur-[80px]"></div>
-    </div>
+      {/* دوائر زخرفية بلون ذهبي خفيف */}
+      <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-0">
+        <div className="absolute top-10 left-10 w-32 h-32 bg-[#C37C00]/10 rounded-full blur-2xl"></div>
+        <div className="absolute top-20 right-20 w-24 h-24 bg-[#C37C00]/10 rounded-full blur-xl"></div>
+        <div className="absolute bottom-10 left-1/3 w-40 h-40 bg-[#C37C00]/10 rounded-full blur-[80px]"></div>
+      </div>
 
-    {/* المحتوى الفعلي */}
-    <div className="relative z-10 max-w-6xl mx-auto px-4">  <div className="text-center mb-8">
+      {/* المحتوى الفعلي */}
+      <div className="relative z-10 max-w-6xl mx-auto px-4">
+        <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">حجوزاتي</h1>
           <p className="text-gray-600">إدارة جميع حجوزات المنتجات الخاصة بك</p>
         </div>
@@ -171,14 +182,13 @@ const MyReservations = () => {
               <div key={reservation.id} className="bg-white rounded-3xl p-6 shadow-lg">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-start gap-4">
-     {reservation.productId?.images?.length > 0 && (
-  <img
-    src={`${VITE_API_BASE_URL}/uploads/product-images/${reservation.productId.images[0]}`}
-    alt={reservation.productId.title}
-    className="w-16 h-16 object-cover rounded-lg"
-  />
-)}
-
+                    {reservation.productId?.images?.length > 0 && (
+                      <img
+                        src={`${API_BASE_URL}/uploads/product-images/${reservation.productId.images[0]}`}
+                        alt={reservation.productId.title}
+                        className="w-16 h-16 object-cover rounded-lg"
+                      />
+                    )}
 
                     <div>
                       <h3 className="text-xl font-bold text-gray-900">

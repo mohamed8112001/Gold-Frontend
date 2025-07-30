@@ -21,49 +21,8 @@ import { useAuth } from "@/context/AuthContext.jsx";
 import { useTranslation } from "react-i18next";
 
 const Home = () => {
-  const sampleProducts = [
-    {
-      name: "خاتم الماس فاخر",
-      price: "12,000",
-      weight: "3.5",
-      category: "خواتم",
-      image:
-        "https://images.unsplash.com/photo-1605100804763-247f67b3557e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Z29sZCUyMHJpbmd8ZW58MHx8MHx8&w=1000&q=80",
-    },
-    {
-      name: "سلسلة ذهب عيار 21",
-      price: "15,500",
-      weight: "7.2",
-      category: "سلاسل",
-      image:
-        "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8Z29sZCUyMG5lY2tsYWNlfGVufDB8fDB8fA%3D%3D&w=1000&q=80",
-    },
-    {
-      name: "أسورة ذهب مع الماس",
-      price: "18,200",
-      weight: "5.8",
-      category: "أساور",
-      image:
-        "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Z29sZCUyMGJyYWNlbGV0fGVufDB8fDB8fA%3D%3D&w=1000&q=80",
-    },
-    {
-      name: "حلق ذهب مميز",
-      price: "8,900",
-      weight: "4.1",
-      category: "حلقان",
-      image:
-        "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8Z29sZCUyMGVhcnJpbmdzfGVufDB8fDB8fA%3D%3D&w=1000&q=80",
-    },
-    {
-      name: "خاتم زفاف كلاسيك",
-      price: "9,500",
-      weight: "4.5",
-      category: "خواتم",
-      image:
-        "https://images.unsplash.com/photo-1595781572981-d63151b232ed?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OXx8Z29sZCUyMHJpbmd8ZW58MHx8MHx8&w=1000&q=80",
-    },
-  ];
-  const { user } = useAuth();
+
+  const { user, reloadUser, updateUser } = useAuth();
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -131,6 +90,12 @@ const Home = () => {
   ];
 
   useEffect(() => {
+    (async () => {
+    const newUSer = await reloadUser();
+    console.log(`new user: ${JSON.stringify(newUSer)}`);
+    
+    updateUser(newUSer);
+    })();
     loadFeaturedShops();
     loadStats();
   }, []);
@@ -968,12 +933,10 @@ const Home = () => {
           <h2 className="text-5xl font-bold font-cairo mb-6 bg-gradient-to-r from-[#C37C00] to-[#A66A00] bg-clip-text text-transparent">
             هل أنت مستعد لاكتشاف مجوهراتك المثالية؟
           </h2>
-
           <p className="text-xl font-tajawal text-[#5C4A1C] mb-8 max-w-2xl mx-auto">
             انضم إلى آلاف العملاء الراضين الذين وجدوا مجوهرات أحلامهم من خلال
             ديبلا
           </p>
-
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
               size="lg"
@@ -982,7 +945,6 @@ const Home = () => {
             >
               استكشف المتاجر الآن
             </Button>
-
             <Button
               size="lg"
               variant="outline"

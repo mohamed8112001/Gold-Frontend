@@ -105,7 +105,7 @@ const AdminDashboard = () => {
           ? shopsResponse
           : shopsResponse.data || [];
         console.log("تم تحميل متاجر الإدارة:", shopsData);
-      } catch (error) {
+      } catch (error) {Upda
         console.warn(
           "فشل نقطة نهاية الإدارة، جارٍ المحاولة بنقطة النهاية العادية:",
           error

@@ -748,7 +748,7 @@ const ShopDetails = () => {
                     </TabsContent>
 
 
-                    <TabsContent value="reviews" className="px-4 sm:px-6 lg:px-8 py-8">
+                    <TabsContent value="reviews" className="px-4 sm:px-6 lg:px-8 py-8 text-right">
                         <div className="mb-8">
                             <h2 className="text-3xl font-bold text-gray-900 mb-2">تقييمات العملاء</h2>
                             <p className="text-gray-600">اقرأ ما يقوله عملاؤنا عن تجربتهم</p>
