@@ -504,7 +504,7 @@ const ShopList = () => {
                       {/* Clear Filters Button */}
 
                       {/* Search Button */}
-                      <Button
+                      {/* <Button
                         type="submit"
                         className="
                       text-white 
@@ -520,7 +520,7 @@ const ShopList = () => {
                       >
                         <Search className="w-4 h-4 ml-1" />
                         بحث
-                      </Button>
+                      </Button> */}
                     </div>
                   </div>
                 </div>

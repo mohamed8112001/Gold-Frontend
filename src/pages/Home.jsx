@@ -586,7 +586,7 @@ const Home = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <Button
                 variant="outline"
-                onClick={() => navigate("/shops?category=gold")}
+                onClick={() => navigate("/products?category=rings")}
                 className="group bg-white border-2 border-secondary-200 hover:border-[#FFD700] text-gray-800 hover:text-[#FFD700] transition-all duration-300 p-6 h-auto rounded-2xl shadow-sm hover:shadow-md"
               >
                 <div className="text-center">
@@ -601,7 +601,7 @@ const Home = () => {
 
               <Button
                 variant="outline"
-                onClick={() => navigate("/shops?category=necklaces")}
+                onClick={() => navigate("/products?category=chains")}
                 className="group bg-white border-2 border-secondary-200 hover:border-[#FFD700] text-gray-800 hover:text-[#FFD700] transition-all duration-300 p-6 h-auto rounded-2xl shadow-sm hover:shadow-md"
               >
                 <div className="text-center">
@@ -609,14 +609,13 @@ const Home = () => {
                     <span className="text-3xl">📿</span>
                   </div>
                   <div className="font-semibold font-tajawal text-sm">
-                    قلائد
-                  </div>
+سلاسل                   </div>
                 </div>
               </Button>
 
               <Button
                 variant="outline"
-                onClick={() => navigate("/shops?category=bracelets")}
+                onClick={() => navigate("/products?category=bracelets")}
                 className="group bg-white border-2 border-secondary-200 hover:border-[#FFD700] text-gray-800 hover:text-[#FFD700] transition-all duration-300 p-6 h-auto rounded-2xl shadow-sm hover:shadow-md"
               >
                 <div className="text-center">
@@ -631,7 +630,7 @@ const Home = () => {
 
               <Button
                 variant="outline"
-                onClick={() => navigate("/shops?category=earrings")}
+                onClick={() => navigate("/products?category=earrings")}
                 className="group bg-white border-2 border-secondary-200 hover:border-[#FFD700] text-gray-800 hover:text-[#FFD700] transition-all duration-300 p-6 h-auto rounded-2xl shadow-sm hover:shadow-md"
               >
                 <div className="text-center">

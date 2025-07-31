@@ -451,9 +451,9 @@ const ManageShop = () => {
             </div>
 
             {products.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1  md:grid-cols-2 lg:grid-cols-3  gap-6 ">
                 {products.map((product) => (
-                  <Card key={product.id} className="overflow-hidden shadow-md hover:shadow-xl transition-shadow">
+                  <Card key={product.id} className="overflow-hidden shadow-md hover:shadow-xl  transition-shadow">
                     <div className="relative">
                       <img
                         src={
@@ -693,7 +693,7 @@ const ManageShop = () => {
                             <Download className="w-4 h-4 ml-2" />
                             تحميل الرمز
                           </Button>
-                          <Button
+                          {/* <Button
                             onClick={generateNewQRCode}
                             variant="outline"
                             className="w-full border-[#C37C00] text-[#C37C00] hover:bg-[#FFF0CC] font-cairo"
@@ -701,7 +701,7 @@ const ManageShop = () => {
                           >
                             <QrCode className="w-4 h-4 ml-2" />
                             إنشاء رمز جديد
-                          </Button>
+                          </Button> */}
                         </div>
                       </div>
                     </div>

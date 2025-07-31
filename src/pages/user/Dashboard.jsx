@@ -834,6 +834,7 @@ const Dashboard = () => {
       {/* Main Management Sections - Side by Side Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Section 1: Shop Management */}
+        {/* 
         <div className="bg-white rounded-xl p-6 shadow border border-gray-200 hover:shadow-xl transition-shadow duration-300">
           <div className="flex items-center mb-6">
             <div className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] p-3 rounded-lg mr-4">
@@ -877,6 +878,76 @@ const Dashboard = () => {
                   إدارة المتاجر الموجودة
                 </Button>
               </div>
+            </div>
+          </div>
+        </div> */}
+        <div className="bg-white rounded-xl p-6 shadow border border-gray-200 hover:shadow-xl transition-shadow duration-300">
+          <div className="">
+            <div className="flex items-center justify-between mb-3 ">
+              <div className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] p-3 rounded-lg ">
+                <Store className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-xl font-bold font-cairo text-[#8A5700] ml-50">
+                إدارة المتاجر
+              </h3>
+              {/* <p className="text-sm font-tajawal text-[#A66A00]">
+                إنشاء وإدارة المتاجر
+              </p> */}
+            </div>
+            <div className="flex items-center justify-between mb-3">
+              {/* <span className="text-sm font-medium text-[#A66A00]">
+                المتاجر النشطة
+              </span> */}
+              {/* <span className="text-2xl font-bold text-[#8A5700]">
+                {stats.shops || 0}
+              </span> */}
+            </div>
+
+            {shopInfo && (
+              <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                <div className="flex items-start">
+                  <div className="flex-shrink-0"></div>
+                  <div className="mr-3">
+                    <h4 className="text-sm font-medium text-blue-800">
+                      حالة المتجر
+                    </h4>
+                    <div className="mt-1 text-sm text-blue-700">
+                      <p>لديك متجر مُنشأ بالفعل. يمكنك إدارة المتجر الحالي.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="space-y-3">
+              <Button
+                className={`w-full rounded-lg shadow-md hover:shadow transition-all duration-300 ${
+                  shopInfo
+                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    : "bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white"
+                }`}
+                onClick={() => {
+                  if (!shopInfo) {
+                    navigate(ROUTES.CREATE_SHOP);
+                  } else {
+                    alert("لديك متجر مُنشأ بالفعل. يمكنك إدارة المتجر الحالي.");
+                  }
+                }}
+                disabled={!!shopInfo}
+                aria-label="Add new shop"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                {shopInfo ? "تم إنشاء المتجر" : "إضافة متجر جديد"}
+              </Button>
+              <Button
+                variant="outline"
+                className="w-full border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] rounded-lg shadow-md hover:shadow transition-all duration-300"
+                onClick={() => navigate(ROUTES.MANAGE_SHOP)}
+                aria-label="Manage existing shops"
+              >
+                <Edit className="w-4 h-4 mr-2" />
+                إدارة المتاجر الموجودة
+              </Button>
             </div>
           </div>
         </div>
@@ -992,7 +1063,7 @@ const Dashboard = () => {
                   <Package className="w-4 h-4 mr-2" />
                   إدارة المنتجات
                 </Button>
-                <Button
+                {/* <Button
                   variant="outline"
                   className={`w-full rounded-lg shadow-md hover:shadow transition-all duration-300 ${
                     shopInfo?.requestStatus === "approved" && user?.paid
@@ -1015,7 +1086,7 @@ const Dashboard = () => {
                 >
                   <QrCode className="w-4 h-4 mr-2" />
                   QR Code المتجر
-                </Button>
+                </Button> */}
               </div>
             </div>
           </div>
@@ -1023,22 +1094,36 @@ const Dashboard = () => {
 
         {/* Section 3: Appointment Management */}
         <div className="bg-white rounded-xl p-6 shadow border border-gray-200 hover:shadow-xl transition-shadow duration-300">
-          <div className="flex items-center mb-6">
-            <div className="bg-gradient-to-r from-[#8A5700] to-[#6D552C] p-3 rounded-lg mr-4">
-              <Clock className="w-6 h-6 text-white" />
-            </div>
-            <div className="mr-5">
-              <h3 className="text-xl font-bold font-cairo text-[#8A5700]">
-                إدارة المواعيد
-              </h3>
-              <p className="text-sm font-tajawal text-[#A66A00]">
-                إدارة المواعيد وعرض الحجوزات
-              </p>
+          {/* Section 1: Shop Management */}
+          <div className="bg-white rounded-xl p-6 shadow border border-gray-200 hover:shadow-xl transition-shadow duration-300">
+            <div className="flex items-center mb-6">
+              <div className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] p-3 rounded-lg mr-4">
+                <Store className="w-6 h-6 text-white" />
+              </div>
+              <div className="mr-5">
+                <h3 className="text-xl font-bold font-cairo text-[#8A5700]">
+                  إدارة المواعيد
+                </h3>
+                <p className="text-sm font-tajawal text-[#A66A00]">
+                  ادارة المواعيد والحجوزات
+                </p>
+              </div>
             </div>
           </div>
           <div className="space-y-4">
             <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
               <div className="space-y-3">
+                {/* {!shopInfo && (
+                  <Button
+                    className="w-full bg-gradient-to-r from-[#28A745] to-[#20A943] hover:from-[#20A943] hover:to-[#1E7E34] text-white rounded-lg shadow-md hover:shadow transition-all duration-300"
+                    onClick={() => navigate(ROUTES.CREATE_SHOP)}
+                    aria-label="Create new shop"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    إنشاء محل جديد
+                  </Button>
+                )} */}
+
                 <Button
                   className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow transition-all duration-300"
                   onClick={() => {
@@ -1058,19 +1143,21 @@ const Dashboard = () => {
               </div>
               <div className="space-y-3">
                 <Button
-    variant="outline"
-    className="w-full border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] rounded-lg mt-3 shadow-md hover:shadow transition-all duration-300"
-    onClick={() => {
-      if (shopInfo?.requestStatus === "approved" && user?.paid) {
-        navigate(ROUTES.MANAGE_BOOKINGS);
-      } else {
-        alert("يجب موافقة الأدمن على المتجر وإتمام الدفع أولاً لإدارة المواعيد");
-      }
-    }}
-    aria-label="Manage all appointments"
-  >
-     المواعيد المحجوزة
-  </Button>
+                  variant="outline"
+                  className="w-full border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] rounded-lg mt-3 shadow-md hover:shadow transition-all duration-300"
+                  onClick={() => {
+                    if (shopInfo?.requestStatus === "approved" && user?.paid) {
+                      navigate(ROUTES.MANAGE_BOOKINGS);
+                    } else {
+                      alert(
+                        "يجب موافقة الأدمن على المتجر وإتمام الدفع أولاً لإدارة المواعيد"
+                      );
+                    }
+                  }}
+                  aria-label="Manage all appointments"
+                >
+                  المواعيد المحجوزة
+                </Button>
               </div>
             </div>
           </div>
