@@ -526,9 +526,7 @@ const EditProduct = () => {
                                     {new Date().toLocaleDateString('ar-EG')}
                                 </p>
                             </div>
-                            <div className="w-12 h-12 bg-gradient-to-r from-[#C37C00] to-[#A66A00] rounded-xl flex items-center justify-center">
-                                <span className="text-white text-xl">✏️</span>
-                            </div>
+                           
                         </div>
                     </div>
                 </div>
@@ -702,7 +700,7 @@ const EditProduct = () => {
                 <div className="flex items-center gap-4 my-8">
                     <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
                     <div className="bg-gradient-to-r from-[#C37C00] to-[#A66A00] text-white px-6 py-2 rounded-full font-semibold">
-                        ✏️ تعديل معلومات المنتج
+                         تعديل معلومات المنتج
                     </div>
                     <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
                 </div>

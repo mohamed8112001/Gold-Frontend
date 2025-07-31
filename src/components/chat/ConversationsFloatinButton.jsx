@@ -21,6 +21,18 @@ const ConversationsModal = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
 
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [isOpen]);
+
   const filteredConversations = conversations.filter(conv =>
     conv.participants.some(p => p.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
     conv.lastMessage?.content.toLowerCase().includes(searchTerm.toLowerCase())
@@ -52,7 +64,7 @@ const ConversationsModal = ({
 
   return (
     <div 
-      className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn"
+      className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn"
       dir="rtl"
       style={{ fontFamily: "'Noto Sans Arabic', 'Cairo', 'Amiri', 'Tajawal', sans-serif" }}
     >

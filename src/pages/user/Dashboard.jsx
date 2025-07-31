@@ -62,11 +62,15 @@ const Dashboard = () => {
 
   useEffect(() => {
     (async () => {
-      const newUSer = await reloadUser();
-      console.log(`new user: ${JSON.stringify(newUSer)}`);
-
-      updateUser(newUSer);
+      try {
+        const newUser = await reloadUser();
+        console.log(`new user: ${JSON.stringify(newUser)}`);
+        updateUser(newUser);
+      } catch (error) {
+        console.error("Error reloading user:", error);
+      }
     })();
+
     if (isRegularUser) {
       navigate("/");
       return;
@@ -80,18 +84,62 @@ const Dashboard = () => {
         setError(null);
 
         if (isShopOwner) {
+          // Load shop owner data
           const shopStats = await dashboardService.getShopOwnerStats();
           const shopActivity = await dashboardService.getShopOwnerActivity();
           const shopData = await dashboardService.getShopOwnerShop();
-          setStats((prev) => ({ ...prev, ...shopStats.data }));
-          setRecentActivity(shopActivity.data || []);
-          setShopInfo(shopData.data);
-          console.log(`status of Shop${shopData.data.id}`);
+
+          // Safe access to shopStats data
+          if (shopStats?.data) {
+            setStats((prev) => ({ ...prev, ...shopStats.data }));
+          }
+
+          // Safe access to activity data
+          setRecentActivity(shopActivity?.data || []);
+
+          // Safe access to shop data with null check
+          if (shopData?.data) {
+            setShopInfo(shopData.data);
+            console.log(`Shop data loaded: ${JSON.stringify(shopData.data)}`);
+
+            // Only try to fetch products if shop data exists and has an ID
+            if (shopData.data.id || shopData.data._id) {
+              const shopId = shopData.data.id || shopData.data._id;
+
+              // Fetch products count
+              try {
+                const token = localStorage.getItem("token");
+                const headers = token
+                  ? { Authorization: `Bearer ${token}` }
+                  : {};
+                const productsResponse = await fetch(
+                  `${import.meta.env.VITE_API_BASE_URL}/product/shop/${shopId}`,
+                  { headers }
+                );
+
+                if (productsResponse.ok) {
+                  const products = await productsResponse.json();
+                  setStats((prev) => ({
+                    ...prev,
+                    products: products.length || 0,
+                  }));
+                } else {
+                  console.warn(`Product API error: ${productsResponse.status}`);
+                }
+              } catch (error) {
+                console.warn("Failed to fetch products count:", error.message);
+              }
+            }
+          } else {
+            console.warn("Shop data is null or undefined");
+            setShopInfo(null);
+          }
         } else {
+          // Load regular user data
           const userStats = await dashboardService.getUserStats();
-          // const userActivity = await dashboardService.getUserActivity();
-          setStats((prev) => ({ ...prev, ...userStats.data }));
-          // setRecentActivity(userActivity.data || []);
+          if (userStats?.data) {
+            setStats((prev) => ({ ...prev, ...userStats.data }));
+          }
         }
 
         // Fetch shops count
@@ -107,28 +155,15 @@ const Dashboard = () => {
           console.warn("Failed to fetch shops count:", error.message);
         }
 
-        // Fetch products count
+        // Fetch bookings
         try {
-          const token = localStorage.getItem("token");
-          const headers = token ? { Authorization: `Bearer ${token}` } : {};
-          const productsResponse = await fetch(
-            `${import.meta.env.VITE_API_BASE_URL}/product/shop/${shopInfo.id}`,
-            { headers }
-          );
-          console.log(`shop data: ${shopInfo.products.length}`)
-          if (!productsResponse.ok) {
-            throw new Error(`Product API error: ${productsResponse.status}`);
-          }
-
-          const products = await productsResponse.json();
-          setStats((prev) => ({ ...prev, products: products.length || 0 })); // Ensure products count is updated
+          const bookingsData = await dashboardService.getBookings();
+          setBookings(bookingsData?.data || []);
         } catch (error) {
-          console.warn("Failed to fetch products count:", error.message);
+          console.warn("Failed to fetch bookings:", error.message);
         }
-
-        const bookingsData = await dashboardService.getBookings();
-        setBookings(bookingsData.data || []);
       } catch (err) {
+        console.error("Dashboard data loading error:", err);
         setError(err.message || "خطأ في تحميل البيانات");
       } finally {
         setLoading(false);
@@ -144,7 +179,7 @@ const Dashboard = () => {
     try {
       await dashboardService.cancelBooking(bookingId);
       const bookingsData = await dashboardService.getBookings();
-      setBookings(bookingsData.data || []);
+      setBookings(bookingsData?.data || []);
       alert("تم إلغاء الحجز بنجاح");
     } catch (err) {
       setError(err.message || "خطأ في إلغاء الحجز");
@@ -156,8 +191,13 @@ const Dashboard = () => {
     try {
       if (isShopOwner) {
         const shopData = await dashboardService.getShopOwnerShop();
-        setShopInfo(shopData.data);
-        console.log("Shop data refreshed:", shopData.data);
+        if (shopData?.data) {
+          setShopInfo(shopData.data);
+          console.log("Shop data refreshed:", shopData.data);
+        } else {
+          console.warn("Refreshed shop data is null");
+          setShopInfo(null);
+        }
       }
     } catch (err) {
       console.error("Error refreshing shop data:", err);
@@ -190,6 +230,11 @@ const Dashboard = () => {
   );
 
   const handlePayment = async (shopId) => {
+    if (!shopId) {
+      alert("معرف المتجر غير متوفر");
+      return;
+    }
+
     const confirmed = window.confirm(
       "هل تريد المتابعة لدفع رسوم تفعيل المتجر؟\n\n" +
         "💰 المبلغ: 100 جنيه\n" +
@@ -218,7 +263,7 @@ const Dashboard = () => {
     try {
       await dashboardService.removeFromFavorites(favoriteId);
       const favoritesData = await dashboardService.getFavorites();
-      setFavorites(favoritesData.data || []);
+      setFavorites(favoritesData?.data || []);
       alert("تم حذف العنصر من المفضلة");
     } catch (err) {
       setError(err.message || "خطأ في حذف العنصر من المفضلة");
@@ -746,9 +791,6 @@ const Dashboard = () => {
                     >
                       ادفع 30$ الآن لتفعيل المتجر
                     </Button>
-                    {/* <p className="text-xs text-blue-600">
-                      💰 رسوم التفعيل: 100 جنيه • 🔒 دفع آمن ومشفر
-                    </p> */}
                   </div>
                 )}
 
@@ -990,20 +1032,12 @@ const Dashboard = () => {
                 إدارة المواعيد
               </h3>
               <p className="text-sm font-tajawal text-[#A66A00]">
-                إدارة المواعيد
+                إدارة المواعيد وعرض الحجوزات
               </p>
             </div>
           </div>
           <div className="space-y-4">
             <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-              <div className="flex items-center justify-between mb-3">
-                {/* <span className="text-sm font-medium text-[#A66A00]">
-                  الحجوزات النشطة
-                </span>
-                <span className="text-2xl font-bold text-[#8A5700]">
-                  {stats.bookings || 0}
-                </span> */}
-              </div>
               <div className="space-y-3">
                 <Button
                   className="w-full bg-gradient-to-r from-[#C37C00] to-[#A66A00] hover:from-[#A66A00] hover:to-[#8A5700] text-white rounded-lg shadow-md hover:shadow transition-all duration-300"
@@ -1012,7 +1046,7 @@ const Dashboard = () => {
                       navigate(ROUTES.TIME_MANAGEMENT);
                     } else {
                       alert(
-                        "يجب موافقة الأدمن على المتجر وإتمام الدفع أولاً للوصول إلى QR Code"
+                        "يجب موافقة الأدمن على المتجر وإتمام الدفع أولاً لإدارة المواعيد"
                       );
                     }
                   }}
@@ -1021,59 +1055,27 @@ const Dashboard = () => {
                   <Clock className="w-4 h-4 mr-2" />
                   إدارة جميع المواعيد
                 </Button>
-                {/* <Button
-                  variant="outline"
-                  className="w-full border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] rounded-lg shadow-md hover:shadow transition-all duration-300"
-                  onClick={() => setActiveTab("available-times")}
-                  aria-label="View time management"
-                >
-                  <Calendar className="w-4 h-4 mr-2" />
-                  عرض إدارة الوقت
-                </Button> */}
+              </div>
+              <div className="space-y-3">
+                <Button
+    variant="outline"
+    className="w-full border-[#C37C00] text-[#C37C00] hover:bg-[#FFF8E6] rounded-lg mt-3 shadow-md hover:shadow transition-all duration-300"
+    onClick={() => {
+      if (shopInfo?.requestStatus === "approved" && user?.paid) {
+        navigate(ROUTES.MANAGE_BOOKINGS);
+      } else {
+        alert("يجب موافقة الأدمن على المتجر وإتمام الدفع أولاً لإدارة المواعيد");
+      }
+    }}
+    aria-label="Manage all appointments"
+  >
+     المواعيد المحجوزة
+  </Button>
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Section 4: Appointment Statistics */}
-      {/* <div className="bg-white rounded-xl p-6 shadow border border-gray-200">
-        <div className="flex items-center mb-6">
-          <div className="bg-gradient-to-r from-[#6D552C] to-[#49391D] p-3 rounded-lg mr-4">
-            <BarChart3 className="w-6 h-6 text-white" />
-          </div>
-            <div className='mr-5'>
-            <h3 className="text-2xl font-bold font-cairo text-[#8A5700]">إحصائيات المواعيد</h3>
-            <p className="font-tajawal text-[#A66A00]">تتبع أداء المواعيد والمقاييس الخاصة بك</p>
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 text-center">
-            <div className="flex items-center justify-center mb-3 space-x-2">
-              <CheckCircle className="w-8 h-8 text-green-600 mr-2" />
-              <span className="text-sm font-medium text-[#A66A00]">محجوز</span>
-            </div>
-            <span className="text-3xl font-bold text-[#8A5700]">{stats.bookings || 0}</span>
-            <p className="text-xs text-[#A66A00] mt-1">المواعيد المؤكدة</p>
-          </div>
-          <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 text-center">
-            <div className="flex items-center justify-center mb-3 space-x-2">
-              <Clock className="w-8 h-8 text-blue-600 mr-2 " />
-              <span className="text-sm font-medium text-[#A66A00]">متاح</span>
-            </div>
-            <span className="text-3xl font-bold text-[#8A5700]">{stats.availableTimes || 0}</span>
-            <p className="text-xs text-[#A66A00] mt-1">أوقات زمنية متاحة</p>
-          </div>
-          <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 text-center">
-            <div className="flex items-center justify-center mb-3 space-x-2">
-              <Calendar className="w-8 h-8 text-purple-600 mr-2" />
-              <span className="text-sm font-medium text-[#A66A00]">الإجمالي</span>
-            </div>
-            <span className="text-3xl font-bold text-[#8A5700]">{(stats.bookings || 0) + (stats.availableTimes || 0)}</span>
-            <p className="text-xs text-[#A66A00] mt-1">جميع المواعيد</p>
-          </div>
-        </div>
-      </div> */}
     </div>
   );
 
@@ -1261,9 +1263,6 @@ const Dashboard = () => {
                         <Clock className="w-4 h-4 text-[#8A6C37]" />
                         <span>{timeSlot.time}</span>
                       </div>
-                      {/* <div className="text-sm text-[#92723A]">
-                        ({timeSlot.duration} دقايق)
-                      </div> */}
                       <span
                         className={`text-xs px-2 py-1 rounded-full ${
                           isShopOwner
@@ -1428,9 +1427,6 @@ const Dashboard = () => {
                         alt="QR Code"
                         className="w-64 h-64 mx-auto mb-4"
                       />
-                      {/* <p className="text-sm text-gray-600 mb-4">
-                        يؤدي إلى: {qrCode.qrCodeUrl}
-                      </p> */}
                     </div>
                   </div>
 
@@ -1496,8 +1492,6 @@ const Dashboard = () => {
 
   const tabs = [
     { id: "overview", label: t("dashboard.overview"), icon: BarChart3 },
-    // { id: 'bookings', label: isShopOwner ? t('dashboard.bookings') : t('dashboard.my_bookings'), icon: Calendar },
-    // { id: 'available-times', label: isShopOwner ? t('dashboard.available_times') : t('dashboard.my_appointments'), icon: Clock },
     ...(isShopOwner
       ? [
           { id: "shop", label: t("dashboard.shop_management"), icon: Store },
@@ -1601,7 +1595,6 @@ const Dashboard = () => {
 
           <div className="pt-4">
             {activeTab === "overview" && <OverviewTab />}
-            {/* {activeTab === 'bookings' && <BookingsTab />} */}
             {activeTab === "shop" && isShopOwner && <ShopOwnerTab />}
             {activeTab === "ratings" && isShopOwner && <ManageRatings />}
             {activeTab === "qr-code" && isShopOwner && <QRCodeTab />}

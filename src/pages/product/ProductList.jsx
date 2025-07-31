@@ -493,6 +493,27 @@ const ProductList = () => {
       }
       return "السعر غير محدد";
     };
+const handleAddToFavorites = async (productId) => {
+        if (!user) {
+            alert('Please login first to add product to favorites');
+            navigate(ROUTES.LOGIN);
+            return;
+        }
+
+        try {
+            await productService.addToFavorites(productId);
+            setProducts(prev => prev.map(product => {
+                const currentProductId = product.id || product._id;
+                return currentProductId === productId
+                    ? { ...product, isFavorited: true }
+                    : product;
+            }));
+            alert('Product added to favorites successfully!');
+        } catch (error) {
+            console.error('Error adding to favorites:', error);
+            alert('Error adding product to favorites');
+        }
+    };
 
     // Safe data extraction
     const safeProduct = {
@@ -579,7 +600,22 @@ const ProductList = () => {
                   fallback.style.display = "flex";
                 }
               }}
+
+              
             />
+             <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            
+                                {!isShopOwner && (<Button
+                                    size="sm"
+                                    variant="ghost"
+                                    className="absolute top-3 right-3 bg-white/90 hover:bg-white backdrop-blur-sm rounded-full w-9 h-9 p-0  opacity-0 group-hover:opacity-100 transition-all duration-300"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleAddToFavorites(productId);
+                                    }}
+                                >
+                                    <Heart className={`w-4 h-4 ${product.isFavorited ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
+                                </Button>)}
 
             {/* Premium fallback image */}
             <div className="fallback-image absolute inset-0 bg-gradient-to-br from-[#FFF0CC] via-[#FFF8E6] to-[#FFE6B3] hidden items-center justify-center group-hover:from-[#FFE6B3] group-hover:via-[#FFF0CC] group-hover:to-[#FFDB99] transition-all duration-700">

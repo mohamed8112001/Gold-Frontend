@@ -47,6 +47,18 @@ const SellerChatInterface = ({
   const messagesEndRef = useRef(null);
   const messageInputRef = useRef(null);
 
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [isOpen]);
+
   // Get other participant (customer)
   const otherParticipant = conversationData?.participants?.find(p => p._id !== user?._id);
 
@@ -338,7 +350,7 @@ const SellerChatInterface = ({
 
   return (
     <div 
-      className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+      className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
       dir="rtl"
       style={{ fontFamily: "'Noto Sans Arabic', 'Cairo', sans-serif" }}
     >

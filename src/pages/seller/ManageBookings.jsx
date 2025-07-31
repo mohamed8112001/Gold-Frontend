@@ -89,8 +89,8 @@ const ManageBookings = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-8 pt-20">
       <div className="max-w-6xl mx-auto px-4">
-        <div className="bg-white rounded-lg p-6 mb-8">
-          <div className="flex justify-between items-center mb-6">
+        <div className="bg-white rounded-lg p-6">
+          {/* <div className="flex justify-between items-center mb-6">
             <h1 className="text-3xl font-bold text-gray-900">إدارة المواعيد</h1>
             <button
               onClick={() => setShowAddForm(!showAddForm)}
@@ -99,7 +99,7 @@ const ManageBookings = () => {
               <Plus size={20} />
               إضافة موعد متاح
             </button>
-          </div>
+          </div> */}
 
           {/* Add Time Slot Form */}
           {showAddForm && (
@@ -173,7 +173,7 @@ const ManageBookings = () => {
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
                       <div className="flex items-center gap-4 mb-3">
-                        <div className="flex items-center gap-2 text-blue-600">
+                        <div className="flex items-center gap-2 text-yellow-800">
                           <Calendar size={18} />
                           <span className="font-medium">{formatDate(booking.date)}</span>
                         </div>

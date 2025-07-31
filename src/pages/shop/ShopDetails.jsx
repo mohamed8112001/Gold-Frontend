@@ -282,7 +282,7 @@ const ShopDetails = () => {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
-                    {!isShopOwner && (<Button
+                    {!isShopOwner && !isAdmin && (<Button
                         size="sm"
                         variant="ghost"
                         className="absolute top-3 right-3 bg-white/90 hover:bg-white backdrop-blur-sm rounded-full w-9 h-9 p-0  opacity-0 group-hover:opacity-100 transition-all duration-300"
@@ -815,16 +815,13 @@ const ShopDetails = () => {
 
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300">
                 <div className="absolute bottom-4 right-4 left-4 text-white text-right">
-                  <p className="font-bold text-lg mb-1">{imageName}</p>
-                  <p className="text-sm text-white/80">اضغط لعرض الصورة بالحجم الكامل</p>
-                  {isLocalImage && (
+                  {/* <p className="font-bold text-lg mb-1">{imageName}</p> */}
+                  {/* <p className="text-sm text-white/80">اضغط لعرض الصورة بالحجم الكامل</p> */}
+                  {/* {isLocalImage && (
                     <p className="text-xs text-[#C5A56D] mt-1">محفوظة محلياً</p>
-                  )}
+                  )} */}
                 </div>
 
-                <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm rounded-full p-2">
-                  <Eye className="w-5 h-5 text-white" />
-                </div>
               </div>
 
               {(user?.role === 'admin' || user?.id === safeShop.ownerId || user?._id === safeShop.ownerId) && (
@@ -841,7 +838,7 @@ const ShopDetails = () => {
             </div>
 
             <div className="mt-4 text-center">
-              <h3 className="font-semibold text-gray-900 text-lg">{imageName}</h3>
+              {/* <h3 className="font-semibold text-gray-900 text-lg">{imageName}</h3> */}
               <p className="text-gray-500 text-sm mt-1">معرض {safeShop.name}</p>
             </div>
           </div>

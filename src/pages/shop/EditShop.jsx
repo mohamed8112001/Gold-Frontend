@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button.jsx';
 import { Input } from '@/components/ui/input.jsx';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.jsx';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.jsx';
-import { ArrowLeft, Upload, X, Plus } from 'lucide-react';
+import { ArrowRight, Upload, X, Plus } from 'lucide-react';
 import { shopService } from '../../services/shopService.js';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { ROUTES } from '../../utils/constants.js';
@@ -129,7 +129,7 @@ const EditShop = () => {
 
         } catch (error) {
             console.error('Error loading shop:', error);
-            alert('Error loading store data. Please try again.');
+            alert('خطأ في تحميل بيانات المتجر. يرجى إعادة المحاولة.');
             navigate(ROUTES.MANAGE_SHOP);
         } finally {
             setIsLoading(false);
@@ -257,7 +257,7 @@ const EditShop = () => {
 
         // Validation
         if (!formData.name || !formData.description || !formData.address || !formData.phone) {
-            alert('Please fill in all required fields');
+            alert('يرجى ملء جميع الحقول المطلوبة');
             return;
         }
 
@@ -334,17 +334,12 @@ const EditShop = () => {
                 await shopService.updateShop(shop.id || shop._id, shopData);
             }
 
-            // TODO: Handle image upload separately if needed
-            // if (image) {
-            //     await shopService.uploadShopImage(shop.id, image);
-            // }
-
-            alert('Store information updated successfully!');
+            alert('تم تحديث معلومات المتجر بنجاح!');
             navigate(ROUTES.MANAGE_SHOP);
 
         } catch (error) {
             console.error('Error updating shop:', error);
-            alert('Error updating store: ' + (error.message || 'Unknown error'));
+            alert('خطأ في تحديث المتجر: ' + (error.message || 'خطأ غير معروف'));
         } finally {
             setIsLoading(false);
         }
@@ -355,14 +350,14 @@ const EditShop = () => {
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#C37C00] mx-auto mb-4"></div>
-                    <p className="text-gray-600">Loading store data...</p>
+                    <p className="text-gray-600">جاري تحميل بيانات المتجر...</p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] via-[#FFFBF0] to-[#FFF0CC]">
+        <div className="min-h-screen bg-gradient-to-br from-[#FFF8E6] via-[#FFFBF0] to-[#FFF0CC]" dir="rtl">
             {/* Professional Header Section */}
             <div className="relative bg-gradient-to-r from-[#C37C00] via-[#D4860A] to-[#A66A00] text-white">
                 <div className="absolute inset-0 bg-black/10"></div>
@@ -374,25 +369,25 @@ const EditShop = () => {
                                 onClick={() => navigate(ROUTES.MANAGE_SHOP)}
                                 className="flex items-center gap-2 text-white hover:bg-white/20 border border-white/30 rounded-xl px-6 py-3 font-semibold transition-all duration-300"
                             >
-                                <ArrowLeft className="w-5 h-5" />
-                                Back to Dashboard
+                                <ArrowRight className="w-5 h-5" />
+                                العودة للوحة التحكم
                             </Button>
                             <div className="h-8 w-px bg-white/30"></div>
                             <div>
                                 <h1 className="text-4xl font-bold mb-2">
-                                    Edit Store Profile
+                                    تعديل ملف المتجر
                                 </h1>
                                 <p className="text-white/90 text-lg">
-                                    Update your store information, location, and media
+                                    تحديث معلومات المتجر والموقع والوسائط
                                 </p>
                             </div>
                         </div>
                         <div className="hidden lg:flex items-center gap-4">
-                            <div className="text-right">
-                                <p className="text-sm text-white/80">Store Status</p>
+                            <div className="text-left">
+                                <p className="text-sm text-white/80">حالة المتجر</p>
                                 <div className="flex items-center gap-2 mt-1">
                                     <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                                    <span className="text-sm font-semibold">Active</span>
+                                    <span className="text-sm font-semibold">نشط</span>
                                 </div>
                             </div>
                         </div>
@@ -403,7 +398,7 @@ const EditShop = () => {
             <div className="w-full px-4 sm:px-6 lg:px-8 py-8 -mt-6 relative z-10">
 
                 {/* Professional Form Container */}
-                <div className="bg-white rounded-3xl  border border-gray-100 overflow-hidden">
+                <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden">
                     <form onSubmit={handleSubmit}>
                         <Tabs defaultValue="basic" className="w-full">
                             {/* Enhanced Tab Navigation */}
@@ -411,38 +406,38 @@ const EditShop = () => {
                                 <TabsList className="grid w-full grid-cols-4 bg-transparent h-auto p-2">
                                     <TabsTrigger
                                         value="basic"
-                                        className="data-[state=active]:bg-white data-[state=active]:text-[#C37C00] data-[state=active]: rounded-xl py-4 px-6 font-bold text-base transition-all duration-300 hover:bg-white/50"
+                                        className="data-[state=active]:bg-white data-[state=active]:text-[#C37C00] data-[state=active]:shadow-lg rounded-xl py-4 px-6 font-bold text-base transition-all duration-300 hover:bg-white/50"
                                     >
                                         <div className="flex items-center gap-2">
                                             <div className="w-2 h-2 bg-current rounded-full"></div>
-                                            Basic Info
+                                            المعلومات الأساسية
                                         </div>
                                     </TabsTrigger>
                                     <TabsTrigger
                                         value="details"
-                                        className="data-[state=active]:bg-white data-[state=active]:text-[#C37C00] data-[state=active]: rounded-xl py-4 px-6 font-bold text-base transition-all duration-300 hover:bg-white/50"
+                                        className="data-[state=active]:bg-white data-[state=active]:text-[#C37C00] data-[state=active]:shadow-lg rounded-xl py-4 px-6 font-bold text-base transition-all duration-300 hover:bg-white/50"
                                     >
                                         <div className="flex items-center gap-2">
                                             <div className="w-2 h-2 bg-current rounded-full"></div>
-                                            Details
+                                            التفاصيل
                                         </div>
                                     </TabsTrigger>
                                     <TabsTrigger
                                         value="location"
-                                        className="data-[state=active]:bg-white data-[state=active]:text-[#C37C00] data-[state=active]: rounded-xl py-4 px-6 font-bold text-base transition-all duration-300 hover:bg-white/50"
+                                        className="data-[state=active]:bg-white data-[state=active]:text-[#C37C00] data-[state=active]:shadow-lg rounded-xl py-4 px-6 font-bold text-base transition-all duration-300 hover:bg-white/50"
                                     >
                                         <div className="flex items-center gap-2">
                                             <div className="w-2 h-2 bg-current rounded-full"></div>
-                                            Location
+                                            الموقع
                                         </div>
                                     </TabsTrigger>
                                     <TabsTrigger
                                         value="media"
-                                        className="data-[state=active]:bg-white data-[state=active]:text-[#C37C00] data-[state=active]: rounded-xl py-4 px-6 font-bold text-base transition-all duration-300 hover:bg-white/50"
+                                        className="data-[state=active]:bg-white data-[state=active]:text-[#C37C00] data-[state=active]:shadow-lg rounded-xl py-4 px-6 font-bold text-base transition-all duration-300 hover:bg-white/50"
                                     >
                                         <div className="flex items-center gap-2">
                                             <div className="w-2 h-2 bg-current rounded-full"></div>
-                                            Media
+                                            الوسائط
                                         </div>
                                     </TabsTrigger>
                                 </TabsList>
@@ -453,12 +448,12 @@ const EditShop = () => {
                                     {/* Progress Indicator */}
                                     <div className="flex items-center justify-between mb-8">
                                         <div>
-                                            <h2 className="text-3xl font-bold text-gray-900 mb-2">Basic Information</h2>
-                                            <p className="text-gray-600">Essential details about your store</p>
+                                            <h2 className="text-3xl font-bold text-gray-900 mb-2">المعلومات الأساسية</h2>
+                                            <p className="text-gray-600">التفاصيل الأساسية حول متجرك</p>
                                         </div>
                                         <div className="flex items-center gap-2 bg-gradient-to-r from-[#C37C00]/10 to-[#A66A00]/10 px-4 py-2 rounded-full">
                                             <div className="w-2 h-2 bg-[#C37C00] rounded-full"></div>
-                                            <span className="text-sm font-semibold text-[#C37C00]">Step 1 of 4</span>
+                                            <span className="text-sm font-semibold text-[#C37C00]">الخطوة 1 من 4</span>
                                         </div>
                                     </div>
 
@@ -468,18 +463,18 @@ const EditShop = () => {
                                             <div className="space-y-3">
                                                 <label className="flex items-center gap-2 text-sm font-bold text-gray-800">
                                                     <div className="w-1.5 h-1.5 bg-[#C37C00] rounded-full"></div>
-                                                    Store Name *
+                                                    اسم المتجر *
                                                 </label>
                                                 <div className="relative">
                                                     <Input
                                                         name="name"
                                                         value={formData.name}
                                                         onChange={handleInputChange}
-                                                        placeholder="Enter your store name"
+                                                        placeholder="أدخل اسم متجرك"
                                                         required
-                                                        className="h-14 border-2 border-gray-200 focus:border-[#C37C00] focus:ring-[#C37C00] rounded-2xl text-base pl-4 pr-4 font-medium  hover: transition-all duration-200"
+                                                        className="h-14 border-2 border-gray-200 focus:border-[#C37C00] focus:ring-[#C37C00] rounded-2xl text-base pl-12 pr-4 font-medium shadow-sm hover:shadow-md transition-all duration-200"
                                                     />
-                                                    <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
+                                                    <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
                                                         <div className="w-1 h-6 bg-gradient-to-b from-[#C37C00] to-[#A66A00] rounded-full"></div>
                                                     </div>
                                                 </div>
@@ -488,18 +483,18 @@ const EditShop = () => {
                                             <div className="space-y-3">
                                                 <label className="flex items-center gap-2 text-sm font-bold text-gray-800">
                                                     <div className="w-1.5 h-1.5 bg-[#C37C00] rounded-full"></div>
-                                                    Phone Number *
+                                                    رقم الهاتف *
                                                 </label>
                                                 <div className="relative">
                                                     <Input
                                                         name="phone"
                                                         value={formData.phone}
                                                         onChange={handleInputChange}
-                                                        placeholder="Enter phone number"
+                                                        placeholder="أدخل رقم الهاتف"
                                                         required
-                                                        className="h-14 border-2 border-gray-200 focus:border-[#C37C00] focus:ring-[#C37C00] rounded-2xl text-base pl-4 pr-4 font-medium  hover: transition-all duration-200"
+                                                        className="h-14 border-2 border-gray-200 focus:border-[#C37C00] focus:ring-[#C37C00] rounded-2xl text-base pl-12 pr-4 font-medium shadow-sm hover:shadow-md transition-all duration-200"
                                                     />
-                                                    <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
+                                                    <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
                                                         <div className="w-1 h-6 bg-gradient-to-b from-[#C37C00] to-[#A66A00] rounded-full"></div>
                                                     </div>
                                                 </div>
@@ -510,19 +505,19 @@ const EditShop = () => {
                                         <div className="space-y-3">
                                             <label className="flex items-center gap-2 text-sm font-bold text-gray-800">
                                                 <div className="w-1.5 h-1.5 bg-[#C37C00] rounded-full"></div>
-                                                Store Description *
+                                                وصف المتجر *
                                             </label>
                                             <div className="relative">
                                                 <textarea
                                                     name="description"
                                                     value={formData.description}
                                                     onChange={handleInputChange}
-                                                    placeholder="Describe your store, services, and what makes you unique..."
-                                                    className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#C37C00] focus:border-[#C37C00] text-base resize-none font-medium  hover: transition-all duration-200"
+                                                    placeholder="اكتب وصفاً لمتجرك والخدمات التي تقدمها وما يميزه..."
+                                                    className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#C37C00] focus:border-[#C37C00] text-base resize-none font-medium shadow-sm hover:shadow-md transition-all duration-200"
                                                     rows={5}
                                                     required
                                                 />
-                                                <div className="absolute top-4 right-4 pointer-events-none">
+                                                <div className="absolute top-4 left-4 pointer-events-none">
                                                     <div className="w-1 h-6 bg-gradient-to-b from-[#C37C00] to-[#A66A00] rounded-full"></div>
                                                 </div>
                                             </div>
@@ -533,18 +528,18 @@ const EditShop = () => {
                                             <div className="space-y-3">
                                                 <label className="flex items-center gap-2 text-sm font-bold text-gray-800">
                                                     <div className="w-1.5 h-1.5 bg-[#C37C00] rounded-full"></div>
-                                                    Store Address *
+                                                    عنوان المتجر *
                                                 </label>
                                                 <div className="relative">
                                                     <Input
                                                         name="address"
                                                         value={formData.address}
                                                         onChange={handleInputChange}
-                                                        placeholder="Enter complete store address"
+                                                        placeholder="أدخل العنوان الكامل للمتجر"
                                                         required
-                                                        className="h-14 border-2 border-gray-200 focus:border-[#C37C00] focus:ring-[#C37C00] rounded-2xl text-base pl-4 pr-4 font-medium  hover: transition-all duration-200"
+                                                        className="h-14 border-2 border-gray-200 focus:border-[#C37C00] focus:ring-[#C37C00] rounded-2xl text-base pl-12 pr-4 font-medium shadow-sm hover:shadow-md transition-all duration-200"
                                                     />
-                                                    <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
+                                                    <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
                                                         <div className="w-1 h-6 bg-gradient-to-b from-[#C37C00] to-[#A66A00] rounded-full"></div>
                                                     </div>
                                                 </div>
@@ -553,18 +548,18 @@ const EditShop = () => {
                                             <div className="space-y-3">
                                                 <label className="flex items-center gap-2 text-sm font-bold text-gray-800">
                                                     <div className="w-1.5 h-1.5 bg-gray-400 rounded-full"></div>
-                                                    WhatsApp Number
-                                                    <span className="text-xs text-gray-500">(Optional)</span>
+                                                    رقم الواتساب
+                                                    <span className="text-xs text-gray-500">(اختياري)</span>
                                                 </label>
                                                 <div className="relative">
                                                     <Input
                                                         name="whatsapp"
                                                         value={formData.whatsapp}
                                                         onChange={handleInputChange}
-                                                        placeholder="WhatsApp number for customers"
-                                                        className="h-14 border-2 border-gray-200 focus:border-[#C37C00] focus:ring-[#C37C00] rounded-2xl text-base pl-4 pr-4 font-medium  hover: transition-all duration-200"
+                                                        placeholder="رقم الواتساب للعملاء"
+                                                        className="h-14 border-2 border-gray-200 focus:border-[#C37C00] focus:ring-[#C37C00] rounded-2xl text-base pl-12 pr-4 font-medium shadow-sm hover:shadow-md transition-all duration-200"
                                                     />
-                                                    <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
+                                                    <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
                                                         <div className="w-1 h-6 bg-gradient-to-b from-gray-400 to-gray-500 rounded-full"></div>
                                                     </div>
                                                 </div>
@@ -579,12 +574,12 @@ const EditShop = () => {
                                     {/* Progress Indicator */}
                                     <div className="flex items-center justify-between mb-8">
                                         <div>
-                                            <h2 className="text-3xl font-bold text-gray-900 mb-2">Store Details</h2>
-                                            <p className="text-gray-600">Additional information and specialties</p>
+                                            <h2 className="text-3xl font-bold text-gray-900 mb-2">تفاصيل المتجر</h2>
+                                            <p className="text-gray-600">معلومات إضافية والتخصصات</p>
                                         </div>
                                         <div className="flex items-center gap-2 bg-gradient-to-r from-[#C37C00]/10 to-[#A66A00]/10 px-4 py-2 rounded-full">
                                             <div className="w-2 h-2 bg-[#C37C00] rounded-full"></div>
-                                            <span className="text-sm font-semibold text-[#C37C00]">Step 2 of 4</span>
+                                            <span className="text-sm font-semibold text-[#C37C00]">الخطوة 2 من 4</span>
                                         </div>
                                     </div>
 
@@ -593,21 +588,21 @@ const EditShop = () => {
                                         <div className="space-y-4">
                                             <label className="flex items-center gap-2 text-sm font-bold text-gray-800">
                                                 <div className="w-1.5 h-1.5 bg-[#C37C00] rounded-full"></div>
-                                                Working Hours
+                                                ساعات العمل
                                             </label>
                                             <div className="relative">
                                                 <Input
                                                     name="workingHours"
                                                     value={formData.workingHours}
                                                     onChange={handleInputChange}
-                                                    placeholder="Example: Saturday - Thursday: 9:00 AM - 10:00 PM"
-                                                    className="h-14 border-2 border-gray-200 focus:border-[#C37C00] focus:ring-[#C37C00] rounded-2xl text-base pl-4 pr-4 font-medium  hover: transition-all duration-200"
+                                                    placeholder="مثال: السبت - الخميس: 9:00 صباحاً - 10:00 مساءً"
+                                                    className="h-14 border-2 border-gray-200 focus:border-[#C37C00] focus:ring-[#C37C00] rounded-2xl text-base pl-12 pr-4 font-medium shadow-sm hover:shadow-md transition-all duration-200"
                                                 />
-                                                <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
+                                                <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
                                                     <div className="w-1 h-6 bg-gradient-to-b from-[#C37C00] to-[#A66A00] rounded-full"></div>
                                                 </div>
                                             </div>
-                                            <p className="text-sm text-gray-500 ml-4">Let customers know when your store is open</p>
+                                            <p className="text-sm text-gray-500 mr-4">اجعل العملاء يعرفون متى يكون متجرك مفتوحاً</p>
                                         </div>
 
                                         {/* Specialties Section */}
@@ -615,10 +610,10 @@ const EditShop = () => {
                                             <div className="flex items-center justify-between">
                                                 <label className="flex items-center gap-2 text-sm font-bold text-gray-800">
                                                     <div className="w-1.5 h-1.5 bg-[#C37C00] rounded-full"></div>
-                                                    Store Specialties
+                                                    تخصصات المتجر
                                                 </label>
                                                 <span className="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-                                                    {formData.specialties.filter(s => s.trim()).length} specialties
+                                                    {formData.specialties.filter(s => s.trim()).length} تخصص
                                                 </span>
                                             </div>
 
@@ -629,10 +624,10 @@ const EditShop = () => {
                                                             <Input
                                                                 value={specialty}
                                                                 onChange={(e) => handleSpecialtyChange(index, e.target.value)}
-                                                                placeholder={`Specialty ${index + 1} (e.g., Gold Jewelry, Wedding Rings)`}
-                                                                className="h-14 border-2 border-gray-200 focus:border-[#C37C00] focus:ring-[#C37C00] rounded-2xl text-base pl-4 pr-4 font-medium  hover: transition-all duration-200"
+                                                                placeholder={`التخصص ${index + 1} (مثال: مجوهرات ذهبية، خواتم زفاف)`}
+                                                                className="h-14 border-2 border-gray-200 focus:border-[#C37C00] focus:ring-[#C37C00] rounded-2xl text-base pl-12 pr-4 font-medium shadow-sm hover:shadow-md transition-all duration-200"
                                                             />
-                                                            <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
+                                                            <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
                                                                 <div className="w-1 h-6 bg-gradient-to-b from-[#C37C00] to-[#A66A00] rounded-full"></div>
                                                             </div>
                                                         </div>
@@ -656,11 +651,11 @@ const EditShop = () => {
                                                     onClick={addSpecialty}
                                                     className="w-full h-14 border-2 border-dashed border-[#C37C00] text-[#C37C00] hover:bg-[#C37C00] hover:text-white rounded-2xl font-semibold text-base transition-all duration-300"
                                                 >
-                                                    <Plus className="w-5 h-5 mr-2" />
-                                                    Add Another Specialty
+                                                    <Plus className="w-5 h-5 ml-2" />
+                                                    إضافة تخصص آخر
                                                 </Button>
                                             </div>
-                                            <p className="text-sm text-gray-500 ml-4">Add what your store specializes in to help customers find you</p>
+                                            <p className="text-sm text-gray-500 mr-4">أضف ما يتخصص فيه متجرك لمساعدة العملاء في العثور عليك</p>
                                         </div>
                                     </div>
                                 </div>
@@ -671,12 +666,12 @@ const EditShop = () => {
                                     {/* Progress Indicator */}
                                     <div className="flex items-center justify-between mb-8">
                                         <div>
-                                            <h2 className="text-3xl font-bold text-gray-900 mb-2">Store Location</h2>
-                                            <p className="text-gray-600">Help customers find your store easily</p>
+                                            <h2 className="text-3xl font-bold text-gray-900 mb-2">موقع المتجر</h2>
+                                            <p className="text-gray-600">ساعد العملاء في العثور على متجرك بسهولة</p>
                                         </div>
                                         <div className="flex items-center gap-2 bg-gradient-to-r from-[#C37C00]/10 to-[#A66A00]/10 px-4 py-2 rounded-full">
                                             <div className="w-2 h-2 bg-[#C37C00] rounded-full"></div>
-                                            <span className="text-sm font-semibold text-[#C37C00]">Step 3 of 4</span>
+                                            <span className="text-sm font-semibold text-[#C37C00]">الخطوة 3 من 4</span>
                                         </div>
                                     </div>
 
@@ -689,12 +684,12 @@ const EditShop = () => {
                                                 </div>
                                                 <div>
                                                     <h3 className="font-bold text-gray-900">
-                                                        {formData.latitude && formData.longitude ? 'Location Set' : 'Location Not Set'}
+                                                        {formData.latitude && formData.longitude ? 'تم تحديد الموقع' : 'لم يتم تحديد الموقع'}
                                                     </h3>
                                                     <p className="text-sm text-gray-600">
                                                         {formData.latitude && formData.longitude
-                                                            ? `Coordinates: ${formData.latitude.toFixed(6)}, ${formData.longitude.toFixed(6)}`
-                                                            : 'Click on the map to set your store location'
+                                                            ? `الإحداثيات: ${formData.latitude.toFixed(6)}, ${formData.longitude.toFixed(6)}`
+                                                            : 'انقر على الخريطة لتحديد موقع متجرك'
                                                         }
                                                     </p>
                                                 </div>
@@ -708,9 +703,9 @@ const EditShop = () => {
                                         <div className="space-y-4">
                                             <label className="flex items-center gap-2 text-sm font-bold text-gray-800">
                                                 <div className="w-1.5 h-1.5 bg-[#C37C00] rounded-full"></div>
-                                                Interactive Map
+                                                الخريطة التفاعلية
                                             </label>
-                                            <div className="rounded-2xl overflow-hidden border-2 border-gray-200 ">
+                                            <div className="rounded-2xl overflow-hidden border-2 border-gray-200 shadow-lg">
                                                 <MapPicker
                                                     latitude={formData.latitude || 30.0444}
                                                     longitude={formData.longitude || 31.2357}
@@ -726,20 +721,20 @@ const EditShop = () => {
                                         <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-2xl border border-blue-200/30">
                                             <h4 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
                                                 <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                                                How to set your location:
+                                                كيفية تحديد موقعك:
                                             </h4>
                                             <ul className="space-y-2 text-sm text-gray-700">
                                                 <li className="flex items-start gap-2">
                                                     <span className="text-blue-500 font-bold">1.</span>
-                                                    <span>Use the search box to find your address</span>
+                                                    <span>استخدم مربع البحث للعثور على عنوانك</span>
                                                 </li>
                                                 <li className="flex items-start gap-2">
                                                     <span className="text-blue-500 font-bold">2.</span>
-                                                    <span>Click "Use Current Location" to use your current position</span>
+                                                    <span>انقر على "استخدام الموقع الحالي" لاستخدام موقعك الحالي</span>
                                                 </li>
                                                 <li className="flex items-start gap-2">
                                                     <span className="text-blue-500 font-bold">3.</span>
-                                                    <span>Or simply click anywhere on the map to set your store location</span>
+                                                    <span>أو ببساطة انقر في أي مكان على الخريطة لتحديد موقع متجرك</span>
                                                 </li>
                                             </ul>
                                         </div>
@@ -752,12 +747,12 @@ const EditShop = () => {
                                     {/* Progress Indicator */}
                                     <div className="flex items-center justify-between mb-8">
                                         <div>
-                                            <h2 className="text-3xl font-bold text-gray-900 mb-2">Store Media</h2>
-                                            <p className="text-gray-600">Showcase your store with beautiful images</p>
+                                            <h2 className="text-3xl font-bold text-gray-900 mb-2">وسائط المتجر</h2>
+                                            <p className="text-gray-600">اعرض متجرك بصور جميلة</p>
                                         </div>
                                         <div className="flex items-center gap-2 bg-gradient-to-r from-[#C37C00]/10 to-[#A66A00]/10 px-4 py-2 rounded-full">
                                             <div className="w-2 h-2 bg-[#C37C00] rounded-full"></div>
-                                            <span className="text-sm font-semibold text-[#C37C00]">Step 4 of 4</span>
+                                            <span className="text-sm font-semibold text-[#C37C00]">الخطوة 4 من 4</span>
                                         </div>
                                     </div>
 
@@ -767,10 +762,10 @@ const EditShop = () => {
                                             <div className="flex items-center justify-between">
                                                 <label className="flex items-center gap-2 text-sm font-bold text-gray-800">
                                                     <div className="w-1.5 h-1.5 bg-[#C37C00] rounded-full"></div>
-                                                    Main Store Image
+                                                    الصورة الرئيسية للمتجر
                                                 </label>
                                                 <span className="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-                                                    {imagePreview ? 'Image Selected' : 'No Image'}
+                                                    {imagePreview ? 'تم اختيار الصورة' : 'لا توجد صورة'}
                                                 </span>
                                             </div>
 
@@ -780,15 +775,15 @@ const EditShop = () => {
                                                         <div className="relative group">
                                                             <img
                                                                 src={imagePreview}
-                                                                alt="Store Preview"
-                                                                className="w-full h-80 object-cover rounded-2xl  group-hover: transition-all duration-300"
+                                                                alt="معاينة المتجر"
+                                                                className="w-full h-80 object-cover rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-300"
                                                             />
                                                             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 rounded-2xl transition-all duration-300"></div>
                                                             <Button
                                                                 type="button"
                                                                 variant="destructive"
                                                                 size="sm"
-                                                                className="absolute top-4 right-4 rounded-full w-10 h-10 p-0  opacity-0 group-hover:opacity-100 transition-all duration-300"
+                                                                className="absolute top-4 left-4 rounded-full w-10 h-10 p-0 shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300"
                                                                 onClick={() => {
                                                                     setImagePreview(null);
                                                                     setFormData(prev => ({ ...prev, image: null }));
@@ -799,12 +794,12 @@ const EditShop = () => {
                                                         </div>
                                                     ) : (
                                                         <div className="text-center py-12">
-                                                            <div className="w-24 h-24 bg-gradient-to-br from-[#C37C00]/20 to-[#A66A00]/20 rounded-full flex items-center justify-center mx-auto mb-6 ">
+                                                            <div className="w-24 h-24 bg-gradient-to-br from-[#C37C00]/20 to-[#A66A00]/20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
                                                                 <Upload className="w-12 h-12 text-[#C37C00]" />
                                                             </div>
-                                                            <h3 className="text-xl font-bold text-gray-900 mb-2">Upload Main Store Image</h3>
-                                                            <p className="text-gray-600 mb-1">This will be the primary image customers see</p>
-                                                            <p className="text-sm text-gray-500">PNG, JPG, GIF up to 10MB • Recommended: 1200x800px</p>
+                                                            <h3 className="text-xl font-bold text-gray-900 mb-2">رفع الصورة الرئيسية للمتجر</h3>
+                                                            <p className="text-gray-600 mb-1">هذه ستكون الصورة الأساسية التي يراها العملاء</p>
+                                                            <p className="text-sm text-gray-500">PNG, JPG, GIF حتى 10 ميجابايت • الحجم المقترح: 1200x800 بكسل</p>
                                                         </div>
                                                     )}
                                                     <input
@@ -821,10 +816,10 @@ const EditShop = () => {
                                                         type="button"
                                                         variant="outline"
                                                         onClick={() => document.getElementById('main-image-input').click()}
-                                                        className="w-full h-14 border-2 border-[#C37C00] text-[#C37C00] hover:bg-[#C37C00] hover:text-white rounded-2xl font-bold text-base  hover: transition-all duration-300"
+                                                        className="w-full h-14 border-2 border-[#C37C00] text-[#C37C00] hover:bg-[#C37C00] hover:text-white rounded-2xl font-bold text-base shadow-sm hover:shadow-md transition-all duration-300"
                                                     >
-                                                        <Upload className="w-5 h-5 mr-3" />
-                                                        {imagePreview ? 'Change Main Image' : 'Choose Main Image'}
+                                                        <Upload className="w-5 h-5 ml-3" />
+                                                        {imagePreview ? 'تغيير الصورة الرئيسية' : 'اختيار الصورة الرئيسية'}
                                                     </Button>
                                                 </div>
                                             </div>
@@ -835,22 +830,22 @@ const EditShop = () => {
                                             <div className="flex items-center justify-between">
                                                 <label className="flex items-center gap-2 text-sm font-bold text-gray-800">
                                                     <div className="w-1.5 h-1.5 bg-[#C37C00] rounded-full"></div>
-                                                    Image Gallery
+                                                    معرض الصور
                                                 </label>
                                                 <span className="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-                                                    {galleryPreviews.length} images
+                                                    {galleryPreviews.length} صورة
                                                 </span>
                                             </div>
 
                                             <div className="relative">
                                                 <div className="border-2 border-dashed border-[#C37C00]/30 rounded-2xl p-8 bg-gradient-to-br from-[#FFF8E6] via-[#FFFBF0] to-[#FFF0CC] hover:from-[#FFF0CC] hover:to-[#FFE6B3] transition-all duration-300">
                                                     <div className="text-center py-8">
-                                                        <div className="w-20 h-20 bg-gradient-to-br from-[#C37C00]/20 to-[#A66A00]/20 rounded-full flex items-center justify-center mx-auto mb-6 ">
+                                                        <div className="w-20 h-20 bg-gradient-to-br from-[#C37C00]/20 to-[#A66A00]/20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
                                                             <Upload className="w-10 h-10 text-[#C37C00]" />
                                                         </div>
-                                                        <h3 className="text-xl font-bold text-gray-900 mb-2">Add Gallery Images</h3>
-                                                        <p className="text-gray-600 mb-1">Showcase your products and store interior</p>
-                                                        <p className="text-sm text-gray-500">Select multiple images at once • PNG, JPG, GIF up to 10MB each</p>
+                                                        <h3 className="text-xl font-bold text-gray-900 mb-2">إضافة صور المعرض</h3>
+                                                        <p className="text-gray-600 mb-1">اعرض منتجاتك والتصميم الداخلي للمتجر</p>
+                                                        <p className="text-sm text-gray-500">اختر عدة صور في نفس الوقت • PNG, JPG, GIF حتى 10 ميجابايت لكل صورة</p>
                                                     </div>
                                                     <input
                                                         type="file"
@@ -867,10 +862,10 @@ const EditShop = () => {
                                                         type="button"
                                                         variant="outline"
                                                         onClick={() => document.getElementById('gallery-input').click()}
-                                                        className="w-full h-14 border-2 border-[#C37C00] text-[#C37C00] hover:bg-[#C37C00] hover:text-white rounded-2xl font-bold text-base  hover: transition-all duration-300"
+                                                        className="w-full h-14 border-2 border-[#C37C00] text-[#C37C00] hover:bg-[#C37C00] hover:text-white rounded-2xl font-bold text-base shadow-sm hover:shadow-md transition-all duration-300"
                                                     >
-                                                        <Upload className="w-5 h-5 mr-3" />
-                                                        {galleryPreviews.length > 0 ? 'Add More Images' : 'Add Gallery Images'}
+                                                        <Upload className="w-5 h-5 ml-3" />
+                                                        {galleryPreviews.length > 0 ? 'إضافة المزيد من الصور' : 'إضافة صور المعرض'}
                                                     </Button>
                                                 </div>
                                             </div>
@@ -879,20 +874,20 @@ const EditShop = () => {
                                                 <div className="mt-10">
                                                     <div className="flex items-center justify-between mb-6">
                                                         <h4 className="text-lg font-bold text-gray-900">
-                                                            Gallery Preview
+                                                            معاينة المعرض
                                                         </h4>
                                                         <div className="flex items-center gap-2">
-                                                            <span className="text-sm text-gray-500">{galleryPreviews.length} images</span>
+                                                            <span className="text-sm text-gray-500">{galleryPreviews.length} صورة</span>
                                                             <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                                                         </div>
                                                     </div>
                                                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                                                         {galleryPreviews.map((preview, index) => (
                                                             <div key={index} className="relative group">
-                                                                <div className="relative overflow-hidden rounded-2xl  group-hover: transition-all duration-300">
+                                                                <div className="relative overflow-hidden rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-300">
                                                                     <img
                                                                         src={preview}
-                                                                        alt={`Gallery ${index + 1}`}
+                                                                        alt={`المعرض ${index + 1}`}
                                                                         className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300"
                                                                     />
                                                                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300"></div>
@@ -900,12 +895,12 @@ const EditShop = () => {
                                                                         type="button"
                                                                         variant="destructive"
                                                                         size="sm"
-                                                                        className="absolute top-3 right-3 w-8 h-8 p-0 rounded-full  opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110"
+                                                                        className="absolute top-3 left-3 w-8 h-8 p-0 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110"
                                                                         onClick={() => removeGalleryImage(index)}
                                                                     >
                                                                         <X className="w-4 h-4" />
                                                                     </Button>
-                                                                    <div className="absolute bottom-3 left-3 bg-black/70 text-white text-xs px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300">
+                                                                    <div className="absolute bottom-3 right-3 bg-black/70 text-white text-xs px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300">
                                                                         #{index + 1}
                                                                     </div>
                                                                 </div>
@@ -915,7 +910,7 @@ const EditShop = () => {
                                                     <div className="mt-6 p-4 bg-green-50 rounded-2xl border border-green-200">
                                                         <p className="text-sm text-green-700 flex items-center gap-2">
                                                             <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                                                            Gallery images will help customers see your products and store atmosphere
+                                                            صور المعرض ستساعد العملاء على رؤية منتجاتك وأجواء المتجر
                                                         </p>
                                                     </div>
                                                 </div>
@@ -927,10 +922,10 @@ const EditShop = () => {
                                             <div className="flex items-center justify-between">
                                                 <label className="flex items-center gap-2 text-sm font-bold text-gray-800">
                                                     <div className="w-1.5 h-1.5 bg-[#C37C00] rounded-full"></div>
-                                                    Commercial Record (PDF) *
+                                                    السجل التجاري (PDF) *
                                                 </label>
                                                 <span className="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-                                                    {commercialRecord ? 'New PDF Selected' : currentCommercialRecord ? 'Current PDF' : 'No PDF'}
+                                                    {commercialRecord ? 'تم اختيار PDF جديد' : currentCommercialRecord ? 'PDF حالي' : 'لا يوجد PDF'}
                                                 </span>
                                             </div>
 
@@ -941,13 +936,13 @@ const EditShop = () => {
                                                             <div className="p-6 bg-green-50 border border-green-200 rounded-2xl">
                                                                 <div className="flex items-center justify-between">
                                                                     <div className="flex items-center">
-                                                                        <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mr-4">
+                                                                        <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center ml-4">
                                                                             <span className="text-red-600 font-bold text-sm">PDF</span>
                                                                         </div>
                                                                         <div>
                                                                             <p className="text-sm font-bold text-gray-900">{commercialRecord.name}</p>
                                                                             <p className="text-xs text-gray-500">
-                                                                                {(commercialRecord.size / (1024 * 1024)).toFixed(2)} MB
+                                                                                {(commercialRecord.size / (1024 * 1024)).toFixed(2)} ميجابايت
                                                                             </p>
                                                                         </div>
                                                                     </div>
@@ -968,18 +963,18 @@ const EditShop = () => {
                                                             <div className="w-20 h-20 bg-gradient-to-br from-green-500/20 to-green-600/20 rounded-full flex items-center justify-center mx-auto mb-6">
                                                                 <span className="text-2xl font-bold text-green-600">PDF</span>
                                                             </div>
-                                                            <h3 className="text-xl font-bold text-gray-900 mb-2">Current Commercial Record</h3>
-                                                            <p className="text-gray-600 mb-1">A commercial record is already uploaded</p>
-                                                            <p className="text-sm text-gray-500">Upload a new PDF to replace the current one</p>
+                                                            <h3 className="text-xl font-bold text-gray-900 mb-2">السجل التجاري الحالي</h3>
+                                                            <p className="text-gray-600 mb-1">تم رفع السجل التجاري مسبقاً</p>
+                                                            <p className="text-sm text-gray-500">ارفع ملف PDF جديد لاستبدال الحالي</p>
                                                         </div>
                                                     ) : (
                                                         <div className="text-center py-12">
                                                             <div className="w-24 h-24 bg-gradient-to-br from-red-500/20 to-red-600/20 rounded-full flex items-center justify-center mx-auto mb-6">
                                                                 <Upload className="w-12 h-12 text-red-600" />
                                                             </div>
-                                                            <h3 className="text-xl font-bold text-gray-900 mb-2">Upload Commercial Record</h3>
-                                                            <p className="text-gray-600 mb-1">Required legal document for your store</p>
-                                                            <p className="text-sm text-gray-500">PDF format only • Max 15MB</p>
+                                                            <h3 className="text-xl font-bold text-gray-900 mb-2">رفع السجل التجاري</h3>
+                                                            <p className="text-gray-600 mb-1">وثيقة قانونية مطلوبة لمتجرك</p>
+                                                            <p className="text-sm text-gray-500">صيغة PDF فقط • الحد الأقصى 15 ميجابايت</p>
                                                         </div>
                                                     )}
                                                     <input
@@ -998,8 +993,8 @@ const EditShop = () => {
                                                         onClick={() => document.getElementById('commercial-record-upload').click()}
                                                         className="w-full h-14 border-2 border-red-500 text-red-600 hover:bg-red-500 hover:text-white rounded-2xl font-bold text-base transition-all duration-300"
                                                     >
-                                                        <Upload className="w-5 h-5 mr-3" />
-                                                        {commercialRecord ? 'Change Commercial Record' : currentCommercialRecord ? 'Replace Commercial Record' : 'Upload Commercial Record'}
+                                                        <Upload className="w-5 h-5 ml-3" />
+                                                        {commercialRecord ? 'تغيير السجل التجاري' : currentCommercialRecord ? 'استبدال السجل التجاري' : 'رفع السجل التجاري'}
                                                     </Button>
                                                 </div>
                                             </div>
@@ -1016,22 +1011,22 @@ const EditShop = () => {
                                 <div className="flex items-center justify-center gap-8 mb-8">
                                     <div className="flex items-center gap-2">
                                         <div className="w-3 h-3 bg-[#C37C00] rounded-full"></div>
-                                        <span className="text-sm font-semibold text-gray-700">Basic Info</span>
+                                        <span className="text-sm font-semibold text-gray-700">المعلومات الأساسية</span>
                                     </div>
                                     <div className="w-8 h-px bg-gray-300"></div>
                                     <div className="flex items-center gap-2">
                                         <div className="w-3 h-3 bg-[#C37C00] rounded-full"></div>
-                                        <span className="text-sm font-semibold text-gray-700">Details</span>
+                                        <span className="text-sm font-semibold text-gray-700">التفاصيل</span>
                                     </div>
                                     <div className="w-8 h-px bg-gray-300"></div>
                                     <div className="flex items-center gap-2">
                                         <div className="w-3 h-3 bg-[#C37C00] rounded-full"></div>
-                                        <span className="text-sm font-semibold text-gray-700">Location</span>
+                                        <span className="text-sm font-semibold text-gray-700">الموقع</span>
                                     </div>
                                     <div className="w-8 h-px bg-gray-300"></div>
                                     <div className="flex items-center gap-2">
                                         <div className="w-3 h-3 bg-[#C37C00] rounded-full"></div>
-                                        <span className="text-sm font-semibold text-gray-700">Media</span>
+                                        <span className="text-sm font-semibold text-gray-700">الوسائط</span>
                                     </div>
                                 </div>
 
@@ -1040,19 +1035,19 @@ const EditShop = () => {
                                     <Button
                                         type="submit"
                                         disabled={isLoading}
-                                        className="flex-1 h-16 bg-gradient-to-r from-[#C37C00] via-[#D4860A] to-[#A66A00] hover:from-[#A66A00] hover:via-[#B8750A] hover:to-[#8A5700] text-white rounded-2xl font-bold text-lg  hover: transition-all duration-500 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                                        className="flex-1 h-16 bg-gradient-to-r from-[#C37C00] via-[#D4860A] to-[#A66A00] hover:from-[#A66A00] hover:via-[#B8750A] hover:to-[#8A5700] text-white rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-500 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                                     >
                                         {isLoading ? (
                                             <>
-                                                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white mr-3"></div>
-                                                <span>Updating Store...</span>
+                                                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white ml-3"></div>
+                                                <span>جاري تحديث المتجر...</span>
                                             </>
                                         ) : (
                                             <>
-                                                <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center mr-3">
+                                                <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center ml-3">
                                                     <Upload className="w-4 h-4" />
                                                 </div>
-                                                <span>Update Store Profile</span>
+                                                <span>تحديث ملف المتجر</span>
                                             </>
                                         )}
                                     </Button>
@@ -1061,19 +1056,19 @@ const EditShop = () => {
                                         type="button"
                                         variant="outline"
                                         onClick={() => navigate(ROUTES.MANAGE_SHOP)}
-                                        className="h-16 border-2 border-gray-300 text-gray-700 hover:bg-white hover:border-gray-400 hover: rounded-2xl font-bold text-lg px-12 transition-all duration-300"
+                                        className="h-16 border-2 border-gray-300 text-gray-700 hover:bg-white hover:border-gray-400 hover:shadow-md rounded-2xl font-bold text-lg px-12 transition-all duration-300"
                                     >
-                                        Cancel Changes
+                                        إلغاء التغييرات
                                     </Button>
                                 </div>
 
                                 {/* Help Text */}
                                 <div className="mt-8 text-center">
                                     <p className="text-sm text-gray-600 mb-2">
-                                        ✓ All changes will be saved immediately after clicking "Update Store Profile"
+                                        ✓ سيتم حفظ جميع التغييرات فوراً بعد النقر على "تحديث ملف المتجر"
                                     </p>
                                     <p className="text-xs text-gray-500">
-                                        Make sure all required fields are completed before submitting
+                                        تأكد من إكمال جميع الحقول المطلوبة قبل الإرسال
                                     </p>
                                 </div>
                             </div>

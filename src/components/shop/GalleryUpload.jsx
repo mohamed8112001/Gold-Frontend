@@ -137,7 +137,7 @@ const GalleryUpload = ({ shopId, currentUser, onUploadSuccess }) => {
   return (
     <div className="space-y-4">
       {/* Upload Button */}
-      { !user && !isAdmin && !isRegularUser && (   <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4">
         <label className="cursor-pointer">
           <input
             type="file"
@@ -172,8 +172,6 @@ const GalleryUpload = ({ shopId, currentUser, onUploadSuccess }) => {
           </Button>
         )}
       </div>
-   
-)}
      
       {previews.length > 0 && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-gray-50 rounded-lg">
@@ -198,7 +196,7 @@ const GalleryUpload = ({ shopId, currentUser, onUploadSuccess }) => {
         </div>
       )}
 
-      {selectedFiles.length  === 0 && !isAdmin && !isRegularUser && !user(
+      {selectedFiles.length === 0 && (
         <div className="text-center p-6 border-2 border-dashed border-gray-300 rounded-lg">
           <ImageIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
           <p className="text-gray-600 mb-2">اضغط "اختيار صور" لإضافة صور للمعرض</p>
