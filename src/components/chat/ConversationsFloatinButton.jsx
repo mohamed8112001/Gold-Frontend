@@ -593,19 +593,18 @@ const ConversationsFloatinButton = ({ user, onOpenChat, onSelectConversation }) 
       // Update total unread count
       setUnreadCount(prev => prev - (conversation.unreadCount || 0));
 
-      // Check if user is a seller (has role 'seller' or 'admin')
-      const isSeller = user?.role === 'seller' || user?.role === 'admin';
+      const isSeller = user?.role === 'seller';
       
       if (isSeller) {
         // For sellers, open the seller chat interface
-        setSelectedConversation(conversation.product);
+        setSelectedConversation(conversation);
         setShowSellerChatInterface(true);
       } else {
         // For customers, use the original callback
         if (onSelectConversation) {
-          onSelectConversation(conversation.product);
+          onSelectConversation(conversation.product._id);
         } else if (onOpenChat) {
-          onOpenChat(conversation);
+          onOpenChat(conversation.product);
         }
       }
     } catch (error) {

@@ -1,4 +1,4 @@
-// Enhanced Chat Interface with Media Support - FIXED
+// Enhanced Chat Interface with Simple Media Support - FIXED
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { 
   X, Send, Phone, MessageSquare, User, Store, Paperclip, Smile, AlertCircle,
@@ -14,21 +14,17 @@ import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/comp
 import chatService from '../../services/chatService';
 import { STORAGE_KEYS } from '@/utils/constants';
 
-// Enhanced Chat Service for Media
+// Simple Enhanced Chat Service for Media
 class EnhancedChatService {
   constructor(baseService) {
     this.baseService = baseService;
     this.socket = null;
-    this.mediaRecorder = null;
-    this.recordingChunks = [];
-    this.currentRecording = null;
     this.eventHandlers = new Map();
   }
 
-  // Initialize enhanced socket connection
   connect(token) {
     this.socket = this.baseService.connect(token);
-    this.setupMediaHandlers();
+    this.setupHandlers();
     return this.socket;
   }
 
@@ -37,78 +33,145 @@ class EnhancedChatService {
   }
 
   getConnectionStatus() {
-    return this.baseService.getConnectionStatus();
+    return this.socket && this.socket.connected;
   }
 
-  setupMediaHandlers() {
+  setupHandlers() {
     if (!this.socket) return;
 
-    // Clear existing handlers
-    this.clearMediaHandlers();
-
-    // Media message handlers
-    this.socket.on('newMediaMessage', (data) => {
-      const handler = this.eventHandlers.get('newMediaMessage');
-      if (handler) handler(data.message);
-    });
-
-    this.socket.on('mediaMessageSent', (data) => {
-      const handler = this.eventHandlers.get('mediaMessageSent');
+    this.socket.on('newMessage', (data) => {
+      const handler = this.eventHandlers.get('newMessage');
       if (handler) handler(data);
     });
 
-    this.socket.on('uploadComplete', (data) => {
-      const handler = this.eventHandlers.get('uploadComplete');
-      if (handler) handler(data);
-    });
-
-    this.socket.on('voiceRecordingStarted', (data) => {
-      const handler = this.eventHandlers.get('voiceRecordingStarted');
-      if (handler) handler(data);
-    });
-
-    this.socket.on('voiceRecordingCompleted', (data) => {
-      const handler = this.eventHandlers.get('voiceRecordingCompleted');
-      if (handler) handler(data);
-    });
-
-    this.socket.on('liveVoiceChunk', (data) => {
-      const handler = this.eventHandlers.get('liveVoiceChunk');
+    this.socket.on('messageDeleted', (data) => {
+      const handler = this.eventHandlers.get('messageDeleted');
       if (handler) handler(data);
     });
   }
 
-  clearMediaHandlers() {
-    if (this.socket) {
-      this.socket.off('newMediaMessage');
-      this.socket.off('mediaMessageSent');
-      this.socket.off('uploadComplete');
-      this.socket.off('voiceRecordingStarted');
-      this.socket.off('voiceRecordingCompleted');
-      this.socket.off('liveVoiceChunk');
+  // Simple file validation
+  validateFile(file) {
+    const maxSize = 50 * 1024 * 1024; // 50MB
+    const allowedTypes = [
+      'image/jpeg', 'image/png', 'image/gif', 'image/webp',
+      'video/mp4', 'video/webm', 'video/quicktime'
+    ];
+
+    if (file.size > maxSize) {
+      return { isValid: false, error: 'File too large (max 50MB)' };
     }
+
+    if (!allowedTypes.includes(file.type)) {
+      return { isValid: false, error: 'File type not supported' };
+    }
+
+    return { isValid: true };
   }
 
-  // Send media message
-  async sendMediaMessage(conversationId, receiverId, type, fileData, fileName, mimeType, fileSize, tempId) {
+  // Upload file
+  async uploadFile(file, conversationId) {
     return new Promise((resolve, reject) => {
-      if (!this.socket) {
-        reject(new Error('Socket not connected'));
+      // Check if socket exists and is connected
+      if (!this.socket || !this.socket.connected) {
+        reject(new Error('Socket not connected. Please wait for connection.'));
         return;
       }
 
-      this.socket.emit('sendMediaMessage', {
-        conversationId,
-        receiverId,
-        type,
-        fileData,
-        fileName,
-        mimeType,
-        fileSize,
-        tempId
+      console.log('Socket status:', {
+        exists: !!this.socket,
+        connected: this.socket?.connected,
+        id: this.socket?.id
+      });
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        const arrayBuffer = reader.result;
+        const fileBuffer = Array.from(new Uint8Array(arrayBuffer));
+
+        console.log('Emitting uploadMedia with:', {
+          fileName: file.name,
+          mimeType: file.type,
+          conversationId,
+          bufferSize: fileBuffer.length
+        });
+
+        this.socket.emit('uploadMedia', {
+          fileBuffer,
+          fileName: file.name,
+          mimeType: file.type,
+          conversationId
+        }, (response) => {
+          console.log('Upload response:', response);
+          if (response && response.status === 'success') {
+            resolve(response.media);
+          } else {
+            reject(new Error(response?.message || 'Upload failed'));
+          }
+        });
+      };
+
+      reader.onerror = () => reject(new Error('Failed to read file'));
+      reader.readAsArrayBuffer(file);
+    });
+  }
+
+  // Send media message
+  async sendMediaMessage(conversationId, file, caption = null, productId = null) {
+    try {
+      // Check connection first
+      if (!this.socket || !this.socket.connected) {
+        throw new Error('Not connected to chat service');
+      }
+
+      // Validate file
+      const validation = this.validateFile(file);
+      if (!validation.isValid) {
+        throw new Error(validation.error);
+      }
+
+      console.log('Sending media message for file:', file.name);
+
+      // Upload file first
+      const mediaData = await this.uploadFile(file, conversationId);
+
+      console.log('File uploaded, sending message with mediaData:', mediaData);
+
+      // Then send the media message
+      return new Promise((resolve, reject) => {
+        this.socket.emit('sendMediaMessage', {
+          conversationId,
+          mediaData,
+          caption,
+          productId
+        }, (response) => {
+          console.log('Send media message response:', response);
+          if (response && response.status === 'success') {
+            resolve(response.message);
+          } else {
+            reject(new Error(response?.message || 'Failed to send message'));
+          }
+        });
+      });
+    } catch (error) {
+      console.error('Send media message error:', error);
+      throw error;
+    }
+  }
+
+  // Delete message
+  async deleteMessage(messageId) {
+    return new Promise((resolve, reject) => {
+      if (!this.socket) {
+        reject(new Error('Not connected'));
+        return;
+      }
+
+      this.socket.emit('deleteMediaMessage', {
+        messageId
       }, (response) => {
         if (response.status === 'success') {
-          resolve(response);
+          resolve();
         } else {
           reject(new Error(response.message));
         }
@@ -116,190 +179,34 @@ class EnhancedChatService {
     });
   }
 
-  // Upload large file in chunks
-  async uploadLargeFile(file, conversationId, receiverId, type, onProgress) {
-    const chunkSize = 1024 * 1024; // 1MB chunks
-    const totalChunks = Math.ceil(file.size / chunkSize);
-    const uploadId = `upload_${Date.now()}`;
-
-    for (let i = 0; i < totalChunks; i++) {
-      const start = i * chunkSize;
-      const end = Math.min(start + chunkSize, file.size);
-      const chunk = file.slice(start, end);
-      const base64Chunk = await this.fileToBase64(chunk);
-
-      await new Promise((resolve, reject) => {
-        this.socket.emit('uploadChunk', {
-          uploadId,
-          chunkIndex: i,
-          totalChunks,
-          chunk: base64Chunk,
-          fileName: file.name,
-          mimeType: file.type,
-          conversationId,
-          receiverId,
-          type
-        }, (response) => {
-          if (response.status === 'success') {
-            onProgress && onProgress(response.chunksReceived, totalChunks);
-            resolve();
-          } else {
-            reject(new Error(response.message));
-          }
-        });
-      });
-    }
-
-    return uploadId;
-  }
-
-  // Voice recording methods
-  async startVoiceRecording(conversationId, receiverId) {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      this.mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
-      this.recordingChunks = [];
-
-      return new Promise((resolve, reject) => {
-        this.socket.emit('startVoiceRecording', {
-          conversationId,
-          receiverId
-        }, (response) => {
-          if (response.status === 'success') {
-            this.currentRecording = response.recordingId;
-            
-            this.mediaRecorder.ondataavailable = (event) => {
-              if (event.data.size > 0) {
-                this.recordingChunks.push(event.data);
-                
-                // Send real-time chunk
-                const reader = new FileReader();
-                reader.onload = () => {
-                  const base64 = reader.result.split(',')[1];
-                  this.socket.emit('voiceChunk', {
-                    recordingId: this.currentRecording,
-                    chunk: base64,
-                    conversationId,
-                    receiverId
-                  });
-                };
-                reader.readAsDataURL(event.data);
-              }
-            };
-
-            this.mediaRecorder.start(100); // Send chunks every 100ms
-            resolve(response.recordingId);
-          } else {
-            reject(new Error(response.message));
-          }
-        });
-      });
-    } catch (error) {
-      throw new Error('Microphone access denied');
-    }
-  }
-
-  stopVoiceRecording(conversationId, receiverId) {
-    return new Promise((resolve, reject) => {
-      if (this.mediaRecorder && this.currentRecording) {
-        this.mediaRecorder.stop();
-        
-        this.mediaRecorder.onstop = () => {
-          this.socket.emit('finishVoiceRecording', {
-            recordingId: this.currentRecording,
-            conversationId,
-            receiverId
-          }, (response) => {
-            if (response.status === 'success') {
-              resolve(response.message);
-            } else {
-              reject(new Error(response.message));
-            }
-            this.currentRecording = null;
-          });
-        };
-      } else {
-        reject(new Error('No active recording'));
-      }
-    });
-  }
-
-  // Utility methods
-  async fileToBase64(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  }
-
   // Event listeners
-  onNewMediaMessage(callback) { 
-    this.eventHandlers.set('newMediaMessage', callback); 
+  onNewMessage(callback) { 
+    this.eventHandlers.set('newMessage', callback); 
   }
-  onMediaMessageSent(callback) { 
-    this.eventHandlers.set('mediaMessageSent', callback); 
-  }
-  onUploadComplete(callback) { 
-    this.eventHandlers.set('uploadComplete', callback); 
-  }
-  onVoiceRecordingStarted(callback) { 
-    this.eventHandlers.set('voiceRecordingStarted', callback); 
-  }
-  onVoiceRecordingCompleted(callback) { 
-    this.eventHandlers.set('voiceRecordingCompleted', callback); 
-  }
-  onLiveVoiceChunk(callback) { 
-    this.eventHandlers.set('liveVoiceChunk', callback); 
+  
+  onMessageDeleted(callback) { 
+    this.eventHandlers.set('messageDeleted', callback); 
   }
 
   // Cleanup
   cleanup() {
-    this.clearMediaHandlers();
+    if (this.socket) {
+      this.socket.off('newMessage');
+      this.socket.off('messageDeleted');
+    }
     this.eventHandlers.clear();
   }
 }
 
-// Media Message Component
-const MediaMessage = ({ message, isOwnMessage, onPlaybackUpdate }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
-  const mediaRef = useRef(null);
+// Simple Media Message Component
+const MediaMessage = ({ message, isOwnMessage, onDelete }) => {
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  const handlePlayPause = () => {
-    if (mediaRef.current) {
-      if (isPlaying) {
-        mediaRef.current.pause();
-      } else {
-        mediaRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
-      
-      // Notify other users about playback status
-      onPlaybackUpdate && onPlaybackUpdate(message._id, isPlaying ? 'paused' : 'playing', currentTime);
+  const handleDelete = () => {
+    if (onDelete) {
+      onDelete(message._id);
     }
-  };
-
-  const handleTimeUpdate = () => {
-    if (mediaRef.current) {
-      setCurrentTime(mediaRef.current.currentTime);
-      onPlaybackUpdate && onPlaybackUpdate(message._id, 'playing', mediaRef.current.currentTime);
-    }
-  };
-
-  const handleLoadedMetadata = () => {
-    if (mediaRef.current) {
-      setDuration(mediaRef.current.duration);
-    }
-  };
-
-  const formatTime = (time) => {
-    const minutes = Math.floor(time / 60);
-    const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    setShowDeleteConfirm(false);
   };
 
   const formatFileSize = (bytes) => {
@@ -310,101 +217,97 @@ const MediaMessage = ({ message, isOwnMessage, onPlaybackUpdate }) => {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
-  const renderMedia = () => {
-    switch (message.type) {
-      case 'image':
-        return (
-          <div className="max-w-xs">
-            <img
-              src={message.mediaUrl}
-              alt={message.mediaMetadata?.fileName}
-              className="rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
-              onClick={() => window.open(message.mediaUrl, '_blank')}
-              onLoad={() => setIsLoading(false)}
-              onLoadStart={() => setIsLoading(true)}
-            />
-            {isLoading && (
-              <div className="absolute inset-0 flex items-center justify-center bg-gray-100 rounded-lg">
-                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
-              </div>
-            )}
-            <div className="text-xs text-gray-500 mt-1">
-              {message.mediaMetadata?.fileName} ({formatFileSize(message.mediaMetadata?.fileSize)})
+  // Get media info from message
+  const mediaUrl = message.media?.url;
+  const fileName = message.media?.originalName || message.media?.fileName;
+  const fileSize = message.media?.size;
+  const mediaType = message.media?.mediaType;
+
+  if (!mediaUrl) return null;
+
+  return (
+    <div className="relative group">
+      {mediaType === 'image' ? (
+        <div className="max-w-xs relative">
+          <img
+            src={mediaUrl}
+            alt={fileName}
+            className="rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
+            onClick={() => window.open(mediaUrl, '_blank')}
+          />
+          {isOwnMessage && (
+            <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowDeleteConfirm(true)}
+                className="bg-red-500 hover:bg-red-600 text-white rounded-full p-1"
+              >
+                <X className="w-3 h-3" />
+              </Button>
+            </div>
+          )}
+          <div className="text-xs text-gray-500 mt-1">
+            {fileName} {fileSize && `(${formatFileSize(fileSize)})`}
+          </div>
+          {message.content && message.content !== `Sent a ${mediaType}` && (
+            <p className="text-sm mt-2">{message.content}</p>
+          )}
+        </div>
+      ) : mediaType === 'video' ? (
+        <div className="max-w-sm relative">
+          <video
+            src={mediaUrl}
+            controls
+            className="rounded-lg w-full"
+            preload="metadata"
+          />
+          {isOwnMessage && (
+            <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowDeleteConfirm(true)}
+                className="bg-red-500 hover:bg-red-600 text-white rounded-full p-1"
+              >
+                <X className="w-3 h-3" />
+              </Button>
+            </div>
+          )}
+          <div className="text-xs text-gray-500 mt-1">
+            {fileName}
+          </div>
+          {message.content && message.content !== `Sent a ${mediaType}` && (
+            <p className="text-sm mt-2">{message.content}</p>
+          )}
+        </div>
+      ) : null}
+
+      {/* Simple Delete Confirmation */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
+          <div className="bg-white rounded-lg p-6 max-w-sm mx-4">
+            <h3 className="text-lg font-semibold mb-2">حذف الرسالة</h3>
+            <p className="text-gray-600 mb-4">هل أنت متأكد من حذف هذه الرسالة؟ لا يمكن التراجع عن هذا الإجراء.</p>
+            <div className="flex gap-2 justify-end">
+              <Button
+                variant="ghost"
+                onClick={() => setShowDeleteConfirm(false)}
+              >
+                إلغاء
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={handleDelete}
+              >
+                حذف
+              </Button>
             </div>
           </div>
-        );
-
-      case 'audio':
-        return (
-          <div className="flex items-center gap-3 bg-gray-50 rounded-lg p-3 min-w-[250px]">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handlePlayPause}
-              className="p-2 rounded-full hover:bg-blue-100"
-            >
-              {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-            </Button>
-            
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-1">
-                <div className="flex-1 bg-gray-200 rounded-full h-1">
-                  <div 
-                    className="bg-blue-500 h-1 rounded-full transition-all"
-                    style={{ width: `${duration ? (currentTime / duration) * 100 : 0}%` }}
-                  />
-                </div>
-                <span className="text-xs text-gray-500">
-                  {formatTime(currentTime)} / {formatTime(duration)}
-                </span>
-              </div>
-              <div className="text-xs text-gray-600">
-                {message.mediaMetadata?.fileName}
-              </div>
-            </div>
-
-            <audio
-              ref={mediaRef}
-              src={message.mediaUrl}
-              onTimeUpdate={handleTimeUpdate}
-              onLoadedMetadata={handleLoadedMetadata}
-              onPlay={() => setIsPlaying(true)}
-              onPause={() => setIsPlaying(false)}
-              onEnded={() => setIsPlaying(false)}
-              preload="metadata"
-            />
-          </div>
-        );
-
-      case 'video':
-        return (
-          <div className="max-w-sm">
-            <video
-              ref={mediaRef}
-              src={message.mediaUrl}
-              poster={message.thumbnailUrl}
-              controls
-              className="rounded-lg w-full"
-              onTimeUpdate={handleTimeUpdate}
-              onLoadedMetadata={handleLoadedMetadata}
-              onPlay={() => setIsPlaying(true)}
-              onPause={() => setIsPlaying(false)}
-              onEnded={() => setIsPlaying(false)}
-              preload="metadata"
-            />
-            <div className="text-xs text-gray-500 mt-1">
-              {message.mediaMetadata?.fileName}
-              {message.mediaMetadata?.duration && ` (${formatTime(message.mediaMetadata.duration)})`}
-            </div>
-          </div>
-        );
-
-      default:
-        return null;
-    }
-  };
-
-  return renderMedia();
+        </div>
+      )}
+    </div>
+  );
 };
 
 // Enhanced Shop Chat Interface
@@ -425,11 +328,8 @@ const ShopChatInterface = ({
   const [isSending, setIsSending] = useState(false);
   
   // Media states
-  const [isRecording, setIsRecording] = useState(false);
-  const [recordingDuration, setRecordingDuration] = useState(0);
   const [showMediaPicker, setShowMediaPicker] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState({});
-  const [remoteRecording, setRemoteRecording] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   // Refs
   const messagesEndRef = useRef(null);
@@ -437,7 +337,6 @@ const ShopChatInterface = ({
   const typingTimeoutRef = useRef(null);
   const fileInputRef = useRef(null);
   const enhancedChatService = useRef(new EnhancedChatService(chatService));
-  const recordingTimerRef = useRef(null);
   const isInitializingRef = useRef(false);
   const cleanupFunctionsRef = useRef([]);
 
@@ -476,46 +375,8 @@ const ShopChatInterface = ({
       }
     };
 
-    // Media message listeners
-    const handleNewMediaMessage = (message) => {
-      console.log('New media message received:', message);
-      if (message.conversationId === conversationId) {
-        setMessages(prev => [...prev, message]);
-      }
-    };
-
-    const handleMediaMessageSent = (data) => {
-      console.log('Media message sent confirmation:', data);
-      setMessages(prev =>
-        prev.map(msg =>
-          msg.tempId === data.tempId ? data.message : msg
-        )
-      );
-    };
-
-    const handleVoiceRecordingStarted = (data) => {
-      if (data.senderId !== user._id) {
-        setRemoteRecording(data.senderName);
-      }
-    };
-
-    const handleVoiceRecordingCompleted = (data) => {
-      if (data.message.conversationId === conversationId) {
-        setMessages(prev => [...prev, data.message]);
-      }
-      setRemoteRecording(null);
-    };
-
-    const handleUploadComplete = (data) => {
-      setUploadProgress(prev => {
-        const newProgress = { ...prev };
-        delete newProgress[data.uploadId];
-        return newProgress;
-      });
-      
-      if (data.message.conversationId === conversationId) {
-        setMessages(prev => [...prev, data.message]);
-      }
+    const handleMessageDeleted = ({ messageId }) => {
+      setMessages(prev => prev.filter(msg => msg._id !== messageId));
     };
 
     // Set up listeners
@@ -523,11 +384,8 @@ const ShopChatInterface = ({
     const unsubscribeUserTyping = chatService.onUserTyping(handleUserTyping);
 
     // Enhanced chat service listeners
-    enhancedChatService.current.onNewMediaMessage(handleNewMediaMessage);
-    enhancedChatService.current.onMediaMessageSent(handleMediaMessageSent);
-    enhancedChatService.current.onVoiceRecordingStarted(handleVoiceRecordingStarted);
-    enhancedChatService.current.onVoiceRecordingCompleted(handleVoiceRecordingCompleted);
-    enhancedChatService.current.onUploadComplete(handleUploadComplete);
+    enhancedChatService.current.onNewMessage(handleNewMessage);
+    enhancedChatService.current.onMessageDeleted(handleMessageDeleted);
 
     // Store cleanup functions
     const cleanup = () => {
@@ -653,14 +511,111 @@ const ShopChatInterface = ({
     if (typingTimeoutRef.current) {
       clearTimeout(typingTimeoutRef.current);
     }
-    
-    if (recordingTimerRef.current) {
-      clearInterval(recordingTimerRef.current);
-    }
 
     clearEventListeners();
     isInitializingRef.current = false;
   }, [clearEventListeners]);
+
+  // Simple file upload function
+  const handleFileUpload = async (file) => {
+    if (!conversationId || isUploading) return;
+
+    // Check if enhanced chat service is connected
+    if (!enhancedChatService.current.getConnectionStatus()) {
+      setError('غير متصل بالخدمة. يرجى الانتظار للاتصال.');
+      return;
+    }
+
+    // Validate file
+    const validation = enhancedChatService.current.validateFile(file);
+    if (!validation.isValid) {
+      setError(validation.error);
+      return;
+    }
+
+    // Get media type
+    const mediaType = file.type.startsWith('image/') ? 'image' : 'video';
+
+    console.log('Starting file upload for:', file.name, 'Type:', mediaType);
+
+    // Add optimistic message
+    const optimisticMessage = {
+      _id: `temp_${Date.now()}`,
+      messageType: 'media',
+      media: {
+        url: URL.createObjectURL(file),
+        originalName: file.name,
+        size: file.size,
+        mediaType: mediaType
+      },
+      sender: { _id: user._id, name: user.name },
+      createdAt: new Date().toISOString(),
+      conversation: conversationId,
+      optimistic: true,
+      content: `Sent a ${mediaType}`
+    };
+
+    setMessages(prev => [...prev, optimisticMessage]);
+    setIsUploading(true);
+    setError(null); // Clear any previous errors
+
+    try {
+      console.log('Calling sendMediaMessage...');
+      
+      // Send media message
+      const sentMessage = await enhancedChatService.current.sendMediaMessage(
+        conversationId,
+        file,
+        `Sent a ${mediaType}`,
+        product._id
+      );
+
+      console.log('Media message sent successfully:', sentMessage);
+
+      // Replace optimistic message
+      setMessages(prev =>
+        prev.map(msg =>
+          msg.optimistic && msg._id === optimisticMessage._id ? sentMessage : msg
+        )
+      );
+
+      // Cleanup
+      URL.revokeObjectURL(optimisticMessage.media.url);
+
+    } catch (error) {
+      console.error('Upload error:', error);
+      setError('فشل في الرفع: ' + error.message);
+      
+      // Remove optimistic message
+      setMessages(prev => prev.filter(msg => msg._id !== optimisticMessage._id));
+      URL.revokeObjectURL(optimisticMessage.media.url);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  // Handle file select
+  const handleFileSelect = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    await handleFileUpload(file);
+    
+    // Reset file input
+    event.target.value = '';
+    setShowMediaPicker(false);
+  };
+
+  // Handle delete message
+  const handleDeleteMessage = async (messageId) => {
+    try {
+      await enhancedChatService.current.deleteMessage(messageId);
+      // Message will be removed by the messageDeleted event
+    } catch (error) {
+      console.error('Delete error:', error);
+      setError('فشل في حذف الرسالة');
+    }
+  };
 
   // Effects
   useEffect(() => {
@@ -672,7 +627,7 @@ const ShopChatInterface = ({
     return () => {
       cleanupChat();
     };
-  }, [isOpen, user, shop, product]); // Only depend on the essential props
+  }, [isOpen, user, shop, product]);
 
   useEffect(() => {
     scrollToBottom();
@@ -683,136 +638,6 @@ const ShopChatInterface = ({
       setTimeout(() => inputRef.current?.focus(), 100);
     }
   }, [isOpen]);
-
-  // Media handling methods
-  const handleFileSelect = async (event) => {
-    const file = event.target.files[0];
-    if (!file || !conversationId) return;
-
-    const fileType = file.type.startsWith('image/') ? 'image' :
-                    file.type.startsWith('video/') ? 'video' :
-                    file.type.startsWith('audio/') ? 'audio' : null;
-
-    if (!fileType) {
-      setError('نوع الملف غير مدعوم');
-      return;
-    }
-
-    try {
-      if (file.size > 50 * 1024 * 1024) { // >50MB, use chunked upload
-        await handleLargeFileUpload(file, fileType);
-      } else {
-        await handleRegularFileUpload(file, fileType);
-      }
-    } catch (error) {
-      console.error('File upload error:', error);
-      setError('فشل في رفع الملف');
-    }
-
-    // Reset file input
-    event.target.value = '';
-  };
-
-  const handleRegularFileUpload = async (file, fileType) => {
-    const tempId = `temp_${Date.now()}`;
-    const receiverId = shop.owner?._id || shop.owner || shop.ownerId;
-
-    // Add optimistic message
-    const optimisticMessage = {
-      _id: tempId,
-      tempId,
-      type: fileType,
-      mediaUrl: URL.createObjectURL(file),
-      mediaMetadata: {
-        fileName: file.name,
-        fileSize: file.size,
-        mimeType: file.type
-      },
-      sender: { _id: user._id, name: user.name },
-      createdAt: new Date().toISOString(),
-      conversation: conversationId,
-      optimistic: true
-    };
-
-    setMessages(prev => [...prev, optimisticMessage]);
-
-    // Upload file
-    const base64 = await enhancedChatService.current.fileToBase64(file);
-    await enhancedChatService.current.sendMediaMessage(
-      conversationId,
-      receiverId,
-      fileType,
-      base64,
-      file.name,
-      file.type,
-      file.size,
-      tempId
-    );
-  };
-
-  const handleLargeFileUpload = async (file, fileType) => {
-    const uploadId = `upload_${Date.now()}`;
-    const receiverId = shop.owner?._id || shop.owner || shop.ownerId;
-
-    setUploadProgress(prev => ({
-      ...prev,
-      [uploadId]: { current: 0, total: Math.ceil(file.size / (1024 * 1024)), fileName: file.name }
-    }));
-
-    await enhancedChatService.current.uploadLargeFile(
-      file,
-      conversationId,
-      receiverId,
-      fileType,
-      (current, total) => {
-        setUploadProgress(prev => ({
-          ...prev,
-          [uploadId]: { current, total, fileName: file.name }
-        }));
-      }
-    );
-  };
-
-  const startVoiceRecording = async () => {
-    try {
-      const receiverId = shop.owner?._id || shop.owner || shop.ownerId;
-      await enhancedChatService.current.startVoiceRecording(conversationId, receiverId);
-      
-      setIsRecording(true);
-      setRecordingDuration(0);
-      
-      recordingTimerRef.current = setInterval(() => {
-        setRecordingDuration(prev => prev + 1);
-      }, 1000);
-      
-    } catch (error) {
-      console.error('Voice recording error:', error);
-      setError('فشل في تسجيل الصوت');
-    }
-  };
-
-  const stopVoiceRecording = async () => {
-    try {
-      const receiverId = shop.owner?._id || shop.owner || shop.ownerId;
-      await enhancedChatService.current.stopVoiceRecording(conversationId, receiverId);
-      
-      setIsRecording(false);
-      setRecordingDuration(0);
-      
-      if (recordingTimerRef.current) {
-        clearInterval(recordingTimerRef.current);
-      }
-      
-    } catch (error) {
-      console.error('Stop recording error:', error);
-      setError('فشل في إيقاف التسجيل');
-    }
-  };
-
-  const handlePlaybackUpdate = (messageId, status, currentTime) => {
-    // You can implement playback synchronization here
-    console.log('Playback update:', { messageId, status, currentTime });
-  };
 
   // Regular text message methods
   const handleInputChange = (e) => {
@@ -909,12 +734,6 @@ const ShopChatInterface = ({
     }
   };
 
-  const formatDuration = (seconds) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-  };
-
   // Group messages by date
   const groupedMessages = messages.reduce((groups, message) => {
     const date = new Date(message.createdAt).toDateString();
@@ -950,11 +769,8 @@ const ShopChatInterface = ({
                     {isTyping && (
                       <span className="text-sm text-blue-600 animate-pulse">يكتب...</span>
                     )}
-                    {remoteRecording && (
-                      <span className="text-sm text-red-600 animate-pulse flex items-center gap-1">
-                        <Mic className="w-3 h-3" />
-                        {remoteRecording} يسجل...
-                      </span>
+                    {isUploading && (
+                      <span className="text-sm text-green-600 animate-pulse">جاري الرفع...</span>
                     )}
                   </div>
                 </div>
@@ -970,25 +786,6 @@ const ShopChatInterface = ({
                 </Button>
               </div>
             </div>
-
-            {/* Upload Progress */}
-            {Object.keys(uploadProgress).length > 0 && (
-              <div className="mt-4 space-y-2">
-                {Object.entries(uploadProgress).map(([uploadId, progress]) => (
-                  <div key={uploadId} className="bg-white/50 rounded-lg p-3">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-gray-700">
-                        جاري رفع: {progress.fileName}
-                      </span>
-                      <span className="text-xs text-gray-500">
-                        {progress.current}/{progress.total}
-                      </span>
-                    </div>
-                    <Progress value={(progress.current / progress.total) * 100} className="h-2" />
-                  </div>
-                ))}
-              </div>
-            )}
           </CardHeader>
 
           {/* Messages Area */}
@@ -1041,7 +838,7 @@ const ShopChatInterface = ({
                       {/* Messages for this date */}
                       {dateMessages.map((message) => {
                         const isOwnMessage = message.sender?._id === user?._id;
-                        const isMediaMessage = ['image', 'audio', 'video'].includes(message.type);
+                        const isMediaMessage = message.messageType === 'media';
                         
                         return (
                           <div
@@ -1069,7 +866,7 @@ const ShopChatInterface = ({
                                   <MediaMessage 
                                     message={message} 
                                     isOwnMessage={isOwnMessage}
-                                    onPlaybackUpdate={handlePlaybackUpdate}
+                                    onDelete={handleDeleteMessage}
                                   />
                                 ) : (
                                   <p className="text-sm leading-relaxed text-right">{message.content}</p>
@@ -1121,24 +918,6 @@ const ShopChatInterface = ({
               </div>
             )}
 
-            {/* Voice Recording Indicator */}
-            {isRecording && (
-              <div className="px-4 py-3 bg-red-50 border-t border-red-100">
-                <div className="flex items-center justify-center gap-3 text-red-600">
-                  <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-                  <span className="text-sm font-medium">جاري التسجيل... {formatDuration(recordingDuration)}</span>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={stopVoiceRecording}
-                    className="text-red-600 hover:text-red-700 rounded-full p-2"
-                  >
-                    <MicOff className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-            )}
-
             {/* Message Input */}
             <div className="flex-shrink-0 p-4 border-t bg-gray-50">
               {/* Media Picker */}
@@ -1156,6 +935,7 @@ const ShopChatInterface = ({
                             setShowMediaPicker(false);
                           }}
                           className="flex-col gap-1 h-auto p-3 hover:bg-blue-50"
+                          disabled={isUploading}
                         >
                           <Image className="w-6 h-6 text-blue-600" />
                           <span className="text-xs text-gray-600">صورة</span>
@@ -1175,51 +955,13 @@ const ShopChatInterface = ({
                             setShowMediaPicker(false);
                           }}
                           className="flex-col gap-1 h-auto p-3 hover:bg-purple-50"
+                          disabled={isUploading}
                         >
                           <Video className="w-6 h-6 text-purple-600" />
                           <span className="text-xs text-gray-600">فيديو</span>
                         </Button>
                       </TooltipTrigger>
                       <TooltipContent>إرسال فيديو</TooltipContent>
-                    </Tooltip>
-
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => {
-                            fileInputRef.current.setAttribute('accept', 'audio/*');
-                            fileInputRef.current.click();
-                            setShowMediaPicker(false);
-                          }}
-                          className="flex-col gap-1 h-auto p-3 hover:bg-green-50"
-                        >
-                          <Volume2 className="w-6 h-6 text-green-600" />
-                          <span className="text-xs text-gray-600">ملف صوتي</span>
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>إرسال ملف صوتي</TooltipContent>
-                    </Tooltip>
-
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onMouseDown={startVoiceRecording}
-                          onMouseUp={stopVoiceRecording}
-                          onMouseLeave={stopVoiceRecording}
-                          className="flex-col gap-1 h-auto p-3 hover:bg-red-50"
-                          disabled={isRecording}
-                        >
-                          <Mic className={`w-6 h-6 ${isRecording ? 'text-red-500' : 'text-red-600'}`} />
-                          <span className="text-xs text-gray-600">
-                            {isRecording ? 'جاري التسجيل' : 'رسالة صوتية'}
-                          </span>
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>اضغط واستمر للتسجيل</TooltipContent>
                     </Tooltip>
                   </div>
                 </div>
@@ -1228,7 +970,7 @@ const ShopChatInterface = ({
               <div className="flex items-end gap-3">
                 <Button
                   onClick={sendMessage}
-                  disabled={!newMessage.trim() || !isConnected || isSending}
+                  disabled={!newMessage.trim() || !isConnected || isSending || isUploading}
                   className="bg-gradient-to-l from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-full p-3 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSending ? (
@@ -1248,7 +990,7 @@ const ShopChatInterface = ({
                     className="w-full p-3 pl-12 border border-gray-200 rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent max-h-32 text-right"
                     rows="1"
                     style={{ minHeight: '44px' }}
-                    disabled={!isConnected || isSending || isRecording}
+                    disabled={!isConnected || isSending || isUploading}
                   />
                 </div>
 
@@ -1260,35 +1002,12 @@ const ShopChatInterface = ({
                         size="sm"
                         onClick={() => setShowMediaPicker(!showMediaPicker)}
                         className="text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-full p-2"
-                        disabled={isRecording}
+                        disabled={isUploading}
                       >
                         <Paperclip className="w-5 h-5" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>إرفاق ملف</TooltipContent>
-                  </Tooltip>
-
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onMouseDown={startVoiceRecording}
-                        onMouseUp={stopVoiceRecording}
-                        onMouseLeave={stopVoiceRecording}
-                        className={`rounded-full p-2 ${
-                          isRecording 
-                            ? 'text-red-500 hover:text-red-600 bg-red-50' 
-                            : 'text-gray-500 hover:text-red-600 hover:bg-red-50'
-                        }`}
-                        disabled={!isConnected}
-                      >
-                        {isRecording ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      {isRecording ? 'إيقاف التسجيل' : 'اضغط واستمر للتسجيل'}
-                    </TooltipContent>
                   </Tooltip>
                 </div>
               </div>
@@ -1313,14 +1032,14 @@ const ShopChatInterface = ({
                       جاري الإرسال...
                     </span>
                   )}
-                  {isRecording && (
-                    <span className="text-red-500 flex items-center gap-1">
-                      <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                      تسجيل الصوت: {formatDuration(recordingDuration)}
+                  {isUploading && (
+                    <span className="text-green-500 flex items-center gap-1">
+                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                      جاري الرفع...
                     </span>
                   )}
                 </div>
-                <span>اضغط Enter للإرسال • اضغط واستمر على 🎤 للتسجيل</span>
+                <span>اضغط Enter للإرسال • اضغط 📎 لإرفاق ملف</span>
               </div>
             </div>
           </CardContent>
@@ -1336,24 +1055,6 @@ const ShopChatInterface = ({
       </div>
     </TooltipProvider>
   );
-};
-
-// Enhanced Chat Service Configuration
-const enhancedChatServiceConfig = {
-  maxFileSize: {
-    image: 10 * 1024 * 1024, // 10MB
-    video: 100 * 1024 * 1024, // 100MB
-    audio: 50 * 1024 * 1024 // 50MB
-  },
-  
-  supportedFormats: {
-    image: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
-    video: ['video/mp4', 'video/webm', 'video/ogg'],
-    audio: ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/webm', 'audio/mp4']
-  },
-  
-  chunkSize: 1024 * 1024, // 1MB chunks for large files
-  maxRecordingDuration: 300 // 5 minutes max recording
 };
 
 // Usage Example Component
@@ -1395,5 +1096,5 @@ const ChatExample = () => {
   );
 };
 
-export { ShopChatInterface, EnhancedChatService, enhancedChatServiceConfig };
+export { ShopChatInterface, EnhancedChatService };
 export default ShopChatInterface;

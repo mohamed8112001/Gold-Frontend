@@ -225,17 +225,6 @@ const Home = () => {
   };
 
   const ShopCard = ({ shop }) => {
-    // Debug shop image
-    console.log(" Home Shop image debug:", {
-      shopName: shop.name,
-      logoUrl: shop.logoUrl,
-      image: shop.image,
-      imageUrl: shop.imageUrl,
-      fullImageUrl: shop.logoUrl
-        ? `${import.meta.env.VITE_API_BASE_URL}/shop-image/${shop.logoUrl}`
-        : "No image",
-    });
-
     return (
       <Card
         className="group relative overflow-hidden bg-white rounded-3xl transition-all duration-500 cursor-pointer transform hover:-translate-y-2 border-0"

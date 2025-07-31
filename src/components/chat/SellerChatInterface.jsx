@@ -144,20 +144,8 @@ const SellerChatInterface = ({
       //   throw new Error('لا يوجد متجر مرتبط بهذا المستخدم');
       // }
 
-      console.log('Loading products for shop:', shopId);
-      const response = await productService.getProductsByShop(shopId);
-      const selectedProduct = response.data.filter(product=>{
-        return product._id == conversation.product;
-      })
-      
-      console.log('Products response:', response);
-      console.log(`successs: ${response.status}`);
-      
-      if (response.status === "success") {
-        setSellerProducts(selectedProduct || []);
-      } else {
-        throw new Error(response.message || 'Failed to load products');
-      }
+      console.log(`conversation: ${JSON.stringify(conversation)}`);
+      setSellerProducts( [conversation.product]);
     } catch (error) {
       console.error('Error loading products:', error);
       setProductsError(error.message);
@@ -269,13 +257,10 @@ const SellerChatInterface = ({
     📄 *الوصف:* ${product.description}
     🔗 *التصنيف:* ${product.design_type === 'chains' ? 'سلاسل' : product.design_type}
     💎 *العيار:* ${product.karat}
-    ⚖️ *الوزن:* ${product.weight.toString()} جرام
+    ⚖️ *الوزن:* ${parseFloat(product.weight.$numberDecimal).toLocaleString('ar-EG')} جرام
     🏷️ *القسم:* ${product.category === 'chains' ? 'سلاسل' : product.category}
-    
     📦 *الحالة:* ${product.isAvailable ? 'متوفر حالياً ✅' : 'غير متوفر ❌'}
-    
     ⭐ *التقييم:* ${product.averageRating}/5 (${product.numRatings} تقييم)
-    
     📸 *شاهد الصور في الأعلى لرؤية التصميم*`;    
     if (!chatService || !conversation?._id) return;
 
@@ -448,7 +433,7 @@ const SellerChatInterface = ({
                            {product.title}
                          </h4>
                          <p className="text-amber-600 font-bold text-sm mb-2">
-                           {formatPrice(product.price)} ج.م
+                           {formatPrice(product.karat)} جرام
                          </p>
                          <div className="flex items-center justify-between text-xs text-gray-500">
                            <div className="flex items-center gap-1">
